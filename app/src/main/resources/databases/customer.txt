@@ -1,0 +1,7 @@
+[
+  {"CustomerID": "CS00001", "Username": "chua", "Name": "c", "Phone": "01134567890", "Password": "a55555", "Gender": "Male", "DOB": "1/January/1910", "Email": "c@gmail.com", "Status": "False"},
+  {"CustomerID": "CS00002", "Username": "w4r", "Name": "c", "Phone": "+6011-2344679", "Password": "a99991", "Gender": "Male", "DOB": "08/May/2024", "Email": "c@gmail.com", "Status": "True"},
+  {"CustomerID": "CS00003", "Username": "ch", "Name": "c", "Phone": "+6011-2344679", "Password": "a66661", "Gender": "Male", "DOB": "15/May/2024", "Email": "c@gmail.com", "Status": "True"},
+  {"CustomerID": "CS00004", "Username": "ccchhh", "Name": "hui wen", "Phone": "010-6720755", "Password": "a12345", "Gender": "Female", "DOB": "16/May/2004", "Email": "hui wen@gmail.com", "Status": "True"},
+  {"CustomerID": "CS00005", "Username": "a123", "Name": "hui", "Phone": "0166270650", "Password": "a12345", "Gender": "Female", "DOB": "31/May/2006", "Email": "hui@gmail.com", "Status": "True"}
+]
