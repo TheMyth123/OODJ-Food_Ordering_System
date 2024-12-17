@@ -1,6 +1,6 @@
 [
-    {"VendorID":1,"VendorName":"Stall A","FoodCourtName":"Food Court 1","ContactNumber":"0123456789","MenuItems":[{"Item":"Burger","Price":5.50},{"Item":"Fries","Price":2.50}],"OrderHistory":[{"OrderID":"Order1","Status":"Accepted"},{"OrderID":"Order2","Status":"Cancelled"}],"Revenue":5000}
-    {"VendorID":2,"VendorName":"Stall B","FoodCourtName":"Food Court 1","ContactNumber":"0987654321","MenuItems":[{"Item":"Pizza","Price":8.00},{"Item":"Pasta","Price":6.50}],"OrderHistory":[{"OrderID":"Order3","Status":"Accepted"},{"OrderID":"Order4","Status":"Accepted"}],"Revenue":7500}
-    {"VendorID":3,"VendorName":"Stall C","FoodCourtName":"Food Court 2","ContactNumber":"0121122334","MenuItems":[{"Item":"Sushi","Price":10.00},{"Item":"Ramen","Price":8.00}],"OrderHistory":[{"OrderID":"Order5","Status":"Cancelled"},{"OrderID":"Order6","Status":"Accepted"}],"Revenue":4000}
-    {"VendorID":4,"VendorName":"Stall D","FoodCourtName":"Food Court 3","ContactNumber":"0155566778","MenuItems":[{"Item":"Tacos","Price":7.00},{"Item":"Burritos","Price":9.00}],"OrderHistory":[{"OrderID":"Order7","Status":"Accepted"}],"Revenue":3000}
+    {"VendorID":1,"VendorName":"Stall A","FoodCourtName":"Food Court 1","ContactNumber":"0123456789","Username":"stallA","Password":"pass1234","Status":true,"DateRegistered":"2023-01-10"}
+    {"VendorID":2,"VendorName":"Stall B","FoodCourtName":"Food Court 1","ContactNumber":"0987654321","Username":"stallB","Password":"pass5678","Status":true,"DateRegistered":"2023-02-15"}
+    {"VendorID":3,"VendorName":"Stall C","FoodCourtName":"Food Court 2","ContactNumber":"0121122334","Username":"stallC","Password":"pass91011","Status":false,"DateRegistered":"2023-03-20"}
+    {"VendorID":4,"VendorName":"Stall D","FoodCourtName":"Food Court 3","ContactNumber":"0155566778","Username":"stallD","Password":"pass1213","Status":true,"DateRegistered":"2023-04-05"}
 ]
