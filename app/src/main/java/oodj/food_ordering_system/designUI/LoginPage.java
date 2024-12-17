@@ -4,28 +4,22 @@ import oodj.food_ordering_system.models.Manager;
 import oodj.food_ordering_system.models.Admin;
 import oodj.food_ordering_system.utils.DialogBox;
 import oodj.food_ordering_system.models.Customer;
+import oodj.food_ordering_system.models.DeliveryRunner;
+import oodj.food_ordering_system.models.Vendor;
 import java.util.ArrayList;
 import oodj.food_ordering_system.utils.UserHandling;
 
 public class LoginPage extends javax.swing.JFrame {
 
-    private static Manager endUserSa;
+    private static Manager endUserMa;
 
-    public static Manager getEndUserSa() {
-        return endUserSa;
-    }
+    private static DeliveryRunner endUserDr;
 
-    public static void setEndUserSa(Manager endUserSa) {
-        LoginPage.endUserSa = endUserSa;
-    }
+    private static Vendor endUserVD;
 
     private static Customer endUser;
     //private static CarRS carRS;
     private static Admin endUserAd;
-
-    public static String adminID = "";
-
-    public static String managerID = "";
 
     public static String loginID = "";
 
@@ -53,7 +47,9 @@ public class LoginPage extends javax.swing.JFrame {
         ArrayList<Manager> managers = UserHandling.getManagers();
         for (Manager manager : managers) {
             if (username.equals(manager.getUsername()) && password.equals(manager.getPassword())) {
-                endUserSa = manager;
+                loginID = manager.getID();
+                endUserMa = manager;
+                System.out.println(loginID);
                 return 1;
             }
         }
@@ -63,8 +59,9 @@ public class LoginPage extends javax.swing.JFrame {
 
         for (Admin admin : admins) {
             if (username.equals(admin.getUsername()) && password.equals(admin.getPassword())) {
-                adminID = admin.getID();
+                loginID = admin.getID();
                 endUserAd = admin;
+                System.out.println(loginID);
                 return 2;
 
             }
@@ -76,7 +73,30 @@ public class LoginPage extends javax.swing.JFrame {
             if (username.equals(customer.getUsername()) && password.equals(customer.getPassword())) {
                 loginID = customer.getID();
                 endUser = customer;
+                System.out.println(loginID);
                 return 3;
+            }
+        }
+
+        ArrayList<DeliveryRunner> deliver = UserHandling.getDeliveries();
+
+        for (DeliveryRunner delivery : deliver) {
+            if (username.equals(delivery.getUsername()) && password.equals(delivery.getPassword())) {
+                loginID = delivery.getID();
+                endUserDr = delivery;
+                System.out.println(loginID);
+                return 4;
+            }
+        }
+
+        ArrayList<Vendor> vendors = UserHandling.getVendors();
+
+        for (Vendor vendor : vendors) {
+            if (username.equals(vendor.getUsername()) && password.equals(vendor.getPassword())) {
+                loginID = vendor.getID();
+                endUserVD = vendor;
+                System.out.println(loginID);
+                return 5;
             }
         }
 
@@ -97,6 +117,7 @@ public class LoginPage extends javax.swing.JFrame {
                     //setVisible(false);
                     // CarAD = new CarAD();
                     // CarAD.setVisible(true);
+                    // TODO Develop Manager Main Menu
                     System.out.println("Manager: "+username+" Logged In");
                     break;
                 case 2:
@@ -104,6 +125,7 @@ public class LoginPage extends javax.swing.JFrame {
                     //setVisible(false);
                     // CarAD = new CarAD();
                     // CarAD.setVisible(true);
+                    // TODO Develop Admin Main Menu
                     System.out.println("Admin: "+username+" Logged In");
                     break;
                 case 3:
@@ -111,7 +133,20 @@ public class LoginPage extends javax.swing.JFrame {
                     //setVisible(false);
                     // carRS = new CarRS();
                     // carRS.setVisible(true); 
+                    // TODO Develop Customer Main Menu
                     System.out.println("Customer: "+username+" Logged In");
+                    break;
+                case 4:
+                    DialogBox.successMessage("Welcome back, " + username + "!", "Delivery Runner Login Success!");
+                    //setVisible(false);
+                    //TODO Develop Delivery Runner Main Menu
+                    System.out.println("Delivery Runner: "+username+" Logged In");
+                    break;
+                case 5:
+                    DialogBox.successMessage("Welcome back, " + username + "!", "Vendor Login Success!");
+                    //setVisible(false);
+                    //TODO Develop Vendor Main Menu
+                    System.out.println("Vendor: "+username+" Logged In");
                     break;
                 default:
                     DialogBox.errorMessage("Invalid user, please try again", "No user found!");
@@ -138,14 +173,22 @@ public class LoginPage extends javax.swing.JFrame {
     public static Admin getEndUserAd() {
         return endUserAd;
     }
-    
-    
 
+    public static Manager getEndUserMa() {
+        return endUserMa;
+    }
+
+    public static DeliveryRunner getEndUserDr() {
+        return endUserDr;
+    }
+
+    public static Vendor getEndUserVD() {
+        return endUserVD;
+    }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
-        jScrollBar1 = new javax.swing.JScrollBar();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
@@ -177,7 +220,7 @@ public class LoginPage extends javax.swing.JFrame {
         jPanel1.setPreferredSize(new java.awt.Dimension(450, 600));
         jPanel1.setLayout(new java.awt.GridLayout(1, 0));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/dining_table.jpg"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/food_mobile.jpg"))); // NOI18N
         jLabel1.setMaximumSize(new java.awt.Dimension(450, 600));
         jLabel1.setMinimumSize(new java.awt.Dimension(450, 600));
         jLabel1.setPreferredSize(new java.awt.Dimension(450, 600));
@@ -326,9 +369,9 @@ public class LoginPage extends javax.swing.JFrame {
         loginButton.setText("Login");
         loginButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.black, new java.awt.Color(27, 28, 30), java.awt.Color.black, java.awt.Color.black));
         loginButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        loginButton.setMaximumSize(new java.awt.Dimension(180, 45));
-        loginButton.setMinimumSize(new java.awt.Dimension(180, 45));
-        loginButton.setPreferredSize(new java.awt.Dimension(180, 45));
+        loginButton.setMaximumSize(new java.awt.Dimension(230, 45));
+        loginButton.setMinimumSize(new java.awt.Dimension(230, 45));
+        loginButton.setPreferredSize(new java.awt.Dimension(230, 45));
         loginButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 loginButtonMouseClicked(evt);
@@ -351,17 +394,17 @@ public class LoginPage extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(245, 251, 254));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Do not have an account?");
+        jLabel2.setText("New Customer?");
         jLabel2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jLabel2.setMaximumSize(new java.awt.Dimension(190, 50));
-        jLabel2.setMinimumSize(new java.awt.Dimension(190, 50));
-        jLabel2.setPreferredSize(new java.awt.Dimension(190, 50));
+        jLabel2.setMaximumSize(new java.awt.Dimension(120, 50));
+        jLabel2.setMinimumSize(new java.awt.Dimension(120, 50));
+        jLabel2.setPreferredSize(new java.awt.Dimension(120, 50));
         jPanel9.add(jLabel2);
 
         signUpButton.setBackground(new java.awt.Color(31, 31, 31));
         signUpButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         signUpButton.setForeground(new java.awt.Color(255, 169, 140));
-        signUpButton.setText("Go to Sign Up");
+        signUpButton.setText("Sign Up Here!");
         signUpButton.setBorder(null);
         signUpButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -376,24 +419,24 @@ public class LoginPage extends javax.swing.JFrame {
 
         pack();
         setLocationRelativeTo(null);
+        getRootPane().setDefaultButton(loginButton);
     }// </editor-fold>                        
 
     private void usernameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                  
-        // TODO add your handling code here:
     }                                                 
 
     private void loginButtonMouseClicked(java.awt.event.MouseEvent evt) {                                         
         checkUserExists();
-    }                                        
+    }                
 
     private void signUpButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
         dispose();
-        // new RegisterPage().setVisible(true);
-        DialogBox.successMessage("Register Page is not available yet", "Reminder");
+        new RegisterPage().setVisible(true);
+        // DialogBox.successMessage("Register Page is not available yet", "Reminder");
     }                                            
 
-    private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        // TODO add your handling code here:
+    private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {     
+        checkUserExists();                                       
     }                                           
 
     private void loginButtonKeyPressed(java.awt.event.KeyEvent evt) {                                       
@@ -401,10 +444,8 @@ public class LoginPage extends javax.swing.JFrame {
     }                                      
 
     public static void main(String args[]) {
-
-        java.awt.EventQueue.invokeLater(() -> {
+        javax.swing.SwingUtilities.invokeLater(() -> {
             new LoginPage().setVisible(true);
-
         });
     }
 
@@ -422,7 +463,6 @@ public class LoginPage extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
-    private javax.swing.JScrollBar jScrollBar1;
     private javax.swing.JButton loginButton;
     private javax.swing.JLabel passwordLabel;
     private javax.swing.JButton signUpButton;

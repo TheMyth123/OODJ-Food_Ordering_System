@@ -1,9 +1,9 @@
 package oodj.food_ordering_system.models;
 
-public class Customer extends User{
-    private String ID, name, gender, DOB, contactnumber, email, address;    
+public class DeliveryRunner extends User{
+    private String ID, name, gender, DOB, contactnumber, email, vehicle, license;    
     private Boolean status;
-    public Customer(String ID, String username, String name, String contactnumber, String password, String gender,String DOB, String email, String address, Boolean status){
+    public DeliveryRunner(String ID, String username, String name, String contactnumber, String password, String gender,String DOB, String email, String vehicle, String license, Boolean status){
         super(username, password);
         this.ID = ID;
         this.name = name;
@@ -11,7 +11,8 @@ public class Customer extends User{
         this.DOB = DOB;
         this.contactnumber = contactnumber;
         this.email = email;
-        this.address = address;
+        this.vehicle = vehicle;
+        this.license = license;
         this.status = status;
     }
     
@@ -63,12 +64,20 @@ public class Customer extends User{
         this.email = email;
     }
 
-    public String getAddress() {
-        return address;
+    public String getVehicle() {
+        return vehicle;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setVehicle(String vehicle) {
+        this.vehicle = vehicle;
+    }
+
+    public String getLicense() {
+        return license;
+    }
+
+    public void setLicense(String license) {
+        this.license = license;
     }
     
     public Boolean getStatus(){

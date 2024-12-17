@@ -1,14 +1,12 @@
 package oodj.food_ordering_system.utils;
 
 
-import static oodj.food_ordering_system.designUI.LoginPage.adminID;
-import static oodj.food_ordering_system.designUI.LoginPage.managerID;
+import static oodj.food_ordering_system.designUI.LoginPage.loginID;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +15,8 @@ import java.util.stream.Collectors;
 import oodj.food_ordering_system.models.Admin;
 import oodj.food_ordering_system.models.Customer;
 import oodj.food_ordering_system.models.Manager;
+import oodj.food_ordering_system.models.DeliveryRunner;
+import oodj.food_ordering_system.models.Vendor;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 
@@ -25,6 +25,8 @@ public class UserHandling {
     private static final String ADMIN = FileHandling.filePath.ADMIN_PATH.getValue();
     private static final String CUSTOMER = FileHandling.filePath.CUSTOMER_PATH.getValue();
     private static final String MANAGER = FileHandling.filePath.MANAGER_PATH.getValue();
+    private static final String DELIVERY = FileHandling.filePath.DELIVERY_PATH.getValue();
+    private static final String VENDOR = FileHandling.filePath.VENDOR_PATH.getValue();
 
 
     public static int getCUid() {
@@ -88,6 +90,48 @@ public class UserHandling {
             }
         } catch (Exception e) {
             DialogBox.errorMessage("Error reading or parsing manager JSON file: " + e.getMessage(), "Error");
+        }
+    
+        return tempCount;
+    }
+
+    public static int getDRId() {
+        int tempCount = 0;
+
+        try {
+            String jsonData = new String(Files.readAllBytes(Paths.get(DELIVERY)));
+            JSONArray deliveriesArray = new JSONArray(jsonData);
+    
+            for (int i = 0; i < deliveriesArray.length(); i++) {
+                JSONObject deliveryData = deliveriesArray.getJSONObject(i);
+                String deliveryID = deliveryData.getString("RunnerID");
+                if (deliveryID.contains("DR")) {
+                    tempCount++;
+                }
+            }
+        } catch (Exception e) {
+            DialogBox.errorMessage("Error reading or parsing delivery JSON file: " + e.getMessage(), "Error");
+        }
+    
+        return tempCount;
+    }
+
+    public static int getVId() {
+        int tempCount = 0;
+
+        try {
+            String jsonData = new String(Files.readAllBytes(Paths.get(VENDOR)));
+            JSONArray vendorsArray = new JSONArray(jsonData);
+    
+            for (int i = 0; i < vendorsArray.length(); i++) {
+                JSONObject vendorData = vendorsArray.getJSONObject(i);
+                String vendorID = vendorData.getString("VendorID");
+                if (vendorID.contains("VN")) {
+                    tempCount++;
+                }
+            }
+        } catch (Exception e) {
+            DialogBox.errorMessage("Error reading or parsing vendor JSON file: " + e.getMessage(), "Error");
         }
     
         return tempCount;
@@ -168,9 +212,10 @@ public class UserHandling {
                     String gender = customerData.getString("Gender");
                     String dob = customerData.getString("DOB");
                     String email = customerData.getString("Email");
+                    String address = customerData.getString("Address");
                     Boolean status = customerData.getBoolean("Status");
     
-                    Customer customer = new Customer(customerID, username, name, phone, password, gender, dob, email, status);
+                    Customer customer = new Customer(customerID, username, name, phone, password, gender, dob, email, address, status);
                     buffer.add(customer);
                 } else {
                     System.out.println("Invalid CustomerID: " + customerID);
@@ -252,6 +297,82 @@ public class UserHandling {
         return buffer;
     }
     
+    public static ArrayList<DeliveryRunner> getDeliveries() {
+        ArrayList<DeliveryRunner> buffer = new ArrayList<>();
+    
+        try {
+            String jsonData = new String(Files.readAllBytes(Paths.get(DELIVERY)));
+            JSONArray deliveriesArray = new JSONArray(jsonData);
+
+            for (int i = 0; i < deliveriesArray.length(); i++) {
+                JSONObject deliveryData = deliveriesArray.getJSONObject(i);
+    
+                String runnerID = deliveryData.getString("RunnerID");
+                if (runnerID.startsWith("DR")) {
+                    String username = deliveryData.getString("Username");
+                    String name = deliveryData.getString("Name");
+                    String phone = deliveryData.getString("Phone");
+                    String password = deliveryData.getString("Password");
+                    String gender = deliveryData.getString("Gender");
+                    String dob = deliveryData.getString("DOB");
+                    String email = deliveryData.getString("Email");
+                    String vehicle = deliveryData.getString("VehicleType");
+                    String license = deliveryData.getString("LicensePlate");
+                    Boolean status = deliveryData.getBoolean("Status");
+    
+                    DeliveryRunner delivery = new DeliveryRunner(runnerID, username, name, phone, password, gender, dob, email, vehicle, license, status);
+                    buffer.add(delivery);
+                } else {
+                    System.out.println("Invalid DeliveryID: " + runnerID);
+    
+                    DialogBox.errorMessage("Invalid data or format for delivery: " + runnerID, "Error");
+                }
+            }
+    
+        } catch (Exception e) {
+            DialogBox.errorMessage("Error reading or parsing delivery JSON file: " + e.getMessage(), "Error");
+        }
+    
+        return buffer;
+    }
+
+    public static ArrayList<Vendor> getVendors() {
+        ArrayList<Vendor> buffer = new ArrayList<>();
+    
+        try {
+            String jsonData = new String(Files.readAllBytes(Paths.get(VENDOR)));
+            JSONArray vendorsArray = new JSONArray(jsonData);
+
+            for (int i = 0; i < vendorsArray.length(); i++) {
+                JSONObject vendorData = vendorsArray.getJSONObject(i);
+    
+                String vendorID = vendorData.getString("VendorID");
+                if (vendorID.startsWith("VD")) {
+                    String username = vendorData.getString("Username");
+                    String name = vendorData.getString("VendorName");
+                    String phone = vendorData.getString("ContactNumber");
+                    String password = vendorData.getString("Password");
+                    Boolean status = vendorData.getBoolean("Status");
+                    String foodcourtname = vendorData.getString("FoodCourtName");
+                    String DOB = vendorData.getString("DateRegistered");
+                    String email = vendorData.getString("Email");
+    
+                    Vendor vendor = new Vendor(vendorID, name, foodcourtname, phone, username, password, status, DOB, email);
+                    buffer.add(vendor);
+                } else {
+                    System.out.println("Invalid VendorID: " + vendorID);
+    
+                    DialogBox.errorMessage("Invalid data or format for vendor: " + vendorID, "Error");
+                }
+            }
+    
+        } catch (Exception e) {
+            DialogBox.errorMessage("Error reading or parsing vendor JSON file: " + e.getMessage(), "Error");
+        }
+    
+        return buffer;
+    }
+    
 
     public static ArrayList<String> getUsernames() {
         ArrayList<String> usernames = new ArrayList<>();
@@ -268,7 +389,41 @@ public class UserHandling {
             usernames.add(customer.getUsername());
         }
 
+        for (DeliveryRunner delivery : getDeliveries()) {
+            usernames.add(delivery.getUsername());
+        }
+
+        for (Vendor vendor : getVendors()) {
+            usernames.add(vendor.getUsername());
+        }
+
         return usernames;
+    }
+
+    public static ArrayList<String> getEmails() {
+        ArrayList<String> emails = new ArrayList<>();
+
+        for (Manager manager : getManagers()) {
+            emails.add(manager.getEmail());
+        }
+
+        for (Admin admin : getAdmins()) {
+            emails.add(admin.getEmail());
+        }
+
+        for (Customer customer : getCustomers()) {
+            emails.add(customer.getEmail());
+        }
+
+        for (DeliveryRunner delivery : getDeliveries()) {
+            emails.add(delivery.getEmail());
+        }
+
+        for (Vendor vendor : getVendors()) {
+            emails.add(vendor.getEmail());
+        }
+
+        return emails;
     }
 
     public static String getName() {
@@ -292,18 +447,27 @@ public class UserHandling {
     
 
     public static String getUserRole() {
-
-        if (managerID != null) {
-            return "manager";
-        } else if (adminID != null) {
-            return "admin";
+        if (loginID == null) {
+            return "Error";
         }
-                return null;
+
+        if (loginID.startsWith("AD")) {
+            return "Admin";
+        } else if (loginID.startsWith("CS")) {
+            return "Customer";
+        } else if (loginID.startsWith("MG")) {
+            return "Manager";
+        } else if (loginID.startsWith("DR")) {
+            return "Delivery Runner";
+        } else if (loginID.startsWith("VD")) {
+            return "Vendor";
+        }
+
+        return "Guest";
     }
 
     public static void logout() {
-        managerID = null;
-        adminID = null;
+        loginID = null;
     }
 
 
@@ -323,6 +487,27 @@ public class UserHandling {
         ArrayList<Customer> customers = getCustomers();
         return customers.stream()
                 .filter(customer -> customer.getID().contains(query) || customer.getUsername().contains(query))
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public static ArrayList<DeliveryRunner> searchDeliveries(String query) {
+        ArrayList<DeliveryRunner> deliveries = getDeliveries();
+        return deliveries.stream()
+                .filter(delivery -> delivery.getID().contains(query) || delivery.getUsername().contains(query))
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+    
+    public static ArrayList<Manager> searchManagers(String query) {
+        ArrayList<Manager> managers = getManagers();
+        return managers.stream()
+                .filter(manager -> manager.getID().contains(query) || manager.getUsername().contains(query))
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public static ArrayList<Vendor> searchVendors(String query) {
+        ArrayList<Vendor> vendors = getVendors();
+        return vendors.stream()
+                .filter(vendor -> vendor.getID().contains(query) || vendor.getUsername().contains(query))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 }

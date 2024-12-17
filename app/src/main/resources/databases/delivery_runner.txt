@@ -1,0 +1,8 @@
+[
+  {"RunnerID": "DR00001", "Username": "runner1", "Name": "Alex Tan", "Phone": "017-9876543", "Password": "r12345", "Gender": "Male", "DOB": "10/January/1995", "Email": "alex.tan@gmail.com", "VehicleType": "Motorcycle", "LicensePlate": "WXY1234", "Status": "True"},
+  {"RunnerID": "DR00002", "Username": "runner2", "Name": "Siti Aminah", "Phone": "018-1234567", "Password": "r67890", "Gender": "Female", "DOB": "25/July/1998", "Email": "siti.aminah@gmail.com", "VehicleType": "Car", "LicensePlate": "ABC5678", "Status": "True"},
+  {"RunnerID": "DR00003", "Username": "runner3", "Name": "John Lee", "Phone": "016-5554443", "Password": "r99999", "Gender": "Male", "DOB": "12/March/1990", "Email": "john.lee@gmail.com", "VehicleType": "Motorcycle", "LicensePlate": "JKL4567", "Status": "True"},
+  {"RunnerID": "DR00004", "Username": "runner4", "Name": "Alicia Wong", "Phone": "012-7778889", "Password": "r54321", "Gender": "Female", "DOB": "5/November/1994", "Email": "alicia.wong@gmail.com", "VehicleType": "Motorcycle", "LicensePlate": "JKL3333", "Status": "True"},
+  {"RunnerID": "DR00005", "Username": "runner5", "Name": "Hassan Ali", "Phone": "019-6667778", "Password": "r11111", "Gender": "Male", "DOB": "20/December/1992", "Email": "hassan.ali@gmail.com", "VehicleType": "Car", "LicensePlate": "XYZ9999", "Status": "False"},
+  {"RunnerID": "DR00006", "Username": "runner6", "Name": "Ahmad Bakar", "Phone": "013-2223344", "Password": "r22222", "Gender": "Male", "DOB": "15/April/1996", "Email": "ahmad.bakar@gmail.com", "VehicleType": "Motorcycle", "LicensePlate": "MNB5678", "Status": "True"}
+]   

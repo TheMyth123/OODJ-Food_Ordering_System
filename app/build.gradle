@@ -26,6 +26,7 @@ dependencies {
 
     implementation 'org.jfree:jfreechart:1.5.3'
     implementation 'org.json:json:20210307'
+    implementation group: 'com.toedter', name: 'jcalendar', version: '1.4'
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

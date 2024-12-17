@@ -1,18 +1,17 @@
 package oodj.food_ordering_system.models;
 
-public class Customer extends User{
-    private String ID, name, gender, DOB, contactnumber, email, address;    
+public class Vendor extends User{
+    private String ID, name, foodcourtname, DOB, contactnumber, email;    
     private Boolean status;
-    public Customer(String ID, String username, String name, String contactnumber, String password, String gender,String DOB, String email, String address, Boolean status){
+    public Vendor(String ID, String name, String foodcourtname, String contactnumber, String username, String password, Boolean status, String DOB, String email){
         super(username, password);
         this.ID = ID;
         this.name = name;
-        this.gender = gender;
         this.DOB = DOB;
         this.contactnumber = contactnumber;
-        this.email = email;
-        this.address = address;
+        this.foodcourtname = foodcourtname;
         this.status = status;
+        this.email = email;
     }
     
     public String getID() {
@@ -31,14 +30,6 @@ public class Customer extends User{
         this.name = name;
     }
     
-    public String getGender() {
-        return gender;
-    }
-    
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-    
     public String getDOB() {
         return DOB;
     }
@@ -54,21 +45,21 @@ public class Customer extends User{
     public void setContactnumber(String contactnumber) {
         this.contactnumber = contactnumber;
     }  
+
+    public String getFoodCourtName(){
+        return foodcourtname;
+    }
     
-    public String getEmail() {
+    public void setFoodCourtName(String foodcourtname){
+        this.foodcourtname = foodcourtname;
+    }
+
+    public String getEmail(){
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(String email){
         this.email = email;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
     
     public Boolean getStatus(){
