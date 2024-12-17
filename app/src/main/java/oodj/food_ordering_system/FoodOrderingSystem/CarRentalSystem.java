@@ -28,8 +28,9 @@ public class CarRentalSystem {
         File managerFile = new File("app\\\\src\\\\main\\\\resources\\\\databases\\\\manager.txt");
         File adminFile = new File("app\\src\\main\\resources\\databases\\admin.txt");
         File customerFile = new File("app\\\\src\\\\main\\\\resources\\\\databases\\\\customer.txt");
+        File vendorFile = new File("app\\\\src\\\\main\\\\resources\\\\databases\\\\vendor.txt");
 
-        if (!managerFile.exists() || !adminFile.exists() || !customerFile.exists()) {
+        if (!managerFile.exists() || !adminFile.exists() || !customerFile.exists() || !vendorFile.exists()) {
             if (!managerFile.exists()) {
                 managerFile.createNewFile();
             }
@@ -38,6 +39,9 @@ public class CarRentalSystem {
             }
             if (!customerFile.exists()) {
                 customerFile.createNewFile();
+            }
+            if (!vendorFile.exists()) {
+                vendorFile.createNewFile();
             }
             return true;
         }
