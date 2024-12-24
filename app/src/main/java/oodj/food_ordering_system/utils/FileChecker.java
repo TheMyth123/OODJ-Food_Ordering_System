@@ -12,9 +12,10 @@ public class FileChecker {
         File customerFile = new File("app\\\\src\\\\main\\\\resources\\\\databases\\\\customer.txt");
         File deliveryFile = new File("app\\\\src\\\\main\\\\resources\\\\databases\\\\delivery_runner.txt");
         File vendorFile = new File("app\\\\src\\\\main\\\\resources\\\\databases\\\\vendor.txt");
+        File notificationFile = new File("app\\\\src\\\\main\\\\resources\\\\databases\\\\notification.txt");
         // TODO : ADD EVERY DATABASE FILE HERE
 
-        if (!managerFile.exists() || !adminFile.exists() || !customerFile.exists() || !deliveryFile.exists() || !vendorFile.exists()) {
+        if (!managerFile.exists() || !adminFile.exists() || !customerFile.exists() || !deliveryFile.exists() || !vendorFile.exists() || !notificationFile.exists()) {
             if (!managerFile.exists()) {
                 managerFile.createNewFile();
                 writeEmptyJsonArray(managerFile);
@@ -39,6 +40,11 @@ public class FileChecker {
                 vendorFile.createNewFile();
                 writeEmptyJsonArray(vendorFile);
                 System.out.println("Vendor file created successfully");
+            }
+            if (!notificationFile.exists()) {
+                notificationFile.createNewFile();
+                writeEmptyJsonArray(notificationFile);
+                System.out.println("Notification file created successfully");
             }
             return true;
         }

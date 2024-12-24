@@ -11,6 +11,9 @@ plugins {
 }
 
 repositories {
+    flatDir{
+        dirs('libs')
+    }
     // Use Maven Central for resolving dependencies.
     mavenCentral()
 }
@@ -26,6 +29,9 @@ dependencies {
 
     implementation 'org.jfree:jfreechart:1.5.3'
     implementation 'org.json:json:20210307'
+    implementation name: 'glasspane-popup', ext: 'jar'
+    implementation name: 'miglayout-4.0', ext: 'jar'
+    implementation name: 'TimingFramework-0.55', ext: 'jar'
     implementation group: 'com.toedter', name: 'jcalendar', version: '1.4'
 }
 
@@ -44,4 +50,8 @@ application {
 tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
+}
+
+jar {
+    from fileTree(dir: 'libs', include: '*.jar')
 }

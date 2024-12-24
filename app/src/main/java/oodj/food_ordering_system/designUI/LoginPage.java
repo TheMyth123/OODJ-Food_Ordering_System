@@ -49,7 +49,6 @@ public class LoginPage extends javax.swing.JFrame {
             if (username.equals(manager.getUsername()) && password.equals(manager.getPassword())) {
                 loginID = manager.getID();
                 endUserMa = manager;
-                System.out.println(loginID);
                 return 1;
             }
         }
@@ -61,7 +60,6 @@ public class LoginPage extends javax.swing.JFrame {
             if (username.equals(admin.getUsername()) && password.equals(admin.getPassword())) {
                 loginID = admin.getID();
                 endUserAd = admin;
-                System.out.println(loginID);
                 return 2;
 
             }
@@ -73,7 +71,6 @@ public class LoginPage extends javax.swing.JFrame {
             if (username.equals(customer.getUsername()) && password.equals(customer.getPassword())) {
                 loginID = customer.getID();
                 endUser = customer;
-                System.out.println(loginID);
                 return 3;
             }
         }
@@ -84,7 +81,6 @@ public class LoginPage extends javax.swing.JFrame {
             if (username.equals(delivery.getUsername()) && password.equals(delivery.getPassword())) {
                 loginID = delivery.getID();
                 endUserDr = delivery;
-                System.out.println(loginID);
                 return 4;
             }
         }
@@ -95,7 +91,6 @@ public class LoginPage extends javax.swing.JFrame {
             if (username.equals(vendor.getUsername()) && password.equals(vendor.getPassword())) {
                 loginID = vendor.getID();
                 endUserVD = vendor;
-                System.out.println(loginID);
                 return 5;
             }
         }
@@ -113,7 +108,6 @@ public class LoginPage extends javax.swing.JFrame {
         } else {
             switch (defineUser(username, password)) {
                 case 1:
-                    DialogBox.successMessage("Welcome back, " + username + "!", "Manager Login Success!");
                     //setVisible(false);
                     // CarAD = new CarAD();
                     // CarAD.setVisible(true);
@@ -121,15 +115,12 @@ public class LoginPage extends javax.swing.JFrame {
                     System.out.println("Manager: "+username+" Logged In");
                     break;
                 case 2:
-                    DialogBox.successMessage("Welcome back, " + username + "!", "Admin Login Success!");
-                    //setVisible(false);
-                    // CarAD = new CarAD();
-                    // CarAD.setVisible(true);
                     // TODO Develop Admin Main Menu
+                    // setVisible(false);
+                    // new MenuTemplate().setVisible(true);
                     System.out.println("Admin: "+username+" Logged In");
                     break;
                 case 3:
-                    DialogBox.successMessage("Welcome back, " + username + "!", "Customer Login Success!");
                     //setVisible(false);
                     // carRS = new CarRS();
                     // carRS.setVisible(true); 
@@ -137,13 +128,11 @@ public class LoginPage extends javax.swing.JFrame {
                     System.out.println("Customer: "+username+" Logged In");
                     break;
                 case 4:
-                    DialogBox.successMessage("Welcome back, " + username + "!", "Delivery Runner Login Success!");
                     //setVisible(false);
                     //TODO Develop Delivery Runner Main Menu
                     System.out.println("Delivery Runner: "+username+" Logged In");
                     break;
                 case 5:
-                    DialogBox.successMessage("Welcome back, " + username + "!", "Vendor Login Success!");
                     //setVisible(false);
                     //TODO Develop Vendor Main Menu
                     System.out.println("Vendor: "+username+" Logged In");
