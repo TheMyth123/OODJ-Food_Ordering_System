@@ -1,0 +1,37 @@
+[
+    {
+        "id": "RS00001",
+        "name": "The Gourmet Kitchen",
+        "description": "Fine dining with global flavors",
+        "location": "Downtown",
+        "rating": 4.5
+    },
+    {
+        "id": "RS00002",
+        "name": "Pasta Palace",
+        "description": "Authentic Italian pasta dishes",
+        "location": "Midtown",
+        "rating": 4.2
+    },
+    {
+        "id": "RS00003",
+        "name": "Sushi World",
+        "description": "Fresh sushi and sashimi",
+        "location": "Uptown",
+        "rating": 4.8
+    },
+    {
+        "id": "RS00004",
+        "name": "Burger Barn",
+        "description": "Classic burgers and fries",
+        "location": "Suburbs",
+        "rating": 4.0
+    },
+    {
+        "id": "RS00005",
+        "name": "Taco Haven",
+        "description": "Mexican street food and tacos",
+        "location": "City Center",
+        "rating": 4.3
+    }
+]

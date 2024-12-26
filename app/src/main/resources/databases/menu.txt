@@ -1,0 +1,137 @@
+[
+    {
+        "id": "MN00001",
+        "restaurantId": "RS00001",
+        "name": "Seared Salmon",
+        "description": "Pan-seared salmon with lemon butter sauce",
+        "weight": "300g",
+        "price": "$25",
+        "imagePath": "images/seared_salmon.jpg"
+    },
+    {
+        "id": "MN00002",
+        "restaurantId": "RS00001",
+        "name": "Filet Mignon",
+        "description": "Tender beef filet with red wine reduction",
+        "weight": "250g",
+        "price": "$35",
+        "imagePath": "images/filet_mignon.jpg"
+    },
+    {
+        "id": "MN00003",
+        "restaurantId": "RS00001",
+        "name": "Truffle Risotto",
+        "description": "Creamy risotto with truffle essence",
+        "weight": "200g",
+        "price": "$20",
+        "imagePath": "images/truffle_risotto.jpg"
+    },
+    {
+        "id": "MN00004",
+        "restaurantId": "RS00002",
+        "name": "Spaghetti Carbonara",
+        "description": "Classic Italian pasta with pancetta",
+        "weight": "350g",
+        "price": "$18",
+        "imagePath": "images/spaghetti_carbonara.jpg"
+    },
+    {
+        "id": "MN00005",
+        "restaurantId": "RS00002",
+        "name": "Lasagna",
+        "description": "Layered pasta with meat and cheese",
+        "weight": "400g",
+        "price": "$22",
+        "imagePath": "images/lasagna.jpg"
+    },
+    {
+        "id": "MN00006",
+        "restaurantId": "RS00002",
+        "name": "Penne Arrabbiata",
+        "description": "Pasta in a spicy tomato sauce",
+        "weight": "300g",
+        "price": "$15",
+        "imagePath": "images/penne_arrabbiata.jpg"
+    },
+    {
+        "id": "MN00007",
+        "restaurantId": "RS00003",
+        "name": "Salmon Nigiri",
+        "description": "Fresh salmon over vinegared rice",
+        "weight": "5 pcs",
+        "price": "$12",
+        "imagePath": "images/salmon_nigiri.jpg"
+    },
+    {
+        "id": "MN00008",
+        "restaurantId": "RS00003",
+        "name": "Dragon Roll",
+        "description": "Eel, avocado, and cucumber roll",
+        "weight": "8 pcs",
+        "price": "$18",
+        "imagePath": "images/dragon_roll.jpg"
+    },
+    {
+        "id": "MN00009",
+        "restaurantId": "RS00003",
+        "name": "Tuna Sashimi",
+        "description": "Slices of fresh tuna",
+        "weight": "10 pcs",
+        "price": "$20",
+        "imagePath": "images/tuna_sashimi.jpg"
+    },
+    {
+        "id": "MN00010",
+        "restaurantId": "RS00004",
+        "name": "Classic Cheeseburger",
+        "description": "Beef patty with cheddar cheese",
+        "weight": "250g",
+        "price": "$10",
+        "imagePath": "images/classic_cheeseburger.jpg"
+    },
+    {
+        "id": "MN00011",
+        "restaurantId": "RS00004",
+        "name": "BBQ Bacon Burger",
+        "description": "Topped with BBQ sauce and crispy bacon",
+        "weight": "300g",
+        "price": "$12",
+        "imagePath": "images/bbq_bacon_burger.jpg"
+    },
+    {
+        "id": "MN00012",
+        "restaurantId": "RS00004",
+        "name": "Veggie Burger",
+        "description": "Plant-based patty with all the fixings",
+        "weight": "250g",
+        "price": "$9",
+        "imagePath": "images/veggie_burger.jpg"
+    },
+    {
+        "id": "MN00013",
+        "restaurantId": "RS00005",
+        "name": "Carnitas Tacos",
+        "description": "Slow-cooked pork tacos with salsa",
+        "weight": "3 pcs",
+        "price": "$10",
+        "imagePath": "images/carnitas_tacos.jpg"
+    },
+    {
+        "id": "MN00014",
+        "restaurantId": "RS00005",
+        "name": "Fish Tacos",
+        "description": "Grilled fish with cabbage slaw",
+        "weight": "3 pcs",
+        "price": "$12",
+        "imagePath": "images/fish_tacos.jpg"
+    },
+    {
+        "id": "MN00015",
+        "restaurantId": "RS00005",
+        "name": "Veggie Tacos",
+        "description": "Roasted veggies with guacamole",
+        "weight": "3 pcs",
+        "price": "$9",
+        "imagePath": "images/veggie_tacos.jpg"
+    }
+]

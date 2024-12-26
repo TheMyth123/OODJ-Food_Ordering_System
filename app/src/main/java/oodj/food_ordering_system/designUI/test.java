@@ -310,7 +310,7 @@ public class test extends javax.swing.JFrame {
     private void btn_menuActionPerformed(java.awt.event.ActionEvent evt) {
         // Add your button action logic here
         setVisible(false);
-        new CusMenu().setVisible(true);
+        // new CusMenu().setVisible(true);
 
     }
 
