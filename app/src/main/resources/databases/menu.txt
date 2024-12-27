@@ -1,7 +1,7 @@
 [
     {
         "id": "MN00001",
-        "restaurantId": "RS00001",
+        "VendorID": "VD00001",
         "name": "Seared Salmon",
         "description": "Pan-seared salmon with lemon butter sauce",
         "weight": "300g",
@@ -10,7 +10,7 @@
     },
     {
         "id": "MN00002",
-        "restaurantId": "RS00001",
+        "VendorID": "VD00001",
         "name": "Filet Mignon",
         "description": "Tender beef filet with red wine reduction",
         "weight": "250g",
@@ -19,7 +19,7 @@
     },
     {
         "id": "MN00003",
-        "restaurantId": "RS00001",
+        "VendorID": "VD00001",
         "name": "Truffle Risotto",
         "description": "Creamy risotto with truffle essence",
         "weight": "200g",
@@ -28,7 +28,7 @@
     },
     {
         "id": "MN00004",
-        "restaurantId": "RS00002",
+        "VendorID": "VD00001",
         "name": "Spaghetti Carbonara",
         "description": "Classic Italian pasta with pancetta",
         "weight": "350g",
@@ -37,7 +37,7 @@
     },
     {
         "id": "MN00005",
-        "restaurantId": "RS00002",
+        "VendorID": "VD00001",
         "name": "Lasagna",
         "description": "Layered pasta with meat and cheese",
         "weight": "400g",
@@ -46,7 +46,7 @@
     },
     {
         "id": "MN00006",
-        "restaurantId": "RS00002",
+        "VendorID": "VD00002",
         "name": "Penne Arrabbiata",
         "description": "Pasta in a spicy tomato sauce",
         "weight": "300g",
@@ -55,7 +55,7 @@
     },
     {
         "id": "MN00007",
-        "restaurantId": "RS00003",
+        "VendorID": "VD00003",
         "name": "Salmon Nigiri",
         "description": "Fresh salmon over vinegared rice",
         "weight": "5 pcs",
@@ -64,7 +64,7 @@
     },
     {
         "id": "MN00008",
-        "restaurantId": "RS00003",
+        "VendorID": "VD00002",
         "name": "Dragon Roll",
         "description": "Eel, avocado, and cucumber roll",
         "weight": "8 pcs",
@@ -73,7 +73,7 @@
     },
     {
         "id": "MN00009",
-        "restaurantId": "RS00003",
+        "VendorID": "VD00001",
         "name": "Tuna Sashimi",
         "description": "Slices of fresh tuna",
         "weight": "10 pcs",
@@ -82,7 +82,7 @@
     },
     {
         "id": "MN00010",
-        "restaurantId": "RS00004",
+        "VendorID": "VD00002",
         "name": "Classic Cheeseburger",
         "description": "Beef patty with cheddar cheese",
         "weight": "250g",
@@ -91,7 +91,7 @@
     },
     {
         "id": "MN00011",
-        "restaurantId": "RS00004",
+        "VendorID": "VD00002",
         "name": "BBQ Bacon Burger",
         "description": "Topped with BBQ sauce and crispy bacon",
         "weight": "300g",
@@ -100,7 +100,7 @@
     },
     {
         "id": "MN00012",
-        "restaurantId": "RS00004",
+        "VendorID": "VD00004",
         "name": "Veggie Burger",
         "description": "Plant-based patty with all the fixings",
         "weight": "250g",
@@ -109,7 +109,7 @@
     },
     {
         "id": "MN00013",
-        "restaurantId": "RS00005",
+        "VendorID": "VD00003",
         "name": "Carnitas Tacos",
         "description": "Slow-cooked pork tacos with salsa",
         "weight": "3 pcs",
@@ -118,7 +118,7 @@
     },
     {
         "id": "MN00014",
-        "restaurantId": "RS00005",
+        "VendorID": "VD00003",
         "name": "Fish Tacos",
         "description": "Grilled fish with cabbage slaw",
         "weight": "3 pcs",
@@ -127,7 +127,7 @@
     },
     {
         "id": "MN00015",
-        "restaurantId": "RS00005",
+        "VendorID": "VD00002",
         "name": "Veggie Tacos",
         "description": "Roasted veggies with guacamole",
         "weight": "3 pcs",

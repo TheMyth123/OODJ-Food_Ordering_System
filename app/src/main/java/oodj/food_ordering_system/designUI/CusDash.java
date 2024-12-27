@@ -55,7 +55,7 @@ public class CusDash extends javax.swing.JFrame {
         margin2 = new javax.swing.JPanel();
         btn_container1 = new javax.swing.JPanel();
         btn_home = new javax.swing.JButton();
-        btn_Page2 = new javax.swing.JButton();
+        btn_history = new javax.swing.JButton();
         btn_Page3 = new javax.swing.JButton();
         btn_Page4 = new javax.swing.JButton();
         margin3 = new javax.swing.JPanel();
@@ -189,23 +189,23 @@ public class CusDash extends javax.swing.JFrame {
         });
         btn_container1.add(btn_home);
 
-        btn_Page2.setBackground(new java.awt.Color(31, 31, 31));
-        btn_Page2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_Page2.setForeground(new java.awt.Color(245, 251, 254));
-        btn_Page2.setText("Page 2");
-        btn_Page2.setBorder(null);
-        btn_Page2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_Page2.setFocusable(false);
-        btn_Page2.setMargin(new java.awt.Insets(15, 50, 15, 50));
-        btn_Page2.setMaximumSize(new java.awt.Dimension(250, 40));
-        btn_Page2.setMinimumSize(new java.awt.Dimension(250, 40));
-        btn_Page2.setPreferredSize(new java.awt.Dimension(250, 40));
-        btn_Page2.addActionListener(new java.awt.event.ActionListener() {
+        btn_history.setBackground(new java.awt.Color(31, 31, 31));
+        btn_history.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btn_history.setForeground(new java.awt.Color(245, 251, 254));
+        btn_history.setText("Order History");
+        btn_history.setBorder(null);
+        btn_history.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_history.setFocusable(false);
+        btn_history.setMargin(new java.awt.Insets(15, 50, 15, 50));
+        btn_history.setMaximumSize(new java.awt.Dimension(250, 40));
+        btn_history.setMinimumSize(new java.awt.Dimension(250, 40));
+        btn_history.setPreferredSize(new java.awt.Dimension(250, 40));
+        btn_history.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_Page2ActionPerformed(evt);
+                btn_historyActionPerformed(evt);
             }
         });
-        btn_container1.add(btn_Page2);
+        btn_container1.add(btn_history);
 
         btn_Page3.setBackground(new java.awt.Color(31, 31, 31));
         btn_Page3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -499,7 +499,7 @@ public class CusDash extends javax.swing.JFrame {
 
     }                                        
 
-    private void btn_Page2ActionPerformed(java.awt.event.ActionEvent evt) {                                            
+    private void btn_historyActionPerformed(java.awt.event.ActionEvent evt) {                                            
         //dispose();
         //TODO CALL PAGE 2
         System.out.println("Page 2");
@@ -523,7 +523,7 @@ public class CusDash extends javax.swing.JFrame {
     private javax.swing.JPanel Logo_container;
     private javax.swing.JPanel Main;
     private javax.swing.JPanel Sidebar;
-    private javax.swing.JButton btn_Page2;
+    private javax.swing.JButton btn_history;
     private javax.swing.JPanel btn_container1;
     private javax.swing.JPanel btn_container2;
     private javax.swing.JButton btn_Page3;

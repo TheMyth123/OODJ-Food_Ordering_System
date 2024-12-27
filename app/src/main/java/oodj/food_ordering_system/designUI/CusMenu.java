@@ -12,36 +12,36 @@ public class CusMenu extends javax.swing.JFrame {
     private Map<String, String[][]> restaurantMenus;
     private static String restaurantName;
     
-        public CusMenu(String restaurantName) {
-            initComponents(restaurantName);
-        }
+    public CusMenu(String restaurantName) {
+        initComponents(restaurantName);
+    }
+
     
-        
-        private void initComponents(String restaurantName) {
-            menuPanel = new JPanel();
-            menuPanel.setLayout(new BorderLayout());
-            menuPanel.setBackground(new Color(31, 31, 31));
-    
-            restaurantMenus = new HashMap<>();
-    
-            // Sample data for restaurant menus
-            restaurantMenus.put("Burger Heaven", new String[][]{
-                {"Classic Burger", "Juicy beef patty with lettuce, tomato, and cheese", "200g", ".99"},
-                {"Cheese Burger", "Beef patty with double cheese", "220g", ".99"},
-                {"Veggie Burger", "Grilled veggie patty with avocado", "180g", ".99"}
-            });
-    
-            restaurantMenus.put("Pasta Paradise", new String[][]{
-                {"Spaghetti Carbonara", "Classic Italian pasta with pancetta", "350g", ".99"},
-                {"Lasagna", "Layered pasta with meat and cheese", "400g", ".99"},
-                {"Penne Arrabbiata", "Pasta in a spicy tomato sauce", "300g", ".99"}
-            });
-    
-            restaurantMenus.put("Sushi World", new String[][]{
-                {"Salmon Sushi", "Fresh salmon on rice", "100g", ".99"},
-                {"Tuna Sushi", "Fresh tuna on rice", "100g", ".99"},
-                {"Eel Sushi", "Grilled eel on rice", "100g", ".99"}
-            });
+    private void initComponents(String restaurantName) {
+        menuPanel = new JPanel();
+        menuPanel.setLayout(new BorderLayout());
+        menuPanel.setBackground(new Color(31, 31, 31));
+
+        restaurantMenus = new HashMap<>();
+
+        // Sample data for restaurant menus
+        restaurantMenus.put("Food Court 1", new String[][]{
+            {"Classic Burger", "Juicy beef patty with lettuce, tomato, and cheese", "200g", ".99"},
+            {"Cheese Burger", "Beef patty with double cheese", "220g", ".99"},
+            {"Veggie Burger", "Grilled veggie patty with avocado", "180g", ".99"}
+        });
+
+        restaurantMenus.put("Pasta Paradise", new String[][]{
+            {"Spaghetti Carbonara", "Classic Italian pasta with pancetta", "350g", ".99"},
+            {"Lasagna", "Layered pasta with meat and cheese", "400g", ".99"},
+            {"Penne Arrabbiata", "Pasta in a spicy tomato sauce", "300g", ".99"}
+        });
+
+        restaurantMenus.put("Sushi World", new String[][]{
+            {"Salmon Sushi", "Fresh salmon on rice", "100g", ".99"},
+            {"Tuna Sushi", "Fresh tuna on rice", "100g", ".99"},
+            {"Eel Sushi", "Grilled eel on rice", "100g", ".99"}
+        });
     
         wrapper = new javax.swing.JPanel();
         back_icon = new javax.swing.JPanel();
@@ -124,7 +124,7 @@ public class CusMenu extends javax.swing.JFrame {
         title.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         title.setForeground(new java.awt.Color(255, 169, 140));
         title.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        title.setText("Pay By");
+        title.setText("Menu");
         title.setAlignmentX(0.5F);
         title.setMaximumSize(new java.awt.Dimension(694, 50));
         title.setMinimumSize(new java.awt.Dimension(694, 50));
@@ -152,37 +152,6 @@ public class CusMenu extends javax.swing.JFrame {
         wrapper.add(m3);
     
         // test
-    
-        payContainer.setBackground(new java.awt.Color(25, 25, 25));
-        payContainer.setMaximumSize(new java.awt.Dimension(800, 40));
-        payContainer.setMinimumSize(new java.awt.Dimension(800, 40));
-        payContainer.setPreferredSize(new java.awt.Dimension(800, 50));
-        payContainer.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
-    
-        payButton.setBackground(new java.awt.Color(255, 169, 140));
-        payButton.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        payButton.setForeground(new java.awt.Color(31, 31, 31));
-        payButton.setText("Pay");
-        payButton.setBorder(null);
-        payButton.setBorderPainted(false);
-        payButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        payButton.setFocusable(false);
-        payButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        payButton.setMargin(null);
-        payButton.setMaximumSize(new java.awt.Dimension(200, 40));
-        payButton.setMinimumSize(new java.awt.Dimension(200, 40));
-        payButton.setPreferredSize(new java.awt.Dimension(170, 40));
-        payButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                // payButtonActionPerformed(evt);
-            }
-        });
-        payContainer.add(payButton);
-    
-        wrapper.add(payContainer);
-    
-        
-    
         // Create a panel to display the menu items
         JPanel itemsPanel = new JPanel();
         itemsPanel.setLayout(new GridLayout(0, 1, 10, 10));
@@ -204,6 +173,38 @@ public class CusMenu extends javax.swing.JFrame {
         
         wrapper.add(menuPanel);
     
+        payContainer.setBackground(new java.awt.Color(25, 25, 25));
+        payContainer.setMaximumSize(new java.awt.Dimension(800, 40));
+        payContainer.setMinimumSize(new java.awt.Dimension(800, 40));
+        payContainer.setPreferredSize(new java.awt.Dimension(800, 50));
+        payContainer.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
+    
+        payButton.setBackground(new java.awt.Color(255, 169, 140));
+        payButton.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        payButton.setForeground(new java.awt.Color(31, 31, 31));
+        payButton.setText("Add to Cart");
+        payButton.setBorder(null);
+        payButton.setBorderPainted(false);
+        payButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        payButton.setFocusable(false);
+        payButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        payButton.setMargin(null);
+        payButton.setMaximumSize(new java.awt.Dimension(200, 40));
+        payButton.setMinimumSize(new java.awt.Dimension(200, 40));
+        payButton.setPreferredSize(new java.awt.Dimension(170, 40));
+        payButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                // payButtonActionPerformed(evt);
+            }
+        });
+        payContainer.add(payButton);
+    
+        wrapper.add(payContainer);
+    
+        
+    
+        
+    
     
         getContentPane().add(wrapper);
         wrapper.setBounds(0, 0, 800, 500);
@@ -211,13 +212,14 @@ public class CusMenu extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(800, 500));
         setLocationRelativeTo(null);
         }// </editor-fold>    
-    
-        private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {                                        
-            dispose();
-        } 
-        public static void main(String[] args) {
-            java.awt.EventQueue.invokeLater(() -> {
-                new CusMenu(restaurantName).setVisible(true); // Replace with a valid restaurant name
+
+    private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {                                        
+        dispose();
+    } 
+    public static void main(String[] args) {
+        restaurantName = "Burger Heaven"; // Initialize with a valid restaurant name
+        java.awt.EventQueue.invokeLater(() -> {
+            new CusMenu(restaurantName).setVisible(true);
         });
     }
 

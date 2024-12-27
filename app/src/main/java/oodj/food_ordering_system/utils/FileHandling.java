@@ -15,7 +15,10 @@ public class FileHandling {
         ADMIN_PATH("Admin", "app\\src\\main\\resources\\databases\\admin.txt"),
         CUSTOMER_PATH("Customer", "app\\src\\main\\resources\\databases\\customer.txt"),
         DELIVERY_PATH("Delivery", "app\\src\\main\\resources\\databases\\delivery_runner.txt"),
-        VENDOR_PATH("Vendor", "app\\src\\main\\resources\\databases\\vendor.txt");
+        VENDOR_PATH("Vendor", "app\\src\\main\\resources\\databases\\vendor.txt"),
+        RESTAURANT_PATH("Restaurant", "app\\src\\main\\resources\\databases\\restaurant.txt"),
+        MENU_PATH("Menu", "app\\src\\main\\resources\\databases\\menu.txt");
+        // ORDER_PATH("Order", "app\\src\\main\\resources\\databases\\order.txt");
         
         private final String key, value;
 
