@@ -1,7 +1,13 @@
 package oodj.food_ordering_system.designUI;
 
 import javax.swing.*;
+
+import java.awt.event.MouseEvent;
+
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,8 +17,15 @@ public class CusMenu extends javax.swing.JFrame {
     private JPanel menuPanel;
     private Map<String, String[][]> restaurantMenus;
     private static String restaurantName;
+    private List<String[]> selectedItems;
+    private List<String[]> cart;
+    private JPanel selectedItemPanel;
+
     
     public CusMenu(String restaurantName) {
+        cart = new ArrayList<>();
+        selectedItemPanel = null;
+
         initComponents(restaurantName);
     }
 
@@ -152,19 +165,39 @@ public class CusMenu extends javax.swing.JFrame {
         wrapper.add(m3);
     
         // test
-        // Create a panel to display the menu items
         JPanel itemsPanel = new JPanel();
-        itemsPanel.setLayout(new GridLayout(0, 1, 10, 10));
+        itemsPanel.setLayout(new GridLayout(0, 2, 10, 10));
         itemsPanel.setBackground(new Color(31, 31, 31));
-    
-        // Add menu items to the itemsPanel
+
         String[][] menuItems = restaurantMenus.get(restaurantName);
         if (menuItems != null) {
             for (String[] item : menuItems) {
+                JPanel itemPanel = new JPanel();
+                itemPanel.setLayout(new BorderLayout());
+                itemPanel.setBackground(new Color(43, 43, 43));
+                itemPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+                itemPanel.setPreferredSize(new Dimension(300, 100));
+
                 JLabel itemLabel = new JLabel("<html><b>" + item[0] + "</b><br>" + item[1] + "<br>Weight: " + item[2] + "<br>Price: " + item[3] + "</html>");
                 itemLabel.setForeground(new Color(255, 169, 140));
                 itemLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-                itemsPanel.add(itemLabel);
+                itemPanel.add(itemLabel, BorderLayout.CENTER);
+
+                itemPanel.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        // Deselect previously selected item
+                        if (selectedItemPanel != null) {
+                            selectedItemPanel.setBackground(new Color(43, 43, 43));
+                        }
+
+                        selectedItemPanel = itemPanel;
+                        itemPanel.setBackground(new Color(63, 63, 63));
+                    }
+                });
+
+
+                itemsPanel.add(itemPanel);
             }
         }
     
@@ -192,11 +225,12 @@ public class CusMenu extends javax.swing.JFrame {
         payButton.setMaximumSize(new java.awt.Dimension(200, 40));
         payButton.setMinimumSize(new java.awt.Dimension(200, 40));
         payButton.setPreferredSize(new java.awt.Dimension(170, 40));
-        payButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                // payButtonActionPerformed(evt);
-            }
+        payButton.addActionListener(evt -> {
+            cart.addAll(selectedItems);
+            selectedItems.clear();
+            JOptionPane.showMessageDialog(this, "Selected items added to cart.");
         });
+        payContainer.add(payButton);
         payContainer.add(payButton);
     
         wrapper.add(payContainer);

@@ -12,7 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import oodj.food_ordering_system.models.Vendor;
-import oodj.food_ordering_system.utils.FoodCourtHandling;
+import oodj.food_ordering_system.utils.UserHandling;
 
 public class CusRestaurant extends javax.swing.JFrame {
 
@@ -31,7 +31,7 @@ public class CusRestaurant extends javax.swing.JFrame {
         restaurantListPanel.setLayout(new GridLayout(0, 2, 50, 50)); // 2 columns, dynamic rows, 50px horizontal and vertical gaps
         restaurantListPanel.setBackground(new Color(31, 31, 31));
 // TODO check again what error
-        List<Vendor> vendors = FoodCourtHandling.getCourtNames();
+        List<Vendor> vendors = UserHandling.getVendors();
         for (Vendor vendor : vendors) {
             String foodCourtName = vendor.getFoodCourtName();
             JButton restaurantButton = new JButton("<html><b>" + foodCourtName + "</b><br></html>");
