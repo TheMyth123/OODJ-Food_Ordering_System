@@ -13,8 +13,8 @@ public class FileChecker {
         File deliveryFile = new File("app\\\\src\\\\main\\\\resources\\\\databases\\\\delivery_runner.txt");
         File vendorFile = new File("app\\\\src\\\\main\\\\resources\\\\databases\\\\vendor.txt");
         File notificationFile = new File("app\\\\src\\\\main\\\\resources\\\\databases\\\\notification.txt");
-        File restaurantFile = new File("app\\\\src\\\\main\\\\resources\\\\databases\\\\restaurant.txt");
         File menuFile = new File("app\\\\src\\\\main\\\\resources\\\\databases\\\\menu.txt");
+        File cartFile = new File("app\\\\src\\\\main\\\\resources\\\\databases\\\\cart.txt");
 
         // TODO : ADD EVERY DATABASE FILE HERE
 
@@ -49,15 +49,15 @@ public class FileChecker {
                 writeEmptyJsonArray(notificationFile);
                 System.out.println("Notification file created successfully");
             }
-            if (!restaurantFile.exists()) {
-                restaurantFile.createNewFile();
-                writeEmptyJsonArray(restaurantFile);
-                System.out.println("Restaurant file created successfully");
-            }
             if (!menuFile.exists()) {
                 menuFile.createNewFile();
                 writeEmptyJsonArray(menuFile);
                 System.out.println("Menu file created successfully");
+            }
+            if (!cartFile.exists()) {
+                cartFile.createNewFile();
+                writeEmptyJsonArray(cartFile);
+                System.out.println("Cart file created successfully");
             }
             return true;
         }

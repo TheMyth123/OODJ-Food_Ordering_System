@@ -1,6 +1,7 @@
 package oodj.food_ordering_system.designUI;
 
-import oodj.food_ordering_system.models.Customer;
+
+import oodj.food_ordering_system.models.Admin;
 import oodj.food_ordering_system.models.Notification;
 import oodj.food_ordering_system.utils.DialogBox;
 import oodj.food_ordering_system.utils.NotificationUtils;
@@ -8,37 +9,28 @@ import raven.glasspanepopup.*;
 
 import java.util.List;
 
-import javax.swing.JPanel;
-
-import oodj.food_ordering_system.designUI.CusFCourt;
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
 
-public class CusDash extends javax.swing.JFrame {
+public class Cart extends javax.swing.JFrame {
 
-    // public static void main(String[] args) {
-    //     java.awt.EventQueue.invokeLater(() -> {
-    //         new CusDash().setVisible(true);
-    //     });
-    // }
+    public static void main(String[] args) {
+        java.awt.EventQueue.invokeLater(() -> {
+            new MenuTemplate().setVisible(true);
+        });
+    }
 
-    public CusDash() {
+    public Cart() {
         initComponents();
         GlassPanePopup.install(this);
         loadName();
-        addRestaurantPanel();
-
     }
 
     private void loadName() {
-        Customer endUser = LoginPage.getEndUser();
-        customer_username.setText(endUser.getUsername());
-    }
-
-    private void addRestaurantPanel() {
-        CusFCourt cusRestaurant = new CusFCourt();
-        JPanel mainPanel = cusRestaurant.getMainPanel();
-        title_container1.add(mainPanel);
+        // Admin endUserAd = LoginPage.getEndUserAd();
+        // admin_username.setText(endUserAd.getUsername());
+        // TODO LOAD ADMIN USERNAME
+        admin_username.setText("Admin");
     }
 
 
@@ -52,9 +44,9 @@ public class CusDash extends javax.swing.JFrame {
         systemName = new javax.swing.JLabel();
         margin2 = new javax.swing.JPanel();
         btn_container1 = new javax.swing.JPanel();
-        btn_home = new javax.swing.JButton();
-        btn_history = new javax.swing.JButton();
-        btn_cart = new javax.swing.JButton();
+        btn_Page1 = new javax.swing.JButton();
+        btn_Page2 = new javax.swing.JButton();
+        btn_Page3 = new javax.swing.JButton();
         btn_Page4 = new javax.swing.JButton();
         margin3 = new javax.swing.JPanel();
         btn_container2 = new javax.swing.JPanel();
@@ -64,7 +56,7 @@ public class CusDash extends javax.swing.JFrame {
         title_container = new javax.swing.JPanel();
         m5 = new javax.swing.JPanel();
         welcome = new javax.swing.JLabel();
-        customer_username = new javax.swing.JLabel();
+        admin_username = new javax.swing.JLabel();
         title_container1 = new javax.swing.JPanel();
         m8 = new javax.swing.JPanel();
         welcome3 = new javax.swing.JLabel();
@@ -73,10 +65,8 @@ public class CusDash extends javax.swing.JFrame {
         m7 = new javax.swing.JPanel();
         btn_Noti = new oodj.food_ordering_system.designUI.Button();
 
-        // TODO double confirm resize
-        setResizable(false);
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Customer Menu");
+        setTitle("Admin Menu");
         setBackground(new java.awt.Color(25, 25, 25));
         setMinimumSize(new java.awt.Dimension(1300, 700));
         setSize(new java.awt.Dimension(1300, 700));
@@ -169,61 +159,59 @@ public class CusDash extends javax.swing.JFrame {
         btn_container1.setPreferredSize(new java.awt.Dimension(300, 320));
         btn_container1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 30));
 
-        btn_home.setBackground(new java.awt.Color(43, 43, 43));
-        btn_home.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btn_home.setForeground(new java.awt.Color(255, 169, 140));
-        btn_home.setText("Home");
-        btn_home.setBorder(null);
-        btn_home.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_home.setFocusable(false);
-        btn_home.setMargin(new java.awt.Insets(15, 50, 15, 50));
-        btn_home.setMaximumSize(new java.awt.Dimension(250, 40));
-        btn_home.setMinimumSize(new java.awt.Dimension(250, 40));
-        btn_home.setPreferredSize(new java.awt.Dimension(250, 40));
-        btn_home.addActionListener(new java.awt.event.ActionListener() {
+        btn_Page1.setBackground(new java.awt.Color(43, 43, 43));
+        btn_Page1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btn_Page1.setForeground(new java.awt.Color(255, 169, 140));
+        btn_Page1.setText("Page 1");
+        btn_Page1.setBorder(null);
+        btn_Page1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_Page1.setFocusable(false);
+        btn_Page1.setMargin(new java.awt.Insets(15, 50, 15, 50));
+        btn_Page1.setMaximumSize(new java.awt.Dimension(250, 40));
+        btn_Page1.setMinimumSize(new java.awt.Dimension(250, 40));
+        btn_Page1.setPreferredSize(new java.awt.Dimension(250, 40));
+        btn_Page1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_homeActionPerformed(evt);
+                btn_Page1ActionPerformed(evt);
             }
         });
-        btn_container1.add(btn_home);
+        btn_container1.add(btn_Page1);
 
-        btn_cart.setBackground(new java.awt.Color(31, 31, 31));
-        btn_cart.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_cart.setForeground(new java.awt.Color(245, 251, 254));
-        btn_cart.setText("Cart");
-        btn_cart.setBorder(null);
-        btn_cart.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_cart.setFocusable(false);
-        btn_cart.setMargin(new java.awt.Insets(15, 50, 15, 50));
-        btn_cart.setMaximumSize(new java.awt.Dimension(250, 40));
-        btn_cart.setMinimumSize(new java.awt.Dimension(250, 40));
-        btn_cart.setPreferredSize(new java.awt.Dimension(250, 40));
-        btn_cart.addActionListener(new java.awt.event.ActionListener() {
+        btn_Page2.setBackground(new java.awt.Color(31, 31, 31));
+        btn_Page2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btn_Page2.setForeground(new java.awt.Color(245, 251, 254));
+        btn_Page2.setText("Page 2");
+        btn_Page2.setBorder(null);
+        btn_Page2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_Page2.setFocusable(false);
+        btn_Page2.setMargin(new java.awt.Insets(15, 50, 15, 50));
+        btn_Page2.setMaximumSize(new java.awt.Dimension(250, 40));
+        btn_Page2.setMinimumSize(new java.awt.Dimension(250, 40));
+        btn_Page2.setPreferredSize(new java.awt.Dimension(250, 40));
+        btn_Page2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_cartActionPerformed(evt);
+                btn_Page2ActionPerformed(evt);
             }
         });
-        btn_container1.add(btn_cart);
+        btn_container1.add(btn_Page2);
 
-        btn_history.setBackground(new java.awt.Color(31, 31, 31));
-        btn_history.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_history.setForeground(new java.awt.Color(245, 251, 254));
-        btn_history.setText("Order History");
-        btn_history.setBorder(null);
-        btn_history.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_history.setFocusable(false);
-        btn_history.setMargin(new java.awt.Insets(15, 50, 15, 50));
-        btn_history.setMaximumSize(new java.awt.Dimension(250, 40));
-        btn_history.setMinimumSize(new java.awt.Dimension(250, 40));
-        btn_history.setPreferredSize(new java.awt.Dimension(250, 40));
-        btn_history.addActionListener(new java.awt.event.ActionListener() {
+        btn_Page3.setBackground(new java.awt.Color(31, 31, 31));
+        btn_Page3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btn_Page3.setForeground(new java.awt.Color(245, 251, 254));
+        btn_Page3.setText("Page 3");
+        btn_Page3.setBorder(null);
+        btn_Page3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_Page3.setFocusable(false);
+        btn_Page3.setMargin(new java.awt.Insets(15, 50, 15, 50));
+        btn_Page3.setMaximumSize(new java.awt.Dimension(250, 40));
+        btn_Page3.setMinimumSize(new java.awt.Dimension(250, 40));
+        btn_Page3.setPreferredSize(new java.awt.Dimension(250, 40));
+        btn_Page3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_historyActionPerformed(evt);
+                btn_Page3ActionPerformed(evt);
             }
         });
-        btn_container1.add(btn_history);
-
-        
+        btn_container1.add(btn_Page3);
 
         btn_Page4.setBackground(new java.awt.Color(31, 31, 31));
         btn_Page4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -353,23 +341,20 @@ public class CusDash extends javax.swing.JFrame {
         welcome.setPreferredSize(new java.awt.Dimension(50, 50));
         title_container.add(welcome);
 
-        customer_username.setBackground(new java.awt.Color(31, 31, 31));
-        customer_username.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        customer_username.setForeground(new java.awt.Color(255, 169, 140));
-        customer_username.setText("< customer_username >, ");
-        customer_username.setMaximumSize(new java.awt.Dimension(300, 50));
-        customer_username.setMinimumSize(new java.awt.Dimension(300, 50));
-        customer_username.setPreferredSize(new java.awt.Dimension(750, 50));
-        title_container.add(customer_username);
+        admin_username.setBackground(new java.awt.Color(31, 31, 31));
+        admin_username.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        admin_username.setForeground(new java.awt.Color(255, 169, 140));
+        admin_username.setText("< admin_username >, ");
+        admin_username.setMaximumSize(new java.awt.Dimension(300, 50));
+        admin_username.setMinimumSize(new java.awt.Dimension(300, 50));
+        admin_username.setPreferredSize(new java.awt.Dimension(750, 50));
+        title_container.add(admin_username);
 
         btn_Noti.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/noti.png"))); // NOI18N
         btn_Noti.setPreferredSize(new java.awt.Dimension(50, 50));
-        // TODO check again
-        btn_Noti.setFocusPainted(false);
-
         btn_Noti.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                // btn_NotiActionPerformed(evt);
+                btn_NotiActionPerformed(evt);
             }
         });
         title_container.add(btn_Noti);
@@ -377,9 +362,9 @@ public class CusDash extends javax.swing.JFrame {
         Main.add(title_container);
 
         title_container1.setBackground(new java.awt.Color(31, 31, 31));
-        title_container1.setMaximumSize(new java.awt.Dimension(1000, 700));
-        title_container1.setMinimumSize(new java.awt.Dimension(1000, 700));
-        title_container1.setPreferredSize(new java.awt.Dimension(1000, 700));
+        title_container1.setMaximumSize(new java.awt.Dimension(1000, 80));
+        title_container1.setMinimumSize(new java.awt.Dimension(1000, 80));
+        title_container1.setPreferredSize(new java.awt.Dimension(1000, 80));
         title_container1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 0));
 
         m8.setBackground(new java.awt.Color(31, 31, 31));
@@ -400,12 +385,18 @@ public class CusDash extends javax.swing.JFrame {
 
         title_container1.add(m8);
 
+        welcome3.setBackground(new java.awt.Color(31, 31, 31));
+        welcome3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        welcome3.setForeground(new java.awt.Color(245, 251, 254));
+        welcome3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        welcome3.setText("This is the default page");
+        welcome3.setAlignmentX(0.5F);
+        welcome3.setMaximumSize(new java.awt.Dimension(275, 50));
+        welcome3.setMinimumSize(new java.awt.Dimension(275, 50));
+        welcome3.setPreferredSize(new java.awt.Dimension(275, 50));
+        title_container1.add(welcome3);
 
         Main.add(title_container1);
-
-        // add the restaurant here
-
-        
 
         m6.setBackground(new java.awt.Color(31, 31, 31));
         m6.setMaximumSize(new java.awt.Dimension(60, 50));
@@ -457,35 +448,35 @@ public class CusDash extends javax.swing.JFrame {
     }// </editor-fold>    
 
     //TODO I USED ADMIN DATA TO GET NOTIFICATIONS. CHANGE TO OWN DATA
-    // List<Notification> notifications = NotificationUtils.getAdminUnreadNotifications(NotificationUtils.getAllNotifications());
+    List<Notification> notifications = NotificationUtils.getAdminUnreadNotifications(NotificationUtils.getAllNotifications());
     
-    // private void btn_NotiActionPerformed(java.awt.event.ActionEvent evt) {                                  
-    //     GlassPanePopup.showPopup(new NotificationPanel(notifications), new DefaultOption(){
-    //         @Override
-    //         public float opacity() {
-    //             return 0;
-    //         }
+    private void btn_NotiActionPerformed(java.awt.event.ActionEvent evt) {                                  
+        GlassPanePopup.showPopup(new NotificationPanel(notifications), new DefaultOption(){
+            @Override
+            public float opacity() {
+                return 0;
+            }
 
-    //         @Override
-    //         public LayoutCallback getLayoutCallBack(java.awt.Component parent) {
-    //             return new DefaultLayoutCallBack(parent){
-    //                 @Override
-    //                 public void correctBounds(ComponentWrapper cw) {
-    //                     if (parent.isVisible()){
-    //                         java.awt.Point pl = parent.getLocationOnScreen();
-    //                         java.awt.Point bl = btn_Noti.getLocationOnScreen();
-    //                         int x = bl.x - pl.x;
-    //                         int y = bl.y - pl.y;
-    //                         cw.setBounds(x - cw.getWidth() + btn_Noti.getWidth(), y + btn_Noti.getHeight(), cw.getWidth(), cw.getHeight());
-    //                     } else {
-    //                         super.correctBounds(cw);
-    //                     }
-    //                 }
-    //             };
-    //         }
+            @Override
+            public LayoutCallback getLayoutCallBack(java.awt.Component parent) {
+                return new DefaultLayoutCallBack(parent){
+                    @Override
+                    public void correctBounds(ComponentWrapper cw) {
+                        if (parent.isVisible()){
+                            java.awt.Point pl = parent.getLocationOnScreen();
+                            java.awt.Point bl = btn_Noti.getLocationOnScreen();
+                            int x = bl.x - pl.x;
+                            int y = bl.y - pl.y;
+                            cw.setBounds(x - cw.getWidth() + btn_Noti.getWidth(), y + btn_Noti.getHeight(), cw.getWidth(), cw.getHeight());
+                        } else {
+                            super.correctBounds(cw);
+                        }
+                    }
+                };
+            }
 
-    //     });
-    // }   
+        });
+    }   
 
     private void btn_logoutActionPerformed(java.awt.event.ActionEvent evt) {                                           
         boolean confirm = DialogBox.confirmMessage("Are you sure you want to logout?", "Logout");
@@ -495,23 +486,21 @@ public class CusDash extends javax.swing.JFrame {
         }
     }                                          
 
-    private void btn_homeActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    private void btn_Page1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
 
-    } 
-    
-    private void btn_cartActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        dispose();
-        new Cart().setVisible(true);
-        System.out.println("Page 3");
-    } 
+    }                                        
 
-    private void btn_historyActionPerformed(java.awt.event.ActionEvent evt) {                                            
+    private void btn_Page2ActionPerformed(java.awt.event.ActionEvent evt) {                                            
         //dispose();
         //TODO CALL PAGE 2
         System.out.println("Page 2");
     }                                           
 
-                                                                             
+    private void btn_Page3ActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        //dispose();
+        //TODO CALL PAGE 3
+        System.out.println("Page 3");
+    }                                                                          
 
     private void btn_Page4ActionPerformed(java.awt.event.ActionEvent evt) {                                        
         //dispose();
@@ -525,14 +514,14 @@ public class CusDash extends javax.swing.JFrame {
     private javax.swing.JPanel Logo_container;
     private javax.swing.JPanel Main;
     private javax.swing.JPanel Sidebar;
-    private javax.swing.JButton btn_history;
+    private javax.swing.JButton btn_Page2;
     private javax.swing.JPanel btn_container1;
     private javax.swing.JPanel btn_container2;
-    private javax.swing.JButton btn_cart;
-    private javax.swing.JButton btn_home;
+    private javax.swing.JButton btn_Page3;
+    private javax.swing.JButton btn_Page1;
     private javax.swing.JButton btn_Page4;
     private javax.swing.JButton btn_logout;
-    private javax.swing.JLabel customer_username;
+    private javax.swing.JLabel admin_username;
     private javax.swing.JPanel m5;
     private javax.swing.JPanel m6;
     private javax.swing.JPanel m7;
@@ -550,4 +539,5 @@ public class CusDash extends javax.swing.JFrame {
     private javax.swing.JButton btn_Noti;
     // End of variables declaration                   
 }
+
 

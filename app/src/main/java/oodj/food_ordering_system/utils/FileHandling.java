@@ -5,6 +5,10 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import org.checkerframework.checker.units.qual.C;
+import org.json.JSONArray;
+
 import java.io.File;
 import java.io.FileWriter;
 
@@ -16,8 +20,8 @@ public class FileHandling {
         CUSTOMER_PATH("Customer", "app\\src\\main\\resources\\databases\\customer.txt"),
         DELIVERY_PATH("Delivery", "app\\src\\main\\resources\\databases\\delivery_runner.txt"),
         VENDOR_PATH("Vendor", "app\\src\\main\\resources\\databases\\vendor.txt"),
-        RESTAURANT_PATH("Restaurant", "app\\src\\main\\resources\\databases\\restaurant.txt"),
-        MENU_PATH("Menu", "app\\src\\main\\resources\\databases\\menu.txt");
+        MENU_PATH("Menu", "app\\src\\main\\resources\\databases\\menu.txt"),
+        CART_PATH("Cart", "app\\src\\main\\resources\\databases\\cart.txt");
         // ORDER_PATH("Order", "app\\src\\main\\resources\\databases\\order.txt");
         
         private final String key, value;
@@ -62,5 +66,14 @@ public class FileHandling {
             DialogBox.errorMessage(filePath + " could not be found.", "File not found");
         }
         return lines;
+    }
+
+    public static void saveToFile(JSONArray cartArray, String filePath) {
+        try (FileWriter fileWriter = new FileWriter(filePath)) {
+            fileWriter.write(cartArray.toString(2)); // Pretty print with indentation
+            fileWriter.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
