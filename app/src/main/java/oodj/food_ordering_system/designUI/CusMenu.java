@@ -21,7 +21,7 @@ public class CusMenu extends javax.swing.JFrame {
     private List<String[]> cart;
     private JPanel selectedItemPanel;
 
-    
+
     public CusMenu(String restaurantName) {
         cart = new ArrayList<>();
         selectedItemPanel = null;
@@ -234,12 +234,7 @@ public class CusMenu extends javax.swing.JFrame {
         payContainer.add(payButton);
     
         wrapper.add(payContainer);
-    
         
-    
-        
-    
-    
         getContentPane().add(wrapper);
         wrapper.setBounds(0, 0, 800, 500);
     
@@ -250,6 +245,7 @@ public class CusMenu extends javax.swing.JFrame {
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {                                        
         dispose();
     } 
+    // TODO remove this 
     public static void main(String[] args) {
         restaurantName = "Burger Heaven"; // Initialize with a valid restaurant name
         java.awt.EventQueue.invokeLater(() -> {

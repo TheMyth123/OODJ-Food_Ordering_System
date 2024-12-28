@@ -14,14 +14,14 @@ import javax.swing.JPanel;
 import oodj.food_ordering_system.models.Vendor;
 import oodj.food_ordering_system.utils.UserHandling;
 
-public class CusRestaurant extends javax.swing.JFrame {
+public class CusFCourt extends javax.swing.JFrame {
 
     private JPanel mainPanel;
     private JPanel restaurantListPanel;
     private String restaurantName;
     
 
-    public CusRestaurant() {
+    public CusFCourt() {
         initComponents();
     }
 

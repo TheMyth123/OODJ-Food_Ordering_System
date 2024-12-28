@@ -10,17 +10,17 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import oodj.food_ordering_system.designUI.CusRestaurant;
+import oodj.food_ordering_system.designUI.CusFCourt;
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
 
 public class CusDash extends javax.swing.JFrame {
 
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> {
-            new CusDash().setVisible(true);
-        });
-    }
+    // public static void main(String[] args) {
+    //     java.awt.EventQueue.invokeLater(() -> {
+    //         new CusDash().setVisible(true);
+    //     });
+    // }
 
     public CusDash() {
         initComponents();
@@ -31,14 +31,12 @@ public class CusDash extends javax.swing.JFrame {
     }
 
     private void loadName() {
-        // Admin endUserAd = LoginPage.getEndUserAd();
-        // customer_username.setText(endUserAd.getUsername());
-        // TODO LOAD customer USERNAME
-        customer_username.setText("Customer");
+        Customer endUser = LoginPage.getEndUser();
+        customer_username.setText(endUser.getUsername());
     }
 
     private void addRestaurantPanel() {
-        CusRestaurant cusRestaurant = new CusRestaurant();
+        CusFCourt cusRestaurant = new CusFCourt();
         JPanel mainPanel = cusRestaurant.getMainPanel();
         title_container1.add(mainPanel);
     }
