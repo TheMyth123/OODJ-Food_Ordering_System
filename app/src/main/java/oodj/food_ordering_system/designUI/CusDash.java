@@ -1,18 +1,18 @@
 package oodj.food_ordering_system.designUI;
 
 import oodj.food_ordering_system.models.Customer;
-import oodj.food_ordering_system.models.Notification;
+// import oodj.food_ordering_system.models.Notification;
 import oodj.food_ordering_system.utils.DialogBox;
-import oodj.food_ordering_system.utils.NotificationUtils;
+// import oodj.food_ordering_system.utils.NotificationUtils;
 import raven.glasspanepopup.*;
 
-import java.util.List;
+// import java.util.List;
 
 import javax.swing.JPanel;
 
-import oodj.food_ordering_system.designUI.CusFCourt;
-import net.miginfocom.layout.ComponentWrapper;
-import net.miginfocom.layout.LayoutCallback;
+// import oodj.food_ordering_system.designUI.CusFCourt;
+// import net.miginfocom.layout.ComponentWrapper;
+// import net.miginfocom.layout.LayoutCallback;
 
 public class CusDash extends javax.swing.JFrame {
 
@@ -67,7 +67,6 @@ public class CusDash extends javax.swing.JFrame {
         customer_username = new javax.swing.JLabel();
         title_container1 = new javax.swing.JPanel();
         m8 = new javax.swing.JPanel();
-        welcome3 = new javax.swing.JLabel();
         m6 = new javax.swing.JPanel();
         margin5 = new javax.swing.JPanel();
         m7 = new javax.swing.JPanel();
@@ -546,7 +545,6 @@ public class CusDash extends javax.swing.JFrame {
     private javax.swing.JPanel title_container;
     private javax.swing.JPanel title_container1;
     private javax.swing.JLabel welcome;
-    private javax.swing.JLabel welcome3;
     private javax.swing.JButton btn_Noti;
     // End of variables declaration                   
 }

@@ -4,21 +4,15 @@ import javax.swing.*;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import oodj.food_ordering_system.utils.DialogBox;
+// TODO import dialog box after added cart
+// import oodj.food_ordering_system.utils.DialogBox;
 import oodj.food_ordering_system.utils.FileHandling;
 import oodj.food_ordering_system.utils.OrderHandling;
 
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.util.ArrayList;
