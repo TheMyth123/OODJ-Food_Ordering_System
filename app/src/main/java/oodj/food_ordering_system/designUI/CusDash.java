@@ -75,7 +75,7 @@ public class CusDash extends javax.swing.JFrame {
         // TODO double confirm resize
         setResizable(false);
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Customer Menu");
+        setTitle("Customer Dashboard");
         setBackground(new java.awt.Color(25, 25, 25));
         setMinimumSize(new java.awt.Dimension(1300, 700));
         setSize(new java.awt.Dimension(1300, 700));

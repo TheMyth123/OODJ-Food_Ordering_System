@@ -1,39 +1,151 @@
 package oodj.food_ordering_system.designUI;
 
 
-import oodj.food_ordering_system.models.Admin;
 import oodj.food_ordering_system.models.Notification;
+import oodj.food_ordering_system.models.Vendor;
 import oodj.food_ordering_system.utils.DialogBox;
 import oodj.food_ordering_system.utils.NotificationUtils;
+import oodj.food_ordering_system.utils.OrderHandling;
+import oodj.food_ordering_system.utils.UserHandling;
 import raven.glasspanepopup.*;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
 
 public class Cart extends javax.swing.JFrame {
+    private JPanel cartListPanel;
+    private JTextArea cartTextArea;
 
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(() -> {
-            new MenuTemplate().setVisible(true);
+            new Cart().setVisible(true);
         });
     }
 
     public Cart() {
         initComponents();
-        GlassPanePopup.install(this);
-        loadName();
+        displayCartItems();
+        // GlassPanePopup.install(this);
+        // loadName();
     }
 
-    private void loadName() {
-        // Admin endUserAd = LoginPage.getEndUserAd();
-        // admin_username.setText(endUserAd.getUsername());
-        // TODO LOAD ADMIN USERNAME
-        admin_username.setText("Admin");
+    // private void loadName() {
+    //     // Admin endUserAd = LoginPage.getEndUserAd();
+    //     // admin_username.setText(endUserAd.getUsername());
+    //     // TODO LOAD ADMIN USERNAME
+    //     admin_username.setText("Admin");
+    // }
+
+    private void displayCartItems() {
+        List<String> cartItems = OrderHandling.getCart();
+        
+
+        title_container1.setLayout(new BoxLayout(title_container1, BoxLayout.Y_AXIS));
+        title_container1.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        // for (String item : cartItems) {
+        //     JLabel itemLabel = new JLabel(item);
+        //     itemLabel.setPreferredSize(new Dimension(750, 30));
+        //     itemLabel.setMaximumSize(new Dimension(750, 30));
+        //     itemLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        //     itemLabel.setBackground(new Color(43, 43, 43));
+        //     itemLabel.setForeground(new Color(255, 169, 140));
+        //     itemLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        //     itemLabel.setOpaque(true);
+        //     itemLabel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+
+        //     title_container1.add(itemLabel);
+        //     title_container1.add(Box.createRigidArea(new Dimension(0, 5))); // Add space between items
+        // }
+
+        for (String item : cartItems) {
+
+            JPanel itemPanel = new JPanel();
+            itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.X_AXIS));
+            itemPanel.setPreferredSize(new Dimension(630, 40));
+            itemPanel.setMaximumSize(new Dimension(630, 40));
+            itemPanel.setMinimumSize(new Dimension(630, 40));
+            itemPanel.setBackground(new Color(43, 43, 43));
+            itemPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+
+            JLabel itemLabel = new JLabel(item);
+            itemLabel.setPreferredSize(new Dimension(620, 30)); // Slightly smaller to account for padding
+            itemLabel.setMaximumSize(new Dimension(620, 30));
+            itemLabel.setMinimumSize(new Dimension(620, 30));
+            itemLabel.setForeground(new Color(255, 169, 140));
+            itemLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+            itemLabel.setOpaque(true);
+            itemPanel.add(itemLabel);
+
+            // Button panel
+            JPanel buttonPanel = new JPanel();
+            buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+            buttonPanel.setPreferredSize(new Dimension(250, 40));
+            buttonPanel.setMaximumSize(new Dimension(250, 40));
+            buttonPanel.setMinimumSize(new Dimension(250, 40));
+            buttonPanel.setBackground(new Color(43, 43, 43));
+
+            JButton editButton = new JButton("Edit");
+            JButton payButton = new JButton("Pay");
+            JButton discardButton = new JButton("Discard");
+
+            // Set uniform button sizes
+            Dimension buttonSize = new Dimension(80, 30);
+            editButton.setPreferredSize(buttonSize);
+            editButton.setMaximumSize(buttonSize);
+            editButton.setMinimumSize(buttonSize);
+
+            payButton.setPreferredSize(buttonSize);
+            payButton.setMaximumSize(buttonSize);
+            payButton.setMinimumSize(buttonSize);
+
+            discardButton.setPreferredSize(buttonSize);
+            discardButton.setMaximumSize(buttonSize);
+            discardButton.setMinimumSize(buttonSize);
+
+            buttonPanel.add(editButton);
+            buttonPanel.add(Box.createRigidArea(new Dimension(5, 0))); // Space between buttons
+            buttonPanel.add(payButton);
+            buttonPanel.add(Box.createRigidArea(new Dimension(5, 0)));
+            buttonPanel.add(discardButton);
+
+            // Combined panel
+            JPanel combinedPanel = new JPanel();
+            combinedPanel.setLayout(new BoxLayout(combinedPanel, BoxLayout.X_AXIS));
+            combinedPanel.setPreferredSize(new Dimension(900, 40));
+            combinedPanel.setMaximumSize(new Dimension(900, 40));
+            combinedPanel.setMinimumSize(new Dimension(900, 40));
+            combinedPanel.setBackground(new Color(43, 43, 43));
+            combinedPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+
+            combinedPanel.add(itemPanel);
+            combinedPanel.add(Box.createRigidArea(new Dimension(10, 0))); // Space between itemPanel and buttonPanel
+            combinedPanel.add(buttonPanel);
+
+            title_container1.add(combinedPanel);
+            title_container1.add(Box.createRigidArea(new Dimension(0, 5))); // Space between rows
+
+            
+        }
+
     }
-
-
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
@@ -44,9 +156,9 @@ public class Cart extends javax.swing.JFrame {
         systemName = new javax.swing.JLabel();
         margin2 = new javax.swing.JPanel();
         btn_container1 = new javax.swing.JPanel();
-        btn_Page1 = new javax.swing.JButton();
-        btn_Page2 = new javax.swing.JButton();
-        btn_Page3 = new javax.swing.JButton();
+        btn_home = new javax.swing.JButton();
+        btn_cart = new javax.swing.JButton();
+        btn_history = new javax.swing.JButton();
         btn_Page4 = new javax.swing.JButton();
         margin3 = new javax.swing.JPanel();
         btn_container2 = new javax.swing.JPanel();
@@ -66,7 +178,7 @@ public class Cart extends javax.swing.JFrame {
         btn_Noti = new oodj.food_ordering_system.designUI.Button();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Admin Menu");
+        setTitle("Customer Cart");
         setBackground(new java.awt.Color(25, 25, 25));
         setMinimumSize(new java.awt.Dimension(1300, 700));
         setSize(new java.awt.Dimension(1300, 700));
@@ -159,59 +271,59 @@ public class Cart extends javax.swing.JFrame {
         btn_container1.setPreferredSize(new java.awt.Dimension(300, 320));
         btn_container1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 30));
 
-        btn_Page1.setBackground(new java.awt.Color(43, 43, 43));
-        btn_Page1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btn_Page1.setForeground(new java.awt.Color(255, 169, 140));
-        btn_Page1.setText("Page 1");
-        btn_Page1.setBorder(null);
-        btn_Page1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_Page1.setFocusable(false);
-        btn_Page1.setMargin(new java.awt.Insets(15, 50, 15, 50));
-        btn_Page1.setMaximumSize(new java.awt.Dimension(250, 40));
-        btn_Page1.setMinimumSize(new java.awt.Dimension(250, 40));
-        btn_Page1.setPreferredSize(new java.awt.Dimension(250, 40));
-        btn_Page1.addActionListener(new java.awt.event.ActionListener() {
+        btn_home.setBackground(new java.awt.Color(31, 31, 31));
+        btn_home.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btn_home.setForeground(new java.awt.Color(245, 251, 254));
+        btn_home.setText("Home");
+        btn_home.setBorder(null);
+        btn_home.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_home.setFocusable(false);
+        btn_home.setMargin(new java.awt.Insets(15, 50, 15, 50));
+        btn_home.setMaximumSize(new java.awt.Dimension(250, 40));
+        btn_home.setMinimumSize(new java.awt.Dimension(250, 40));
+        btn_home.setPreferredSize(new java.awt.Dimension(250, 40));
+        btn_home.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_Page1ActionPerformed(evt);
+                btn_homeActionPerformed(evt);
             }
         });
-        btn_container1.add(btn_Page1);
+        btn_container1.add(btn_home);
 
-        btn_Page2.setBackground(new java.awt.Color(31, 31, 31));
-        btn_Page2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_Page2.setForeground(new java.awt.Color(245, 251, 254));
-        btn_Page2.setText("Page 2");
-        btn_Page2.setBorder(null);
-        btn_Page2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_Page2.setFocusable(false);
-        btn_Page2.setMargin(new java.awt.Insets(15, 50, 15, 50));
-        btn_Page2.setMaximumSize(new java.awt.Dimension(250, 40));
-        btn_Page2.setMinimumSize(new java.awt.Dimension(250, 40));
-        btn_Page2.setPreferredSize(new java.awt.Dimension(250, 40));
-        btn_Page2.addActionListener(new java.awt.event.ActionListener() {
+        btn_cart.setBackground(new java.awt.Color(43, 43, 43));
+        btn_cart.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btn_cart.setForeground(new java.awt.Color(255, 169, 140));
+        btn_cart.setText("Cart");
+        btn_cart.setBorder(null);
+        btn_cart.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_cart.setFocusable(false);
+        btn_cart.setMargin(new java.awt.Insets(15, 50, 15, 50));
+        btn_cart.setMaximumSize(new java.awt.Dimension(250, 40));
+        btn_cart.setMinimumSize(new java.awt.Dimension(250, 40));
+        btn_cart.setPreferredSize(new java.awt.Dimension(250, 40));
+        btn_cart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_Page2ActionPerformed(evt);
+                btn_cartActionPerformed(evt);
             }
         });
-        btn_container1.add(btn_Page2);
+        btn_container1.add(btn_cart);
 
-        btn_Page3.setBackground(new java.awt.Color(31, 31, 31));
-        btn_Page3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_Page3.setForeground(new java.awt.Color(245, 251, 254));
-        btn_Page3.setText("Page 3");
-        btn_Page3.setBorder(null);
-        btn_Page3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_Page3.setFocusable(false);
-        btn_Page3.setMargin(new java.awt.Insets(15, 50, 15, 50));
-        btn_Page3.setMaximumSize(new java.awt.Dimension(250, 40));
-        btn_Page3.setMinimumSize(new java.awt.Dimension(250, 40));
-        btn_Page3.setPreferredSize(new java.awt.Dimension(250, 40));
-        btn_Page3.addActionListener(new java.awt.event.ActionListener() {
+        btn_history.setBackground(new java.awt.Color(31, 31, 31));
+        btn_history.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btn_history.setForeground(new java.awt.Color(245, 251, 254));
+        btn_history.setText("Page 3");
+        btn_history.setBorder(null);
+        btn_history.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_history.setFocusable(false);
+        btn_history.setMargin(new java.awt.Insets(15, 50, 15, 50));
+        btn_history.setMaximumSize(new java.awt.Dimension(250, 40));
+        btn_history.setMinimumSize(new java.awt.Dimension(250, 40));
+        btn_history.setPreferredSize(new java.awt.Dimension(250, 40));
+        btn_history.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_Page3ActionPerformed(evt);
+                btn_historyActionPerformed(evt);
             }
         });
-        btn_container1.add(btn_Page3);
+        btn_container1.add(btn_history);
 
         btn_Page4.setBackground(new java.awt.Color(31, 31, 31));
         btn_Page4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -312,6 +424,8 @@ public class Cart extends javax.swing.JFrame {
         title_container.setPreferredSize(new java.awt.Dimension(1000, 50));
         title_container.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 0));
 
+        
+
         m5.setBackground(new java.awt.Color(31, 31, 31));
         m5.setMaximumSize(new java.awt.Dimension(60, 50));
         m5.setMinimumSize(new java.awt.Dimension(60, 50));
@@ -330,42 +444,28 @@ public class Cart extends javax.swing.JFrame {
 
         title_container.add(m5);
 
+        // TODO title container add credit
+
         welcome.setBackground(new java.awt.Color(31, 31, 31));
         welcome.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         welcome.setForeground(new java.awt.Color(255, 169, 140));
         welcome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        welcome.setText("Hi,");
+        welcome.setText("Cart");
         welcome.setAlignmentX(0.5F);
         welcome.setMaximumSize(new java.awt.Dimension(50, 50));
         welcome.setMinimumSize(new java.awt.Dimension(50, 50));
         welcome.setPreferredSize(new java.awt.Dimension(50, 50));
         title_container.add(welcome);
 
-        admin_username.setBackground(new java.awt.Color(31, 31, 31));
-        admin_username.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        admin_username.setForeground(new java.awt.Color(255, 169, 140));
-        admin_username.setText("< admin_username >, ");
-        admin_username.setMaximumSize(new java.awt.Dimension(300, 50));
-        admin_username.setMinimumSize(new java.awt.Dimension(300, 50));
-        admin_username.setPreferredSize(new java.awt.Dimension(750, 50));
-        title_container.add(admin_username);
-
-        btn_Noti.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/noti.png"))); // NOI18N
-        btn_Noti.setPreferredSize(new java.awt.Dimension(50, 50));
-        btn_Noti.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_NotiActionPerformed(evt);
-            }
-        });
-        title_container.add(btn_Noti);
+        
 
         Main.add(title_container);
 
         title_container1.setBackground(new java.awt.Color(31, 31, 31));
-        title_container1.setMaximumSize(new java.awt.Dimension(1000, 80));
-        title_container1.setMinimumSize(new java.awt.Dimension(1000, 80));
-        title_container1.setPreferredSize(new java.awt.Dimension(1000, 80));
-        title_container1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 0));
+        title_container1.setMaximumSize(new java.awt.Dimension(1000, 670));
+        title_container1.setMinimumSize(new java.awt.Dimension(1000, 670));
+        title_container1.setPreferredSize(new java.awt.Dimension(1000, 670));
+        // title_container1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 0));
 
         m8.setBackground(new java.awt.Color(31, 31, 31));
         m8.setMaximumSize(new java.awt.Dimension(60, 60));
@@ -385,16 +485,20 @@ public class Cart extends javax.swing.JFrame {
 
         title_container1.add(m8);
 
-        welcome3.setBackground(new java.awt.Color(31, 31, 31));
-        welcome3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        welcome3.setForeground(new java.awt.Color(245, 251, 254));
-        welcome3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        welcome3.setText("This is the default page");
-        welcome3.setAlignmentX(0.5F);
-        welcome3.setMaximumSize(new java.awt.Dimension(275, 50));
-        welcome3.setMinimumSize(new java.awt.Dimension(275, 50));
-        welcome3.setPreferredSize(new java.awt.Dimension(275, 50));
-        title_container1.add(welcome3);
+        // welcome3.setBackground(new java.awt.Color(31, 31, 31));
+        // welcome3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        // welcome3.setForeground(new java.awt.Color(245, 251, 254));
+        // welcome3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        // welcome3.setText("This is the default page");
+        // welcome3.setAlignmentX(0.5F);
+        // welcome3.setMaximumSize(new java.awt.Dimension(275, 50));
+        // welcome3.setMinimumSize(new java.awt.Dimension(275, 50));
+        // welcome3.setPreferredSize(new java.awt.Dimension(275, 50));
+        // title_container1.add(welcome3);
+
+        // TODO add cart content in title container 1
+
+        // title_container1.add(cartTextArea);
 
         Main.add(title_container1);
 
@@ -478,6 +582,8 @@ public class Cart extends javax.swing.JFrame {
         });
     }   
 
+    
+
     private void btn_logoutActionPerformed(java.awt.event.ActionEvent evt) {                                           
         boolean confirm = DialogBox.confirmMessage("Are you sure you want to logout?", "Logout");
         if (confirm) {
@@ -486,17 +592,18 @@ public class Cart extends javax.swing.JFrame {
         }
     }                                          
 
-    private void btn_Page1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-
+    private void btn_homeActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        dispose();
+        new CusDash().setVisible(true);
     }                                        
 
-    private void btn_Page2ActionPerformed(java.awt.event.ActionEvent evt) {                                            
+    private void btn_cartActionPerformed(java.awt.event.ActionEvent evt) {                                            
         //dispose();
         //TODO CALL PAGE 2
         System.out.println("Page 2");
     }                                           
 
-    private void btn_Page3ActionPerformed(java.awt.event.ActionEvent evt) {                                            
+    private void btn_historyActionPerformed(java.awt.event.ActionEvent evt) {                                            
         //dispose();
         //TODO CALL PAGE 3
         System.out.println("Page 3");
@@ -514,11 +621,11 @@ public class Cart extends javax.swing.JFrame {
     private javax.swing.JPanel Logo_container;
     private javax.swing.JPanel Main;
     private javax.swing.JPanel Sidebar;
-    private javax.swing.JButton btn_Page2;
+    private javax.swing.JButton btn_cart;
     private javax.swing.JPanel btn_container1;
     private javax.swing.JPanel btn_container2;
-    private javax.swing.JButton btn_Page3;
-    private javax.swing.JButton btn_Page1;
+    private javax.swing.JButton btn_history;
+    private javax.swing.JButton btn_home;
     private javax.swing.JButton btn_Page4;
     private javax.swing.JButton btn_logout;
     private javax.swing.JLabel admin_username;

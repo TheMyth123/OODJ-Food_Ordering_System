@@ -48,16 +48,6 @@ public class CusFCourt extends javax.swing.JFrame {
                 new CusMenu(vendorID).setVisible(true);
             });
 
-            // restaurantButton.addActionListener(evt -> {
-            //     // JFrame menuFrame = new JFrame("Restaurant Menu");
-            //     CusMenu menuPanel = new CusMenu(vendorID);
-            //     menuFrame.add(menuPanel);
-            //     menuFrame.setSize(800, 500);
-            //     menuFrame.setLocationRelativeTo(null);
-            //     menuFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            //     menuFrame.setVisible(true);
-            // });
-
             restaurantListPanel.add(restaurantButton);
         }
 
