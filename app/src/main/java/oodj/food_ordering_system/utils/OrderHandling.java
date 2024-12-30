@@ -62,5 +62,23 @@ public class OrderHandling {
         return cartItems;
     }
 
+    public static void saveCart(List<String> cartItems) {
+        JSONArray cartArray = new JSONArray();
+        for (String item : cartItems) {
+            String[] itemParts = item.split(", ");
+            JSONObject jsonObject = new JSONObject();
+            for (String part : itemParts) {
+                String[] keyValue = part.split(": ");
+                jsonObject.put(keyValue[0], keyValue[1]);
+            }
+            cartArray.put(jsonObject);
+        }
+        try {
+            Files.write(Paths.get(CART), cartArray.toString().getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
    
 }
