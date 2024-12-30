@@ -31,7 +31,7 @@ import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
 
 
-// TODO design have done yet
+// TODO design have done yet, discard items will affect the cart.txt json format
 public class Cart extends javax.swing.JFrame {
     private JPanel cartListPanel;
     private JTextArea cartTextArea;

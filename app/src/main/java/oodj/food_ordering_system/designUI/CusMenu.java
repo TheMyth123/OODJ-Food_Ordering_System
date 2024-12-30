@@ -322,19 +322,32 @@ public class CusMenu extends javax.swing.JFrame {
 
         addButton.addActionListener(evt -> {
             if (selectedItem != null) {
-                String itemId = selectedItem[0];
-                int currentQuantity = itemQuantities.getOrDefault(itemId, 0) + 1;
-                itemQuantities.put(itemId, currentQuantity);
-                String quantity = String.valueOf(currentQuantity);
-                selectedItem = new String[] { selectedItem[0], selectedItem[1], selectedItem[2], quantity, selectedItem[3], selectedItem[4] };
-                cart.add(selectedItem);
-                selectedItem = null;
-                if (selectedItemPanel != null) {
-                    selectedItemPanel.setBackground(new Color(43, 43, 43));
-                    selectedItemPanel = null;
+                // Prompt the user to enter the quantity
+                String quantityStr = JOptionPane.showInputDialog(this, "Enter quantity:", "Select Quantity", JOptionPane.PLAIN_MESSAGE);
+        
+                // Check if the user entered a valid quantity
+                if (quantityStr != null && !quantityStr.trim().isEmpty()) {
+                    try {
+                        int quantity = Integer.parseInt(quantityStr.trim());
+                        if (quantity > 0) {
+                            selectedItem = new String[] { selectedItem[0], selectedItem[1], selectedItem[2], String.valueOf(quantity), selectedItem[3], selectedItem[4] };
+                            cart.add(selectedItem);
+                            selectedItem = null;
+                            if (selectedItemPanel != null) {
+                                selectedItemPanel.setBackground(new Color(43, 43, 43));
+                                selectedItemPanel = null;
+                            }
+                            addToCart();
+                            JOptionPane.showMessageDialog(this, "Selected item added to cart.");
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Quantity must be greater than 0.", "Invalid Quantity", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(this, "Please enter a valid number for quantity.", "Invalid Quantity", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Quantity is required.", "Invalid Quantity", JOptionPane.ERROR_MESSAGE);
                 }
-                addToCart();
-                JOptionPane.showMessageDialog(this, "Selected item added to cart.");
             } else {
                 JOptionPane.showMessageDialog(this, "No item selected.");
             }
