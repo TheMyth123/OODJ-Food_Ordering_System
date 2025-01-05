@@ -16,13 +16,19 @@ import javax.swing.JPanel;
 
 public class CusDash extends javax.swing.JFrame {
 
+
     // public static void main(String[] args) {
     //     java.awt.EventQueue.invokeLater(() -> {
     //         new CusDash().setVisible(true);
     //     });
     // }
 
-    public CusDash() {
+    private String customerID;
+// TODO check again customerID
+    public CusDash(String customerID) {
+        this.customerID = customerID;
+        System.out.println("CusDash initialized with customerID: " + customerID); // Debugging statement
+
         initComponents();
         GlassPanePopup.install(this);
         loadName();
@@ -500,7 +506,7 @@ public class CusDash extends javax.swing.JFrame {
     
     private void btn_cartActionPerformed(java.awt.event.ActionEvent evt) {                                            
         dispose();
-        new Cart().setVisible(true);
+        new Cart(customerID).setVisible(true);
         System.out.println("Page 3");
     } 
 

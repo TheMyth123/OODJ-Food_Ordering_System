@@ -21,9 +21,10 @@ public class FileHandling {
         DELIVERY_PATH("Delivery", "app\\src\\main\\resources\\databases\\delivery_runner.txt"),
         VENDOR_PATH("Vendor", "app\\src\\main\\resources\\databases\\vendor.txt"),
         MENU_PATH("Menu", "app\\src\\main\\resources\\databases\\menu.txt"),
-        CART_PATH("Cart", "app\\src\\main\\resources\\databases\\cart.txt");
-        // ORDER_PATH("Order", "app\\src\\main\\resources\\databases\\order.txt");
-        
+        CART_PATH("Cart", "app\\src\\main\\resources\\databases\\cart.txt"),
+        CREDIT_PATH("Credit", "app\\src\\main\\resources\\databases\\credit.txt"),
+        PAYMENT_PATH("Payment", "app\\src\\main\\resources\\databases\\payment.txt");
+
         private final String key, value;
 
         filePath(String key, String value) {

@@ -1,0 +1,12 @@
+[
+    {
+        "CreditAmount": 30,
+        "CustomerID": "CS00001",
+        "LastUpdated": "2025-01-04"
+    },
+    {
+        "CreditAmount": 150,
+        "CustomerID": "CS00002",
+        "LastUpdated": "2023-01-01"
+    }
+]

@@ -1,21 +1,19 @@
 package oodj.food_ordering_system.designUI;
 
 
+import oodj.food_ordering_system.models.Credit;
 import oodj.food_ordering_system.models.Notification;
-import oodj.food_ordering_system.models.Vendor;
 import oodj.food_ordering_system.utils.DialogBox;
 import oodj.food_ordering_system.utils.NotificationUtils;
 import oodj.food_ordering_system.utils.OrderHandling;
-import oodj.food_ordering_system.utils.UserHandling;
 import raven.glasspanepopup.*;
+
+import static oodj.food_ordering_system.designUI.LoginPage.loginID;
 
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -23,8 +21,8 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import net.miginfocom.layout.ComponentWrapper;
@@ -33,28 +31,18 @@ import net.miginfocom.layout.LayoutCallback;
 
 // TODO design have done yet, discard items will affect the cart.txt json format
 public class Cart extends javax.swing.JFrame {
-    private JPanel cartListPanel;
-    private JTextArea cartTextArea;
+    private String customerID;
 
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> {
-            new Cart().setVisible(true);
-        });
-    }
 
-    public Cart() {
+
+    public Cart(String customerID) {
+        this.customerID = customerID;
+        System.out.println("CusDash initialized with customerID: " + customerID); // Debugging statement
         initComponents();
         displayCartItems();
-        // GlassPanePopup.install(this);
-        // loadName();
+        
     }
 
-    // private void loadName() {
-    //     // Admin endUserAd = LoginPage.getEndUserAd();
-    //     // admin_username.setText(endUserAd.getUsername());
-    //     // TODO LOAD ADMIN USERNAME
-    //     admin_username.setText("Admin");
-    // }
 
     private void displayCartItems() {
         List<String> cartItems = OrderHandling.getCart();
@@ -71,11 +59,16 @@ public class Cart extends javax.swing.JFrame {
             itemPanel.setMinimumSize(new Dimension(630, 40));
             itemPanel.setBackground(new Color(31, 31, 31));
             itemPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-    
-            // Extract quantity from item string (assuming item string contains quantity information)
+
+            // TODO orderID
+            // Extract details from item string (assuming item string contains these details)
             String[] itemParts = item.split(", ");
+            String orderID = itemParts[2].split(": ")[1];
             String quantity = itemParts[0].split(": ")[1];
-    
+            String foodName = itemParts[3].split(": ")[1];
+            String totalAmount = itemParts[1].split(": ")[1];
+
+            // Quantity
             JTextField quantityField = new JTextField(quantity);
             quantityField.setPreferredSize(new Dimension(50, 30));
             quantityField.setMaximumSize(new Dimension(50, 30));
@@ -86,17 +79,29 @@ public class Cart extends javax.swing.JFrame {
             quantityField.setOpaque(true);
             quantityField.setEditable(false); // Initially not editable
             itemPanel.add(quantityField);
-    
-            JLabel itemLabel = new JLabel(item.replaceFirst("quantity: \\d+, ", ""));
-            itemLabel.setPreferredSize(new Dimension(570, 30)); // Adjust size to fit remaining text
-            itemLabel.setMaximumSize(new Dimension(570, 30));
-            itemLabel.setMinimumSize(new Dimension(570, 30));
-            itemLabel.setForeground(new Color(255, 169, 140)); // Set text color
-            itemLabel.setBackground(new Color(31, 31, 31));
-            itemLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-            itemLabel.setOpaque(true);
-            itemPanel.add(itemLabel);
-    
+
+            // Food Name
+            JLabel foodNameLabel = new JLabel(foodName);
+            foodNameLabel.setPreferredSize(new Dimension(200, 30));
+            foodNameLabel.setMaximumSize(new Dimension(200, 30));
+            foodNameLabel.setMinimumSize(new Dimension(200, 30));
+            foodNameLabel.setForeground(new Color(255, 169, 140)); // Set text color
+            foodNameLabel.setBackground(new Color(31, 31, 31));
+            foodNameLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+            foodNameLabel.setOpaque(true);
+            itemPanel.add(foodNameLabel);
+
+            // Total Amount
+            JLabel totalAmountLabel = new JLabel(totalAmount);
+            totalAmountLabel.setPreferredSize(new Dimension(100, 30));
+            totalAmountLabel.setMaximumSize(new Dimension(100, 30));
+            totalAmountLabel.setMinimumSize(new Dimension(100, 30));
+            totalAmountLabel.setForeground(new Color(255, 169, 140)); // Set text color
+            totalAmountLabel.setBackground(new Color(31, 31, 31));
+            totalAmountLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+            totalAmountLabel.setOpaque(true);
+            itemPanel.add(totalAmountLabel);
+
             // Button panel
             JPanel buttonPanel = new JPanel();
             buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
@@ -104,37 +109,37 @@ public class Cart extends javax.swing.JFrame {
             buttonPanel.setMaximumSize(new Dimension(350, 40));
             buttonPanel.setMinimumSize(new Dimension(350, 40));
             buttonPanel.setBackground(new Color(43, 43, 43));
-    
+
             JButton editButton = new JButton("Edit");
             JButton payButton = new JButton("Pay");
             JButton discardButton = new JButton("Discard");
             JButton plusButton = new JButton("+");
             JButton minusButton = new JButton("-");
-    
+
             // Set uniform button sizes
             Dimension buttonSize = new Dimension(80, 30);
             editButton.setPreferredSize(buttonSize);
             editButton.setMaximumSize(buttonSize);
             editButton.setMinimumSize(buttonSize);
-    
+
             payButton.setPreferredSize(buttonSize);
             payButton.setMaximumSize(buttonSize);
             payButton.setMinimumSize(buttonSize);
-    
+
             discardButton.setPreferredSize(buttonSize);
             discardButton.setMaximumSize(buttonSize);
             discardButton.setMinimumSize(buttonSize);
-    
+
             plusButton.setPreferredSize(buttonSize);
             plusButton.setMaximumSize(buttonSize);
             plusButton.setMinimumSize(buttonSize);
             plusButton.setEnabled(false); // Initially disabled
-    
+
             minusButton.setPreferredSize(buttonSize);
             minusButton.setMaximumSize(buttonSize);
             minusButton.setMinimumSize(buttonSize);
             minusButton.setEnabled(false); // Initially disabled
-    
+
             editButton.addActionListener(evt -> {
                 if (editButton.getText().equals("Edit")) {
                     quantityField.setEditable(true);
@@ -148,25 +153,45 @@ public class Cart extends javax.swing.JFrame {
                     editButton.setText("Edit");
                 }
             });
-    
+
             plusButton.addActionListener(evt -> {
                 int currentQuantity = Integer.parseInt(quantityField.getText());
                 quantityField.setText(String.valueOf(currentQuantity + 1));
             });
-    
+
             minusButton.addActionListener(evt -> {
                 int currentQuantity = Integer.parseInt(quantityField.getText());
                 if (currentQuantity > 1) {
                     quantityField.setText(String.valueOf(currentQuantity - 1));
                 }
             });
-    
-            // payButton.addActionListener(evt -> payForItem(item));
+
+            payButton.addActionListener(evt -> {
+            // Load credits
+            List<Credit> credits = OrderHandling.getCredits();
+            Credit customerCredit = null;
+            for (Credit credit : credits) {
+                if (credit.getCustomerID().equals(customerID)) {
+                    customerCredit = credit;
+                    break;
+                }
+            }
+
+            if (customerCredit != null) {
+                // Pass details to Payment page
+                 // Convert JLabel to String
+                new Payment(orderID, foodName, quantityField.getText(), totalAmountLabel.getText(), customerCredit).setVisible(true);
+                dispose(); // Close the Cart page
+            } else {
+                JOptionPane.showMessageDialog(this, "Credit information not found for customer ID: " + customerID, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
             discardButton.addActionListener(evt -> {
                 discardItem(item);
                 displayCartItems(); // Refresh the cart display
             });
-    
+
             buttonPanel.add(editButton);
             buttonPanel.add(Box.createRigidArea(new Dimension(5, 0))); // Space between buttons
             buttonPanel.add(payButton);
@@ -176,7 +201,7 @@ public class Cart extends javax.swing.JFrame {
             buttonPanel.add(plusButton);
             buttonPanel.add(Box.createRigidArea(new Dimension(5, 0)));
             buttonPanel.add(minusButton);
-    
+
             // Combined panel
             JPanel combinedPanel = new JPanel();
             combinedPanel.setLayout(new BoxLayout(combinedPanel, BoxLayout.X_AXIS));
@@ -185,86 +210,17 @@ public class Cart extends javax.swing.JFrame {
             combinedPanel.setMinimumSize(new Dimension(900, 40));
             combinedPanel.setBackground(new Color(31, 31, 31));
             combinedPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-    
+
             combinedPanel.add(itemPanel);
             combinedPanel.add(Box.createRigidArea(new Dimension(10, 0))); // Space between itemPanel and buttonPanel
             combinedPanel.add(buttonPanel);
-    
+
             title_container1.add(combinedPanel);
             title_container1.add(Box.createRigidArea(new Dimension(0, 5))); // Add space between items
         }
 
-        // for (String item : cartItems) {
-
-        //     JPanel itemPanel = new JPanel();
-        //     itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.X_AXIS));
-        //     itemPanel.setPreferredSize(new Dimension(630, 40));
-        //     itemPanel.setMaximumSize(new Dimension(630, 40));
-        //     itemPanel.setMinimumSize(new Dimension(630, 40));
-        //     itemPanel.setBackground(new Color(31, 31, 31));
-        //     itemPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-
-        //     JLabel itemLabel = new JLabel(item);
-        //     itemLabel.setPreferredSize(new Dimension(620, 30)); // Slightly smaller to account for padding
-        //     itemLabel.setMaximumSize(new Dimension(620, 30));
-        //     itemLabel.setMinimumSize(new Dimension(620, 30));
-        //     itemLabel.setForeground(new Color(255, 169, 140)); // Set text color
-        //     itemLabel.setBackground(new Color(31, 31, 31));
-        //     itemLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-        //     itemLabel.setOpaque(true);
-        //     itemPanel.add(itemLabel);
-
-        //     // Button panel
-        //     JPanel buttonPanel = new JPanel();
-        //     buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-        //     buttonPanel.setPreferredSize(new Dimension(250, 40));
-        //     buttonPanel.setMaximumSize(new Dimension(250, 40));
-        //     buttonPanel.setMinimumSize(new Dimension(250, 40));
-        //     buttonPanel.setBackground(new Color(43, 43, 43));
-
-        //     JButton editButton = new JButton("Edit");
-        //     JButton payButton = new JButton("Pay");
-        //     JButton discardButton = new JButton("Discard");
-
-        //     // Set uniform button sizes
-        //     Dimension buttonSize = new Dimension(80, 30);
-        //     editButton.setPreferredSize(buttonSize);
-        //     editButton.setMaximumSize(buttonSize);
-        //     editButton.setMinimumSize(buttonSize);
-
-        //     payButton.setPreferredSize(buttonSize);
-        //     payButton.setMaximumSize(buttonSize);
-        //     payButton.setMinimumSize(buttonSize);
-
-        //     discardButton.setPreferredSize(buttonSize);
-        //     discardButton.setMaximumSize(buttonSize);
-        //     discardButton.setMinimumSize(buttonSize);
-
-        //     buttonPanel.add(editButton);
-        //     buttonPanel.add(Box.createRigidArea(new Dimension(5, 0))); // Space between buttons
-        //     buttonPanel.add(payButton);
-        //     buttonPanel.add(Box.createRigidArea(new Dimension(5, 0)));
-        //     buttonPanel.add(discardButton);
-
-        //     // Combined panel
-        //     JPanel combinedPanel = new JPanel();
-        //     combinedPanel.setLayout(new BoxLayout(combinedPanel, BoxLayout.X_AXIS));
-        //     combinedPanel.setPreferredSize(new Dimension(900, 40));
-        //     combinedPanel.setMaximumSize(new Dimension(900, 40));
-        //     combinedPanel.setMinimumSize(new Dimension(900, 40));
-        //     combinedPanel.setBackground(new Color(31, 31, 31));
-        //     combinedPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-
-        //     combinedPanel.add(itemPanel);
-        //     combinedPanel.add(Box.createRigidArea(new Dimension(10, 0))); // Space between itemPanel and buttonPanel
-        //     combinedPanel.add(buttonPanel);
-
-        //     title_container1.add(combinedPanel);
-        //     title_container1.add(Box.createRigidArea(new Dimension(0, 5))); // Space between rows
-
         title_container1.revalidate();
-        title_container1.repaint();
-        
+        title_container1.repaint();     
 
     }
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
@@ -606,20 +562,6 @@ public class Cart extends javax.swing.JFrame {
 
         title_container1.add(m8);
 
-        // welcome3.setBackground(new java.awt.Color(31, 31, 31));
-        // welcome3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        // welcome3.setForeground(new java.awt.Color(245, 251, 254));
-        // welcome3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        // welcome3.setText("This is the default page");
-        // welcome3.setAlignmentX(0.5F);
-        // welcome3.setMaximumSize(new java.awt.Dimension(275, 50));
-        // welcome3.setMinimumSize(new java.awt.Dimension(275, 50));
-        // welcome3.setPreferredSize(new java.awt.Dimension(275, 50));
-        // title_container1.add(welcome3);
-
-        // TODO add cart content in title container 1
-
-        // title_container1.add(cartTextArea);
 
         Main.add(title_container1);
 
@@ -726,7 +668,7 @@ public class Cart extends javax.swing.JFrame {
 
     private void btn_homeActionPerformed(java.awt.event.ActionEvent evt) {                                         
         dispose();
-        new CusDash().setVisible(true);
+        new CusDash(loginID).setVisible(true);
     }                                        
 
     private void btn_cartActionPerformed(java.awt.event.ActionEvent evt) {                                            
