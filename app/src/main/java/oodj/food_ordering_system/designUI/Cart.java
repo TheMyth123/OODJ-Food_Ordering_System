@@ -14,6 +14,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -245,10 +246,8 @@ public class Cart extends javax.swing.JFrame {
         title_container = new javax.swing.JPanel();
         m5 = new javax.swing.JPanel();
         welcome = new javax.swing.JLabel();
-        admin_username = new javax.swing.JLabel();
         title_container1 = new javax.swing.JPanel();
         m8 = new javax.swing.JPanel();
-        welcome3 = new javax.swing.JLabel();
         m6 = new javax.swing.JPanel();
         margin5 = new javax.swing.JPanel();
         m7 = new javax.swing.JPanel();
@@ -648,7 +647,7 @@ public class Cart extends javax.swing.JFrame {
 
     private void discardItem(String item) {
         // Read the current cart items from the file
-        List<String> cartItems = OrderHandling.getCart();
+        ArrayList<String> cartItems = OrderHandling.getCart();
         // Remove the selected item from the list
         cartItems.remove(item);
         // Write the updated list back to the file
@@ -702,7 +701,6 @@ public class Cart extends javax.swing.JFrame {
     private javax.swing.JButton btn_home;
     private javax.swing.JButton btn_Page4;
     private javax.swing.JButton btn_logout;
-    private javax.swing.JLabel admin_username;
     private javax.swing.JPanel m5;
     private javax.swing.JPanel m6;
     private javax.swing.JPanel m7;
@@ -716,7 +714,6 @@ public class Cart extends javax.swing.JFrame {
     private javax.swing.JPanel title_container;
     private javax.swing.JPanel title_container1;
     private javax.swing.JLabel welcome;
-    private javax.swing.JLabel welcome3;
     private javax.swing.JButton btn_Noti;
     // End of variables declaration                   
 }

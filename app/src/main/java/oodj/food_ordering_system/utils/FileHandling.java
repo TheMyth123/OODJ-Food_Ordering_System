@@ -22,6 +22,7 @@ public class FileHandling {
         VENDOR_PATH("Vendor", "app\\src\\main\\resources\\databases\\vendor.txt"),
         MENU_PATH("Menu", "app\\src\\main\\resources\\databases\\menu.txt"),
         CART_PATH("Cart", "app\\src\\main\\resources\\databases\\cart.txt"),
+        TOPUP_PATH("Topup", "app\\src\\main\\resources\\databases\\topup.txt"),
         CREDIT_PATH("Credit", "app\\src\\main\\resources\\databases\\credit.txt"),
         PAYMENT_PATH("Payment", "app\\src\\main\\resources\\databases\\payment.txt");
 
@@ -49,10 +50,10 @@ public class FileHandling {
         }
     }
     
-    public static void writeToFile(String filePath, String data, boolean append) throws IOException {
+    public static void writeToFile(String filePath, JSONArray jsonArray, boolean append) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, append))) {
-            writer.write(data);
-            writer.newLine(); 
+            writer.write(jsonArray.toString(4)); // Pretty print with indentation
+            writer.newLine();
         }
     }
 
@@ -77,4 +78,6 @@ public class FileHandling {
             e.printStackTrace();
         }
     }
+
+    
 }

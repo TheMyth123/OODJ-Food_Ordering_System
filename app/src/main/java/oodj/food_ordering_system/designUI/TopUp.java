@@ -7,9 +7,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -18,18 +17,23 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import oodj.food_ordering_system.models.Credit;
+import oodj.food_ordering_system.utils.OrderHandling;
+import oodj.food_ordering_system.utils.UserHandling;
+
 
 
 
 public class TopUp extends javax.swing.JFrame {
 
-    private String paymentMethod = "";
-    private String bookID;
 
-    public TopUp() {
-        // this.bookID = bookID;
+    private String customerID;
+    private String receiptImagePath;
+
+
+    public TopUp(String customerID) {
+        this.customerID = customerID;
         initComponents();
-
     }
 
 
@@ -134,17 +138,7 @@ public class TopUp extends javax.swing.JFrame {
         m3.setMinimumSize(new java.awt.Dimension(800, 250));
         m3.setPreferredSize(new java.awt.Dimension(800, 250));
 
-        // javax.swing.GroupLayout m3Layout = new javax.swing.GroupLayout(m3);
-        // m3.setLayout(m3Layout);
-        // m3Layout.setHorizontalGroup(
-        //     m3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        //     .addGap(0, 800, Short.MAX_VALUE)
-        // );
-        // m3Layout.setVerticalGroup(
-        //     m3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        //     .addGap(0, 0, Short.MAX_VALUE)
-        // );
-
+        
         m3.setLayout(new javax.swing.BoxLayout(m3, javax.swing.BoxLayout.Y_AXIS));
 
         JLabel amountLabel = new JLabel("Enter Top-Up Amount:");
@@ -271,7 +265,8 @@ public class TopUp extends javax.swing.JFrame {
         int returnValue = fileChooser.showOpenDialog(this);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             // Handle file selection
-            System.out.println("Receipt uploaded: " + fileChooser.getSelectedFile().getPath());
+            receiptImagePath = fileChooser.getSelectedFile().getPath();
+            System.out.println("Receipt uploaded: " + receiptImagePath);
         }
     }
 
@@ -280,7 +275,27 @@ public class TopUp extends javax.swing.JFrame {
         String amount = amountField.getText();
         if (amount.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please enter the top-up amount.", "Error", JOptionPane.ERROR_MESSAGE);
+        } else if (receiptImagePath == null || receiptImagePath.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please upload the receipt.", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
+            // Create a new Credit object
+            String creditID = "CR" + String.format("%05d", OrderHandling.getCRid() + 1);
+
+            // String creditID = "CR" + System.currentTimeMillis(); // Generate a unique ID based on the current time
+            double creditAmount = Double.parseDouble(amount);
+            LocalDate lastUpdated = LocalDate.now();
+            String status = "Pending";
+            String receiptPath = OrderHandling.RECEIPT_FOLDER + creditID + ".jpg";
+
+            Credit newCredit = new Credit(creditID, customerID, creditAmount, lastUpdated, status, receiptPath);
+
+            // Get existing credits and add the new credit
+            ArrayList<Credit> credits = OrderHandling.getCredits();
+            credits.add(newCredit);
+
+            // Save the updated credits
+            OrderHandling.saveCredits(newCredit, receiptImagePath);
+
             JOptionPane.showMessageDialog(this, "Request has successfully been sent to admin.", "Success", JOptionPane.INFORMATION_MESSAGE);
         }
     }
@@ -289,9 +304,7 @@ public class TopUp extends javax.swing.JFrame {
         dispose();
     }                                       
 
-//     private void payButtonActionPerformed(java.awt.event.ActionEvent evt) {                                          
-// //        payment();
-//     }                                         
+                                       
 
 
     // Variables declaration - do not modify                     
@@ -311,10 +324,10 @@ public class TopUp extends javax.swing.JFrame {
     // End of variables declaration  
     
     
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> {
-            new TopUp().setVisible(true);
-        });
-    }
+    // public static void main(String[] args) {
+    //     java.awt.EventQueue.invokeLater(() -> {
+    //         new TopUp().setVisible(true);
+    //     });
+    // }
 }
 

@@ -1,0 +1,66 @@
+[
+    {
+        "Status": "Active",
+        "ReceiptImagePath": "app/src/main/resources/receipts/CR00001.jpg",
+        "CreditID": "CR00001",
+        "CreditAmount": 5,
+        "CustomerID": "CS00001",
+        "LastUpdated": "2025-01-05"
+    },
+    {
+        "Status": "Inactive",
+        "ReceiptImagePath": "app/src/main/resources/receipts/CR00002.jpg",
+        "CreditID": "CR00002",
+        "CreditAmount": 150,
+        "CustomerID": "CS00002",
+        "LastUpdated": "2023-01-01"
+    },
+    {
+        "Status": "Pending",
+        "ReceiptImagePath": "app/src/main/resources/receipts/CR1736168278059.jpg",
+        "CreditID": "CR1736168278059",
+        "CreditAmount": 10,
+        "CustomerID": "CS00001",
+        "LastUpdated": "2025-01-06"
+    },
+    {
+        "Status": "Pending",
+        "ReceiptImagePath": "app/src/main/resources/receipts/CR1736244343409.jpg",
+        "CreditID": "CR1736244343409",
+        "CreditAmount": 10,
+        "CustomerID": "CS00001",
+        "LastUpdated": "2025-01-07"
+    },
+    {
+        "Status": "Pending",
+        "ReceiptImagePath": "app/src/main/resources/receipts/CR1736245014349.jpg",
+        "CreditID": "CR1736245014349",
+        "CreditAmount": 10,
+        "CustomerID": "CS00001",
+        "LastUpdated": "2025-01-07"
+    },
+    {
+        "Status": "Pending",
+        "ReceiptImagePath": "app/src/main/resources/receipts/CR1736245281890.jpg",
+        "CreditID": "CR1736245281890",
+        "CreditAmount": 10,
+        "CustomerID": "CS00001",
+        "LastUpdated": "2025-01-07"
+    },
+    {
+        "Status": "Pending",
+        "ReceiptImagePath": "app/src/main/resources/receipts/CR1736245535859.jpg",
+        "CreditID": "CR1736245535859",
+        "CreditAmount": 10,
+        "CustomerID": "CS00001",
+        "LastUpdated": "2025-01-07"
+    },
+    {
+        "Status": "Pending",
+        "ReceiptImagePath": "app/src/main/resources/receipts/CR00008.jpg",
+        "CreditID": "CR00008",
+        "CreditAmount": 100,
+        "CustomerID": "CS00001",
+        "LastUpdated": "2025-01-08"
+    }
+]

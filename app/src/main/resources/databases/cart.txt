@@ -22,5 +22,14 @@
     "name": "Filet Mignon",
     "description": "Tender beef filet with red wine reduction",
     "CustomerID": "CS00001"
+  },
+  {
+    "MenuID": "MN00001",
+    "quantity": "2",
+    "price": "$25",
+    "imagePath": "images/seared_salmon.jpg",
+    "name": "Seared Salmon",
+    "description": "Pan-seared salmon with lemon butter sauce",
+    "CustomerID": "CS00001"
   }
 ]

@@ -2,10 +2,8 @@ package oodj.food_ordering_system.designUI;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.ArrayList;
 import java.awt.Component;
 import java.awt.Dimension;
 
@@ -15,12 +13,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import oodj.food_ordering_system.models.Credit;
-import oodj.food_ordering_system.models.Customer;
 import oodj.food_ordering_system.utils.OrderHandling;
-import oodj.food_ordering_system.utils.UserHandling;
 
 // TODO after payment successfull dispose the payment page
-// TODO use credit to pay
 public class Payment extends javax.swing.JFrame {
 
     private String orderID;
@@ -29,6 +24,8 @@ public class Payment extends javax.swing.JFrame {
     private String totalAmount;
     private JTextField addressField;
     private Credit credit;
+    private String receiptImagePath;
+
 
     
 
@@ -291,7 +288,7 @@ public class Payment extends javax.swing.JFrame {
             credit.setDate(LocalDate.now());
 
             // Save updated credit information
-            List<Credit> credits = OrderHandling.getCredits();
+            ArrayList<Credit> credits = OrderHandling.getCredits();
             for (Credit c : credits) {
                 if (c.getCustomerID().equals(credit.getCustomerID())) {
                     c.setAmount(credit.getAmount());
@@ -299,7 +296,8 @@ public class Payment extends javax.swing.JFrame {
                     break;
                 }
             }
-            OrderHandling.saveCredits(credits);
+            // TODO edit this
+            OrderHandling.saveCredits(credit, receiptImagePath);
 
             OrderHandling.savePayment(orderID, credit.getCustomerID(), foodName, quantity, totalAmountDouble, address);
 

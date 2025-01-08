@@ -1,5 +1,6 @@
 [
     {
+        "Status": "True",
         "id": "MN00001",
         "VendorID": "VD00001",
         "name": "Seared Salmon",
@@ -8,6 +9,7 @@
         "imagePath": "images/seared_salmon.jpg"
     },
     {
+        "Status": "True",
         "id": "MN00002",
         "VendorID": "VD00001",
         "name": "Filet Mignon",
@@ -16,6 +18,7 @@
         "imagePath": "images/filet_mignon.jpg"
     },
     {
+        "Status": "True",
         "id": "MN00003",
         "VendorID": "VD00001",
         "name": "Truffle Risotto",
@@ -24,6 +27,7 @@
         "imagePath": "images/truffle_risotto.jpg"
     },
     {
+        "Status": "True",
         "id": "MN00004",
         "VendorID": "VD00001",
         "name": "Spaghetti Carbonara",

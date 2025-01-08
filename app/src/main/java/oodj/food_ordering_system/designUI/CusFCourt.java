@@ -18,7 +18,6 @@ public class CusFCourt extends javax.swing.JFrame {
 
     private JPanel mainPanel;
     private JPanel restaurantListPanel;
-    // private int vendorID;
     
 
     public CusFCourt() {

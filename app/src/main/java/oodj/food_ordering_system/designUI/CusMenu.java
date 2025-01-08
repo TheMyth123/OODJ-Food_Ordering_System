@@ -24,8 +24,7 @@ import java.util.Map;
 public class CusMenu extends javax.swing.JFrame {
 
     private JPanel menuPanel;
-    // private Map<String, String[][]> restaurantMenus;
-    // private static String restaurantName;
+    
     private String[] selectedItem;
     private List<String[]> cart;
     private JPanel selectedItemPanel;
@@ -303,22 +302,7 @@ public class CusMenu extends javax.swing.JFrame {
         addButton.setMaximumSize(new java.awt.Dimension(200, 40));
         addButton.setMinimumSize(new java.awt.Dimension(200, 40));
         addButton.setPreferredSize(new java.awt.Dimension(170, 40));
-        // addButton.addActionListener(evt -> {
-        //     if (selectedItem != null) {
-        //         cart.add(selectedItem);
-        //         selectedItem = null;
-        //         if (selectedItemPanel != null) {
-        //             selectedItemPanel.setBackground(new Color(43, 43, 43));
-        //             selectedItemPanel = null;
-
-        //         }
-        //         addToCart();
-        //         JOptionPane.showMessageDialog(this, "Selected item added to cart.");
-
-        //     } else {
-        //         JOptionPane.showMessageDialog(this, "No item selected.");
-        //     }
-        // });
+        
 
         addButton.addActionListener(evt -> {
             if (selectedItem != null) {
@@ -371,17 +355,7 @@ public class CusMenu extends javax.swing.JFrame {
         public List<String[]> getCart() {
             return cart;
         }
-        // TODO remove this 
-        // public static void main(String[] args) {
-            
-        //     java.awt.EventQueue.invokeLater(() -> {
-        //         JFrame frame = new JFrame("Restaurant Menu");
-            
-    
-        //         CusMenu menuPanel = new CusMenu(OrderHandling.readMenuFile(vendorID));
-        //     frame.add(menuPanel);
-        // });
-        // }
+        
 
   
     private javax.swing.JButton backBtn;

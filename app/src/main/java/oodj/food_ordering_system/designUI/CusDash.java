@@ -17,12 +17,6 @@ import javax.swing.JPanel;
 public class CusDash extends javax.swing.JFrame {
 
 
-    // public static void main(String[] args) {
-    //     java.awt.EventQueue.invokeLater(() -> {
-    //         new CusDash().setVisible(true);
-    //     });
-    // }
-
     private String customerID;
 // TODO check again customerID
     public CusDash(String customerID) {
@@ -229,7 +223,7 @@ public class CusDash extends javax.swing.JFrame {
         btn_container1.add(btn_history);
 
         
-
+// Test top up
         btn_Page4.setBackground(new java.awt.Color(31, 31, 31));
         btn_Page4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btn_Page4.setForeground(new java.awt.Color(245, 251, 254));
@@ -519,8 +513,8 @@ public class CusDash extends javax.swing.JFrame {
                                                                              
 
     private void btn_Page4ActionPerformed(java.awt.event.ActionEvent evt) {                                        
-        //dispose();
-        //TODO CALL PAGE 4
+        // dispose();
+        new TopUp(customerID).setVisible(true);
         System.out.println("Page 4");
     }                                       
 
