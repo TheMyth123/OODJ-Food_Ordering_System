@@ -9,6 +9,7 @@ import oodj.food_ordering_system.models.Vendor;
 import java.util.ArrayList;
 import oodj.food_ordering_system.utils.UserHandling;
 
+
 public class LoginPage extends javax.swing.JFrame {
 
     private static Manager endUserMa;
@@ -19,6 +20,7 @@ public class LoginPage extends javax.swing.JFrame {
 
     private static Customer endUser;
     //private static CarRS carRS;
+
     private static Admin endUserAd;
 
     public static String loginID = "";
@@ -121,10 +123,13 @@ public class LoginPage extends javax.swing.JFrame {
                     System.out.println("Admin: "+username+" Logged In");
                     break;
                 case 3:
-                    //setVisible(false);
-                    // carRS = new CarRS();
-                    // carRS.setVisible(true); 
+                    DialogBox.successMessage("Welcome back, " + username + "!", "Customer Login Success!");
+                    setVisible(false);
+                    new CusDash(loginID).setVisible(true); 
+
                     // TODO Develop Customer Main Menu
+                    // test
+
                     System.out.println("Customer: "+username+" Logged In");
                     break;
                 case 4:

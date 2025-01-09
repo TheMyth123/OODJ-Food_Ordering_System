@@ -8,11 +8,14 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import oodj.food_ordering_system.models.Admin;
+import oodj.food_ordering_system.models.Credit;
 import oodj.food_ordering_system.models.Customer;
 import oodj.food_ordering_system.models.Manager;
 import oodj.food_ordering_system.models.DeliveryRunner;
@@ -197,6 +200,7 @@ public class UserHandling {
         ArrayList<Customer> buffer = new ArrayList<>();
     
         try {
+            
             String jsonData = new String(Files.readAllBytes(Paths.get(CUSTOMER)));
             JSONArray customersArray = new JSONArray(jsonData);
 

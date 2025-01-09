@@ -14,6 +14,12 @@ public class Vendor extends User{
         this.email = email;
     }
     
+    public Vendor(String ID, String foodCourtName) {
+        super("", "");
+        this.ID = ID;
+        this.foodcourtname = foodCourtName;
+    }
+
     public String getID() {
         return ID;
     }
