@@ -16,7 +16,6 @@ import java.util.Enumeration;
 import javax.swing.AbstractButton;
 import oodj.food_ordering_system.utils.FileHandling;
 import oodj.food_ordering_system.utils.UserHandling;
-import static oodj.food_ordering_system.utils.validation.isValidPhone;
 
 public class RegisterPage extends javax.swing.JFrame {
 
@@ -85,7 +84,7 @@ public class RegisterPage extends javax.swing.JFrame {
                 emailTextField.setText("");
                 DialogBox.errorMessage("Please Change another email", "Email exists!");
 
-            } else if (!isValidPhone(contactnumber)) {
+            } else if (!validation.isValidPhone(contactnumber)) {
                 contactNumberTextField.setText("");
                 DialogBox.errorMessage(
                         "Please re-enter your contact number! Valid formats include:\n"

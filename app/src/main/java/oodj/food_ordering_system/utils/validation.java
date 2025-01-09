@@ -1,6 +1,7 @@
 package oodj.food_ordering_system.utils;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.table.DefaultTableModel;
@@ -45,6 +46,18 @@ public class validation {
         }
     }
 
+    public static boolean checkUsernameWithId(String username, String id) {
+        Map<String, String> usernamesWithIds = UserHandling.getUsernamesWithIds();
+
+        for (Map.Entry<String, String> entry : usernamesWithIds.entrySet()) {
+            if (!entry.getKey().equals(id) && entry.getValue().equals(username)) {
+                return false;
+            }
+        }
+
+        return true; 
+    }
+
     public static boolean checkEmail(String email) {
         ArrayList<String> emails = UserHandling.getEmails();
 
@@ -53,6 +66,18 @@ public class validation {
         } else {
             return true;
         }
+    }
+
+    public static boolean checkEmailWithId(String email, String id) {
+        Map<String, String> emailsWithIds = UserHandling.getEmailsWithIds();
+
+        for (Map.Entry<String, String> entry : emailsWithIds.entrySet()) {
+            if (!entry.getKey().equals(id) && entry.getValue().equals(email)) {
+                return false;
+            }
+        }
+
+        return true; 
     }
 
     public static boolean isValidPassword(String password) {

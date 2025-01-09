@@ -117,9 +117,8 @@ public class LoginPage extends javax.swing.JFrame {
                     System.out.println("Manager: "+username+" Logged In");
                     break;
                 case 2:
-                    // TODO Develop Admin Main Menu
-                    // setVisible(false);
-                    // new MenuTemplate().setVisible(true);
+                    setVisible(false);
+                    new ManageCustomer().setVisible(true);
                     System.out.println("Admin: "+username+" Logged In");
                     break;
                 case 3:

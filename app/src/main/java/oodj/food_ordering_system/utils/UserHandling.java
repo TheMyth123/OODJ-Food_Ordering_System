@@ -129,7 +129,7 @@ public class UserHandling {
             for (int i = 0; i < vendorsArray.length(); i++) {
                 JSONObject vendorData = vendorsArray.getJSONObject(i);
                 String vendorID = vendorData.getString("VendorID");
-                if (vendorID.contains("VN")) {
+                if (vendorID.contains("VD")) {
                     tempCount++;
                 }
             }
@@ -404,6 +404,32 @@ public class UserHandling {
         return usernames;
     }
 
+    public static Map<String, String> getUsernamesWithIds() {
+        Map<String, String> usernamesWithIds = new HashMap<>();
+    
+        for (Manager manager : getManagers()) {
+            usernamesWithIds.put(manager.getID(), manager.getUsername());
+        }
+    
+        for (Admin admin : getAdmins()) {
+            usernamesWithIds.put(admin.getID(), admin.getUsername());
+        }
+    
+        for (Customer customer : getCustomers()) {
+            usernamesWithIds.put(customer.getID(), customer.getUsername());
+        }
+    
+        for (DeliveryRunner delivery : getDeliveries()) {
+            usernamesWithIds.put(delivery.getID(), delivery.getUsername());
+        }
+    
+        for (Vendor vendor : getVendors()) {
+            usernamesWithIds.put(vendor.getID(), vendor.getUsername());
+        }
+    
+        return usernamesWithIds;
+    }
+
     public static ArrayList<String> getEmails() {
         ArrayList<String> emails = new ArrayList<>();
 
@@ -428,6 +454,32 @@ public class UserHandling {
         }
 
         return emails;
+    }
+
+    public static Map<String, String> getEmailsWithIds() {
+        Map<String, String> emailsWithIds = new HashMap<>();
+    
+        for (Manager manager : getManagers()) {
+            emailsWithIds.put(manager.getID(), manager.getEmail());
+        }
+    
+        for (Admin admin : getAdmins()) {
+            emailsWithIds.put(admin.getID(), admin.getEmail());
+        }
+    
+        for (Customer customer : getCustomers()) {
+            emailsWithIds.put(customer.getID(), customer.getEmail());
+        }
+    
+        for (DeliveryRunner delivery : getDeliveries()) {
+            emailsWithIds.put(delivery.getID(), delivery.getEmail());
+        }
+    
+        for (Vendor vendor : getVendors()) {
+            emailsWithIds.put(vendor.getID(), vendor.getEmail());
+        }
+    
+        return emailsWithIds;
     }
 
     public static String getName() {
@@ -514,4 +566,118 @@ public class UserHandling {
                 .filter(vendor -> vendor.getID().contains(query) || vendor.getUsername().contains(query))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
+
+    public static Customer getCustomerByID(String customerID) {
+        try {
+            // Read the JSON file
+            String jsonData = new String(Files.readAllBytes(Paths.get(CUSTOMER)));
+            JSONArray customersArray = new JSONArray(jsonData);
+    
+            // Iterate through the customer data to find the matching ID
+            for (int i = 0; i < customersArray.length(); i++) {
+                JSONObject customerData = customersArray.getJSONObject(i);
+    
+                // Check if the CustomerID matches
+                if (customerData.getString("CustomerID").equals(customerID)) {
+                    String username = customerData.getString("Username");
+                    String name = customerData.getString("Name");
+                    String phone = customerData.getString("Phone");
+                    String password = customerData.getString("Password");
+                    String gender = customerData.getString("Gender");
+                    String dob = customerData.getString("DOB");
+                    String email = customerData.getString("Email");
+                    String address = customerData.getString("Address");
+                    Boolean status = customerData.getBoolean("Status");
+    
+                    // Create and return the Customer object
+                    return new Customer(customerID, username, name, phone, password, gender, dob, email, address, status);
+                }
+            }
+    
+            // If no matching customer is found
+            DialogBox.errorMessage("Customer with ID " + customerID + " not found.", "Error");
+            return null;
+    
+        } catch (Exception e) {
+            // Handle any errors (e.g., file reading or JSON parsing)
+            DialogBox.errorMessage("Error reading or parsing customer JSON file: " + e.getMessage(), "Error");
+            return null;
+        }
+    }    
+
+    public static Vendor getVendorByID(String vendorID) {
+        try {
+            // Read the JSON file
+            String jsonData = new String(Files.readAllBytes(Paths.get(VENDOR)));
+            JSONArray vendorsArray = new JSONArray(jsonData);
+    
+            // Iterate through the vendor data to find the matching ID
+            for (int i = 0; i < vendorsArray.length(); i++) {
+                JSONObject vendordata = vendorsArray.getJSONObject(i);
+    
+                // Check if the vendor matches
+                if (vendordata.getString("VendorID").equals(vendorID)) {
+                    String username = vendordata.getString("Username");
+                    String vendorname = vendordata.getString("VendorName");
+                    String phone = vendordata.getString("ContactNumber");
+                    String password = vendordata.getString("Password");
+                    Boolean status = vendordata.getBoolean("Status");
+                    String foodcourtname = vendordata.getString("FoodCourtName");
+                    String email = vendordata.getString("Email");
+                    String DOB = vendordata.getString("DateRegistered");
+    
+                    // Create and return the vendor object
+                    return new Vendor(vendorID, vendorname, foodcourtname, phone, username, password, status, DOB, email);
+                }
+            }
+    
+            // If no matching vendor is found
+            DialogBox.errorMessage("Vendor with ID " + vendorID + " not found.", "Error");
+            return null;
+    
+        } catch (Exception e) {
+            // Handle any errors (e.g., file reading or JSON parsing)
+            DialogBox.errorMessage("Error reading or parsing vendor JSON file: " + e.getMessage(), "Error");
+            return null;
+        }
+    }
+
+    public static DeliveryRunner getDeliveryRunnerByID(String runnerID) {
+        try {
+            // Read the JSON file
+            String jsonData = new String(Files.readAllBytes(Paths.get(DELIVERY)));
+            JSONArray runnersArray = new JSONArray(jsonData);
+    
+            // Iterate through the runner data to find the matching ID
+            for (int i = 0; i < runnersArray.length(); i++) {
+                JSONObject runnerData = runnersArray.getJSONObject(i);
+    
+                // Check if the runnerID matches
+                if (runnerData.getString("RunnerID").equals(runnerID)) {
+                    String username = runnerData.getString("Username");
+                    String name = runnerData.getString("Name");
+                    String phone = runnerData.getString("Phone");
+                    String password = runnerData.getString("Password");
+                    String gender = runnerData.getString("Gender");
+                    String dob = runnerData.getString("DOB");
+                    String email = runnerData.getString("Email");
+                    String vehicle = runnerData.getString("VehicleType");
+                    String license = runnerData.getString("LicensePlate");
+                    Boolean status = runnerData.getBoolean("Status");
+    
+                    // Create and return the runner object
+                    return new DeliveryRunner(runnerID, username, name, phone, password, gender, dob, email, vehicle, license, status);
+                }
+            }
+    
+            // If no matching runner is found
+            DialogBox.errorMessage("Delivery Runner with ID " + runnerID + " not found.", "Error");
+            return null;
+    
+        } catch (Exception e) {
+            // Handle any errors (e.g., file reading or JSON parsing)
+            DialogBox.errorMessage("Error reading or parsing runner JSON file: " + e.getMessage(), "Error");
+            return null;
+        }
+    }   
 }

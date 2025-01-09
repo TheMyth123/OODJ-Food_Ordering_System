@@ -1,46 +1,46 @@
 [
-    {
-        "VendorID": "VD00001",
-        "VendorName": "Stall A",
-        "FoodCourtName": "Food Court 1",
-        "ContactNumber": "0123456789",
-        "Username": "stallA",
-        "Password": "pass1234",
-        "Status": true,
-        "DateRegistered": "2023-01-10",
-        "Email": "stallA@example.com"
-    },
-    {
-        "VendorID": "VD00002",
-        "VendorName": "Stall B",
-        "FoodCourtName": "Food Court 1",
-        "ContactNumber": "0987654321",
-        "Username": "stallB",
-        "Password": "pass5678",
-        "Status": true,
-        "DateRegistered": "2023-02-15",
-        "Email": "stallB@example.com"
-    },
-    {
-        "VendorID": "VD00003",
-        "VendorName": "Stall C",
-        "FoodCourtName": "Food Court 2",
-        "ContactNumber": "0121122334",
-        "Username": "stallC",
-        "Password": "pass91011",
-        "Status": false,
-        "DateRegistered": "2023-03-20",
-        "Email": "stallC@example.com"
-    },
-    {
-        "VendorID": "VD00004",
-        "VendorName": "Stall D",
-        "FoodCourtName": "Food Court 3",
-        "ContactNumber": "0155566778",
-        "Username": "stallD",
-        "Password": "pass1213",
-        "Status": true,
-        "DateRegistered": "2023-04-05",
-        "Email": "stallD@example.com"
-    }
+  {
+    "FoodCourtName": "Food Court 1",
+    "Status": true,
+    "VendorName": "Stall A",
+    "Email": "stallA@example.com",
+    "Username": "stallA",
+    "DateRegistered": "2023-01-10",
+    "VendorID": "VD00001",
+    "ContactNumber": "0123456789",
+    "Password": "pass1234"
+  },
+  {
+    "FoodCourtName": "Food Court 1",
+    "Status": true,
+    "VendorName": "Stall B",
+    "Email": "stallB@example.com",
+    "Username": "stallB",
+    "DateRegistered": "2023-02-15",
+    "VendorID": "VD00002",
+    "ContactNumber": "0987654321",
+    "Password": "pass5678"
+  },
+  {
+    "FoodCourtName": "Food Court 2",
+    "Status": false,
+    "VendorName": "Stall C",
+    "Email": "stallC@example.com",
+    "Username": "stallC",
+    "DateRegistered": "2023-03-20",
+    "VendorID": "VD00003",
+    "ContactNumber": "0121122334",
+    "Password": "pass91011"
+  },
+  {
+    "FoodCourtName": "Food Court 3",
+    "Status": True,
+    "VendorName": "Stall D",
+    "Email": "stallD@example.com",
+    "Username": "stallD",
+    "DateRegistered": "2023-04-05",
+    "VendorID": "VD00004",
+    "ContactNumber": "0155566778",
+    "Password": "pass1213"
+  },
 ]
