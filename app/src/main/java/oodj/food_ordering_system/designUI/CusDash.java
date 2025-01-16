@@ -1,18 +1,23 @@
 package oodj.food_ordering_system.designUI;
 
 import oodj.food_ordering_system.models.Customer;
+import oodj.food_ordering_system.models.Notification;
 // import oodj.food_ordering_system.models.Notification;
 import oodj.food_ordering_system.utils.DialogBox;
+import oodj.food_ordering_system.utils.NotificationUtils;
 // import oodj.food_ordering_system.utils.NotificationUtils;
 import raven.glasspanepopup.*;
+
+import java.util.List;
 
 // import java.util.List;
 
 import javax.swing.JPanel;
 
-// import oodj.food_ordering_system.designUI.CusFCourt;
-// import net.miginfocom.layout.ComponentWrapper;
-// import net.miginfocom.layout.LayoutCallback;
+import net.miginfocom.layout.ComponentWrapper;
+import net.miginfocom.layout.LayoutCallback;
+
+//  dine in, take-away or request for delivery service from the vendor.
 
 public class CusDash extends javax.swing.JFrame {
 
@@ -364,13 +369,19 @@ public class CusDash extends javax.swing.JFrame {
         btn_Noti.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/noti.png"))); // NOI18N
         btn_Noti.setPreferredSize(new java.awt.Dimension(50, 50));
         // TODO check again
+
         btn_Noti.setFocusPainted(false);
+
 
         btn_Noti.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                // btn_NotiActionPerformed(evt);
+
+                btn_NotiActionPerformed(evt);
             }
         });
+
+
+
         title_container.add(btn_Noti);
 
         Main.add(title_container);
@@ -456,35 +467,35 @@ public class CusDash extends javax.swing.JFrame {
     }// </editor-fold>    
 
     //TODO I USED ADMIN DATA TO GET NOTIFICATIONS. CHANGE TO OWN DATA
-    // List<Notification> notifications = NotificationUtils.getAdminUnreadNotifications(NotificationUtils.getAllNotifications());
+    List<Notification> notifications = NotificationUtils.getUnreadNotifications(NotificationUtils.getAllNotifications());
     
-    // private void btn_NotiActionPerformed(java.awt.event.ActionEvent evt) {                                  
-    //     GlassPanePopup.showPopup(new NotificationPanel(notifications), new DefaultOption(){
-    //         @Override
-    //         public float opacity() {
-    //             return 0;
-    //         }
+    private void btn_NotiActionPerformed(java.awt.event.ActionEvent evt) {                                  
+        GlassPanePopup.showPopup(new NotificationPanel(notifications), new DefaultOption(){
+            @Override
+            public float opacity() {
+                return 0;
+            }
 
-    //         @Override
-    //         public LayoutCallback getLayoutCallBack(java.awt.Component parent) {
-    //             return new DefaultLayoutCallBack(parent){
-    //                 @Override
-    //                 public void correctBounds(ComponentWrapper cw) {
-    //                     if (parent.isVisible()){
-    //                         java.awt.Point pl = parent.getLocationOnScreen();
-    //                         java.awt.Point bl = btn_Noti.getLocationOnScreen();
-    //                         int x = bl.x - pl.x;
-    //                         int y = bl.y - pl.y;
-    //                         cw.setBounds(x - cw.getWidth() + btn_Noti.getWidth(), y + btn_Noti.getHeight(), cw.getWidth(), cw.getHeight());
-    //                     } else {
-    //                         super.correctBounds(cw);
-    //                     }
-    //                 }
-    //             };
-    //         }
+            @Override
+            public LayoutCallback getLayoutCallBack(java.awt.Component parent) {
+                return new DefaultLayoutCallBack(parent){
+                    @Override
+                    public void correctBounds(ComponentWrapper cw) {
+                        if (parent.isVisible()){
+                            java.awt.Point pl = parent.getLocationOnScreen();
+                            java.awt.Point bl = btn_Noti.getLocationOnScreen();
+                            int x = bl.x - pl.x;
+                            int y = bl.y - pl.y;
+                            cw.setBounds(x - cw.getWidth() + btn_Noti.getWidth(), y + btn_Noti.getHeight(), cw.getWidth(), cw.getHeight());
+                        } else {
+                            super.correctBounds(cw);
+                        }
+                    }
+                };
+            }
 
-    //     });
-    // }   
+        });
+    }   
 
     private void btn_logoutActionPerformed(java.awt.event.ActionEvent evt) {                                           
         boolean confirm = DialogBox.confirmMessage("Are you sure you want to logout?", "Logout");

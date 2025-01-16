@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+// change to OOP
 public class OrderHandling {
     
     private static final String MENU = FileHandling.filePath.MENU_PATH.getValue();
@@ -43,7 +44,7 @@ public class OrderHandling {
     
         return tempCount;
     }
-
+//  need OOP
     public static ArrayList<JSONObject> readMenuFile(String vendorID) throws IOException {
         // Path to the menu file
         ArrayList<String> lines = FileHandling.readLines(MENU);
@@ -58,7 +59,7 @@ public class OrderHandling {
         }
         return filterMenuByVendor(menuItems, vendorID);
     }
-
+//  need OOP
     public static ArrayList<JSONObject> filterMenuByVendor(ArrayList<JSONObject> menuItems, String vendorID) {
         ArrayList<JSONObject> filteredMenu = new ArrayList<>();
         // Convert vendorID to string for comparison
@@ -69,7 +70,7 @@ public class OrderHandling {
         }
         return filteredMenu;
     }
-
+//  need OOP
     public static ArrayList<String> getCart() {
         ArrayList<String> lines = FileHandling.readLines(CART);
 
@@ -95,7 +96,7 @@ public class OrderHandling {
         }
         return cartItems;
     }
-
+//  need OOP
     public static void saveCart(ArrayList<String> cartItems) {
         JSONArray cartArray = new JSONArray();
         for (String item : cartItems) {

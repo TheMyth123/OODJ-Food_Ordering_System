@@ -29,7 +29,7 @@ import javax.swing.JTextField;
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
 
-
+// TODO add orderType = 0-dine in, 1-take away, 2-delivery
 // TODO design have done yet, discard items will affect the cart.txt json format
 public class Cart extends javax.swing.JFrame {
     private String customerID;
@@ -613,36 +613,36 @@ public class Cart extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>    
 
-    //TODO I USED ADMIN DATA TO GET NOTIFICATIONS. CHANGE TO OWN DATA
-    List<Notification> notifications = NotificationUtils.getAdminUnreadNotifications(NotificationUtils.getAllNotifications());
+    // //TODO I USED ADMIN DATA TO GET NOTIFICATIONS. CHANGE TO OWN DATA
+    // List<Notification> notifications = NotificationUtils.getAdminUnreadNotifications(NotificationUtils.getAllNotifications());
     
-    private void btn_NotiActionPerformed(java.awt.event.ActionEvent evt) {                                  
-        GlassPanePopup.showPopup(new NotificationPanel(notifications), new DefaultOption(){
-            @Override
-            public float opacity() {
-                return 0;
-            }
+    // private void btn_NotiActionPerformed(java.awt.event.ActionEvent evt) {                                  
+    //     GlassPanePopup.showPopup(new NotificationPanel(notifications), new DefaultOption(){
+    //         @Override
+    //         public float opacity() {
+    //             return 0;
+    //         }
 
-            @Override
-            public LayoutCallback getLayoutCallBack(java.awt.Component parent) {
-                return new DefaultLayoutCallBack(parent){
-                    @Override
-                    public void correctBounds(ComponentWrapper cw) {
-                        if (parent.isVisible()){
-                            java.awt.Point pl = parent.getLocationOnScreen();
-                            java.awt.Point bl = btn_Noti.getLocationOnScreen();
-                            int x = bl.x - pl.x;
-                            int y = bl.y - pl.y;
-                            cw.setBounds(x - cw.getWidth() + btn_Noti.getWidth(), y + btn_Noti.getHeight(), cw.getWidth(), cw.getHeight());
-                        } else {
-                            super.correctBounds(cw);
-                        }
-                    }
-                };
-            }
+    //         @Override
+    //         public LayoutCallback getLayoutCallBack(java.awt.Component parent) {
+    //             return new DefaultLayoutCallBack(parent){
+    //                 @Override
+    //                 public void correctBounds(ComponentWrapper cw) {
+    //                     if (parent.isVisible()){
+    //                         java.awt.Point pl = parent.getLocationOnScreen();
+    //                         java.awt.Point bl = btn_Noti.getLocationOnScreen();
+    //                         int x = bl.x - pl.x;
+    //                         int y = bl.y - pl.y;
+    //                         cw.setBounds(x - cw.getWidth() + btn_Noti.getWidth(), y + btn_Noti.getHeight(), cw.getWidth(), cw.getHeight());
+    //                     } else {
+    //                         super.correctBounds(cw);
+    //                     }
+    //                 }
+    //             };
+    //         }
 
-        });
-    }   
+    //     });
+    // }   
 
 
     private void discardItem(String item) {
