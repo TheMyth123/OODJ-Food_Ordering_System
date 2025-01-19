@@ -9,7 +9,8 @@
     "CustomerID": "CS00001",
     "Gender": "Male",
     "Name": "c",
-    "Password": "a55555"
+    "Password": "a55555",
+    "Balance": 100.00
   },
   {
     "Status": "True",
@@ -21,7 +22,8 @@
     "CustomerID": "CS00002",
     "Gender": "Male",
     "Name": "c",
-    "Password": "a99991"
+    "Password": "a99991",
+    "Balance": 100.00    
   },
   {
     "Status": "True",
@@ -33,7 +35,8 @@
     "CustomerID": "CS00003",
     "Gender": "Male",
     "Name": "c",
-    "Password": "a66661"
+    "Password": "a66661",
+    "Balance": 100.00
   },
   {
     "Status": "True",
@@ -45,7 +48,8 @@
     "CustomerID": "CS00004",
     "Gender": "Female",
     "Name": "hui wen",
-    "Password": "a12345"
+    "Password": "a12345",
+    "Balance": 200.00
   },
   {
     "Status": "True",
@@ -57,7 +61,8 @@
     "CustomerID": "CS00005",
     "Gender": "Female",
     "Name": "hui",
-    "Password": "a12345"
+    "Password": "a12345",
+    "Balance": 150.00
   },
   {
     "Status": "True",
@@ -69,7 +74,8 @@
     "CustomerID": "CS00006",
     "Gender": "Male",
     "Name": "test name",
-    "Password": "testing1"
+    "Password": "testing1",
+    "Balance": 50.00
   },
   {
     "Status": "True",
@@ -81,7 +87,8 @@
     "CustomerID": "CS00007",
     "Gender": "Male",
     "Name": "dsfadsafds",
-    "Password": "dsfaaafd2"
+    "Password": "dsfaaafd2",
+    "Balance": 100.00
   },
   {
     "Status": "True",
@@ -93,7 +100,8 @@
     "CustomerID": "CS00008",
     "Gender": "Male",
     "Name": "asfdfsad",
-    "Password": "dfasdfas3"
+    "Password": "dfasdfas3",
+    "Balance": 100.00
   },
   {
     "Status": "True",
@@ -105,7 +113,8 @@
     "CustomerID": "CS00009",
     "Gender": "Male",
     "Name": "sdfsadsa",
-    "Password": "dsafsadads3"
+    "Password": "dsafsadads3",
+    "Balance": 100.00
   },
   {
     "Status": "True",
@@ -117,7 +126,8 @@
     "CustomerID": "CS00010",
     "Gender": "Male",
     "Name": "testsekase",
-    "Password": "afsdsas2"
+    "Password": "afsdsas2",
+    "Balance": 100.00
   },
   {
     "Status": "True",
@@ -129,7 +139,8 @@
     "CustomerID": "CS00011",
     "Gender": "Male",
     "Name": "dfdsasddsa",
-    "Password": "dsasdfa1"
+    "Password": "dsasdfa1",
+    "Balance": 100.00
   },
   {
     "Status": "True",
@@ -141,6 +152,7 @@
     "CustomerID": "CS00012",
     "Gender": "Male",
     "Name": "acha cacha bom",
-    "Password": "fsaasdsad1bom"
+    "Password": "fsaasdsad1bom",
+    "Balance": 90.00
   }
 ]

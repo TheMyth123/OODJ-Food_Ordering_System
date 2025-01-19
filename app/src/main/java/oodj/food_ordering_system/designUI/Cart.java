@@ -2,6 +2,7 @@ package oodj.food_ordering_system.designUI;
 
 
 import oodj.food_ordering_system.models.Credit;
+import oodj.food_ordering_system.models.Customer;
 import oodj.food_ordering_system.models.Notification;
 import oodj.food_ordering_system.utils.DialogBox;
 import oodj.food_ordering_system.utils.NotificationUtils;
@@ -28,17 +29,18 @@ import javax.swing.JTextField;
 
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
-
+// Added new field for order type
 // TODO add orderType = 0-dine in, 1-take away, 2-delivery
 // TODO design have done yet, discard items will affect the cart.txt json format
 public class Cart extends javax.swing.JFrame {
-    private String customerID;
+
+    private Customer endUser;
 
 
 
-    public Cart(String customerID) {
-        this.customerID = customerID;
-        System.out.println("CusDash initialized with customerID: " + customerID); // Debugging statement
+    public Cart(Customer endUser) {
+        this.endUser = endUser;            
+        System.out.println("CusDash initialized with customerID: " + endUser.getID()); // Debugging statement
         initComponents();
         displayCartItems();
         
@@ -172,7 +174,7 @@ public class Cart extends javax.swing.JFrame {
             List<Credit> credits = OrderHandling.getCredits();
             Credit customerCredit = null;
             for (Credit credit : credits) {
-                if (credit.getCustomerID().equals(customerID)) {
+                if (credit.getCustomerID().equals(endUser.getID())) {
                     customerCredit = credit;
                     break;
                 }
@@ -184,7 +186,7 @@ public class Cart extends javax.swing.JFrame {
                 new Payment(orderID, foodName, quantityField.getText(), totalAmountLabel.getText(), customerCredit).setVisible(true);
                 dispose(); // Close the Cart page
             } else {
-                JOptionPane.showMessageDialog(this, "Credit information not found for customer ID: " + customerID, "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Credit information not found for customer ID: " + endUser.getID(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -237,7 +239,7 @@ public class Cart extends javax.swing.JFrame {
         btn_home = new javax.swing.JButton();
         btn_cart = new javax.swing.JButton();
         btn_history = new javax.swing.JButton();
-        btn_Page4 = new javax.swing.JButton();
+        btn_profile = new javax.swing.JButton();
         margin3 = new javax.swing.JPanel();
         btn_container2 = new javax.swing.JPanel();
         btn_logout = new javax.swing.JButton();
@@ -376,17 +378,13 @@ public class Cart extends javax.swing.JFrame {
         btn_cart.setMaximumSize(new java.awt.Dimension(250, 40));
         btn_cart.setMinimumSize(new java.awt.Dimension(250, 40));
         btn_cart.setPreferredSize(new java.awt.Dimension(250, 40));
-        btn_cart.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_cartActionPerformed(evt);
-            }
-        });
+    
         btn_container1.add(btn_cart);
 
         btn_history.setBackground(new java.awt.Color(31, 31, 31));
         btn_history.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btn_history.setForeground(new java.awt.Color(245, 251, 254));
-        btn_history.setText("Page 3");
+        btn_history.setText("Order History");
         btn_history.setBorder(null);
         btn_history.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btn_history.setFocusable(false);
@@ -401,24 +399,24 @@ public class Cart extends javax.swing.JFrame {
         });
         btn_container1.add(btn_history);
 
-        btn_Page4.setBackground(new java.awt.Color(31, 31, 31));
-        btn_Page4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_Page4.setForeground(new java.awt.Color(245, 251, 254));
-        btn_Page4.setText("Page 4");
-        btn_Page4.setBorder(null);
-        btn_Page4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_Page4.setDoubleBuffered(true);
-        btn_Page4.setFocusable(false);
-        btn_Page4.setMargin(new java.awt.Insets(15, 50, 15, 50));
-        btn_Page4.setMaximumSize(new java.awt.Dimension(250, 40));
-        btn_Page4.setMinimumSize(new java.awt.Dimension(250, 40));
-        btn_Page4.setPreferredSize(new java.awt.Dimension(250, 40));
-        btn_Page4.addActionListener(new java.awt.event.ActionListener() {
+        btn_profile.setBackground(new java.awt.Color(31, 31, 31));
+        btn_profile.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btn_profile.setForeground(new java.awt.Color(245, 251, 254));
+        btn_profile.setText("Profile");
+        btn_profile.setBorder(null);
+        btn_profile.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_profile.setDoubleBuffered(true);
+        btn_profile.setFocusable(false);
+        btn_profile.setMargin(new java.awt.Insets(15, 50, 15, 50));
+        btn_profile.setMaximumSize(new java.awt.Dimension(250, 40));
+        btn_profile.setMinimumSize(new java.awt.Dimension(250, 40));
+        btn_profile.setPreferredSize(new java.awt.Dimension(250, 40));
+        btn_profile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_Page4ActionPerformed(evt);
+                btn_profileActionPerformed(evt);
             }
         });
-        btn_container1.add(btn_Page4);
+        btn_container1.add(btn_profile);
 
         Sidebar.add(btn_container1);
 
@@ -667,22 +665,17 @@ public class Cart extends javax.swing.JFrame {
 
     private void btn_homeActionPerformed(java.awt.event.ActionEvent evt) {                                         
         dispose();
-        new CusDash(loginID).setVisible(true);
+        new CusDash().setVisible(true);
     }                                        
 
-    private void btn_cartActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        //dispose();
-        //TODO CALL PAGE 2
-        System.out.println("Page 2");
-    }                                           
-
     private void btn_historyActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        //dispose();
+        dispose();
+        new OrderHistory(endUser).setVisible(true);
         //TODO CALL PAGE 3
         System.out.println("Page 3");
     }                                                                          
 
-    private void btn_Page4ActionPerformed(java.awt.event.ActionEvent evt) {                                        
+    private void btn_profileActionPerformed(java.awt.event.ActionEvent evt) {                                        
         //dispose();
         //TODO CALL PAGE 4
         System.out.println("Page 4");
@@ -699,7 +692,7 @@ public class Cart extends javax.swing.JFrame {
     private javax.swing.JPanel btn_container2;
     private javax.swing.JButton btn_history;
     private javax.swing.JButton btn_home;
-    private javax.swing.JButton btn_Page4;
+    private javax.swing.JButton btn_profile;
     private javax.swing.JButton btn_logout;
     private javax.swing.JPanel m5;
     private javax.swing.JPanel m6;

@@ -52,7 +52,7 @@ public class CusMenu extends javax.swing.JFrame {
     private void addToCart() {
         String filePath = FileHandling.filePath.CART_PATH.getValue();
         JSONArray cartArray = new JSONArray();
-
+    
         // Read existing cart items from the file
         try {
             String content = new String(Files.readAllBytes(Paths.get(filePath)));
@@ -62,7 +62,35 @@ public class CusMenu extends javax.swing.JFrame {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+    
+        // Prompt the user to select the service type
+        String[] options = {"Dine In", "Take-Away", "Request for Delivery"};
+        int choice = JOptionPane.showOptionDialog(null, 
+            "Please select a order type:", 
+            "Order Type", 
+            JOptionPane.DEFAULT_OPTION, 
+            JOptionPane.INFORMATION_MESSAGE, 
+            null, 
+            options, 
+            options[0]);
+    
+        String orderType = "";
+        switch (choice) {
+            case 0:
+                orderType = "Dine In";
+                break;
+            case 1:
+                orderType = "Take-Away";
+                break;
+            case 2:
+                orderType = "Request for Delivery";
+                break;
+            default:
+                // Handle case where no option is selected
+                JOptionPane.showMessageDialog(null, "No order type selected. Please try again.");
+                return;
+        }
+    
         // Add new items to the cart array
         for (String[] item : cart) {
             if (item.length < 6) {
@@ -77,10 +105,11 @@ public class CusMenu extends javax.swing.JFrame {
             jsonObject.put("quantity", item[3]);
             jsonObject.put("price", item[4]);
             jsonObject.put("imagePath", item[5]);
-
+            jsonObject.put("orderType", orderType); // Add the service type
+    
             cartArray.put(jsonObject);
         }
-
+    
         // Write the updated cart array back to the file
         FileHandling.saveToFile(cartArray, filePath);
         cart.clear();

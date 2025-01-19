@@ -124,7 +124,7 @@ public class LoginPage extends javax.swing.JFrame {
                 case 3:
                     DialogBox.successMessage("Welcome back, " + username + "!", "Customer Login Success!");
                     setVisible(false);
-                    new CusDash(loginID).setVisible(true); 
+                    new CusDash().setVisible(true); 
 
                     // TODO Develop Customer Main Menu
                     // test
@@ -139,6 +139,8 @@ public class LoginPage extends javax.swing.JFrame {
                 case 5:
                     //setVisible(false);
                     //TODO Develop Vendor Main Menu
+                    setVisible(false);
+                    new VendorTest(loginID).setVisible(true); 
                     System.out.println("Vendor: "+username+" Logged In");
                     break;
                 default:

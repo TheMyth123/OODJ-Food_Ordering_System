@@ -218,8 +218,9 @@ public class UserHandling {
                     String email = customerData.getString("Email");
                     String address = customerData.getString("Address");
                     Boolean status = customerData.getBoolean("Status");
+                    double balance = customerData.getDouble("Balance");
     
-                    Customer customer = new Customer(customerID, username, name, phone, password, gender, dob, email, address, status);
+                    Customer customer = new Customer(customerID, username, name, phone, password, gender, dob, email, address, status, balance);
                     buffer.add(customer);
                 } else {
                     System.out.println("Invalid CustomerID: " + customerID);
@@ -588,9 +589,10 @@ public class UserHandling {
                     String email = customerData.getString("Email");
                     String address = customerData.getString("Address");
                     Boolean status = customerData.getBoolean("Status");
+                    double balance = customerData.getDouble("Balance");
     
                     // Create and return the Customer object
-                    return new Customer(customerID, username, name, phone, password, gender, dob, email, address, status);
+                    return new Customer(customerID, username, name, phone, password, gender, dob, email, address, status, balance);
                 }
             }
     

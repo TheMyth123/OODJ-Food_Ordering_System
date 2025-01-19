@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -18,8 +19,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import oodj.food_ordering_system.models.Credit;
+import oodj.food_ordering_system.models.Customer;
+import oodj.food_ordering_system.models.Notification;
 import oodj.food_ordering_system.utils.OrderHandling;
 import oodj.food_ordering_system.utils.UserHandling;
+import raven.glasspanepopup.GlassPanePopup;
 
 
 
@@ -27,15 +31,18 @@ import oodj.food_ordering_system.utils.UserHandling;
 public class TopUp extends javax.swing.JFrame {
 
 
-    private String customerID;
+    private Customer endUser;
+
     private String receiptImagePath;
 
 
-    public TopUp(String customerID) {
-        this.customerID = customerID;
+    public TopUp(Customer endUser) {
+        this.endUser = endUser;              
         initComponents();
     }
 
+// TODO check again customerID
+   
 
 
     @SuppressWarnings("unchecked")
@@ -287,7 +294,7 @@ public class TopUp extends javax.swing.JFrame {
             String status = "Pending";
             String receiptPath = OrderHandling.RECEIPT_FOLDER + creditID + ".jpg";
 
-            Credit newCredit = new Credit(creditID, customerID, creditAmount, lastUpdated, status, receiptPath);
+            Credit newCredit = new Credit(creditID, endUser.getID(), creditAmount, lastUpdated, status, receiptPath);
 
             // Get existing credits and add the new credit
             ArrayList<Credit> credits = OrderHandling.getCredits();

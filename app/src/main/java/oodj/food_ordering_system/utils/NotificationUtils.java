@@ -52,37 +52,37 @@ public class NotificationUtils{
         return text.length() > length ? text.substring(0, length) + "..." : text;
     }
 
-    // public static List<Notification> getAdminUnreadNotifications(String jsonText) {
-    //     List<Notification> notifications = new ArrayList<>();
+    public static List<Notification> getAdminUnreadNotifications(String jsonText) {
+        List<Notification> notifications = new ArrayList<>();
 
-    //     // Parse the JSON string into a JSONArray
-    //     JSONArray notificationsArray = new JSONArray(jsonText);
+        // Parse the JSON string into a JSONArray
+        JSONArray notificationsArray = new JSONArray(jsonText);
 
-    //     // Iterate through all notifications in the JSONArray
-    //     for (int i = 0; i < notificationsArray.length(); i++) {
-    //         JSONObject notificationObject = notificationsArray.getJSONObject(i);
+        // Iterate through all notifications in the JSONArray
+        for (int i = 0; i < notificationsArray.length(); i++) {
+            JSONObject notificationObject = notificationsArray.getJSONObject(i);
 
-    //         // Extract values for the fields
-    //         String userId = notificationObject.getString("UserID");
-    //         String readStatus = notificationObject.getString("ReadStatus");
-    //         String status = notificationObject.getString("Status");
+            // Extract values for the fields
+            String userId = notificationObject.getString("UserID");
+            String readStatus = notificationObject.getString("ReadStatus");
+            String status = notificationObject.getString("Status");
 
-    //         // Check if the notification meets the specified conditions
-    //         if ("Admin".equals(userId) && "False".equals(readStatus) && "True".equals(status)) {
-    //             // Store the relevant information in a Notification object
-    //             String timestamp = notificationObject.getString("Timestamp");
-    //             String title = notificationObject.getString("Title");
-    //             String content = notificationObject.getString("Content");
-    //             String actionLink = notificationObject.getString("ActionLink");
+            // Check if the notification meets the specified conditions
+            if ("Admin".equals(userId) && "False".equals(readStatus) && "True".equals(status)) {
+                // Store the relevant information in a Notification object
+                String timestamp = notificationObject.getString("Timestamp");
+                String title = notificationObject.getString("Title");
+                String content = notificationObject.getString("Content");
+                String actionLink = notificationObject.getString("ActionLink");
 
-    //             // Create a Notification object and add it to the list
-    //             Notification notification = new Notification(timestamp, title, content, actionLink);
-    //             notifications.add(notification);
-    //         }
+                // Create a Notification object and add it to the list
+                Notification notification = new Notification(timestamp, title, content, actionLink);
+                notifications.add(notification);
+            }
             
-    //     }
-    //     return notifications;
-    // }
+        }
+        return notifications;
+    }
 
     public static String getAllNotifications() {
         try {
@@ -104,29 +104,29 @@ public class NotificationUtils{
     }
 
 // Error on customer notification
-    public static List<Notification> getUnreadNotifications(String jsonText) {
+    public static List<Notification> getUnreadNotifications(String jsonText, String loginID, boolean isAdmin) {
         List<Notification> notifications = new ArrayList<>();
-    
+
         // Parse the JSON string into a JSONArray
         JSONArray notificationsArray = new JSONArray(jsonText);
-    
+
         // Iterate through all notifications in the JSONArray
         for (int i = 0; i < notificationsArray.length(); i++) {
             JSONObject notificationObject = notificationsArray.getJSONObject(i);
-    
+
             // Extract values for the fields
             String userId = notificationObject.getString("UserID");
             String readStatus = notificationObject.getString("ReadStatus");
             String status = notificationObject.getString("Status");
-    
+
             // Check if the notification meets the specified conditions
-            if (("Admin".equals(userId) || loginID.equals(userId)) && "False".equals(readStatus) && "True".equals(status)) {
+            if ((isAdmin && "Admin".equals(userId)) || (!isAdmin && loginID.equals(userId)) && "False".equals(readStatus) && "True".equals(status)) {
                 // Store the relevant information in a Notification object
                 String timestamp = notificationObject.getString("Timestamp");
                 String title = notificationObject.getString("Title");
                 String content = notificationObject.getString("Content");
                 String actionLink = notificationObject.getString("ActionLink");
-    
+
                 // Create a Notification object and add it to the list
                 Notification notification = new Notification(timestamp, title, content, actionLink);
                 notifications.add(notification);
@@ -134,4 +134,7 @@ public class NotificationUtils{
         }
         return notifications;
     }
+
 }
+
+
