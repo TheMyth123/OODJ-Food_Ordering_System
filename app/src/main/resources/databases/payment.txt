@@ -1,20 +1,13 @@
-[
-  {
-    "Address": "jtyhjrth",
-    "Quantity": "1",
-    "CustomerID": "CS00001",
-    "TotalAmount": 35,
-    "OrderID": "images/filet_mignon.jpg",
-    "Date": "2025-01-04",
-    "FoodName": "Filet Mignon"
-  },
-  {
-    "Address": "cawfawe",
-    "Quantity": "2",
-    "CustomerID": "CS00001",
-    "TotalAmount": 25,
-    "OrderID": "images/seared_salmon.jpg",
-    "Date": "2025-01-05",
-    "FoodName": "Seared Salmon"
-  }
-]
+{
+  "OrderItems": [{
+    "quantity": 1,
+    "totalPrice": 20,
+    "price": 20,
+    "name": "Truffle Risotto"
+  }],
+  "ServiceType": "Take-Away",
+  "DeliveryAddress": "f3w43f34",
+  "CustomerID": "CS00001",
+  "TotalAmount": 20,
+  "PaymentStatus": "Completed"
+}

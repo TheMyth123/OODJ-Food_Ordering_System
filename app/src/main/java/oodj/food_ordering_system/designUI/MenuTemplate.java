@@ -447,10 +447,44 @@ public class MenuTemplate extends javax.swing.JFrame {
     }// </editor-fold>    
 
     //TODO I USED ADMIN DATA TO GET NOTIFICATIONS. CHANGE TO OWN DATA
-    List<Notification> notifications = NotificationUtils.getUnreadNotifications(NotificationUtils.getAllNotifications());
+    // List<Notification> notifications = NotificationUtils.getUnreadNotifications(NotificationUtils.getAllNotifications());
     
+    // private void btn_NotiActionPerformed(java.awt.event.ActionEvent evt) {                                  
+    //     GlassPanePopup.showPopup(new NotificationPanel(notifications), new DefaultOption(){
+    //         @Override
+    //         public float opacity() {
+    //             return 0;
+    //         }
+
+    //         @Override
+    //         public LayoutCallback getLayoutCallBack(java.awt.Component parent) {
+    //             return new DefaultLayoutCallBack(parent){
+    //                 @Override
+    //                 public void correctBounds(ComponentWrapper cw) {
+    //                     if (parent.isVisible()){
+    //                         java.awt.Point pl = parent.getLocationOnScreen();
+    //                         java.awt.Point bl = btn_Noti.getLocationOnScreen();
+    //                         int x = bl.x - pl.x;
+    //                         int y = bl.y - pl.y;
+    //                         cw.setBounds(x - cw.getWidth() + btn_Noti.getWidth(), y + btn_Noti.getHeight(), cw.getWidth(), cw.getHeight());
+    //                     } else {
+    //                         super.correctBounds(cw);
+    //                     }
+    //                 }
+    //             };
+    //         }
+
+    //     });
+    // } 
+    private List<Notification> getNotifications() {
+        if (notifications == null) {
+            notifications = NotificationUtils.getUnreadNotifications(NotificationUtils.getAllNotifications(), "Admin", true);
+        }
+        return notifications;
+    }
+
     private void btn_NotiActionPerformed(java.awt.event.ActionEvent evt) {                                  
-        GlassPanePopup.showPopup(new NotificationPanel(notifications), new DefaultOption(){
+        GlassPanePopup.showPopup(new NotificationPanel(getNotifications()), new DefaultOption(){
             @Override
             public float opacity() {
                 return 0;
@@ -475,7 +509,7 @@ public class MenuTemplate extends javax.swing.JFrame {
             }
 
         });
-    }   
+    }    
 
     private void btn_logoutActionPerformed(java.awt.event.ActionEvent evt) {                                           
         boolean confirm = DialogBox.confirmMessage("Are you sure you want to logout?", "Logout");
@@ -508,7 +542,9 @@ public class MenuTemplate extends javax.swing.JFrame {
     }                                       
 
 
-    // Variables declaration - do not modify                     
+    // Variables declaration - do not modify 
+    private List<Notification> notifications;
+                    
     private javax.swing.JPanel Line;
     private javax.swing.JPanel Logo_container;
     private javax.swing.JPanel Main;

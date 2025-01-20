@@ -4,7 +4,7 @@ package oodj.food_ordering_system.models;
 
 public class CusMenu {
     private String menuID;
-    private String quantity;
+    private int quantity;
     private String price;
     private String imagePath;
     private String name;
@@ -12,7 +12,7 @@ public class CusMenu {
     private String customerID;
     private String orderType;
 
-    public CusMenu(String menuID, String quantity, String price, String imagePath, String name, String description, String customerID, String orderType) {
+    public CusMenu(String menuID, int quantity, String price, String imagePath, String name, String description, String customerID, String orderType) {
         this.menuID = menuID;
         this.quantity = quantity;
         this.price = price;
@@ -56,11 +56,11 @@ public class CusMenu {
         this.menuID = menuID;
     }
 
-    public String getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 

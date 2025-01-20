@@ -527,11 +527,11 @@ public class OrderHistory extends javax.swing.JFrame {
         welcome.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         welcome.setForeground(new java.awt.Color(255, 169, 140));
         welcome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        welcome.setText("Cart");
+        welcome.setText("Order History");
         welcome.setAlignmentX(0.5F);
-        welcome.setMaximumSize(new java.awt.Dimension(50, 50));
-        welcome.setMinimumSize(new java.awt.Dimension(50, 50));
-        welcome.setPreferredSize(new java.awt.Dimension(50, 50));
+        welcome.setMaximumSize(new java.awt.Dimension(200, 50));
+        welcome.setMinimumSize(new java.awt.Dimension(200, 50));
+        welcome.setPreferredSize(new java.awt.Dimension(200, 50));
         title_container.add(welcome);
 
         
@@ -615,7 +615,7 @@ public class OrderHistory extends javax.swing.JFrame {
     }// </editor-fold>    
 
     // //TODO I USED ADMIN DATA TO GET NOTIFICATIONS. CHANGE TO OWN DATA
-    // List<Notification> notifications = NotificationUtils.getAdminUnreadNotifications(NotificationUtils.getAllNotifications());
+    // List<Notification> notifications = NotificationUtils.getUnreadNotifications(NotificationUtils.getAllNotifications());
     
     // private void btn_NotiActionPerformed(java.awt.event.ActionEvent evt) {                                  
     //     GlassPanePopup.showPopup(new NotificationPanel(notifications), new DefaultOption(){

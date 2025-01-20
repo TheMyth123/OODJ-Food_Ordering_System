@@ -52,7 +52,7 @@ public class NotificationUtils{
         return text.length() > length ? text.substring(0, length) + "..." : text;
     }
 
-    public static List<Notification> getAdminUnreadNotifications(String jsonText) {
+    public static List<Notification> getUnreadNotifications(String jsonText) {
         List<Notification> notifications = new ArrayList<>();
 
         // Parse the JSON string into a JSONArray

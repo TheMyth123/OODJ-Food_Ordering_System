@@ -71,6 +71,8 @@ public class CusDash extends javax.swing.JFrame {
         margin2 = new javax.swing.JPanel();
         btn_container1 = new javax.swing.JPanel();
         btn_home = new javax.swing.JButton();
+        btn_wallet = new javax.swing.JButton();
+
         btn_history = new javax.swing.JButton();
         btn_cart = new javax.swing.JButton();
         btn_profile = new javax.swing.JButton();
@@ -181,9 +183,9 @@ public class CusDash extends javax.swing.JFrame {
         Sidebar.add(margin2);
 
         btn_container1.setBackground(new java.awt.Color(31, 31, 31));
-        btn_container1.setMaximumSize(new java.awt.Dimension(300, 320));
-        btn_container1.setMinimumSize(new java.awt.Dimension(300, 320));
-        btn_container1.setPreferredSize(new java.awt.Dimension(300, 320));
+        btn_container1.setMaximumSize(new java.awt.Dimension(300, 350));
+        btn_container1.setMinimumSize(new java.awt.Dimension(300, 350));
+        btn_container1.setPreferredSize(new java.awt.Dimension(300, 350));
         btn_container1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 30));
 
         btn_home.setBackground(new java.awt.Color(43, 43, 43));
@@ -203,6 +205,24 @@ public class CusDash extends javax.swing.JFrame {
         //     }
         // });
         btn_container1.add(btn_home);
+
+        btn_wallet.setBackground(new java.awt.Color(31, 31, 31));
+        btn_wallet.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btn_wallet.setForeground(new java.awt.Color(245, 251, 254));
+        btn_wallet.setText("Wallet");
+        btn_wallet.setBorder(null);
+        btn_wallet.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_wallet.setFocusable(false);
+        btn_wallet.setMargin(new java.awt.Insets(15, 50, 15, 50));
+        btn_wallet.setMaximumSize(new java.awt.Dimension(250, 40));
+        btn_wallet.setMinimumSize(new java.awt.Dimension(250, 40));
+        btn_wallet.setPreferredSize(new java.awt.Dimension(250, 40));
+        // btn_wallet.addActionListener(new java.awt.event.ActionListener() {
+        //     public void actionPerformed(java.awt.event.ActionEvent evt) {
+        //         btn_walletActionPerformed(evt);
+        //     }
+        // });
+        btn_container1.add(btn_wallet);
 
         btn_cart.setBackground(new java.awt.Color(31, 31, 31));
         btn_cart.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -589,7 +609,14 @@ public class CusDash extends javax.swing.JFrame {
         dispose();
         new OrderHistory(endUser).setVisible(true);
         //TODO CALL PAGE 2
-    }                                           
+    } 
+                                              
+                                              
+    private void btn_walletActionPerformed(java.awt.event.ActionEvent evt) {                                        
+        // dispose();
+        // new CusDash().setVisible(true);
+        // System.out.println("Page 1");
+    }
 
                                                                              
 
@@ -610,6 +637,7 @@ public class CusDash extends javax.swing.JFrame {
     private javax.swing.JPanel btn_container2;
     private javax.swing.JButton btn_cart;
     private javax.swing.JButton btn_home;
+    private javax.swing.JButton btn_wallet;
     private javax.swing.JButton btn_profile;
     private javax.swing.JButton btn_logout;
     private javax.swing.JLabel customer_username;

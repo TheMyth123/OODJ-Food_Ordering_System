@@ -49,7 +49,87 @@ public class CusMenu extends javax.swing.JFrame {
     }
 
     // TODO check again
-    private void addToCart() {
+    // private void addToCart() throws IOException {
+    //     String filePath = FileHandling.filePath.CART_PATH.getValue();
+    //     JSONArray cartArray = new JSONArray();
+    
+    //     // Read existing cart items from the file
+    //     try {
+    //         String content = new String(Files.readAllBytes(Paths.get(filePath)));
+    //         if (!content.isEmpty()) {
+    //             cartArray = new JSONArray(content);
+    //         }
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //         JOptionPane.showMessageDialog(null, "Error reading cart file.", "Error", JOptionPane.ERROR_MESSAGE);
+    //         return;
+    //     } catch (Exception e) {
+    //         JOptionPane.showMessageDialog(null, "Invalid JSON format in cart file.", "Error", JOptionPane.ERROR_MESSAGE);
+    //         return;
+    //     }
+    
+    //     // Prompt the user to select the service type
+    //     String[] options = {"Dine In", "Take-Away", "Request for Delivery"};
+    //     int choice = JOptionPane.showOptionDialog(
+    //         null,
+    //         "Please select an order type:",
+    //         "Order Type",
+    //         JOptionPane.DEFAULT_OPTION,
+    //         JOptionPane.INFORMATION_MESSAGE,
+    //         null,
+    //         options,
+    //         options[0]
+    //     );
+    
+    //     if (choice == JOptionPane.CLOSED_OPTION) {
+    //         JOptionPane.showMessageDialog(null, "No order type selected. Please try again.");
+    //         return;
+    //     }
+    
+    //     String orderType = options[choice];
+    
+    //     // Process cart items and avoid duplicates
+    //     for (String[] item : cart) {
+    //         if (item.length < 6) {
+    //             System.err.println("Invalid item array length: " + item.length);
+    //             continue;
+    //         }
+    
+    //         boolean itemExists = false;
+    //         for (int i = 0; i < cartArray.length(); i++) {
+    //             JSONObject existingItem = cartArray.getJSONObject(i);
+    //             if (existingItem.getString("MenuID").equals(item[0]) && existingItem.getString("CustomerID").equals(customerID)) {
+    //                 // Update quantity if item already exists
+    //                 int existingQuantity = existingItem.getInt("quantity");
+    //                 existingItem.put("quantity", existingQuantity + Integer.parseInt(item[3]));
+    //                 itemExists = true;
+    //                 break;
+    //             }
+    //         }
+    
+    //         if (!itemExists) {
+    //             // Add new item to the cart
+    //             JSONObject newItem = new JSONObject();
+    //             newItem.put("MenuID", item[0]);
+    //             newItem.put("CustomerID", customerID);
+    //             newItem.put("name", item[1]);
+    //             newItem.put("description", item[2]);
+    //             newItem.put("quantity", Integer.parseInt(item[3]));  // Ensure integer type for quantity
+    //             newItem.put("price", item[4]);
+    //             newItem.put("imagePath", item[5]);
+    //             newItem.put("orderType", orderType);
+    
+    //             cartArray.put(newItem);
+    //         }
+    //     }
+    
+    //     FileHandling.saveToFile(cartArray, filePath);
+    //     JOptionPane.showMessageDialog(null, "Items added to cart successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+    
+    //     cart.clear();
+    // }
+
+    private void addToCart() throws IOException {
         String filePath = FileHandling.filePath.CART_PATH.getValue();
         JSONArray cartArray = new JSONArray();
     
@@ -61,34 +141,11 @@ public class CusMenu extends javax.swing.JFrame {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    
-        // Prompt the user to select the service type
-        String[] options = {"Dine In", "Take-Away", "Request for Delivery"};
-        int choice = JOptionPane.showOptionDialog(null, 
-            "Please select a order type:", 
-            "Order Type", 
-            JOptionPane.DEFAULT_OPTION, 
-            JOptionPane.INFORMATION_MESSAGE, 
-            null, 
-            options, 
-            options[0]);
-    
-        String orderType = "";
-        switch (choice) {
-            case 0:
-                orderType = "Dine In";
-                break;
-            case 1:
-                orderType = "Take-Away";
-                break;
-            case 2:
-                orderType = "Request for Delivery";
-                break;
-            default:
-                // Handle case where no option is selected
-                JOptionPane.showMessageDialog(null, "No order type selected. Please try again.");
-                return;
+            JOptionPane.showMessageDialog(null, "Error reading cart file.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Invalid JSON format in cart file.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
     
         // Add new items to the cart array
@@ -105,7 +162,6 @@ public class CusMenu extends javax.swing.JFrame {
             jsonObject.put("quantity", item[3]);
             jsonObject.put("price", item[4]);
             jsonObject.put("imagePath", item[5]);
-            jsonObject.put("orderType", orderType); // Add the service type
     
             cartArray.put(jsonObject);
         }
@@ -114,6 +170,7 @@ public class CusMenu extends javax.swing.JFrame {
         FileHandling.saveToFile(cartArray, filePath);
         cart.clear();
     }
+    
 
     
     private void initComponents(String vendorID) {
@@ -350,7 +407,12 @@ public class CusMenu extends javax.swing.JFrame {
                                 selectedItemPanel.setBackground(new Color(43, 43, 43));
                                 selectedItemPanel = null;
                             }
-                            addToCart();
+                            try {
+                                addToCart();
+                            } catch (IOException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
                             JOptionPane.showMessageDialog(this, "Selected item added to cart.");
                         } else {
                             JOptionPane.showMessageDialog(this, "Quantity must be greater than 0.", "Invalid Quantity", JOptionPane.ERROR_MESSAGE);

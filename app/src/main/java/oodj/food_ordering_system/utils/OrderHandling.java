@@ -76,18 +76,39 @@ public class OrderHandling {
 
         ArrayList<String> cartItems = new ArrayList<>();
         StringBuilder jsonData = new StringBuilder();
+        
         for (String line : lines) {
             jsonData.append(line);
         }
+
         if (!jsonData.toString().isEmpty()) {
             try {
                 JSONArray cartArray = new JSONArray(jsonData.toString());
                 for (int i = 0; i < cartArray.length(); i++) {
                     JSONObject item = cartArray.getJSONObject(i);
-                    String itemDetails = "quantity: " + item.getString("quantity") + ", " +
-                                         "price: " + item.getString("price") + ", " +
-                                         "imagePath: " + item.getString("imagePath") + ", " +
-                                         "name: " + item.getString("name");
+
+                    // Handle quantity safely as integer
+                    int quantity = item.has("quantity") ? item.optInt("quantity", -1) : -1;
+
+                    // Fallback to string if needed
+                    if (quantity == -1) {
+                        try {
+                            quantity = Integer.parseInt(item.optString("quantity", "0"));
+                        } catch (NumberFormatException e) {
+                            quantity = 0; // Default value if conversion fails
+                        }
+                    }
+
+                    // Ensure all required fields exist before accessing
+                    String price = item.optString("price", "N/A");
+                    String imagePath = item.optString("imagePath", "N/A");
+                    String name = item.optString("name", "Unknown");
+
+                    // Format the item details
+                    String itemDetails = "quantity: " + quantity + ", " +
+                                        "price: " + price + ", " +
+                                        "imagePath: " + imagePath + ", " +
+                                        "name: " + name;
                     cartItems.add(itemDetails);
                 }
             } catch (Exception e) {
@@ -96,6 +117,7 @@ public class OrderHandling {
         }
         return cartItems;
     }
+
 //  need OOP
     public static void saveCart(ArrayList<String> cartItems) {
         JSONArray cartArray = new JSONArray();
@@ -239,6 +261,27 @@ public class OrderHandling {
             FileHandling.saveToFile(paymentsArray, PAYMENT);
         } catch (Exception e) {
             DialogBox.errorMessage("Error reading or parsing the JSON file: " + e.getMessage(), "Error");
+        }
+    }
+
+
+    public static void updateCustomerBalance(String customerID, double newBalance) {
+        try {
+            String filePath = FileHandling.filePath.CUSTOMER_PATH.getValue();
+            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+            JSONArray customerArray = new JSONArray(content);
+    
+            for (int i = 0; i < customerArray.length(); i++) {
+                JSONObject customerObject = customerArray.getJSONObject(i);
+                if (customerObject.getString("CustomerID").equals(customerID)) {
+                    customerObject.put("Balance", newBalance);
+                    break;
+                }
+            }
+    
+            Files.write(Paths.get(filePath), customerArray.toString(2).getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
