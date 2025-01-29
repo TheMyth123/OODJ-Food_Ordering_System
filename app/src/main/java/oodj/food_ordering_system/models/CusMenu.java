@@ -23,31 +23,7 @@ public class CusMenu {
         this.orderType = orderType;
     }
 
-    // public CartItem(JSONObject jsonObject) {
-    //     this.menuID = jsonObject.getString("MenuID");
-    //     this.quantity = jsonObject.getString("quantity");
-    //     this.price = jsonObject.getString("price");
-    //     this.imagePath = jsonObject.getString("imagePath");
-    //     this.name = jsonObject.getString("name");
-    //     this.description = jsonObject.getString("description");
-    //     this.customerID = jsonObject.getString("CustomerID");
-    //     this.orderType = jsonObject.getString("orderType");
-    // }
-
-    // public JSONObject toJson() {
-    //     JSONObject jsonObject = new JSONObject();
-    //     jsonObject.put("MenuID", menuID);
-    //     jsonObject.put("quantity", quantity);
-    //     jsonObject.put("price", price);
-    //     jsonObject.put("imagePath", imagePath);
-    //     jsonObject.put("name", name);
-    //     jsonObject.put("description", description);
-    //     jsonObject.put("CustomerID", customerID);
-    //     jsonObject.put("orderType", orderType);
-    //     return jsonObject;
-    // }
-
-    // Getters and setters
+    
     public String getMenuID() {
         return menuID;
     }

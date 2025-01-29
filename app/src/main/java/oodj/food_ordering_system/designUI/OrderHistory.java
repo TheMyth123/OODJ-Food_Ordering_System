@@ -648,12 +648,12 @@ public class OrderHistory extends javax.swing.JFrame {
 
     private void discardItem(String item) {
         // Read the current cart items from the file
-        ArrayList<String> cartItems = OrderHandling.getCart();
-        // Remove the selected item from the list
-        cartItems.remove(item);
-        // Write the updated list back to the file
-        OrderHandling.saveCart(cartItems);
-        System.out.println("Discard item: " + item);
+        // ArrayList<String> cartItems = OrderHandling.getCart();
+        // // Remove the selected item from the list
+        // cartItems.remove(item);
+        // // Write the updated list back to the file
+        // OrderHandling.saveCart(cartItems);
+        // System.out.println("Discard item: " + item);
     }
 
     

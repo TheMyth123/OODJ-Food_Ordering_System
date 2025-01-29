@@ -2,6 +2,7 @@ package oodj.food_ordering_system.designUI;
 
 
 import oodj.food_ordering_system.models.Credit;
+import oodj.food_ordering_system.models.CusOrder;
 import oodj.food_ordering_system.models.Customer;
 import oodj.food_ordering_system.models.Notification;
 import oodj.food_ordering_system.utils.DialogBox;
@@ -12,9 +13,11 @@ import raven.glasspanepopup.*;
 
 import static oodj.food_ordering_system.designUI.LoginPage.loginID;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,17 +25,23 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListSelectionModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableModel;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -45,18 +54,21 @@ import net.miginfocom.layout.LayoutCallback;
 public class Cart extends javax.swing.JFrame {
 
     private Customer endUser;
+    private JTable cartTable;
 
+// make the cart refresh after i finish payment
 
 
     public Cart(Customer endUser) {
         this.endUser = endUser;            
         System.out.println("CusDash initialized with customerID: " + endUser.getID()); // Debugging statement
         initComponents();
-        displayCartItems();
+        ArrayList<CusOrder> cart = OrderHandling.getCart(); // Fetch cart items
+        displayCart(cart);
         addWindowFocusListener(new java.awt.event.WindowFocusListener() {
             @Override
             public void windowGainedFocus(java.awt.event.WindowEvent evt) {
-                refreshCart();
+                // refreshCart();
             }
             @Override
             public void windowLostFocus(java.awt.event.WindowEvent evt) {
@@ -85,128 +97,252 @@ public class Cart extends javax.swing.JFrame {
     //     }
     // }
 
+
+    private void displayCart(ArrayList<CusOrder> cart) {
+    // Ensure cartTable is initialized
+        if (cartTable == null) {
+            cartTable = new JTable(new DefaultTableModel(
+                new Object[][]{},
+                new String[]{"Menu ID", "Quantity", "Price", "Name"}
+            ));
+
+            // Enable multiple row selection
+            cartTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+            cartTable.setRowSelectionAllowed(true);
+            cartTable.setColumnSelectionAllowed(false);
+        } else {
+            cartTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        }
+
+        // Modify selection model to allow multiple selections without Ctrl and allow deselecting
+        cartTable.setSelectionModel(new DefaultListSelectionModel() {
+            @Override
+            public void setSelectionInterval(int index0, int index1) {
+                if (super.isSelectedIndex(index0)) {
+                    super.removeSelectionInterval(index0, index1);  // Deselect if already selected
+                } else {
+                    super.addSelectionInterval(index0, index1);  // Select if not selected
+                }
+            }
+        });
+
+        // Get the table model
+        DefaultTableModel model = (DefaultTableModel) cartTable.getModel();
+
+        // Clear existing rows
+        model.setRowCount(0);
+
+        // Add rows for each CusOrder in the cart
+        for (CusOrder order : cart) {
+            model.addRow(new Object[]{
+                order.getMenuID(),
+                order.getQuantity(),
+                order.getPrice(),
+                order.getName(),
+            });
+        }
+
+        // Add cartTable to title_container1 with a scroll pane
+        JScrollPane scrollPane = new JScrollPane(cartTable);
+        scrollPane.setPreferredSize(new Dimension(500, 200));
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+
+        // **Pay Button**
+        JButton payButton = new JButton("Pay");
+        payButton.addActionListener(evt -> {
+            int[] selectedRows = cartTable.getSelectedRows();
+            if (selectedRows.length > 0) {
+                double totalAmount = 0; // Initialize total amount
+        
+                DefaultTableModel tableModel = (DefaultTableModel) cartTable.getModel();
+                
+                JSONArray orderItems = new JSONArray();
+        
+                for (int row : selectedRows) {
+                    String menuID = tableModel.getValueAt(row, 0).toString();
+                    int quantity = Integer.parseInt(tableModel.getValueAt(row, 1).toString());
+                    double price = Double.parseDouble(tableModel.getValueAt(row, 2).toString());
+        
+                    double itemTotal = quantity * price;  // Calculate item total
+                    totalAmount += itemTotal;  // Add to total amount
+        
+                    JSONObject orderItem = new JSONObject();
+                    orderItem.put("menuID", menuID);
+                    orderItem.put("quantity", quantity);
+                    orderItem.put("price", price);
+                    orderItem.put("totalPrice", itemTotal);
+        
+                    orderItems.put(orderItem);
+                }
+        
+                JOptionPane.showMessageDialog(null, "Total Amount: $" + totalAmount);
+        
+            
+                try {
+                    checkout(orderItems, totalAmount);
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                
+            } else {
+                JOptionPane.showMessageDialog(null, "Please select items to pay for.");
+            }
+        });
+        
+
+        // **Discard Button**
+        JButton discardButton = new JButton("Discard");
+        discardButton.addActionListener(evt -> {
+            int[] selectedRows = cartTable.getSelectedRows();
+            if (selectedRows.length > 0) {
+                JOptionPane.showMessageDialog(null, "Discarded rows: " + Arrays.toString(selectedRows));
+                // Implement discard logic here
+            } else {
+                JOptionPane.showMessageDialog(null, "Please select items to discard.");
+            }
+        });
+
+        // Add buttons to the panel
+        buttonPanel.add(payButton);
+        buttonPanel.add(discardButton);
+
+        title_container1.removeAll(); // Remove previous content
+        title_container1.setLayout(new BorderLayout()); // Set layout manager
+        title_container1.add(scrollPane, BorderLayout.CENTER); // Add scroll pane
+        title_container1.add(buttonPanel, BorderLayout.SOUTH); // Add button panel
+        title_container1.revalidate(); // Revalidate to refresh
+        title_container1.repaint();   // Repaint to update UI
+    }
+
+    
+
+
+
     
 
     
     // Method to update the quantity in the cart
-    public void displayCartItems() {
-        List<String> cartItems = OrderHandling.getCart();
+    // public void displayCartItems() {
+    //     List<String> cartItems = OrderHandling.getCart();
     
-        title_container1.setLayout(new BoxLayout(title_container1, BoxLayout.Y_AXIS));
-        title_container1.setAlignmentX(Component.CENTER_ALIGNMENT);
+    //     title_container1.setLayout(new BoxLayout(title_container1, BoxLayout.Y_AXIS));
+    //     title_container1.setAlignmentX(Component.CENTER_ALIGNMENT);
     
-        for (String item : cartItems) {
-            System.out.println("Item received: " + item);
+    //     for (String item : cartItems) {
+    //         System.out.println("Item received: " + item);
     
-            try {
-                int quantity = 0;
-                double price = 0.0;
-                String imagePath = "";
-                String foodName = "";
+    //         try {
+    //             int quantity = 0;
+    //             double price = 0.0;
+    //             String imagePath = "";
+    //             String foodName = "";
     
-                // Check if the item is in JSON format or plain text
-                if (item.trim().startsWith("{")) {
-                    // If JSON, parse it
-                    JSONObject jsonItem = new JSONObject(item);
+    //             // Check if the item is in JSON format or plain text
+    //             if (item.trim().startsWith("{")) {
+    //                 // If JSON, parse it
+    //                 JSONObject jsonItem = new JSONObject(item);
     
-                    quantity = jsonItem.optInt("quantity", 0);
-                    String priceStr = jsonItem.optString("price").replace("$", "");
-                    price = Double.parseDouble(priceStr);
-                    imagePath = jsonItem.optString("imagePath");
-                    foodName = jsonItem.optString("name");
+    //                 quantity = jsonItem.optInt("quantity", 0);
+    //                 String priceStr = jsonItem.optString("price").replace("$", "");
+    //                 price = Double.parseDouble(priceStr);
+    //                 imagePath = jsonItem.optString("imagePath");
+    //                 foodName = jsonItem.optString("name");
     
-                } else {
-                    // If plain string, parse it manually
-                    String[] itemParts = item.split(", ");
-                    if (itemParts.length < 4) {
-                        System.err.println("Invalid item format: " + item);
-                        continue;
-                    }
+    //             } else {
+    //                 // If plain string, parse it manually
+    //                 String[] itemParts = item.split(", ");
+    //                 if (itemParts.length < 4) {
+    //                     System.err.println("Invalid item format: " + item);
+    //                     continue;
+    //                 }
     
-                    quantity = Integer.parseInt(itemParts[0].split(": ")[1].trim());
-                    price = Double.parseDouble(itemParts[1].split(": ")[1].replace("$", "").trim());
-                    imagePath = itemParts[2].split(": ")[1].trim();
-                    foodName = itemParts[3].split(": ")[1].trim();
-                }
+    //                 quantity = Integer.parseInt(itemParts[0].split(": ")[1].trim());
+    //                 price = Double.parseDouble(itemParts[1].split(": ")[1].replace("$", "").trim());
+    //                 imagePath = itemParts[2].split(": ")[1].trim();
+    //                 foodName = itemParts[3].split(": ")[1].trim();
+    //             }
     
-                double totalAmount = quantity * price;
+    //             double totalAmount = quantity * price;
     
-                JPanel itemPanel = new JPanel();
-                itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.X_AXIS));
-                itemPanel.setPreferredSize(new Dimension(900, 80));
-                itemPanel.setMaximumSize(new Dimension(900, 80));
-                itemPanel.setBackground(Color.WHITE);
-                itemPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+    //             JPanel itemPanel = new JPanel();
+    //             itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.X_AXIS));
+    //             itemPanel.setPreferredSize(new Dimension(900, 80));
+    //             itemPanel.setMaximumSize(new Dimension(900, 80));
+    //             itemPanel.setBackground(Color.WHITE);
+    //             itemPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
     
-                // Quantity field
-                JTextField quantityField = new JTextField(String.valueOf(quantity));
-                quantityField.setPreferredSize(new Dimension(50, 30));
-                quantityField.setMaximumSize(new Dimension(50, 30));
-                quantityField.setForeground(new Color(255, 169, 140));
-                quantityField.setBackground(new Color(31, 31, 31));
-                quantityField.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-                quantityField.setEditable(true);
+    //             // Quantity field
+    //             JTextField quantityField = new JTextField(String.valueOf(quantity));
+    //             quantityField.setPreferredSize(new Dimension(50, 30));
+    //             quantityField.setMaximumSize(new Dimension(50, 30));
+    //             quantityField.setForeground(new Color(255, 169, 140));
+    //             quantityField.setBackground(new Color(31, 31, 31));
+    //             quantityField.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+    //             quantityField.setEditable(true);
     
-                // Total amount label
-                JLabel totalAmountLabel = new JLabel(String.format("$%.2f", totalAmount));
-                totalAmountLabel.setPreferredSize(new Dimension(100, 30));
-                totalAmountLabel.setForeground(new Color(255, 169, 140));
-                totalAmountLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+    //             // Total amount label
+    //             JLabel totalAmountLabel = new JLabel(String.format("$%.2f", totalAmount));
+    //             totalAmountLabel.setPreferredSize(new Dimension(100, 30));
+    //             totalAmountLabel.setForeground(new Color(255, 169, 140));
+    //             totalAmountLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
     
-                // Plus and Minus buttons
-                JButton minusButton = new JButton("-");
-                JButton plusButton = new JButton("+");
+    //             // Plus and Minus buttons
+    //             JButton minusButton = new JButton("-");
+    //             JButton plusButton = new JButton("+");
     
-                // minusButton.addActionListener(e -> updateCartQuantity(foodName, -1, quantityField, totalAmountLabel, price));
-                // plusButton.addActionListener(e -> updateCartQuantity(foodName, 1, quantityField, totalAmountLabel, price));
+    //             // minusButton.addActionListener(e -> updateCartQuantity(foodName, -1, quantityField, totalAmountLabel, price));
+    //             // plusButton.addActionListener(e -> updateCartQuantity(foodName, 1, quantityField, totalAmountLabel, price));
     
-                JPanel quantityPanel = new JPanel();
-                quantityPanel.add(minusButton);
-                quantityPanel.add(quantityField);
-                quantityPanel.add(plusButton);
-                itemPanel.add(quantityPanel);
+    //             JPanel quantityPanel = new JPanel();
+    //             quantityPanel.add(minusButton);
+    //             quantityPanel.add(quantityField);
+    //             quantityPanel.add(plusButton);
+    //             itemPanel.add(quantityPanel);
     
-                itemPanel.add(totalAmountLabel);
+    //             itemPanel.add(totalAmountLabel);
     
-                // Delete button
-                JButton deleteButton = new JButton("Delete");
-                deleteButton.addActionListener(evt -> {
-                    discardItem(item);
-                    displayCartItems();
-                });
-                itemPanel.add(deleteButton);
+    //             // Delete button
+    //             JButton deleteButton = new JButton("Delete");
+    //             deleteButton.addActionListener(evt -> {
+    //                 discardItem(item);
+    //                 displayCartItems();
+    //             });
+    //             itemPanel.add(deleteButton);
     
-                title_container1.add(itemPanel);
-                title_container1.add(Box.createRigidArea(new Dimension(0, 10)));
+    //             title_container1.add(itemPanel);
+    //             title_container1.add(Box.createRigidArea(new Dimension(0, 10)));
     
-            } catch (Exception e) {
-                System.err.println("Invalid item format: " + item);
-                e.printStackTrace();
-            }
-        }
+    //         } catch (Exception e) {
+    //             System.err.println("Invalid item format: " + item);
+    //             e.printStackTrace();
+    //         }
+    //     }
     
-        // Checkout Panel
-        JPanel checkoutPanel = new JPanel();
-        checkoutPanel.setLayout(new BoxLayout(checkoutPanel, BoxLayout.X_AXIS));
-        checkoutPanel.setPreferredSize(new Dimension(900, 50));
-        checkoutPanel.setBackground(new Color(31, 31, 31));
+    //     // Checkout Panel
+    //     JPanel checkoutPanel = new JPanel();
+    //     checkoutPanel.setLayout(new BoxLayout(checkoutPanel, BoxLayout.X_AXIS));
+    //     checkoutPanel.setPreferredSize(new Dimension(900, 50));
+    //     checkoutPanel.setBackground(new Color(31, 31, 31));
     
-        JButton checkoutButton = new JButton("Checkout");
-        checkoutButton.addActionListener(evt -> {
-            try {
-                checkout();
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, "Error during checkout process.", "Error", JOptionPane.ERROR_MESSAGE);
-                e.printStackTrace();
-            }
-        });
-        checkoutPanel.add(checkoutButton);
+    //     JButton checkoutButton = new JButton("Checkout");
+    //     checkoutButton.addActionListener(evt -> {
+    //         try {
+    //             checkout();
+    //         } catch (IOException e) {
+    //             JOptionPane.showMessageDialog(null, "Error during checkout process.", "Error", JOptionPane.ERROR_MESSAGE);
+    //             e.printStackTrace();
+    //         }
+    //     });
+    //     checkoutPanel.add(checkoutButton);
     
-        title_container1.add(checkoutPanel);
+    //     title_container1.add(checkoutPanel);
 
-        title_container1.revalidate();
-        title_container1.repaint();
-    }
+    //     title_container1.revalidate();
+    //     title_container1.repaint();
+    // }
     
     
     // Method to update the quantity in the cart
@@ -234,39 +370,24 @@ public class Cart extends javax.swing.JFrame {
         }
     }
     
-    public void refreshCart() {
-        title_container1.removeAll();  // Clear the cart UI components
-        displayCartItems();            // Reload the cart items
-        title_container1.revalidate();  // Refresh layout
-        title_container1.repaint();     // Repaint UI
-    }
+    // public void refreshCart() {
+    //     title_container1.removeAll();  // Clear the cart UI components
+    //     displayCart();            // Reload the cart items
+    //     title_container1.revalidate();  // Refresh layout
+    //     title_container1.repaint();     // Repaint UI
+    // }
     
 
-    private void checkout() throws IOException {
-        String cartFilePath = FileHandling.filePath.CART_PATH.getValue();
-        JSONArray cartArray = new JSONArray();
-    
-        // Read existing cart items from the file
-        try {
-            String content = new String(Files.readAllBytes(Paths.get(cartFilePath)));
-            if (!content.isEmpty()) {
-                cartArray = new JSONArray(content);
-            } else {
-                JOptionPane.showMessageDialog(null, "Cart is empty!", "Warning", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Error reading cart file.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Invalid JSON format in cart file.", "Error", JOptionPane.ERROR_MESSAGE);
+    private void checkout(JSONArray orderItems, double totalAmount) throws IOException {
+        if (orderItems.length() == 0) {
+            JOptionPane.showMessageDialog(this, "No items selected!", "Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
     
-        // Prompt the user to select the service type
+        // Prompt user for service type
         String[] options = {"Dine In", "Take-Away", "Request for Delivery"};
         int choice = JOptionPane.showOptionDialog(
-            null,
+            this,
             "Please select an order type:",
             "Order Type",
             JOptionPane.DEFAULT_OPTION,
@@ -277,45 +398,23 @@ public class Cart extends javax.swing.JFrame {
         );
     
         if (choice == JOptionPane.CLOSED_OPTION) {
-            JOptionPane.showMessageDialog(null, "No order type selected. Please try again.");
+            JOptionPane.showMessageDialog(this, "No order type selected.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
     
         String serviceType = options[choice];
     
-        // Prepare payment summary
+        // Create payment summary
         JSONObject paymentSummary = new JSONObject();
-        JSONArray orderItems = new JSONArray();
-        double totalAmount = 0;
-    
-        for (int i = 0; i < cartArray.length(); i++) {
-            JSONObject item = cartArray.getJSONObject(i);
-            
-            int quantity = Integer.parseInt(item.get("quantity").toString());
-            double price = Double.parseDouble(item.getString("price").replace("$", ""));
-            double itemTotal = quantity * price;
-    
-            totalAmount += itemTotal;
-    
-            JSONObject orderItem = new JSONObject();
-            orderItem.put("name", item.getString("name"));
-            orderItem.put("quantity", quantity);
-            orderItem.put("price", price);
-            orderItem.put("totalPrice", itemTotal);
-    
-            orderItems.put(orderItem);
-        }
-    
         paymentSummary.put("CustomerID", endUser.getID());
         paymentSummary.put("ServiceType", serviceType);
         paymentSummary.put("TotalAmount", totalAmount);
         paymentSummary.put("PaymentStatus", "Pending");
         paymentSummary.put("OrderItems", orderItems);
     
-        // Check customer credit balance
-        List<Credit> credits = OrderHandling.getCredits();
+        // Fetch customer credit
         Credit customerCredit = null;
-        for (Credit credit : credits) {
+        for (Credit credit : OrderHandling.getCredits()) {
             if (credit.getCustomerID().equals(endUser.getID())) {
                 customerCredit = credit;
                 break;
@@ -323,30 +422,22 @@ public class Cart extends javax.swing.JFrame {
         }
     
         if (customerCredit != null) {
-            // Open Payment Page with summarized order data
+            // Open payment page
             new CusPayment(
                 "ORDER" + System.currentTimeMillis(),  // Auto-generate Order ID
-                "Multiple Items", 
-                String.valueOf(cartArray.length()), 
-                String.format("%.2f", totalAmount),  
-                customerCredit,
-                serviceType, paymentSummary // Passing payment summary
+                orderItems, endUser,
+                totalAmount,
+                "Completed",
+                serviceType
             ).setVisible(true);
-
-
-            
         } else {
             JOptionPane.showMessageDialog(this, "Credit information not found for customer ID: " + endUser.getID(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-        
     }
-
     
     
 
     
-
-
 
     // private void displayCartItems() {
     //     List<String> cartItems = OrderHandling.getCart();
@@ -845,9 +936,9 @@ public class Cart extends javax.swing.JFrame {
         Main.add(title_container);
 
         title_container1.setBackground(new java.awt.Color(31, 31, 31));
-        title_container1.setMaximumSize(new java.awt.Dimension(1000, 670));
-        title_container1.setMinimumSize(new java.awt.Dimension(1000, 670));
-        title_container1.setPreferredSize(new java.awt.Dimension(1000, 670));
+        title_container1.setMaximumSize(new java.awt.Dimension(1000, 400));
+        title_container1.setMinimumSize(new java.awt.Dimension(1000, 400));
+        title_container1.setPreferredSize(new java.awt.Dimension(1000, 400));
         // title_container1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 0));
 
         m8.setBackground(new java.awt.Color(31, 31, 31));
@@ -903,6 +994,8 @@ public class Cart extends javax.swing.JFrame {
             .addGap(0, 50, Short.MAX_VALUE)
         );
 
+
+
         Main.add(margin5);
 
         m7.setBackground(new java.awt.Color(31, 31, 31));
@@ -953,13 +1046,13 @@ public class Cart extends javax.swing.JFrame {
 
 
     private void discardItem(String item) {
-        // Read the current cart items from the file
-        ArrayList<String> cartItems = OrderHandling.getCart();
-        // Remove the selected item from the list
-        cartItems.remove(item);
-        // Write the updated list back to the file
-        OrderHandling.saveCart(cartItems);
-        System.out.println("Discard item: " + item);
+        // // Read the current cart items from the file
+        // ArrayList<CusOrder> cartItems = OrderHandling.getCart();
+        // // Remove the selected item from the list
+        // cartItems.remove(item);
+        // // Write the updated list back to the file
+        // OrderHandling.saveCart(cartItems);
+        // System.out.println("Discard item: " + item);
     }
 
     
@@ -1017,7 +1110,7 @@ public class Cart extends javax.swing.JFrame {
     private javax.swing.JPanel title_container1;
     private javax.swing.JLabel welcome;
     private javax.swing.JButton btn_Noti;
-    // End of variables declaration                   
-}
+    // End of variables declaration  
 
+}
 

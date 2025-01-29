@@ -1,13 +1,106 @@
-{
-  "OrderItems": [{
-    "quantity": 1,
-    "totalPrice": 20,
-    "price": 20,
-    "name": "Truffle Risotto"
-  }],
-  "ServiceType": "Take-Away",
-  "DeliveryAddress": "f3w43f34",
-  "CustomerID": "CS00001",
-  "TotalAmount": 20,
-  "PaymentStatus": "Completed"
-}
+[
+  {
+    "OrderItems": [{
+      "quantity": 1,
+      "totalPrice": 25,
+      "price": 25,
+      "name": "Seared Salmon"
+    }],
+    "ServiceType": "Dine In",
+    "DeliveryAddress": "feewew",
+    "CustomerID": "CS00001",
+    "TotalAmount": 25,
+    "PaymentStatus": "Completed"
+  },
+  {
+    "ReceiptImagePath": "Dine In",
+    "DeliveryAddress": "rgr",
+    "CustomerID": "CS00001",
+    "TotalAmount": 25,
+    "OrderID": "ORDER1738031070820",
+    "Date": "2025-01-28",
+    "PaymentStatus": "Completed"
+  },
+  {
+    "ReceiptImagePath": "Take-Away",
+    "DeliveryAddress": "vergser",
+    "CustomerID": "CS00001",
+    "TotalAmount": 35,
+    "OrderID": "ORDER1738031115163",
+    "Date": "2025-01-28",
+    "PaymentStatus": "Completed"
+  },
+  {
+    "ReceiptImagePath": "Take-Away",
+    "DeliveryAddress": "brthgt",
+    "CustomerID": "CS00001",
+    "TotalAmount": 25,
+    "OrderID": "ORDER1738033252004",
+    "Date": "2025-01-28",
+    "PaymentStatus": "Completed"
+  },
+  {
+    "ReceiptImagePath": "Take-Away",
+    "DeliveryAddress": "brdfghserhet",
+    "CustomerID": "CS00001",
+    "TotalAmount": 60,
+    "OrderID": "ORDER1738033313231",
+    "Date": "2025-01-28",
+    "PaymentStatus": "Completed"
+  },
+  {
+    "DeliveryAddress": "vresg",
+    "CustomerID": "CS00001",
+    "TotalAmount": 20,
+    "OrderID": "ORDER1738033514681",
+    "Date": "2025-01-28",
+    "PaymentStatus": "Completed"
+  },
+  {
+    "DeliveryAddress": "bsrgv",
+    "CustomerID": "CS00001",
+    "TotalAmount": 25,
+    "OrderID": "ORDER1738034486169",
+    "PaymentStatus": "Completed",
+    "Date": "2025-01-28"
+  },
+  {
+    "DeliveryAddress": "frgwetg",
+    "CustomerID": "CS00001",
+    "TotalAmount": 20,
+    "OrderID": "ORDER1738034678656",
+    "PaymentStatus": "Completed",
+    "Date": "2025-01-28"
+  },
+  {
+    "DeliveryAddress": "rgesrge",
+    "CustomerID": "CS00001",
+    "TotalAmount": 25,
+    "OrderID": "ORDER1738036598980",
+    "PaymentStatus": "Completed",
+    "Date": "2025-01-28"
+  },
+  {
+    "OrderItems": [
+      {
+        "quantity": 1,
+        "totalPrice": 25,
+        "price": 25,
+        "menuID": "MN00001"
+      },
+      {
+        "quantity": 1,
+        "totalPrice": 35,
+        "price": 35,
+        "menuID": "MN00002"
+      }
+    ],
+    "ServiceType": "Dine In",
+    "DeliveryAddress": "fnioenfs",
+    "CustomerID": "CS00001",
+    "TotalAmount": 60,
+    "OrderID": "ORDER1738142142854",
+    "PaymentStatus": "Completed",
+    "Date": "2025-01-29"
+  }
+]

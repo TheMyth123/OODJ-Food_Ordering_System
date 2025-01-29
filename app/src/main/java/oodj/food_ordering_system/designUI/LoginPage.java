@@ -29,6 +29,7 @@ public class LoginPage extends javax.swing.JFrame {
         return loginID;
     }
 
+    
     public static void setLoginID(String loginID) {
         LoginPage.loginID = loginID;
     }

@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.awt.Component;
@@ -30,27 +32,27 @@ public class CusPayment extends javax.swing.JFrame {
     private String orderID;
     private String foodName;
     private String quantity;
-    private String totalAmount;
+    private double totalAmount;
     private JTextField addressField;
     private Credit credit;
     private String receiptImagePath;
     private JSONObject paymentSummary;
+    private JSONArray orderItems;
+    private String serviceType;
+    private String paymentStatus;
+
 
 
     private Customer endUser;
 
 
-    public CusPayment(String orderID, String foodName, String quantity, String totalAmount, Credit credit, String receiptImagePath, JSONObject paymentSummary) {
+    public CusPayment(String orderID, JSONArray orderItems,Customer endUser, double totalAmount, String paymentStatus, String serviceType) {
+        this.endUser = endUser;
         this.orderID = orderID;
-        this.foodName = foodName;
-        this.quantity = quantity;
+        this.orderItems = orderItems;
         this.totalAmount = totalAmount;
-        this.credit = credit;
-        this.receiptImagePath = receiptImagePath;
-        this.paymentSummary = paymentSummary;
-        this.endUser = LoginPage.getEndUser();        
-
-
+        this.paymentStatus = paymentStatus;
+        this.serviceType = serviceType;
         initComponents();
     }
 
@@ -269,66 +271,74 @@ public class CusPayment extends javax.swing.JFrame {
         dispose();
     }                                       
 
-    private void payButtonActionPerformed(java.awt.event.ActionEvent evt) {                                          
-        String address = addressField.getText();
-        if (address != null && !address.trim().isEmpty()) {
-            processPayment(address);
-        } else {
-            JOptionPane.showMessageDialog(this, "Address is required to proceed with the payment.", "Invalid Address", JOptionPane.ERROR_MESSAGE);
-        }
-    } 
-// wrong jsonformat  
-    private void processPayment(String address) {
+     
+
+
+    private void processPayment(String address, JSONArray orderItems, String serviceType, double totalAmount) {
         try {
             double customerBalance = endUser.getBalance();
-            double totalAmountDouble = Double.parseDouble(totalAmount.replace("RM", "").trim());
     
             System.out.println("Available credit: " + customerBalance);
-            System.out.println("Total amount: " + totalAmountDouble);
+            System.out.println("Total amount: " + totalAmount);
     
-            if (customerBalance >= totalAmountDouble) {
-                // Deduct credit from the customer's balance directly
-                endUser.setBalance(customerBalance - totalAmountDouble);
+            // Check if the customer has enough balance
+            if (customerBalance >= totalAmount) {
+                // Deduct the total amount from the customer's balance
+                endUser.setBalance(customerBalance - totalAmount);
     
-                // Update customer balance in the list and save changes
+                // Update the customer's balance in the customer list
                 ArrayList<Customer> customers = UserHandling.getCustomers();
-                for (Customer c : customers) {
-                    if (c.getID().equals(endUser.getID())) {
-                        c.setBalance(endUser.getBalance());
+                for (Customer customer : customers) {
+                    if (customer.getID().equals(endUser.getID())) {
+                        customer.setBalance(endUser.getBalance());
                         break;
                     }
                 }
     
-                // Save updated customer list to customer.txt
+                // Save the updated customer list to the file
                 OrderHandling.updateCustomerBalance(endUser.getID(), endUser.getBalance());
     
-                // Save payment details
-                OrderHandling.savePayment(orderID, receiptImagePath, LocalDate.now().toString(), address, totalAmountDouble, address);
+                // Generate OrderID
+                String orderID = "ORDER" + System.currentTimeMillis();
     
-                // Update payment summary
-                paymentSummary.put("PaymentStatus", "Completed");
-                paymentSummary.put("DeliveryAddress", address);
+                // Call savePayment to save the payment details
+                OrderHandling.savePayment(orderID, endUser.getID(), orderItems, totalAmount, "Completed", serviceType, address);
     
-                // Save payment to payment file
-                Files.write(Paths.get(FileHandling.filePath.PAYMENT_PATH.getValue()), paymentSummary.toString(2).getBytes());
+                // Clear the cart file after successful payment
+                Path cartPath = Paths.get(FileHandling.filePath.CART_PATH.getValue());
+                Files.write(cartPath, new JSONArray().toString().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
     
-                // Clear cart file after successful payment
-                Files.write(Paths.get(FileHandling.filePath.CART_PATH.getValue()), new JSONArray().toString().getBytes());
+                // Read and print the saved payment data
+                Path paymentPath = Paths.get(FileHandling.filePath.PAYMENT_PATH.getValue());
+                String paymentData = new String(Files.readAllBytes(paymentPath));
     
                 JOptionPane.showMessageDialog(this, "Payment successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                dispose(); // Close payment page
-                
-                
+                dispose(); // Close the payment page
+    
             } else {
+                // Notify the user of insufficient credit
                 JOptionPane.showMessageDialog(this, "Insufficient credit to complete the payment.", "Payment Failed", JOptionPane.ERROR_MESSAGE);
             }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error processing payment.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error processing payment: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Invalid total amount format.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
+    private void payButtonActionPerformed(java.awt.event.ActionEvent evt) {                                          
+        String address = addressField.getText();
+        if (address != null && !address.trim().isEmpty()) {
+            processPayment(address, orderItems, serviceType, totalAmount);
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Address is required to proceed with the payment.", "Invalid Address", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    
+    
     
     
 
