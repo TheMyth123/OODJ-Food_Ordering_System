@@ -14,9 +14,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 
 // change to OOP
 public class OrderHandling {
@@ -27,6 +29,7 @@ public class OrderHandling {
     private static final String PAYMENT = FileHandling.filePath.PAYMENT_PATH.getValue();
     public static final String RECEIPT_FOLDER = "app/src/main/resources/receipts/";
     private static final String TOPUP = FileHandling.filePath.TOPUP_PATH.getValue();
+    private static final String RATING = FileHandling.filePath.RATING_PATH.getValue();
 
     public static int getCRid() {
         int tempCount = 0;
@@ -145,10 +148,14 @@ public class OrderHandling {
                     price = item.getDouble("price");
                 }
                 String name = item.getString("name");
-    
+
+                String customerID = item.getString("CustomerID"); // Retrieve CustomerID as a string
+
+            // Retrieve the Customer object using customerID
+                Customer customer = UserHandling.getCustomerByID(customerID);
                 // Retrieve the Customer object using the customerID string
     
-                CusOrder order = new CusOrder(menuID, quantity, price, name);
+                CusOrder order = new CusOrder(menuID, quantity, price, name, customer);
                 cartItems.add(order);
             }
         } catch (Exception e) {
@@ -372,9 +379,113 @@ public class OrderHandling {
             e.printStackTrace();
         }
     }
-    public static void savePayment(String orderID, String receiptImagePath, String string, String address,
-            double totalAmountDouble, String address2) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'savePayment'");
+
+    public static ArrayList<Payment> getOrderHistory() {
+        ArrayList<String> lines = FileHandling.readLines(PAYMENT);
+        StringBuilder jsonData = new StringBuilder();
+    
+        for (String line : lines) {
+            jsonData.append(line);
+        }
+    
+        ArrayList<Payment> paymentList = new ArrayList<>();
+    
+        try {
+            JSONArray ordersArray = new JSONArray(jsonData.toString()); // Assuming the file contains an array of orders
+    
+            for (int i = 0; i < ordersArray.length(); i++) {
+                JSONObject orderObject = ordersArray.getJSONObject(i);
+    
+                String orderID = orderObject.getString("OrderID");
+                String customerID = orderObject.getString("CustomerID");
+                double totalAmount = orderObject.getDouble("TotalAmount");
+                String paymentStatus = orderObject.getString("PaymentStatus");
+                String serviceType = orderObject.getString("ServiceType");
+                String address = orderObject.getString("DeliveryAddress");
+                String dateString = orderObject.getString("Date");
+    
+                // Extract order items array
+    
+                // Create Payment object and add to list
+                Payment payment = new Payment(orderID, customerID, serviceType, totalAmount, paymentStatus, address, dateString);
+                paymentList.add(payment);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    
+        return paymentList;
     }
+
+    public static void saveRating(Payment orderID, Customer customerID, int rating) {
+        ArrayList<String> lines = FileHandling.readLines(RATING);
+        StringBuilder jsonData = new StringBuilder();
+
+        for (String line : lines) {
+            jsonData.append(line);
+        }
+
+        JSONArray ratingsArray;
+        try {
+            if (jsonData.length() == 0) {
+                ratingsArray = new JSONArray();
+            } else {
+                ratingsArray = new JSONArray(jsonData.toString());
+            }
+
+            JSONObject ratingObject = new JSONObject();
+            ratingObject.put("OrderID", orderID.getOrderID());
+            ratingObject.put("CustomerID", customerID.getID());
+            ratingObject.put("Rating", rating);
+
+            ratingsArray.put(ratingObject);
+
+            Files.write(Paths.get(RATING), ratingsArray.toString(2).getBytes());
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    
+
+    public static Payment getPaymentByID(String orderID) {
+        try {
+            // Read the JSON file
+            String jsonData = new String(Files.readAllBytes(Paths.get(PAYMENT)));
+            JSONArray customersArray = new JSONArray(jsonData);
+    
+            // Iterate through the customer data to find the matching ID
+            for (int i = 0; i < customersArray.length(); i++) {
+                JSONObject customerData = customersArray.getJSONObject(i);
+    
+                // Check if the CustomerID matches
+                if (customerData.getString("OrderID").equals(orderID)) {
+                    String customerID = customerData.getString("CustomerID");
+                    String serviceType = customerData.getString("ServiceType");
+                    double totalAmount = customerData.getDouble("TotalAmount");
+                    String paymentStatus = customerData.getString("PaymentStatus");
+                    String address = customerData.getString("DeliveryAddress");
+                    String dateString = customerData.getString("Date");
+    
+                    // Extract order items array
+    
+                    // Create Payment object and return
+                    return new Payment(orderID, customerID, serviceType, totalAmount, paymentStatus, address, dateString);
+                }
+            }
+    
+            // If no matching customer is found
+            // DialogBox.errorMessage("Customer with ID " + customerID + " not found.", "Error");
+            return null;
+    
+        } catch (Exception e) {
+            // Handle any errors (e.g., file reading or JSON parsing)
+            DialogBox.errorMessage("Error reading or parsing customer JSON file: " + e.getMessage(), "Error");
+            return null;
+        }
+    } 
+    
+    
 }

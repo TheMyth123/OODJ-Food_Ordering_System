@@ -15,7 +15,7 @@ public class FileChecker {
         File notificationFile = new File("app\\\\src\\\\main\\\\resources\\\\databases\\\\notification.txt");
         File menuFile = new File("app\\\\src\\\\main\\\\resources\\\\databases\\\\menu.txt");
         File cartFile = new File("app\\\\src\\\\main\\\\resources\\\\databases\\\\cart.txt");
-
+        
         // TODO : ADD EVERY DATABASE FILE HERE
 
         if (!managerFile.exists() || !adminFile.exists() || !customerFile.exists() || !deliveryFile.exists() || !vendorFile.exists() || !notificationFile.exists()) {
@@ -59,6 +59,8 @@ public class FileChecker {
                 writeEmptyJsonArray(cartFile);
                 System.out.println("Cart file created successfully");
             }
+
+            
             return true;
         }
         return false;

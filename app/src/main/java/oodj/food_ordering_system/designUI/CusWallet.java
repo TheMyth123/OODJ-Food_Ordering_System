@@ -1,361 +1,52 @@
 package oodj.food_ordering_system.designUI;
 
 
-import oodj.food_ordering_system.models.Credit;
-import oodj.food_ordering_system.models.CusOrder;
 import oodj.food_ordering_system.models.Customer;
 import oodj.food_ordering_system.models.Notification;
+// import oodj.food_ordering_system.models.Notification;
 import oodj.food_ordering_system.utils.DialogBox;
-import oodj.food_ordering_system.utils.FileHandling;
 import oodj.food_ordering_system.utils.NotificationUtils;
-import oodj.food_ordering_system.utils.OrderHandling;
+// import oodj.food_ordering_system.utils.NotificationUtils;
 import raven.glasspanepopup.*;
 
-import static oodj.food_ordering_system.designUI.LoginPage.loginID;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.DefaultListSelectionModel;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.table.DefaultTableModel;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+// import java.util.List;
+
+import javax.swing.JPanel;
 
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
-// TODO design have done yet, discard items will affect the cart.txt json format
-// set on more can choose which food to pay
-// need to add refresh page
-public class Cart extends javax.swing.JFrame {
+
+//  dine in, take-away or request for delivery service from the vendor.
+
+public class CusWallet extends javax.swing.JFrame {
+
 
     private Customer endUser;
-    private JTable cartTable;
+    private List<Notification> notifications;
 
-// make the cart refresh after i finish payment
-
-
-    public Cart(Customer endUser) {
-        this.endUser = endUser;            
-        System.out.println("CusDash initialized with customerID: " + endUser.getID()); // Debugging statement
-        initComponents();
-        ArrayList<CusOrder> cart = OrderHandling.getCart(); // Fetch cart items
-        displayCart(cart, endUser.getID()); // Display cart items
-        addWindowFocusListener(new java.awt.event.WindowFocusListener() {
-            @Override
-            public void windowGainedFocus(java.awt.event.WindowEvent evt) {
-                // refreshCart();
-            }
-            @Override
-            public void windowLostFocus(java.awt.event.WindowEvent evt) {
-                // Do nothing
-            }
-        });
-        
-    }
-    // private void updateCartQuantity(String foodName, int newQuantity) {
-    //         String filePath = FileHandling.filePath.CART_PATH.getValue();
-    //         try {
-    //             String content = new String(Files.readAllBytes(Paths.get(filePath)));
-    //             JSONArray cartArray = new JSONArray(content);
-    //             for (int i = 0; i < cartArray.length(); i++) {
-    //                 JSONObject item = cartArray.getJSONObject(i);
-    //                 if (item.getString("name").equals(foodName)) {
-    //                     System.out.println("Updating quantity for " + foodName + " to " + newQuantity); // Debugging statement
-    //                     item.put("quantity", j);
-    //                 break;
-    //             }
-    //         }
-    //         FileHandling.saveToFile(cartArray, filePath);
-    //         System.out.println("Cart updated successfully."); // Debugging statement
-    //     } catch (IOException e) {
-    //         e.printStackTrace();
-    //     }
-    // }
-
-
-    // private void displayCart(ArrayList<CusOrder> cart) {
-    // // Ensure cartTable is initialized
-    //     if (cartTable == null) {
-    //         cartTable = new JTable(new DefaultTableModel(
-    //             new Object[][]{},
-    //             new String[]{"Menu ID", "Quantity", "Unit Price", "Name"}
-    //         ));
-
-    //         // Enable multiple row selection
-    //         cartTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-    //         cartTable.setRowSelectionAllowed(true);
-    //         cartTable.setColumnSelectionAllowed(false);
-    //     } else {
-    //         cartTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-    //     }
-
-    //     // Modify selection model to allow multiple selections without Ctrl and allow deselecting
-    //     cartTable.setSelectionModel(new DefaultListSelectionModel() {
-    //         @Override
-    //         public void setSelectionInterval(int index0, int index1) {
-    //             if (super.isSelectedIndex(index0)) {
-    //                 super.removeSelectionInterval(index0, index1);  // Deselect if already selected
-    //             } else {
-    //                 super.addSelectionInterval(index0, index1);  // Select if not selected
-    //             }
-    //         }
+// add run method
+    // public static void run() {
+    //     java.awt.EventQueue.invokeLater(() -> {
+    //         new CusDash().setVisible(true);
     //     });
-
-    //     // Get the table model
-    //     DefaultTableModel model = (DefaultTableModel) cartTable.getModel();
-
-    //     // Clear existing rows
-    //     model.setRowCount(0);
-
-    //     // Add rows for each CusOrder in the cart
-    //     for (CusOrder order : cart) {
-    //         model.addRow(new Object[]{
-    //             order.getMenuID(),
-    //             order.getQuantity(),
-    //             order.getPrice(),
-    //             order.getName(),
-    //         });
-    //     }
-    private void displayCart(ArrayList<CusOrder> cart, String endUser) {
-        // Ensure cartTable is initialized
-        if (cartTable == null) {
-            cartTable = new JTable(new DefaultTableModel(
-                new Object[][]{},
-                new String[]{"Menu ID", "Quantity", "Unit Price", "Name"}
-            ));
-    
-            // Enable multiple row selection
-            cartTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-            cartTable.setRowSelectionAllowed(true);
-            cartTable.setColumnSelectionAllowed(false);
-        } else {
-            cartTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        }
-    
-        // Modify selection model to allow multiple selections without Ctrl and allow deselecting
-        cartTable.setSelectionModel(new DefaultListSelectionModel() {
-            @Override
-            public void setSelectionInterval(int index0, int index1) {
-                if (super.isSelectedIndex(index0)) {
-                    super.removeSelectionInterval(index0, index1);  // Deselect if already selected
-                } else {
-                    super.addSelectionInterval(index0, index1);  // Select if not selected
-                }
-            }
-        });
-    
-        // Get the table model
-        DefaultTableModel model = (DefaultTableModel) cartTable.getModel();
-    
-        // Clear existing rows
-        model.setRowCount(0);
-    
-        // Add rows only if CustomerID matches endUser
-        for (CusOrder order : cart) {
-            if (order.getCustomer().getID().equals(endUser)) {  // Check if the customer ID matches
-                model.addRow(new Object[]{
-                    order.getMenuID(),
-                    order.getQuantity(),
-                    order.getPrice(),
-                    order.getName(),
-                });
-            }
-        }
-    
-    
-
-        // Add cartTable to title_container1 with a scroll pane
-        JScrollPane scrollPane = new JScrollPane(cartTable);
-        scrollPane.setPreferredSize(new Dimension(500, 200));
-
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-
-        // **Pay Button**
-        JButton payButton = new JButton("Pay");
-        payButton.addActionListener(evt -> {
-            int[] selectedRows = cartTable.getSelectedRows();
-            if (selectedRows.length > 0) {
-                double totalAmount = 0; // Initialize total amount
-        
-                DefaultTableModel tableModel = (DefaultTableModel) cartTable.getModel();
-                
-                JSONArray orderItems = new JSONArray();
-        
-                for (int row : selectedRows) {
-                    String menuID = tableModel.getValueAt(row, 0).toString();
-                    int quantity = Integer.parseInt(tableModel.getValueAt(row, 1).toString());
-                    double price = Double.parseDouble(tableModel.getValueAt(row, 2).toString());
-        
-                    double itemTotal = quantity * price;  // Calculate item total
-                    totalAmount += itemTotal;  // Add to total amount
-        
-                    JSONObject orderItem = new JSONObject();
-                    orderItem.put("menuID", menuID);
-                    orderItem.put("quantity", quantity);
-                    orderItem.put("price", price);
-                    orderItem.put("totalPrice", itemTotal);
-        
-                    orderItems.put(orderItem);
-                }
-        
-                JOptionPane.showMessageDialog(null, "Total Amount: $" + totalAmount);
-        
-            
-                try {
-                    checkout(orderItems, totalAmount);
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                
-            } else {
-                JOptionPane.showMessageDialog(null, "Please select items to pay for.");
-            }
-        });
-        
-
-        // **Discard Button**
-        JButton discardButton = new JButton("Discard");
-        discardButton.addActionListener(evt -> {
-            int[] selectedRows = cartTable.getSelectedRows();
-            if (selectedRows.length > 0) {
-                JOptionPane.showMessageDialog(null, "Discarded rows: " + Arrays.toString(selectedRows));
-                // Implement discard logic here
-            } else {
-                JOptionPane.showMessageDialog(null, "Please select items to discard.");
-            }
-        });
-
-        // Add buttons to the panel
-        buttonPanel.add(payButton);
-        buttonPanel.add(discardButton);
-
-        title_container1.removeAll(); // Remove previous content
-        title_container1.setLayout(new BorderLayout()); // Set layout manager
-        title_container1.add(scrollPane, BorderLayout.CENTER); // Add scroll pane
-        title_container1.add(buttonPanel, BorderLayout.SOUTH); // Add button panel
-        title_container1.revalidate(); // Revalidate to refresh
-        title_container1.repaint();   // Repaint to update UI
-    }
-
-    
-    // Method to update the quantity in the cart
-    private void updateCartQuantity(String foodName, int delta, JTextField quantityField, JLabel totalAmountLabel, double price) {
-        String filePath = FileHandling.filePath.CART_PATH.getValue();
-        try {
-            String content = new String(Files.readAllBytes(Paths.get(filePath)));
-            JSONArray cartArray = new JSONArray(content);
-            for (int i = 0; i < cartArray.length(); i++) {
-                JSONObject item = cartArray.getJSONObject(i);
-                if (item.getString("name").equals(foodName)) {
-                    int currentQuantity = item.getInt("quantity");
-                    int newQuantity = Math.max(currentQuantity + delta, 0);
-                    item.put("quantity", newQuantity);
-                    quantityField.setText(String.valueOf(newQuantity));
-                    double newTotalAmount = newQuantity * price;
-                    totalAmountLabel.setText(String.format("$%.2f", newTotalAmount));
-                    break;
-                }
-            }
-            FileHandling.saveToFile(cartArray, filePath);
-            System.out.println("Cart updated successfully.");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    // public void refreshCart() {
-    //     title_container1.removeAll();  // Clear the cart UI components
-    //     displayCart();            // Reload the cart items
-    //     title_container1.revalidate();  // Refresh layout
-    //     title_container1.repaint();     // Repaint UI
     // }
-    
 
-    private void checkout(JSONArray orderItems, double totalAmount) throws IOException {
-        if (orderItems.length() == 0) {
-            JOptionPane.showMessageDialog(this, "No items selected!", "Warning", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-    
-        // Prompt user for service type
-        String[] options = {"Dine In", "Take-Away", "Request for Delivery"};
-        int choice = JOptionPane.showOptionDialog(
-            this,
-            "Please select an order type:",
-            "Order Type",
-            JOptionPane.DEFAULT_OPTION,
-            JOptionPane.INFORMATION_MESSAGE,
-            null,
-            options,
-            options[0]
-        );
-    
-        if (choice == JOptionPane.CLOSED_OPTION) {
-            JOptionPane.showMessageDialog(this, "No order type selected.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
-    
-        String serviceType = options[choice];
-    
-        // Create payment summary
-        JSONObject paymentSummary = new JSONObject();
-        paymentSummary.put("CustomerID", endUser.getID());
-        paymentSummary.put("ServiceType", serviceType);
-        paymentSummary.put("TotalAmount", totalAmount);
-        paymentSummary.put("PaymentStatus", "Pending");
-        paymentSummary.put("OrderItems", orderItems);
-    
-        // Fetch customer credit
-        Credit customerCredit = null;
-        for (Credit credit : OrderHandling.getCredits()) {
-            if (credit.getCustomerID().equals(endUser.getID())) {
-                customerCredit = credit;
-                break;
-            }
-        }
-    
-        if (customerCredit != null) {
-            // Open payment page
-            new CusPayment(
-                "ORDER" + System.currentTimeMillis(),  // Auto-generate Order ID
-                orderItems, endUser,
-                totalAmount,
-                "Completed",
-                serviceType
-            ).setVisible(true);
-        } else {
-            JOptionPane.showMessageDialog(this, "Credit information not found for customer ID: " + endUser.getID(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
+// TODO check again customerID
+    public CusWallet(Customer endUser) {
+        this.endUser = endUser;
+        initComponents();
+        // GlassPanePopup.install(this);
+
     }
-    
-    
+
+
+
+
+
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
@@ -367,9 +58,9 @@ public class Cart extends javax.swing.JFrame {
         margin2 = new javax.swing.JPanel();
         btn_container1 = new javax.swing.JPanel();
         btn_home = new javax.swing.JButton();
-        btn_wallet = new javax.swing.JButton();
         btn_cart = new javax.swing.JButton();
         btn_history = new javax.swing.JButton();
+        btn_wallet = new javax.swing.JButton();
         btn_profile = new javax.swing.JButton();
         margin3 = new javax.swing.JPanel();
         btn_container2 = new javax.swing.JPanel();
@@ -385,6 +76,7 @@ public class Cart extends javax.swing.JFrame {
         margin5 = new javax.swing.JPanel();
         m7 = new javax.swing.JPanel();
         btn_Noti = new oodj.food_ordering_system.designUI.Button();
+        wallet = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Customer Cart");
@@ -498,9 +190,9 @@ public class Cart extends javax.swing.JFrame {
         });
         btn_container1.add(btn_home);
 
-        btn_wallet.setBackground(new java.awt.Color(31, 31, 31));
-        btn_wallet.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_wallet.setForeground(new java.awt.Color(245, 251, 254));
+        btn_wallet.setBackground(new java.awt.Color(43, 43, 43));
+        btn_wallet.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btn_wallet.setForeground(new java.awt.Color(255, 169, 140));
         btn_wallet.setText("Wallet");
         btn_wallet.setBorder(null);
         btn_wallet.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -509,16 +201,16 @@ public class Cart extends javax.swing.JFrame {
         btn_wallet.setMaximumSize(new java.awt.Dimension(250, 40));
         btn_wallet.setMinimumSize(new java.awt.Dimension(250, 40));
         btn_wallet.setPreferredSize(new java.awt.Dimension(250, 40));
-        btn_wallet.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_walletActionPerformed(evt);
-            }
-        });
+        // btn_wallet.addActionListener(new java.awt.event.ActionListener() {
+        //     public void actionPerformed(java.awt.event.ActionEvent evt) {
+        //         btn_walletActionPerformed(evt);
+        //     }
+        // });
         btn_container1.add(btn_wallet);
 
-        btn_cart.setBackground(new java.awt.Color(43, 43, 43));
-        btn_cart.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btn_cart.setForeground(new java.awt.Color(255, 169, 140));
+        btn_cart.setBackground(new java.awt.Color(31, 31, 31));
+        btn_cart.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btn_cart.setForeground(new java.awt.Color(245, 251, 254));
         btn_cart.setText("Cart");
         btn_cart.setBorder(null);
         btn_cart.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -527,7 +219,11 @@ public class Cart extends javax.swing.JFrame {
         btn_cart.setMaximumSize(new java.awt.Dimension(250, 40));
         btn_cart.setMinimumSize(new java.awt.Dimension(250, 40));
         btn_cart.setPreferredSize(new java.awt.Dimension(250, 40));
-    
+        btn_cart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_cartActionPerformed(evt);
+            }
+        });
         btn_container1.add(btn_cart);
 
         btn_history.setBackground(new java.awt.Color(31, 31, 31));
@@ -546,6 +242,7 @@ public class Cart extends javax.swing.JFrame {
                 btn_historyActionPerformed(evt);
             }
         });
+        
         btn_container1.add(btn_history);
 
         btn_profile.setBackground(new java.awt.Color(31, 31, 31));
@@ -673,11 +370,11 @@ public class Cart extends javax.swing.JFrame {
         welcome.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         welcome.setForeground(new java.awt.Color(255, 169, 140));
         welcome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        welcome.setText("Cart");
+        welcome.setText("Wallet");
         welcome.setAlignmentX(0.5F);
-        welcome.setMaximumSize(new java.awt.Dimension(50, 50));
-        welcome.setMinimumSize(new java.awt.Dimension(50, 50));
-        welcome.setPreferredSize(new java.awt.Dimension(50, 50));
+        welcome.setMaximumSize(new java.awt.Dimension(200, 50));
+        welcome.setMinimumSize(new java.awt.Dimension(200, 50));
+        welcome.setPreferredSize(new java.awt.Dimension(200, 50));
         title_container.add(welcome);
 
         
@@ -685,10 +382,20 @@ public class Cart extends javax.swing.JFrame {
         Main.add(title_container);
 
         title_container1.setBackground(new java.awt.Color(31, 31, 31));
-        title_container1.setMaximumSize(new java.awt.Dimension(1000, 400));
-        title_container1.setMinimumSize(new java.awt.Dimension(1000, 400));
-        title_container1.setPreferredSize(new java.awt.Dimension(1000, 400));
+        title_container1.setMaximumSize(new java.awt.Dimension(1000, 670));
+        title_container1.setMinimumSize(new java.awt.Dimension(1000, 670));
+        title_container1.setPreferredSize(new java.awt.Dimension(1000, 670));
         // title_container1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 0));
+
+
+        wallet.setBackground(new java.awt.Color(31, 31, 31));
+        wallet.setMaximumSize(new java.awt.Dimension(1000, 670));
+        wallet.setMinimumSize(new java.awt.Dimension(1000, 670));
+        wallet.setPreferredSize(new java.awt.Dimension(1000, 670));
+        wallet.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 0));
+        
+
+        title_container1.add(wallet);
 
         m8.setBackground(new java.awt.Color(31, 31, 31));
         m8.setMaximumSize(new java.awt.Dimension(60, 60));
@@ -743,8 +450,6 @@ public class Cart extends javax.swing.JFrame {
             .addGap(0, 50, Short.MAX_VALUE)
         );
 
-
-
         Main.add(margin5);
 
         m7.setBackground(new java.awt.Color(31, 31, 31));
@@ -762,49 +467,65 @@ public class Cart extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>    
 
-    // //TODO I USED ADMIN DATA TO GET NOTIFICATIONS. CHANGE TO OWN DATA
-    // List<Notification> notifications = NotificationUtils.getUnreadNotifications(NotificationUtils.getAllNotifications());
+    //TODO I USED ADMIN DATA TO GET NOTIFICATIONS. CHANGE TO OWN DATA
+    // List<Notification> notifications = NotificationUtils.getUnreadNotifications(NotificationUtils.getAllNotifications(), customerID);
     
-    // private void btn_NotiActionPerformed(java.awt.event.ActionEvent evt) {                                  
-    //     GlassPanePopup.showPopup(new NotificationPanel(notifications), new DefaultOption(){
-    //         @Override
-    //         public float opacity() {
-    //             return 0;
-    //         }
-
-    //         @Override
-    //         public LayoutCallback getLayoutCallBack(java.awt.Component parent) {
-    //             return new DefaultLayoutCallBack(parent){
-    //                 @Override
-    //                 public void correctBounds(ComponentWrapper cw) {
-    //                     if (parent.isVisible()){
-    //                         java.awt.Point pl = parent.getLocationOnScreen();
-    //                         java.awt.Point bl = btn_Noti.getLocationOnScreen();
-    //                         int x = bl.x - pl.x;
-    //                         int y = bl.y - pl.y;
-    //                         cw.setBounds(x - cw.getWidth() + btn_Noti.getWidth(), y + btn_Noti.getHeight(), cw.getWidth(), cw.getHeight());
-    //                     } else {
-    //                         super.correctBounds(cw);
-    //                     }
-    //                 }
-    //             };
-    //         }
-
-    //     });
-    // }   
-
-
-    private void discardItem(String item) {
-        // // Read the current cart items from the file
-        // ArrayList<CusOrder> cartItems = OrderHandling.getCart();
-        // // Remove the selected item from the list
-        // cartItems.remove(item);
-        // // Write the updated list back to the file
-        // OrderHandling.saveCart(cartItems);
-        // System.out.println("Discard item: " + item);
+    private List<Notification> getNotifications() {
+        if (notifications == null) {
+            notifications = NotificationUtils.getUnreadNotifications(NotificationUtils.getAllNotifications(), endUser.getID(), false);
+        }
+        return notifications;
     }
 
+
+
+    private void btn_NotiActionPerformed(java.awt.event.ActionEvent evt) {                                  
+        GlassPanePopup.showPopup(new NotificationPanel(getNotifications()), new DefaultOption(){
+            @Override
+            public float opacity() {
+                return 0;
+            }
+
+            @Override
+            public LayoutCallback getLayoutCallBack(java.awt.Component parent) {
+                return new DefaultLayoutCallBack(parent){
+                    @Override
+                    public void correctBounds(ComponentWrapper cw) {
+                        if (parent.isVisible()){
+                            java.awt.Point pl = parent.getLocationOnScreen();
+                            java.awt.Point bl = btn_Noti.getLocationOnScreen();
+                            int x = bl.x - pl.x;
+                            int y = bl.y - pl.y;
+                            cw.setBounds(x - cw.getWidth() + btn_Noti.getWidth(), y + btn_Noti.getHeight(), cw.getWidth(), cw.getHeight());
+                        } else {
+                            super.correctBounds(cw);
+                        }
+                    }
+                };
+            }
+
+        });
+    }  
+
+
+    private void btn_plusActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        // Disable the current CusDash window
+        this.setEnabled(false);
     
+        // Create and show the TopUp window
+        TopUp topup = new TopUp(endUser);
+    
+        // Add a window listener to re-enable CusDash when TopUp is closed
+        topup.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                CusWallet.this.setEnabled(true);
+                CusWallet.this.toFront();
+            }
+        });
+    
+        topup.setVisible(true);
+    }
 
     private void btn_logoutActionPerformed(java.awt.event.ActionEvent evt) {                                           
         boolean confirm = DialogBox.confirmMessage("Are you sure you want to logout?", "Logout");
@@ -814,28 +535,31 @@ public class Cart extends javax.swing.JFrame {
         }
     }                                          
 
-    private void btn_homeActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    
+    private void btn_cartActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        dispose();
+        new Cart(endUser).setVisible(true);
+    } 
+
+    private void btn_homeActionPerformed(java.awt.event.ActionEvent evt) {                                            
         dispose();
         new CusDash().setVisible(true);
-    }                                        
+    }
 
     private void btn_historyActionPerformed(java.awt.event.ActionEvent evt) {                                            
         dispose();
         new OrderHistory(endUser).setVisible(true);
-        //TODO CALL PAGE 3
-        System.out.println("Page 3");
-    }                                                                          
+        //TODO CALL PAGE 2
+    } 
+                                              
+                                            
+                                                                             
 
     private void btn_profileActionPerformed(java.awt.event.ActionEvent evt) {                                        
-        //dispose();
-        //TODO CALL PAGE 4
-        System.out.println("Page 4");
-    }      
-    
-    private void btn_walletActionPerformed(java.awt.event.ActionEvent evt) {                                        
-        dispose();
-        new CusWallet(endUser).setVisible(true);
-    }
+        // dispose();
+        // new TopUp(endUser).setVisible(true);
+        // System.out.println("Page 4");
+    }                                       
 
 
     // Variables declaration - do not modify                     
@@ -843,13 +567,15 @@ public class Cart extends javax.swing.JFrame {
     private javax.swing.JPanel Logo_container;
     private javax.swing.JPanel Main;
     private javax.swing.JPanel Sidebar;
-    private javax.swing.JButton btn_cart;
+    private javax.swing.JButton btn_history;
     private javax.swing.JPanel btn_container1;
     private javax.swing.JPanel btn_container2;
-    private javax.swing.JButton btn_history;
+    private javax.swing.JButton btn_cart;
     private javax.swing.JButton btn_home;
+    private javax.swing.JButton btn_wallet;
     private javax.swing.JButton btn_profile;
     private javax.swing.JButton btn_logout;
+    private javax.swing.JLabel customer_username;
     private javax.swing.JPanel m5;
     private javax.swing.JPanel m6;
     private javax.swing.JPanel m7;
@@ -864,8 +590,10 @@ public class Cart extends javax.swing.JFrame {
     private javax.swing.JPanel title_container1;
     private javax.swing.JLabel welcome;
     private javax.swing.JButton btn_Noti;
-    private javax.swing.JButton btn_wallet;
-    // End of variables declaration  
-
+    private javax.swing.JLabel amount;
+    private javax.swing.JButton btn_plus;
+    private javax.swing.JPanel wallet;
+    // End of variables declaration                   
 }
+
 

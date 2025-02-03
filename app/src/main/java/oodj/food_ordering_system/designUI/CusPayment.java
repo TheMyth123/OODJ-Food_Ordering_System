@@ -29,29 +29,19 @@ import oodj.food_ordering_system.utils.UserHandling;
 // TODO after payment successfull dispose the payment page
 public class CusPayment extends javax.swing.JFrame {
 
-    private String orderID;
     private String foodName;
     private String quantity;
     private double totalAmount;
     private JTextField addressField;
-    private Credit credit;
-    private String receiptImagePath;
-    private JSONObject paymentSummary;
     private JSONArray orderItems;
     private String serviceType;
-    private String paymentStatus;
-
-
-
     private Customer endUser;
 
 
     public CusPayment(String orderID, JSONArray orderItems,Customer endUser, double totalAmount, String paymentStatus, String serviceType) {
         this.endUser = endUser;
-        this.orderID = orderID;
         this.orderItems = orderItems;
         this.totalAmount = totalAmount;
-        this.paymentStatus = paymentStatus;
         this.serviceType = serviceType;
         initComponents();
     }
@@ -160,18 +150,50 @@ public class CusPayment extends javax.swing.JFrame {
         m3.setLayout(new BoxLayout(m3, BoxLayout.Y_AXIS));
 
 // Food Name
-        JLabel foodNameLabel = new JLabel("Food Name: " + foodName);
-        foodNameLabel.setForeground(new Color(255, 169, 140));
-        foodNameLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-        foodNameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        m3.add(foodNameLabel);
 
-        // Quantity
-        JLabel quantityLabel = new JLabel("Quantity: " + quantity);
-        quantityLabel.setForeground(new Color(255, 169, 140));
-        quantityLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-        quantityLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        m3.add(quantityLabel);
+        JLabel nameLabel = new JLabel("Name: " + endUser.getName());
+        nameLabel.setForeground(new Color(255, 169, 140));
+        nameLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        m3.add(nameLabel);
+
+        JLabel addressLabel = new JLabel("Address: " + endUser.getAddress());
+        addressLabel.setForeground(new Color(255, 169, 140));
+        addressLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        addressLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        m3.add(addressLabel);
+
+        JLabel phoneLabel = new JLabel("Phone: " + endUser.getContactnumber());
+        phoneLabel.setForeground(new Color(255, 169, 140));
+        phoneLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        phoneLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        m3.add(phoneLabel);
+
+        for (int i = 0; i < orderItems.length(); i++) {
+            JSONObject orderItem = orderItems.getJSONObject(i);
+            String menuID = orderItem.getString("menuID");
+            int quantity = orderItem.getInt("quantity");
+
+
+            // String foodName = getFoodNameFromMenu(menuItems, menuID);
+
+
+
+        
+
+            // JLabel foodNameLabel = new JLabel("Food Name: " + name);
+            // foodNameLabel.setForeground(new Color(255, 169, 140));
+            // foodNameLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+            // foodNameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            // m3.add(foodNameLabel);
+
+            // Quantity
+            JLabel quantityLabel = new JLabel("Quantity: " + quantity);
+            quantityLabel.setForeground(new Color(255, 169, 140));
+            quantityLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+            quantityLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            m3.add(quantityLabel);
+        }
 
         // Total Amount
         JLabel totalAmountLabel = new JLabel("Total Amount: " + totalAmount);
@@ -180,11 +202,11 @@ public class CusPayment extends javax.swing.JFrame {
         totalAmountLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         m3.add(totalAmountLabel);
 
-        JLabel addressLabel = new JLabel("Enter Address:");
-        addressLabel.setForeground(new Color(255, 169, 140));
-        addressLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-        addressLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        m3.add(addressLabel);
+        JLabel enterAddressLabel = new JLabel("Enter Address:");
+        enterAddressLabel.setForeground(new Color(255, 169, 140));
+        enterAddressLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        enterAddressLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        m3.add(enterAddressLabel);
 
         addressField = new JTextField();
         addressField.setPreferredSize(new Dimension(200, 30));
@@ -335,6 +357,16 @@ public class CusPayment extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(this, "Address is required to proceed with the payment.", "Invalid Address", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    private static String getFoodNameFromMenu(JSONArray menuItems, String menuID) {
+        for (int j = 0; j < menuItems.length(); j++) {
+            JSONObject menuItem = menuItems.getJSONObject(j);
+            if (menuItem.getString("menuID").equals(menuID)) {
+                return menuItem.getString("foodName");
+            }
+        }
+        return "Unknown Item";  // Default if menuID is not found
     }
     
     

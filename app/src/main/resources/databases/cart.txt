@@ -1,1 +1,9 @@
-[]
+[{
+    "MenuID": "MN00001",
+    "quantity": 3,
+    "price": "$25",
+    "imagePath": "images/seared_salmon.jpg",
+    "name": "Seared Salmon",
+    "description": "Pan-seared salmon with lemon butter sauce",
+    "CustomerID": "CS00001"
+}]

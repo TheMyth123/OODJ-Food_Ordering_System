@@ -217,11 +217,11 @@ public class CusDash extends javax.swing.JFrame {
         btn_wallet.setMaximumSize(new java.awt.Dimension(250, 40));
         btn_wallet.setMinimumSize(new java.awt.Dimension(250, 40));
         btn_wallet.setPreferredSize(new java.awt.Dimension(250, 40));
-        // btn_wallet.addActionListener(new java.awt.event.ActionListener() {
-        //     public void actionPerformed(java.awt.event.ActionEvent evt) {
-        //         btn_walletActionPerformed(evt);
-        //     }
-        // });
+        btn_wallet.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_walletActionPerformed(evt);
+            }
+        });
         btn_container1.add(btn_wallet);
 
         btn_cart.setBackground(new java.awt.Color(31, 31, 31));
@@ -284,9 +284,9 @@ public class CusDash extends javax.swing.JFrame {
         Sidebar.add(btn_container1);
 
         margin3.setBackground(new java.awt.Color(31, 31, 31));
-        margin3.setMaximumSize(new java.awt.Dimension(300, 100));
-        margin3.setMinimumSize(new java.awt.Dimension(300, 100));
-        margin3.setPreferredSize(new java.awt.Dimension(300, 80));
+        margin3.setMaximumSize(new java.awt.Dimension(300, 60));
+        margin3.setMinimumSize(new java.awt.Dimension(300, 60));
+        margin3.setPreferredSize(new java.awt.Dimension(300, 60));
 
         javax.swing.GroupLayout margin3Layout = new javax.swing.GroupLayout(margin3);
         margin3.setLayout(margin3Layout);
@@ -408,28 +408,7 @@ public class CusDash extends javax.swing.JFrame {
         amount.setMinimumSize(new java.awt.Dimension(220, 50));
         amount.setPreferredSize(new java.awt.Dimension(220, 50));
         title_container.add(amount);
-// TODO balance will refresh after top up (might be)
-        btn_plus = new javax.swing.JButton();
-        btn_plus.setBackground(new java.awt.Color(31, 31, 31));
-        btn_plus.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        btn_plus.setForeground(new java.awt.Color(255, 169, 140));
-        btn_plus.setText("+");
-    
-        btn_plus.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 15));
-        btn_plus.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_plus.setFocusable(false);
-        // btn_plus.setMargin(new java.awt.Insets(15, 25, 15, 50));
-        btn_plus.setMaximumSize(new java.awt.Dimension(50, 50));
-        btn_plus.setMinimumSize(new java.awt.Dimension(50, 50));
-        btn_plus.setPreferredSize(new java.awt.Dimension(50, 50));
-        btn_plus.setContentAreaFilled(false);
-        btn_plus.setBorderPainted(false);
-        btn_plus.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_plusActionPerformed(evt);
-            }
-        });
-        title_container.add(btn_plus);
+
 
         btn_Noti.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/noti.png"))); // NOI18N
         btn_Noti.setPreferredSize(new java.awt.Dimension(50, 50));
@@ -613,9 +592,8 @@ public class CusDash extends javax.swing.JFrame {
                                               
                                               
     private void btn_walletActionPerformed(java.awt.event.ActionEvent evt) {                                        
-        // dispose();
-        // new CusDash().setVisible(true);
-        // System.out.println("Page 1");
+        dispose();
+        new CusWallet(endUser).setVisible(true);
     }
 
                                                                              

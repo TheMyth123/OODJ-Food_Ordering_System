@@ -31,8 +31,6 @@ public class CusMenu extends javax.swing.JFrame {
     private String customerID;
     private Map<String, Integer> itemQuantities;
 
-    // private static String vendorID;
-    
     
     
     public CusMenu(String vendorID) {
@@ -48,87 +46,6 @@ public class CusMenu extends javax.swing.JFrame {
         initComponents(vendorID);
     }
 
-    // TODO check again
-    // private void addToCart() throws IOException {
-    //     String filePath = FileHandling.filePath.CART_PATH.getValue();
-    //     JSONArray cartArray = new JSONArray();
-    
-    //     // Read existing cart items from the file
-    //     try {
-    //         String content = new String(Files.readAllBytes(Paths.get(filePath)));
-    //         if (!content.isEmpty()) {
-    //             cartArray = new JSONArray(content);
-    //         }
-    //     } catch (IOException e) {
-    //         e.printStackTrace();
-    //         JOptionPane.showMessageDialog(null, "Error reading cart file.", "Error", JOptionPane.ERROR_MESSAGE);
-    //         return;
-    //     } catch (Exception e) {
-    //         JOptionPane.showMessageDialog(null, "Invalid JSON format in cart file.", "Error", JOptionPane.ERROR_MESSAGE);
-    //         return;
-    //     }
-    
-    //     // Prompt the user to select the service type
-    //     String[] options = {"Dine In", "Take-Away", "Request for Delivery"};
-    //     int choice = JOptionPane.showOptionDialog(
-    //         null,
-    //         "Please select an order type:",
-    //         "Order Type",
-    //         JOptionPane.DEFAULT_OPTION,
-    //         JOptionPane.INFORMATION_MESSAGE,
-    //         null,
-    //         options,
-    //         options[0]
-    //     );
-    
-    //     if (choice == JOptionPane.CLOSED_OPTION) {
-    //         JOptionPane.showMessageDialog(null, "No order type selected. Please try again.");
-    //         return;
-    //     }
-    
-    //     String orderType = options[choice];
-    
-    //     // Process cart items and avoid duplicates
-    //     for (String[] item : cart) {
-    //         if (item.length < 6) {
-    //             System.err.println("Invalid item array length: " + item.length);
-    //             continue;
-    //         }
-    
-    //         boolean itemExists = false;
-    //         for (int i = 0; i < cartArray.length(); i++) {
-    //             JSONObject existingItem = cartArray.getJSONObject(i);
-    //             if (existingItem.getString("MenuID").equals(item[0]) && existingItem.getString("CustomerID").equals(customerID)) {
-    //                 // Update quantity if item already exists
-    //                 int existingQuantity = existingItem.getInt("quantity");
-    //                 existingItem.put("quantity", existingQuantity + Integer.parseInt(item[3]));
-    //                 itemExists = true;
-    //                 break;
-    //             }
-    //         }
-    
-    //         if (!itemExists) {
-    //             // Add new item to the cart
-    //             JSONObject newItem = new JSONObject();
-    //             newItem.put("MenuID", item[0]);
-    //             newItem.put("CustomerID", customerID);
-    //             newItem.put("name", item[1]);
-    //             newItem.put("description", item[2]);
-    //             newItem.put("quantity", Integer.parseInt(item[3]));  // Ensure integer type for quantity
-    //             newItem.put("price", item[4]);
-    //             newItem.put("imagePath", item[5]);
-    //             newItem.put("orderType", orderType);
-    
-    //             cartArray.put(newItem);
-    //         }
-    //     }
-    
-    //     FileHandling.saveToFile(cartArray, filePath);
-    //     JOptionPane.showMessageDialog(null, "Items added to cart successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-    
-    //     cart.clear();
-    // }
-
     private void addToCart() throws IOException {
         String filePath = FileHandling.filePath.CART_PATH.getValue();
         JSONArray cartArray = new JSONArray();
@@ -136,7 +53,7 @@ public class CusMenu extends javax.swing.JFrame {
         // Read existing cart items from the file
         try {
             String content = new String(Files.readAllBytes(Paths.get(filePath)));
-            if (!content.isEmpty()) {
+            if (!content.trim().isEmpty()) {
                 cartArray = new JSONArray(content);
             }
         } catch (IOException e) {
@@ -148,34 +65,133 @@ public class CusMenu extends javax.swing.JFrame {
             return;
         }
     
-        // Add new items to the cart array
+        // Process each item in the cart list
         for (String[] item : cart) {
-            if (item.length < 6) {
-                System.err.println("Invalid item array length: " + item.length);
-                continue;
-            }
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("MenuID", item[0]);
-            jsonObject.put("CustomerID", customerID); // Use the customerID field
-            jsonObject.put("name", item[1]);
-            jsonObject.put("description", item[2]);
-            jsonObject.put("quantity", item[3]);
-            jsonObject.put("price", item[4]);
-            jsonObject.put("imagePath", item[5]);
+            // if (item.length < 6) {
+            //     System.err.println("Invalid item array length: " + item.length);
+            //     continue;
+            // }
     
-            cartArray.put(jsonObject);
+            String menuID = item[0];
+            // String customerID = item[2]; // Assuming customerID is in the item array
+            int quantityToAdd = Integer.parseInt(item[3]);
+            boolean found = false;
+    
+            // Check if the item already exists in the cart (JSON format handling)
+            for (int i = 0; i < cartArray.length(); i++) {
+                JSONObject cartItem = cartArray.getJSONObject(i);
+                if (cartItem.getString("MenuID").equals(menuID) && cartItem.getString("CustomerID").equals(customerID)) {
+                    // Update existing quantity
+                    int existingQuantity = cartItem.getInt("quantity");
+                    cartItem.put("quantity", existingQuantity + quantityToAdd);
+                    found = true;
+                    break;
+                }
+            }
+    
+            // If item does not exist, add a new JSON object
+            if (!found) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("MenuID", menuID);
+                jsonObject.put("CustomerID", customerID); // Use the customerID field
+                jsonObject.put("name", item[1]);
+                jsonObject.put("description", item[2]);
+                jsonObject.put("quantity", quantityToAdd);
+                jsonObject.put("price", item[4]);
+                jsonObject.put("imagePath", item[5]);
+    
+                cartArray.put(jsonObject);
+            }
         }
     
-        // Write the updated cart array back to the file
-        FileHandling.saveToFile(cartArray, filePath);
+        // Save updated JSON data back to the file
+        try {
+            Files.write(Paths.get(filePath), cartArray.toString(4).getBytes()); // Pretty print with indentation
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error writing to cart file.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    
         cart.clear();
     }
+
+
+    
+    // test
+ 
+    
+    // private void addToCart() throws IOException {
+    //     String filePath = FileHandling.filePath.CART_PATH.getValue();
+    //     JSONArray cartArray = new JSONArray();
+    
+    //     // Read existing cart items from the file
+    //     try {
+    //         String content = new String(Files.readAllBytes(Paths.get(filePath)));
+    //         if (!content.trim().isEmpty()) {
+    //             cartArray = new JSONArray(content);
+    //         }
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //         JOptionPane.showMessageDialog(null, "Error reading cart file.", "Error", JOptionPane.ERROR_MESSAGE);
+    //         return;
+    //     } catch (Exception e) {
+    //         JOptionPane.showMessageDialog(null, "Invalid JSON format in cart file.", "Error", JOptionPane.ERROR_MESSAGE);
+    //         return;
+    //     }
+    
+    //     // Process each item in the cart list
+    //     for (String[] item : cart) {
+    //         if (item.length < 6) {
+    //             System.err.println("Invalid item array length: " + item.length);
+    //             continue;
+    //         }
+    
+    //         String menuID = item[0];
+    //         int quantityToAdd = Integer.parseInt(item[3]);
+    //         boolean found = false;
+    
+    //         // Check if the item already exists in the cart (JSON format handling)
+    //         for (int i = 0; i < cartArray.length(); i++) {
+    //             JSONObject cartItem = cartArray.getJSONObject(i);
+    //             if (cartItem.getString("MenuID").equals(menuID)) {
+    //                 // Update existing quantity
+    //                 int existingQuantity = cartItem.getInt("quantity");
+    //                 cartItem.put("quantity", existingQuantity + quantityToAdd);
+    //                 found = true;
+    //                 break;
+    //             }
+    //         }
+    
+    //         // If item does not exist, add a new JSON object
+    //         if (!found) {
+    //             JSONObject jsonObject = new JSONObject();
+    //             jsonObject.put("MenuID", menuID);
+    //             jsonObject.put("CustomerID", customerID); // Use the customerID field
+    //             jsonObject.put("name", item[1]);
+    //             jsonObject.put("description", item[2]);
+    //             jsonObject.put("quantity", quantityToAdd);
+    //             jsonObject.put("price", item[4]);
+    //             jsonObject.put("imagePath", item[5]);
+    
+    //             cartArray.put(jsonObject);
+    //         }
+    //     }
+    
+    //     // Save updated JSON data back to the file
+    //     try {
+    //         Files.write(Paths.get(filePath), cartArray.toString(4).getBytes()); // Pretty print with indentation
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //         JOptionPane.showMessageDialog(null, "Error writing to cart file.", "Error", JOptionPane.ERROR_MESSAGE);
+    //     }
+    
+    //     cart.clear();
+    // }
     
 
     
     private void initComponents(String vendorID) {
-        menuPanel = new JPanel();
-        menuPanel.setLayout(new BorderLayout());
+        menuPanel = new JPanel(new BorderLayout());        
         menuPanel.setBackground(new Color(31, 31, 31));
 
         
@@ -287,44 +303,6 @@ public class CusMenu extends javax.swing.JFrame {
     
         wrapper.add(m3);
     
-        // test
-        // JPanel itemsPanel = new JPanel();
-        // itemsPanel.setLayout(new GridLayout(0, 2, 10, 10));
-        // itemsPanel.setBackground(new Color(31, 31, 31));
-
-        // String[][] menuItems = restaurantMenus.get(restaurantName);
-        // if (menuItems != null) {
-        //     for (String[] item : menuItems) {
-        //         JPanel itemPanel = new JPanel();
-        //         itemPanel.setLayout(new BorderLayout());
-        //         itemPanel.setBackground(new Color(43, 43, 43));
-        //         itemPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        //         itemPanel.setPreferredSize(new Dimension(300, 100));
-
-        //         JLabel itemLabel = new JLabel("<html><b>" + item[0] + "</b><br>" + item[1] + "<br>Weight: " + item[2] + "<br>Price: " + item[3] + "</html>");
-        //         itemLabel.setForeground(new Color(255, 169, 140));
-        //         itemLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-        //         itemPanel.add(itemLabel, BorderLayout.CENTER);
-
-        //         itemPanel.addMouseListener(new MouseAdapter() {
-        //             @Override
-        //             public void mouseClicked(MouseEvent e) {
-        //                 // Deselect previously selected item
-        //                 if (selectedItemPanel != null) {
-        //                     selectedItemPanel.setBackground(new Color(43, 43, 43));
-        //                 }
-
-
-        //                 selectedItem = item;
-        //                 selectedItemPanel = itemPanel;
-        //                 itemPanel.setBackground(new Color(63, 63, 63));
-        //             }
-        //         });
-
-
-        //         itemsPanel.add(itemPanel);
-        //     }
-        // }
 
         JPanel itemsPanel = new JPanel();
         itemsPanel.setLayout(new GridLayout(0, 2, 10, 10));

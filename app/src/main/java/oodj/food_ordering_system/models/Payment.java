@@ -1,26 +1,43 @@
 package oodj.food_ordering_system.models;
 
-import org.json.JSONObject;
 import org.json.JSONArray;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class Payment {
+    private String orderID;
     private String customerID;
     private String serviceType;
     private double totalAmount;
     private String paymentStatus;
-    private JSONArray orderItems;
-    private Credit credit;
+    private String address;
+    private String date;
 
-    public Payment(String customerID, String serviceType, double totalAmount, String paymentStatus, JSONArray orderItems, Credit credit) {
+    public Payment(String orderID, String customerID, String serviceType, double totalAmount, String paymentStatus, String address, String dateString) {
+        this.orderID = orderID;
         this.customerID = customerID;
         this.serviceType = serviceType;
         this.totalAmount = totalAmount;
-        this.paymentStatus = paymentStatus;
-        this.orderItems = orderItems;
-        this.credit = credit;
+        this.paymentStatus = paymentStatus; 
+        this.address = address;       
+        this.date = dateString;
+
+
+        // Convert JSONArray to ArrayList<OrderItem>
+        
     }
 
     // Getter and Setter methods
+
+
+
+    public String getOrderID() {
+        return orderID;
+    }
+
+    public void setOrderID(String orderID) {
+        this.orderID = orderID;
+    }
 
     public String getCustomerID() {
         return customerID;
@@ -54,20 +71,23 @@ public class Payment {
         this.paymentStatus = paymentStatus;
     }
 
-    public JSONArray getOrderItems() {
-        return orderItems;
+    
+
+    public String getAddress() {
+        return address;
     }
 
-    public void setOrderItems(JSONArray orderItems) {
-        this.orderItems = orderItems;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public Credit getCredit() {
-        return credit;
+    public String getDate() {
+        return date;
     }
 
-    public void setCredit(Credit credit) {
-        this.credit = credit;
+    public void setDate(String date) {
+        this.date = date;
     }
+
 
 }
