@@ -13,7 +13,11 @@ public class FileHandling {
     public enum filePath {
         MANAGER_PATH("Manager", "app\\src\\main\\resources\\databases\\manager.txt"),
         ADMIN_PATH("Admin", "app\\src\\main\\resources\\databases\\admin.txt"),
-        CUSTOMER_PATH("Customer", "app\\src\\main\\resources\\databases\\customer.txt");
+        CUSTOMER_PATH("Customer", "app\\src\\main\\resources\\databases\\customer.txt"),
+        VENDOR_PATH("Vendor", "app\\src\\main\\resources\\databases\\vendor.txt"),
+        ITEM_PATH("Item", "app\\src\\main\\resources\\databases\\item.txt"),
+        ORDER_PATH("Order", "app\\src\\main\\resources\\databases\\order.txt");
+        
         
         private final String key, value;
 
@@ -43,6 +47,7 @@ public class FileHandling {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, append))) {
             writer.write(data);
             writer.newLine(); 
+            writer.flush();
         }
     }
 

@@ -1,7 +1,8 @@
+// dine in status: Order placed > Kitchen is preparing > Order is being served > Payment completed
+// takeaway status: Order placed > Kitchen is preparing > Order is ready for pickup > Order picked up > Order completed
+// delivery status: Order received > Kitchen is preparing > Order is ready for pickup > Rider has picked up the order > Order delivered > Order completed
+
 [
-  {"ManagerID": "MG00001", "Username": "john_doe", "Password": "password123", "Name": "John Doe", "Email": "john.doe@gmail.com", "Status": "True"},
-  {"ManagerID": "MG00002", "Username": "jane_smith", "Password": "securePass456", "Name": "Jane Smith", "Email": "jane.smith@gmail.com", "Status": "False"},
-  {"ManagerID": "MG00003", "Username": "michael_b", "Password": "pass789", "Name": "Michael Brown", "Email": "michael.brown@gmail.com", "Status": "True"},
-  {"ManagerID": "MG00004", "Username": "susan_w", "Password": "susan123", "Name": "Susan White", "Email": "susan.white@gmail.com", "Status": "True"},
-  {"ManagerID": "MG00005", "Username": "david_l", "Password": "davidpass456", "Name": "David Lee", "Email": "david.lee@gmail.com", "Status": "False"}
+    {"OrderID": "ORD001", "CustomerID": "CS001", "VendorID": "1", "Items": ["Spicy Chicken Rice", "Vegetable Soup"], "TotalPrice": 13.50, "OrderType": "Dine-in", "Status": "Order placed"},
+    {"OrderID": "ORD002", "CustomerID": "CS002", "VendorID": "2", "Items": ["Cheese Burger", "Fries"], "TotalPrice": 10.99, "OrderType": "Delivery", "Status": "Order received"}
 ]
