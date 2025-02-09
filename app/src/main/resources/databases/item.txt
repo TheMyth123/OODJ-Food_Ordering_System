@@ -1,5 +1,3 @@
-// category: appetizer, soup, salad, main course, side dish, and dessert
-
 [
     {"ItemID": "IT001", "VendorID": "1", "ItemName": "Spicy Chicken Rice", "Category": "Main Course", "Price": 8.50, "Status": "True"},
     {"ItemID": "IT002", "VendorID": "1", "ItemName": "Vegetable Soup", "Category": "Soup", "Price": 5.00, "Status": "True"}

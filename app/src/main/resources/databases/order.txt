@@ -1,0 +1,26 @@
+[
+    {
+        "Status": "Payment completed",
+        "OrderType": "Dine-in",
+        "VendorID": "1",
+        "TotalPrice": 13.5,
+        "Items": [
+            "Spicy Chicken Rice",
+            "Vegetable Soup"
+        ],
+        "CustomerID": "CS001",
+        "OrderID": "ORD001"
+    },
+    {
+        "Status": "Order received",
+        "OrderType": "Delivery",
+        "VendorID": "2",
+        "TotalPrice": 10.99,
+        "Items": [
+            "Cheese Burger",
+            "Fries"
+        ],
+        "CustomerID": "CS002",
+        "OrderID": "ORD002"
+    }
+]

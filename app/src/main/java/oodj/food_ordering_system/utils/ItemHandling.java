@@ -1,14 +1,14 @@
 package oodj.food_ordering_system.utils;
 
-import oodj.food_ordering_system.models.Item;
-import oodj.food_ordering_system.models.Vendor;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import oodj.food_ordering_system.models.Item;
+import oodj.food_ordering_system.models.Vendor;
 
 public class ItemHandling {
 
@@ -40,6 +40,8 @@ public class ItemHandling {
         return "IT" + String.format("%03d", tempCount + 1);
     }
 
+    // category: appetizer, soup, salad, main course, side dish, and dessert
+
     public static void createItem(Vendor vendor, String itemName, String category, double price, boolean status) {
 
         try {
@@ -55,14 +57,11 @@ public class ItemHandling {
             itemObject.put("ItemName", item.getItemName());
             itemObject.put("Category", item.getCategory());
             itemObject.put("Price", item.getPrice());
-            itemObject.put("Status", item.isStatus());
+            itemObject.put("Status", String.valueOf(item.isStatus()));
 
             // Add new item to array
             itemsArray.put(itemObject);
 
-//            try (BufferedWriter writer = new BufferedWriter(new FileWriter(ITEM))) {
-//                writer.write(itemsArray.toString(4));
-//            }
             FileHandling.writeToFile(ITEM, itemsArray.toString(4), false);
             DialogBox.successMessage("Item " + itemName + " added successfully!", "Success");
 
@@ -97,9 +96,9 @@ public class ItemHandling {
         }
         
         return items;
-    }
+    }  
     
-     public static void updateItemInfo(String itemID, String newItemName, String newCategory, double newPrice, boolean newStatus) {
+    public static void updateItemInfo(String itemID, String newItemName, String newCategory, double newPrice, boolean newStatus) {
         try {
             String jsonData = new String(Files.readAllBytes(Paths.get(ITEM)));
             JSONArray itemsArray = jsonData.trim().isEmpty() ? new JSONArray() : new JSONArray(jsonData);
@@ -159,6 +158,34 @@ public class ItemHandling {
             DialogBox.errorMessage("Error deleting item: " + e.getMessage(), "Error");
         }
     }
+
+    
+    // test the code
+    public static void main(String[] args) {
+        Vendor vendor = new Vendor(5, "Vendor 5", "Food Court 5", "0123456789", "stallE", "passE", true, "2021-08-01");
+        
+        // create item
+        // createItem(vendor, "Test Item", "Test Category", 10.00, true);
+
+        // read items
+        // ArrayList<Item> itemList = getItem();
+        // if (!itemList.isEmpty()) {
+        //     System.out.println("Items List:");
+        //     for (Item item : itemList) {
+        //         System.out.println(item.displayItemInfo()); // Assuming you have a displayItemInfo() method in Item class
+        //     }
+        // } else {
+        //     System.out.println("No items found in the database.");
+        // }
+
+        // update item
+        // updateItemInfo("IT001", "Updated Item", "Updated Category", 20.00, false);
+
+        // delete item
+        // deleteItem("IT001");
+    }
+
+     
 
 
     

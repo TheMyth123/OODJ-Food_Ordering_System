@@ -1,8 +1,0 @@
-// dine in status: Order placed > Kitchen is preparing > Order is being served > Payment completed
-// takeaway status: Order placed > Kitchen is preparing > Order is ready for pickup > Order picked up > Order completed
-// delivery status: Order received > Kitchen is preparing > Order is ready for pickup > Rider has picked up the order > Order delivered > Order completed
-
-[
-    {"OrderID": "ORD001", "CustomerID": "CS001", "VendorID": "1", "Items": ["Spicy Chicken Rice", "Vegetable Soup"], "TotalPrice": 13.50, "OrderType": "Dine-in", "Status": "Order placed"},
-    {"OrderID": "ORD002", "CustomerID": "CS002", "VendorID": "2", "Items": ["Cheese Burger", "Fries"], "TotalPrice": 10.99, "OrderType": "Delivery", "Status": "Order received"}
-]
