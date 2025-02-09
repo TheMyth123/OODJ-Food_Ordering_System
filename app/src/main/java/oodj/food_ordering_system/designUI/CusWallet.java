@@ -20,8 +20,7 @@ import javax.swing.JPanel;
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
 
-//  dine in, take-away or request for delivery service from the vendor.
-
+//  TODO add transaction history
 public class CusWallet extends javax.swing.JFrame {
 
 
@@ -42,9 +41,6 @@ public class CusWallet extends javax.swing.JFrame {
         // GlassPanePopup.install(this);
 
     }
-
-
-
 
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          

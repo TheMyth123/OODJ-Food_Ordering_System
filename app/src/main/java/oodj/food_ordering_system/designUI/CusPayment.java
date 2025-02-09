@@ -321,7 +321,7 @@ public class CusPayment extends javax.swing.JFrame {
                 OrderHandling.updateCustomerBalance(endUser.getID(), endUser.getBalance());
     
                 // Generate OrderID
-                String orderID = "ORDER" + System.currentTimeMillis();
+                String orderID = "OR" + String.format("%05d", OrderHandling.getORid() + 1);
     
                 // Call savePayment to save the payment details
                 OrderHandling.savePayment(orderID, endUser.getID(), orderItems, totalAmount, "Completed", serviceType, address);

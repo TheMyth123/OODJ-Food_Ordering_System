@@ -1,9 +1,20 @@
-[{
-    "MenuID": "MN00001",
-    "quantity": 3,
-    "price": "$25",
-    "imagePath": "images/seared_salmon.jpg",
-    "name": "Seared Salmon",
-    "description": "Pan-seared salmon with lemon butter sauce",
-    "CustomerID": "CS00001"
-}]
+[
+    {
+        "MenuID": "MN00001",
+        "quantity": 1,
+        "price": "RM25",
+        "imagePath": "images/seared_salmon.jpg",
+        "name": "Seared Salmon",
+        "description": "Pan-seared salmon with lemon butter sauce",
+        "CustomerID": "CS00001"
+    },
+    {
+        "MenuID": "MN00002",
+        "quantity": 3,
+        "price": "RM35",
+        "imagePath": "images/filet_mignon.jpg",
+        "name": "Filet Mignon",
+        "description": "Tender beef filet with red wine reduction",
+        "CustomerID": "CS00001"
+    }
+]

@@ -4,13 +4,17 @@ import javax.swing.*;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import oodj.food_ordering_system.models.Menu;
 // TODO import dialog box after added cart
 // import oodj.food_ordering_system.utils.DialogBox;
 import oodj.food_ordering_system.utils.FileHandling;
 import oodj.food_ordering_system.utils.OrderHandling;
 
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.awt.*;
@@ -309,32 +313,115 @@ public class CusMenu extends javax.swing.JFrame {
         itemsPanel.setBackground(new Color(31, 31, 31));
 
         try {
-            List<JSONObject> menuItems = OrderHandling.readMenuFile(vendorID);
-            for (JSONObject item : menuItems) {
+            List<Menu> menuItems = OrderHandling.readMenuFile(vendorID);
+            for (Menu item : menuItems) {
                 JPanel itemPanel = new JPanel();
                 itemPanel.setLayout(new BorderLayout());
                 itemPanel.setBackground(new Color(43, 43, 43));
                 itemPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-                itemPanel.setPreferredSize(new Dimension(300, 100));
+                itemPanel.setPreferredSize(new Dimension(300, 155));
 
-                JLabel itemLabel = new JLabel("<html><b>" + item.getString("name") + "</b><br>" + item.getString("description") +  "<br>Price: " + item.getString("price") + "</html>");
-                itemLabel.setForeground(new Color(255, 169, 140));
-                itemLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-                itemPanel.add(itemLabel, BorderLayout.CENTER);
+                JPanel detailsPanel = new JPanel();
+                detailsPanel.setLayout(new BoxLayout(detailsPanel, BoxLayout.Y_AXIS));
+                detailsPanel.setBackground(new Color(43, 43, 43));
+
+                JLabel nameLabel = new JLabel(item.getName());
+                nameLabel.setForeground(new Color(255, 169, 140));
+                nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
+                detailsPanel.add(nameLabel);
+
+                JLabel descriptionLabel = new JLabel(item.getDescription());
+                descriptionLabel.setForeground(new Color(255, 169, 140));
+                descriptionLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+                detailsPanel.add(descriptionLabel);
+
+                JLabel priceLabel = new JLabel("Price: " + item.getPrice());
+                priceLabel.setForeground(new Color(255, 169, 140));
+                priceLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+                detailsPanel.add(priceLabel);
+
+                itemPanel.add(detailsPanel, BorderLayout.CENTER);
+
+
+                String imagePath = OrderHandling.getImagePathByMenuID(item.getId());
+                System.out.println("Full Image Path: " + imagePath);
+
+                if (imagePath != null) {
+                    URL imageUrl = getClass().getResource(imagePath);
+                    if (imageUrl == null) {
+                        System.out.println("❌ Image not found in resources: " + imagePath);
+                    } else {
+                        ImageIcon originalIcon = new ImageIcon(imageUrl);
+                        Image originalImage = originalIcon.getImage();
+                        Image resizedImage = originalImage.getScaledInstance(120, 90, Image.SCALE_SMOOTH);
+                        ImageIcon resizedIcon = new ImageIcon(resizedImage);
+
+                        JLabel imageLabel = new JLabel(resizedIcon);
+                        imageLabel.setPreferredSize(new Dimension(120, 90));
+                        imageLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+
+
+                        itemPanel.add(imageLabel, BorderLayout.NORTH); // Add image on top
+                    }
+                }
+
+                itemPanel.add(detailsPanel, BorderLayout.CENTER);
+                menuPanel.add(itemPanel);
+            
+                
 
                 itemPanel.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        // Deselect previously selected item
                         if (selectedItemPanel != null) {
                             selectedItemPanel.setBackground(new Color(43, 43, 43));
+                            selectedItemPanel.revalidate();
+                            selectedItemPanel.repaint();
                         }
-
-                        selectedItem = new String[] { item.getString("id"), item.getString("name"), item.getString("description"), item.getString("price"), item.getString("imagePath") };
+                
+                        selectedItem = new String[] {
+                            item.getId(), item.getName(), item.getDescription(), item.getPrice(), item.getImagePath()
+                        };
                         selectedItemPanel = itemPanel;
                         itemPanel.setBackground(new Color(63, 63, 63));
+                        itemPanel.revalidate();
+                        itemPanel.repaint();
                     }
                 });
+                
+                // Ensure child panels do not block background changes
+                detailsPanel.setOpaque(false);
+                // buttonPanel.setOpaque(false);
+                itemPanel.setOpaque(true);
+                itemPanel.setFocusable(true);
+                
+                // Forward click events from labels
+                nameLabel.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        itemPanel.dispatchEvent(e);
+                    }
+                });
+                descriptionLabel.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        itemPanel.dispatchEvent(e);
+                    }
+                });
+                priceLabel.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        itemPanel.dispatchEvent(e);
+                    }
+                });
+                
+                // Ensure JButton does not block clicks
+                // seeDetailsButton.addActionListener(e -> {
+                //     itemPanel.dispatchEvent(new MouseEvent(itemPanel, MouseEvent.MOUSE_CLICKED,
+                //             System.currentTimeMillis(), 0, 0, 0, 1, false));
+                // });
+                
+                
 
                 itemsPanel.add(itemPanel);
             }

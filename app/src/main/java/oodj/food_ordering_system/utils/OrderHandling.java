@@ -4,7 +4,9 @@ import oodj.food_ordering_system.models.Admin;
 import oodj.food_ordering_system.models.Credit;
 import oodj.food_ordering_system.models.CusOrder;
 import oodj.food_ordering_system.models.Customer;
+import oodj.food_ordering_system.models.Menu;
 import oodj.food_ordering_system.models.Payment;
+import oodj.food_ordering_system.models.Rating;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,7 +27,7 @@ public class OrderHandling {
     
     private static final String MENU = FileHandling.filePath.MENU_PATH.getValue();
     private static final String CART = FileHandling.filePath.CART_PATH.getValue();
-    private static final String CREDIT = FileHandling.filePath.CREDIT_PATH.getValue();
+    // private static final String CREDIT = FileHandling.filePath.CREDIT_PATH.getValue();
     private static final String PAYMENT = FileHandling.filePath.PAYMENT_PATH.getValue();
     public static final String RECEIPT_FOLDER = "app/src/main/resources/receipts/";
     private static final String TOPUP = FileHandling.filePath.TOPUP_PATH.getValue();
@@ -52,79 +54,114 @@ public class OrderHandling {
     
         return tempCount;
     }
-//  need OOP
-    public static ArrayList<JSONObject> readMenuFile(String vendorID) throws IOException {
-        // Path to the menu file
-        ArrayList<String> lines = FileHandling.readLines(MENU);
-        StringBuilder jsonData = new StringBuilder();
-        for (String line : lines) {
-            jsonData.append(line);
-        }
-        JSONArray menuArray = new JSONArray(jsonData.toString());
-        ArrayList<JSONObject> menuItems = new ArrayList<>();
-        for (int i = 0; i < menuArray.length(); i++) {
-            menuItems.add(menuArray.getJSONObject(i));
-        }
-        return filterMenuByVendor(menuItems, vendorID);
-    }
-//  need OOP
-    public static ArrayList<JSONObject> filterMenuByVendor(ArrayList<JSONObject> menuItems, String vendorID) {
-        ArrayList<JSONObject> filteredMenu = new ArrayList<>();
-        // Convert vendorID to string for comparison
-        for (JSONObject item : menuItems) {
-            if (item.getString("VendorID").equals(vendorID)) {
-                filteredMenu.add(item);
-            }
-        }
-        return filteredMenu;
-    }
-//  need OOP
-    // public static ArrayList<String> getCart() {
-    //     ArrayList<String> lines = FileHandling.readLines(CART);
 
-    //     ArrayList<String> cartItems = new ArrayList<>();
-    //     StringBuilder jsonData = new StringBuilder();
-        
+    public static int getORid() {
+        int tempCount = 0;
+    
+        try {
+            String jsonData = new String(Files.readAllBytes(Paths.get(PAYMENT)));
+            JSONArray topUpArray = new JSONArray(jsonData);
+    
+            for (int i = 0; i < topUpArray.length(); i++) {
+                JSONObject topUpData = topUpArray.getJSONObject(i);
+                String orderID = topUpData.getString("OrderID");
+                if (orderID.contains("OR")) {
+                    tempCount++;
+                }
+            }
+        } catch (Exception e) {
+            // Display error if file reading or parsing fails
+            DialogBox.errorMessage("Error reading or parsing order JSON file: " + e.getMessage(), "Error");
+        }
+    
+        return tempCount;
+    }
+
+// USE OOP
+    public static String getImagePathByMenuID(String menuID) {
+        try {
+            // Read JSON file content
+            String content = new String(Files.readAllBytes(Paths.get(MENU)));
+            JSONArray menuArray = new JSONArray(content);
+
+            // Iterate over the JSON array
+            for (int i = 0; i < menuArray.length(); i++) {
+                JSONObject menuItem = menuArray.getJSONObject(i);
+
+                // Check if the current item's ID matches the given menuID
+                if (menuItem.getString("id").equals(menuID)) {
+                    return "/images/" + menuItem.getString("imagePath"); // Ensure classpath format
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null; // Return null if not found
+    }
+//  need OOP
+    // public static ArrayList<Menu> readMenuFile(String vendorID) throws IOException {
+    //     ArrayList<Menu> lines = new ArrayList<>();
+
+    //     try{
+    //         String jsonData  = new String(Files.readAllBytes(Paths.get(MENU)));
+    //         JSONArray menuArray = new JSONArray(jsonData);
+            
     //     for (String line : lines) {
     //         jsonData.append(line);
     //     }
+    //     JSONArray menuArray = new JSONArray(jsonData.toString());
+    //     ArrayList<JSONObject> menuItems = new ArrayList<>();
+    //     for (int i = 0; i < menuArray.length(); i++) {
+    //         menuItems.add(menuArray.getJSONObject(i));
+    //     }
+    //     return filterMenuByVendor(menuItems, vendorID);
 
-    //     if (!jsonData.toString().isEmpty()) {
-    //         try {
-    //             JSONArray cartArray = new JSONArray(jsonData.toString());
-    //             for (int i = 0; i < cartArray.length(); i++) {
-    //                 JSONObject item = cartArray.getJSONObject(i);
+    //     }
+        
+    // }
 
-    //                 // Handle quantity safely as integer
-    //                 int quantity = item.has("quantity") ? item.optInt("quantity", -1) : -1;
+    public static ArrayList<Menu> readMenuFile(String vendorID) throws IOException {
+        ArrayList<Menu> menuItems = new ArrayList<>();
 
-    //                 // Fallback to string if needed
-    //                 if (quantity == -1) {
-    //                     try {
-    //                         quantity = Integer.parseInt(item.optString("quantity", "0"));
-    //                     } catch (NumberFormatException e) {
-    //                         quantity = 0; // Default value if conversion fails
-    //                     }
-    //                 }
+        try {
+            String jsonData = new String(Files.readAllBytes(Paths.get(MENU)));
+            JSONArray menuArray = new JSONArray(jsonData);
 
-    //                 // Ensure all required fields exist before accessing
-    //                 String price = item.optString("price", "N/A");
-    //                 String imagePath = item.optString("imagePath", "N/A");
-    //                 String name = item.optString("name", "Unknown");
+            for (int i = 0; i < menuArray.length(); i++) {
+                JSONObject menuObject = menuArray.getJSONObject(i);
+                if (menuObject.getString("VendorID").equals(vendorID)) {
+                    Menu menuItem = new Menu(
+                        menuObject.getString("Status"),
+                        menuObject.getString("id"),
+                        menuObject.getString("VendorID"),
+                        menuObject.getString("name"),
+                        menuObject.getString("description"),
+                        menuObject.getString("price"),
+                        menuObject.getString("imagePath")
+                    );
+                    menuItems.add(menuItem);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-    //                 // Format the item details
-    //                 String itemDetails = "quantity: " + quantity + ", " +
-    //                                     "price: " + price + ", " +
-    //                                     "imagePath: " + imagePath + ", " +
-    //                                     "name: " + name;
-    //                 cartItems.add(itemDetails);
-    //             }
-    //         } catch (Exception e) {
-    //             DialogBox.errorMessage("Error reading or parsing the JSON file: " + e.getMessage(), "Error");
+        return menuItems;
+    }
+
+
+//  need OOP
+    // public static ArrayList<JSONObject> filterMenuByVendor(ArrayList<JSONObject> menuItems, String vendorID) {
+    //     ArrayList<JSONObject> filteredMenu = new ArrayList<>();
+    //     // Convert vendorID to string for comparison
+    //     for (JSONObject item : menuItems) {
+    //         if (item.getString("VendorID").equals(vendorID)) {
+    //             filteredMenu.add(item);
     //         }
     //     }
-    //     return cartItems;
+    //     return filteredMenu;
     // }
+   
 
     public static ArrayList<CusOrder> getCart() {
         ArrayList<String> lines = FileHandling.readLines(CART);
@@ -143,7 +180,7 @@ public class OrderHandling {
                 int quantity = item.getInt("quantity");
                 double price = 0.0;
                 if (item.get("price") instanceof String) {
-                    price = Double.parseDouble(item.getString("price").replace("$", ""));
+                    price = Double.parseDouble(item.getString("price").replace("RM", ""));
                 } else {
                     price = item.getDouble("price");
                 }
@@ -420,29 +457,34 @@ public class OrderHandling {
     public static void saveRating(Payment orderID, Customer customerID, int rating) {
         ArrayList<String> lines = FileHandling.readLines(RATING);
         StringBuilder jsonData = new StringBuilder();
-
+    
         for (String line : lines) {
             jsonData.append(line);
         }
-
-        JSONArray ratingsArray;
+    
         try {
+            JSONArray ratingsArray;
+    
+            // If the file is empty, create a new JSON array
             if (jsonData.length() == 0) {
                 ratingsArray = new JSONArray();
             } else {
                 ratingsArray = new JSONArray(jsonData.toString());
             }
-
+    
+            // Create a new rating JSON object
             JSONObject ratingObject = new JSONObject();
             ratingObject.put("OrderID", orderID.getOrderID());
             ratingObject.put("CustomerID", customerID.getID());
             ratingObject.put("Rating", rating);
-
+            ratingObject.put("Status", true);
+    
+            // Add the new rating to the array
             ratingsArray.put(ratingObject);
-
-            Files.write(Paths.get(RATING), ratingsArray.toString(2).getBytes());
-
-
+    
+            // Write updated JSON array back to the file
+            FileHandling.saveToFile(ratingsArray, RATING); // Pretty-print JSON
+    
         } catch (Exception e) {
             e.printStackTrace();
         }

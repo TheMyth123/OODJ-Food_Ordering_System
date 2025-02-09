@@ -43,8 +43,7 @@ import java.io.IOException;
 
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
-// Added new field for order type
-// TODO add orderType = 0-dine in, 1-take away, 2-delivery
+// TODO make the table refresh
 // TODO design have done yet, discard items will affect the cart.txt json format
 public class OrderHistory extends javax.swing.JFrame {
 

@@ -1,15 +1,17 @@
 package oodj.food_ordering_system.models;
-// TODO add status
 
 public class Rating {
     private Payment orderID;
     private Customer customerID;
     private int rating;
+    private Boolean status;
 
-    public Rating(Payment orderID, Customer customerID, int rating) {
+
+    public Rating(Payment orderID, Customer customerID, int rating, Boolean status) {
         this.orderID = orderID;
         this.customerID = customerID;
         this.rating = rating;
+        this.status = status;
     }
 
     // Getter and Setter methods
@@ -36,5 +38,12 @@ public class Rating {
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 }

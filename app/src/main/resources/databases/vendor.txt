@@ -11,7 +11,7 @@
     "Password": "pass1234"
   },
   {
-    "FoodCourtName": "Food Court 1",
+    "FoodCourtName": "Food Court 2",
     "Status": true,
     "VendorName": "Stall B",
     "Email": "stallB@example.com",
@@ -22,7 +22,7 @@
     "Password": "pass5678"
   },
   {
-    "FoodCourtName": "Food Court 2",
+    "FoodCourtName": "Food Court 3",
     "Status": false,
     "VendorName": "Stall C",
     "Email": "stallC@example.com",
@@ -33,7 +33,7 @@
     "Password": "pass91011"
   },
   {
-    "FoodCourtName": "Food Court 3",
+    "FoodCourtName": "Food Court 4",
     "Status": True,
     "VendorName": "Stall D",
     "Email": "stallD@example.com",
@@ -43,4 +43,26 @@
     "ContactNumber": "0155566778",
     "Password": "pass1213"
   },
+  {
+    "FoodCourtName": "Food Court 5",
+    "Status": true,
+    "VendorName": "Stall E",
+    "Email": "stallE@example.com",
+    "Username": "stallE",
+    "DateRegistered": "2023-05-12",
+    "VendorID": "VD00005",
+    "ContactNumber": "0178899001",
+    "Password": "pass1415"
+  },
+  {
+    "FoodCourtName": "Food Court 6",
+    "Status": false,
+    "VendorName": "Stall F",
+    "Email": "stallF@example.com",
+    "Username": "stallF",
+    "DateRegistered": "2023-06-25",
+    "VendorID": "VD00006",
+    "ContactNumber": "0182233445",
+    "Password": "pass1617"
+  }
 ]

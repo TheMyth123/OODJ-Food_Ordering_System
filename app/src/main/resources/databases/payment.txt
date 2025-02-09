@@ -1,25 +1,32 @@
 [
   {
-    "OrderItems": [
-      {
-        "quantity": 1,
-        "totalPrice": 25,
-        "price": 25,
-        "menuID": "MN00001"
-      },
-      {
-        "quantity": 1,
-        "totalPrice": 35,
-        "price": 35,
-        "menuID": "MN00002"
-      }
-    ],
-    "ServiceType": "Dine In",
-    "DeliveryAddress": "fnioenfs",
+    "OrderItems": [{
+      "quantity": 1,
+      "totalPrice": 25,
+      "price": 25,
+      "menuID": "MN00001"
+    }],
+    "ServiceType": "Request for Delivery",
+    "DeliveryAddress": "fo",
     "CustomerID": "CS00001",
-    "TotalAmount": 60,
-    "OrderID": "ORDER1738142142854",
+    "TotalAmount": 25,
+    "OrderID": "OR00001",
     "PaymentStatus": "Completed",
-    "Date": 2025-01-29
+    "Date": "2025-02-04"
+  },
+  {
+    "OrderItems": [{
+      "quantity": 1,
+      "totalPrice": 25,
+      "price": 25,
+      "menuID": "MN00001"
+    }],
+    "ServiceType": "Request for Delivery",
+    "DeliveryAddress": "fop4w",
+    "CustomerID": "CS00001",
+    "TotalAmount": 25,
+    "OrderID": "OR00002",
+    "PaymentStatus": "Completed",
+    "Date": "2025-02-04"
   }
 ]

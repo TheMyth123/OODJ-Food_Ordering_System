@@ -50,6 +50,7 @@ import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
 // TODO design have done yet, discard items will affect the cart.txt json format
 // set on more can choose which food to pay
+// TODO make the table refresh
 // need to add refresh page
 public class Cart extends javax.swing.JFrame {
 
@@ -224,7 +225,7 @@ public class Cart extends javax.swing.JFrame {
                     orderItems.put(orderItem);
                 }
         
-                JOptionPane.showMessageDialog(null, "Total Amount: $" + totalAmount);
+                JOptionPane.showMessageDialog(null, "Total Amount: RM" + totalAmount);
         
             
                 try {
@@ -279,7 +280,7 @@ public class Cart extends javax.swing.JFrame {
                     item.put("quantity", newQuantity);
                     quantityField.setText(String.valueOf(newQuantity));
                     double newTotalAmount = newQuantity * price;
-                    totalAmountLabel.setText(String.format("$%.2f", newTotalAmount));
+                    totalAmountLabel.setText(String.format("RM%.2f", newTotalAmount));
                     break;
                 }
             }
@@ -384,7 +385,7 @@ public class Cart extends javax.swing.JFrame {
         m6 = new javax.swing.JPanel();
         margin5 = new javax.swing.JPanel();
         m7 = new javax.swing.JPanel();
-        btn_Noti = new oodj.food_ordering_system.designUI.Button();
+        btn_complaint = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Customer Cart");
@@ -547,6 +548,25 @@ public class Cart extends javax.swing.JFrame {
             }
         });
         btn_container1.add(btn_history);
+
+        btn_complaint.setBackground(new java.awt.Color(31, 31, 31));
+        btn_complaint.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btn_complaint.setForeground(new java.awt.Color(245, 251, 254));
+        btn_complaint.setText("Complaint");
+        btn_complaint.setBorder(null);
+        btn_complaint.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_complaint.setDoubleBuffered(true);
+        btn_complaint.setFocusable(false);
+        btn_complaint.setMargin(new java.awt.Insets(15, 50, 15, 50));
+        btn_complaint.setMaximumSize(new java.awt.Dimension(250, 40));
+        btn_complaint.setMinimumSize(new java.awt.Dimension(250, 40));
+        btn_complaint.setPreferredSize(new java.awt.Dimension(250, 40));
+        btn_complaint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_complaintActionPerformed(evt);
+            }
+        });
+        btn_container1.add(btn_complaint);
 
         btn_profile.setBackground(new java.awt.Color(31, 31, 31));
         btn_profile.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -837,6 +857,11 @@ public class Cart extends javax.swing.JFrame {
         new CusWallet(endUser).setVisible(true);
     }
 
+    private void btn_complaintActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        dispose();
+        // new Complaint(endUser).setVisible(true);
+    }
+
 
     // Variables declaration - do not modify                     
     private javax.swing.JPanel Line;
@@ -863,7 +888,7 @@ public class Cart extends javax.swing.JFrame {
     private javax.swing.JPanel title_container;
     private javax.swing.JPanel title_container1;
     private javax.swing.JLabel welcome;
-    private javax.swing.JButton btn_Noti;
+    private javax.swing.JButton btn_complaint;
     private javax.swing.JButton btn_wallet;
     // End of variables declaration  
 

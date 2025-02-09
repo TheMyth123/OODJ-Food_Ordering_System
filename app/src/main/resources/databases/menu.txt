@@ -5,8 +5,8 @@
         "VendorID": "VD00001",
         "name": "Seared Salmon",
         "description": "Pan-seared salmon with lemon butter sauce",
-        "price": "$25",
-        "imagePath": "images/seared_salmon.jpg"
+        "price": "RM25",
+        "imagePath": "seared_salmon.jpg"
     },
     {
         "Status": "True",
@@ -14,8 +14,8 @@
         "VendorID": "VD00001",
         "name": "Filet Mignon",
         "description": "Tender beef filet with red wine reduction",
-        "price": "$35",
-        "imagePath": "images/filet_mignon.jpg"
+        "price": "RM35",
+        "imagePath": "filet_mignon.jpg"
     },
     {
         "Status": "True",
@@ -23,8 +23,8 @@
         "VendorID": "VD00001",
         "name": "Truffle Risotto",
         "description": "Creamy risotto with truffle essence",
-        "price": "$20",
-        "imagePath": "images/truffle_risotto.jpg"
+        "price": "RM20",
+        "imagePath": "truffle_risotto.jpg"
     },
     {
         "Status": "True",
@@ -32,7 +32,7 @@
         "VendorID": "VD00001",
         "name": "Spaghetti Carbonara",
         "description": "Classic Italian pasta with pancetta",
-        "price": "$18",
-        "imagePath": "images/spaghetti_carbonara.jpg"
-    },
+        "price": "RM18",
+        "imagePath": "spaghetti_carbonara.jpg"
+    }
 ]

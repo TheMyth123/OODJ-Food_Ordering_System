@@ -23,9 +23,10 @@ public class FileHandling {
         MENU_PATH("Menu", "app\\src\\main\\resources\\databases\\menu.txt"),
         CART_PATH("Cart", "app\\src\\main\\resources\\databases\\cart.txt"),
         TOPUP_PATH("Topup", "app\\src\\main\\resources\\databases\\topup.txt"),
-        CREDIT_PATH("Credit", "app\\src\\main\\resources\\databases\\credit.txt"),
+        // CREDIT_PATH("Credit", "app\\src\\main\\resources\\databases\\credit.txt"),
         PAYMENT_PATH("Payment", "app\\src\\main\\resources\\databases\\payment.txt"),
-        RATING_PATH("Rating", "app\\src\\main\\resources\\databases\\rating.txt");  
+        RATING_PATH("Rating", "app\\src\\main\\resources\\databases\\rating.txt"),
+        COMPLAINT_PATH("Complaint", "app\\src\\main\\resources\\databases\\complaint.txt");
         
         private final String key, value;
 
