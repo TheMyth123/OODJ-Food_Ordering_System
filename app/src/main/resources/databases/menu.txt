@@ -6,7 +6,7 @@
         "name": "Seared Salmon",
         "description": "Pan-seared salmon with lemon butter sauce",
         "price": "$25",
-        "imagePath": "images/seared_salmon.jpg"
+        "imagePath": "app/src/main/resources/receipts/shelby_gt500_5k-5120x2880.jpg"
     },
     {
         "Status": "True",

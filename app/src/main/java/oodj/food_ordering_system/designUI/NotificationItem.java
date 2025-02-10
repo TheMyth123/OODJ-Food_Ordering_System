@@ -8,22 +8,22 @@ public class NotificationItem extends javax.swing.JPanel {
     public NotificationItem(String title, String content, String timestamp, String actionLink) {
         initComponents();
         titleLabel.setText(title);
-        contentLabel.setText(content);
+        contentLabel.setText("<html>" + content.replace("\n", "<br>") + "</html>");
         timestampLabel.setText(timestamp);
-
-        // behave like a button
+    
+        // Behave like a button
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 // Print "Clicked" when the item is clicked
                 System.out.println(title + " " + actionLink + " Clicked");
             }
-
+    
             @Override
             public void mouseEntered(MouseEvent e) {
                 setBackground(new java.awt.Color(80, 80, 80)); // Lighten the background
             }
-
+    
             @Override
             public void mouseExited(MouseEvent e) {
                 setBackground(new java.awt.Color(60, 60, 60)); // Original color
@@ -73,10 +73,10 @@ public class NotificationItem extends javax.swing.JPanel {
                 .addGap(12, 12, 12)
                 .addComponent(titleLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(contentLabel)
+                .addComponent(contentLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(timestampLabel)
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>                        
 

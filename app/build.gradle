@@ -19,16 +19,19 @@ repositories {
 }
 
 dependencies {
-    // Use JUnit Jupiter for testing.
-    testImplementation libs.junit.jupiter
+    // // Use JUnit Jupiter for testing.
+    // testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
 
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    // // Use JUnit Platform launcher for runtime.
+    // testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.9.0'
 
-    // This dependency is used by the application.
-    implementation libs.guava
-
+    // Application dependencies.
+    implementation 'com.google.guava:guava:31.1-jre'
     implementation 'org.jfree:jfreechart:1.5.3'
     implementation 'org.json:json:20210307'
+    implementation 'com.itextpdf:itextpdf:5.5.13.4'
+
+    // Local JAR files.
     implementation name: 'glasspane-popup', ext: 'jar'
     implementation name: 'miglayout-4.0', ext: 'jar'
     implementation name: 'TimingFramework-0.55', ext: 'jar'

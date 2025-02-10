@@ -24,7 +24,8 @@ public class FileHandling {
         CART_PATH("Cart", "app\\src\\main\\resources\\databases\\cart.txt"),
         TOPUP_PATH("Topup", "app\\src\\main\\resources\\databases\\topup.txt"),
         CREDIT_PATH("Credit", "app\\src\\main\\resources\\databases\\credit.txt"),
-        PAYMENT_PATH("Payment", "app\\src\\main\\resources\\databases\\payment.txt");
+        PAYMENT_PATH("Payment", "app\\src\\main\\resources\\databases\\payment.txt"),
+        NOTIFICATION_PATH("Notification", "app\\src\\main\\resources\\databases\\notification.txt");
 
         private final String key, value;
 

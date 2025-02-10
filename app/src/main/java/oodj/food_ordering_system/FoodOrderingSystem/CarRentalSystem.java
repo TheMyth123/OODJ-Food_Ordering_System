@@ -11,7 +11,7 @@ public class CarRentalSystem {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             try {
-                if (firstTimeSetup()) {
+                if (firstTimeSetup()) { 
                     new LoginPage().start();
                 } else {
                     new LoginPage().start();;
