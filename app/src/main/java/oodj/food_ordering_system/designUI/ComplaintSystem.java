@@ -201,8 +201,292 @@ class CustomerComplaint extends JFrame {
     private JButton sendButton;
 
 
-    public CustomerComplaint() {
+    // public CustomerComplaint() {
 
+    //     setTitle("Customer Complaint Interface");
+    //     setSize(500, 350);
+    //     setDefaultCloseOperation(EXIT_ON_CLOSE);
+    //     setLayout(new BorderLayout());
+
+    //     tableModel = new DefaultTableModel(new Object[]{"Complaint ID", "Status"}, 0);
+    //     complaintTable = new JTable(tableModel);
+    //     JScrollPane tableScrollPane = new JScrollPane(complaintTable);
+    //     add(tableScrollPane, BorderLayout.WEST);
+
+    //     complaintTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    //     complaintTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+    //         @Override
+    //         public void valueChanged(ListSelectionEvent e) {
+    //             if (!e.getValueIsAdjusting()) {
+    //                 int selectedRow = complaintTable.getSelectedRow();
+    //                 if (selectedRow != -1) {
+    //                     String complaintId = (String) tableModel.getValueAt(selectedRow, 0);
+    //                     updateChat(complaintId);
+    //                     sendButton.setText("Send Message");
+    //                 } else {
+    //                     chatArea.setText(""); // Clear chat when unselected
+    //                     sendButton.setText("Create Complaint");
+    //                 }
+    //             }
+    //         }
+    //     });
+
+    //     chatArea = new JTextArea();
+    //     chatArea.setEditable(false);
+    //     JScrollPane chatScrollPane = new JScrollPane(chatArea);
+    //     add(chatScrollPane, BorderLayout.CENTER);
+
+    //     // Add chat input field & send button
+    //     JPanel inputPanel = new JPanel(new BorderLayout());
+    //     inputField = new JTextField();
+    //     sendButton = new JButton("Create Complaint");
+
+    //     sendButton.addActionListener(e -> sendMessage(inputField));
+
+    //     inputPanel.add(inputField, BorderLayout.CENTER);
+    //     inputPanel.add(sendButton, BorderLayout.EAST);
+    //     add(inputPanel, BorderLayout.SOUTH);
+
+    //     // Load existing complaints
+    //     loadComplaints();
+    // }
+
+    // private void loadComplaints() {
+    //     try {
+    //         ArrayList<Complaint> complaints = ComplaintHandling.readComplaints();
+    //         for (Complaint complaint : complaints) {
+    //             tableModel.addRow(new Object[]{complaint.getId(), complaint.isResolved() ? "Resolved" : "Ongoing"});
+    //         }
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
+
+    // public void updateTable() {
+    //     tableModel.setRowCount(0);
+    //     try {
+    //         ArrayList<Complaint> complaints = ComplaintHandling.readComplaints();
+    //         for (Complaint complaint : complaints) {
+    //             tableModel.addRow(new Object[]{complaint.getId(), complaint.isResolved() ? "Resolved" : "Ongoing"});
+    //         }
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
+
+    // public void updateChat(String complaintId) {
+    //     chatArea.setText("");
+    //     Complaint complaint = ComplaintHandling.getComplaintById(complaintId);
+    //     if (complaint != null) {
+    //         for (String message : complaint.getMessages()) {
+    //             chatArea.append(message + "\n");
+    //         }
+    //     }
+    // }
+
+    // // private void sendComplaint() {
+    // //     String message = JOptionPane.showInputDialog(this, "Enter your complaint:");
+    // //     if (message != null && !message.trim().isEmpty()) {
+    // //         ComplaintSystem.addComplaint("Customer" + UserHandling.getCUid(), message);
+    // //         updateTable();
+    // //     }
+    // // }
+
+    // private void sendComplaint() {
+    //     System.out.println("DEBUG: sendComplaint() was called");
+    
+    //     String message = JOptionPane.showInputDialog(this, "Enter your complaint:");
+    //     if (message != null && !message.trim().isEmpty()) {
+    //         System.out.println("User entered a complaint: " + message);
+    
+    //         ComplaintSystem complaintSystem = ComplaintSystem.getInstance();
+    //         if (complaintSystem != null) {
+    //             // ✅ Create a new Complaint object
+    //             Complaint newComplaint = new Complaint("Customer" + UserHandling.getCUid(), message);
+    
+    //             // ✅ Call addNewComplaint() with a Complaint object
+    //             ComplaintHandling.addNewComplaint(newComplaint);
+                
+    //             System.out.println("Complaint passed to ComplaintHandling.addNewComplaint()");
+    //             updateTable();
+    //         } else {
+    //             System.out.println("ERROR: ComplaintSystem instance is null.");
+    //         }
+    //     } else {
+    //         System.out.println("User did not enter a valid complaint.");
+    //     }
+    // }
+    
+    
+    
+
+    // private void sendMessage(JTextField inputField) {
+    //     String message = inputField.getText().trim();
+    //     if (!message.isEmpty()) {
+    //         int selectedRow = complaintTable.getSelectedRow();
+    //         if (selectedRow != -1) { // If a complaint is selected, continue chat
+    //             String complaintId = (String) tableModel.getValueAt(selectedRow, 0);
+    //             Complaint complaint = ComplaintHandling.getComplaintById(complaintId);
+    //             if (complaint != null && !complaint.isResolved()) {
+    //                 complaint.addMessage("User", message);
+    //                 ComplaintHandling.updateComplaint(complaint);
+    //                 inputField.setText("");
+    //                 updateChat(complaintId);
+    //             }
+    //         } 
+    //         // } else { // Otherwise, create a new complaint
+    //         //     sendComplaint();
+    //         // }
+    //     }
+    // }
+
+    // public static void main(String[] args) {
+    //     SwingUtilities.invokeLater(() -> {
+    //         // ✅ Ensure ComplaintSystem is initialized first
+    //         ComplaintSystem.getInstance().setVisible(true);
+    
+    //         // ✅ Then open CustomerComplaint
+    //         CustomerComplaint customerComplaint = new CustomerComplaint();
+    //         customerComplaint.setVisible(true);
+    //     });
+    // }
+
+    // public CustomerComplaint() {
+    //     setTitle("Customer Complaint Interface");
+    //     setSize(500, 350);
+    //     setDefaultCloseOperation(EXIT_ON_CLOSE);
+    //     setLayout(new BorderLayout());
+
+    //     tableModel = new DefaultTableModel(new Object[]{"Complaint ID", "Status"}, 0);
+    //     complaintTable = new JTable(tableModel);
+    //     JScrollPane tableScrollPane = new JScrollPane(complaintTable);
+    //     add(tableScrollPane, BorderLayout.WEST);
+
+    //     complaintTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    //     complaintTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+    //         @Override
+    //         public void valueChanged(ListSelectionEvent e) {
+    //             if (!e.getValueIsAdjusting()) {
+    //                 int selectedRow = complaintTable.getSelectedRow();
+    //                 // if (selectedRow != -1) {
+    //                 //     String complaintId = (String) tableModel.getValueAt(selectedRow, 0);
+    //                 //     updateChat(complaintId);
+    //                 //     sendButton.setText("Send Message");
+    //                 // } else {
+    //                 //     chatArea.setText(""); // Clear chat when unselected
+    //                 //     sendButton.setText("Create Complaint");
+    //                 // }
+    //                 if (selectedRow != -1) {
+    //                     String complaintId = (String) tableModel.getValueAt(selectedRow, 0);
+    //                     updateChat(complaintId);
+    //                     sendButton.setText("Send Message");
+    //                     inputField.setVisible(true);
+    //                     chatArea.setVisible(true);
+    //                 } else {
+    //                     chatArea.setVisible(false); // Make chat area invisible when unselected
+    //                     sendButton.setText("Create Complaint");
+    //                     inputField.setVisible(false);
+    //                 }
+    //             }
+    //         }
+    //     });
+
+    //     chatArea = new JTextArea();
+    //     chatArea.setVisible(false); // Make chat area invisible when unselected                
+    //     JScrollPane chatScrollPane = new JScrollPane(chatArea);
+    //     add(chatScrollPane, BorderLayout.CENTER);
+
+    //     // Add chat input field & send button
+    //     JPanel inputPanel = new JPanel(new BorderLayout());
+    //     inputField = new JTextField();
+    //     inputField.setVisible(false);
+    //     sendButton = new JButton("Create Complaint");
+
+    //     sendButton.addActionListener(e -> handleSendButton());
+
+    //     inputPanel.add(inputField, BorderLayout.CENTER);
+    //     inputPanel.add(sendButton, BorderLayout.EAST);
+    //     add(inputPanel, BorderLayout.SOUTH);
+
+    //     // Load existing complaints
+    //     loadComplaints();
+    // }
+
+    // private void loadComplaints() {
+    //     try {
+    //         ArrayList<Complaint> complaints = ComplaintHandling.readComplaints();
+    //         for (Complaint complaint : complaints) {
+    //             tableModel.addRow(new Object[]{complaint.getId(), complaint.isResolved() ? "Resolved" : "Ongoing"});
+    //         }
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
+
+    // public void updateTable() {
+    //     tableModel.setRowCount(0);
+    //     try {
+    //         ArrayList<Complaint> complaints = ComplaintHandling.readComplaints();
+    //         for (Complaint complaint : complaints) {
+    //             tableModel.addRow(new Object[]{complaint.getId(), complaint.isResolved() ? "Resolved" : "Ongoing"});
+    //         }
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
+
+    // public void updateChat(String complaintId) {
+    //     chatArea.setText("");
+    //     Complaint complaint = ComplaintHandling.getComplaintById(complaintId);
+    //     if (complaint != null) {
+    //         for (String message : complaint.getMessages()) {
+    //             chatArea.append(message + "\n");
+    //         }
+    //     }
+    // }
+
+    // private void sendComplaint() {
+    //     String message = JOptionPane.showInputDialog(this, "Enter your complaint:");
+    //     if (message != null && !message.trim().isEmpty()) {
+    //         ComplaintSystem.addComplaint("Customer1" + UserHandling.getCUid(), message);
+    //         updateTable();
+    //     }
+    // }
+
+    // private void handleSendButton() {
+    //     int selectedRow = complaintTable.getSelectedRow();
+    //     if (selectedRow != -1) { // If a complaint is selected, continue chat
+    //         sendMessage();
+    //     } else { // Otherwise, create a new complaint
+    //         sendComplaint();
+    //     }
+    // }
+
+    // private void sendMessage() {
+    //     String message = inputField.getText().trim();
+    //     if (!message.isEmpty()) {
+    //         int selectedRow = complaintTable.getSelectedRow();
+    //         if (selectedRow != -1) {
+    //             String complaintId = (String) tableModel.getValueAt(selectedRow, 0);
+    //             Complaint complaint = ComplaintHandling.getComplaintById(complaintId);
+    //             if (complaint != null && !complaint.isResolved()) {
+    //                 complaint.addMessage("User", message);
+    //                 ComplaintHandling.updateComplaint(complaint);
+    //                 inputField.setText("");
+    //                 updateChat(complaintId);
+    //             }
+    //         }
+    //     }
+    // }
+
+    // public static void main(String[] args) {
+    //     SwingUtilities.invokeLater(() -> {
+    //         CustomerComplaint customerComplaint = new CustomerComplaint();
+    //         customerComplaint.setVisible(true);
+    //     });
+    // }
+
+    public CustomerComplaint() {
         setTitle("Customer Complaint Interface");
         setSize(500, 350);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -223,25 +507,50 @@ class CustomerComplaint extends JFrame {
                         String complaintId = (String) tableModel.getValueAt(selectedRow, 0);
                         updateChat(complaintId);
                         sendButton.setText("Send Message");
+                        inputField.setVisible(true);
+                        chatArea.setVisible(true);
                     } else {
-                        chatArea.setText(""); // Clear chat when unselected
+                        chatArea.setVisible(false); // Make chat area invisible when unselected
                         sendButton.setText("Create Complaint");
+                        inputField.setVisible(false);
                     }
                 }
             }
         });
 
         chatArea = new JTextArea();
-        chatArea.setEditable(false);
+        chatArea.setVisible(false); // Make chat area invisible when unselected                
         JScrollPane chatScrollPane = new JScrollPane(chatArea);
         add(chatScrollPane, BorderLayout.CENTER);
 
         // Add chat input field & send button
         JPanel inputPanel = new JPanel(new BorderLayout());
         inputField = new JTextField();
+        inputField.setVisible(false);
         sendButton = new JButton("Create Complaint");
+        //             if (selectedRow != -1) {
+        //                 String complaintId = (String) tableModel.getValueAt(selectedRow, 0);
+        //                 updateChat(complaintId);
+        //                 sendButton.setText("Send Message");
+        //             } else {
+        //                 chatArea.setText(""); // Clear chat when unselected
+        //                 sendButton.setText("Create Complaint");
+        //             }
+        //         }
+        //     }
+        // });
 
-        sendButton.addActionListener(e -> sendMessage(inputField));
+        // chatArea = new JTextArea();
+        // chatArea.setEditable(false);
+        // JScrollPane chatScrollPane = new JScrollPane(chatArea);
+        // add(chatScrollPane, BorderLayout.CENTER);
+
+        // // Add chat input field & send button
+        // JPanel inputPanel = new JPanel(new BorderLayout());
+        // inputField = new JTextField();
+        // sendButton = new JButton("Create Complaint");
+
+        sendButton.addActionListener(e -> handleSendButton());
 
         inputPanel.add(inputField, BorderLayout.CENTER);
         inputPanel.add(sendButton, BorderLayout.EAST);
@@ -284,13 +593,6 @@ class CustomerComplaint extends JFrame {
         }
     }
 
-    // private void sendComplaint() {
-    //     String message = JOptionPane.showInputDialog(this, "Enter your complaint:");
-    //     if (message != null && !message.trim().isEmpty()) {
-    //         ComplaintSystem.addComplaint("Customer" + UserHandling.getCUid(), message);
-    //         updateTable();
-    //     }
-    // }
 
     private void sendComplaint() {
         System.out.println("DEBUG: sendComplaint() was called");
@@ -316,15 +618,21 @@ class CustomerComplaint extends JFrame {
             System.out.println("User did not enter a valid complaint.");
         }
     }
-    
-    
-    
 
-    private void sendMessage(JTextField inputField) {
+    private void handleSendButton() {
+        int selectedRow = complaintTable.getSelectedRow();
+        if (selectedRow != -1) { // If a complaint is selected, continue chat
+            sendMessage();
+        } else { // Otherwise, create a new complaint
+            sendComplaint();
+        }
+    }
+
+    private void sendMessage() {
         String message = inputField.getText().trim();
         if (!message.isEmpty()) {
             int selectedRow = complaintTable.getSelectedRow();
-            if (selectedRow != -1) { // If a complaint is selected, continue chat
+            if (selectedRow != -1) {
                 String complaintId = (String) tableModel.getValueAt(selectedRow, 0);
                 Complaint complaint = ComplaintHandling.getComplaintById(complaintId);
                 if (complaint != null && !complaint.isResolved()) {
@@ -333,119 +641,16 @@ class CustomerComplaint extends JFrame {
                     inputField.setText("");
                     updateChat(complaintId);
                 }
-            } else { // Otherwise, create a new complaint
-                sendComplaint();
             }
         }
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            // ✅ Ensure ComplaintSystem is initialized first
-            ComplaintSystem.getInstance().setVisible(true);
-    
-            // ✅ Then open CustomerComplaint
             CustomerComplaint customerComplaint = new CustomerComplaint();
             customerComplaint.setVisible(true);
         });
-    }
-    
-
-    
-    
+    }   
 }
-    
-//     public CustomerComplaint() {
-//         setTitle("Customer Complaint Interface");
-//         setSize(500, 350);
-//         setDefaultCloseOperation(EXIT_ON_CLOSE);
-//         setLayout(new BorderLayout());
 
-//         tableModel = new DefaultTableModel(new Object[]{"Complaint ID", "Status"}, 0);
-//         complaintTable = new JTable(tableModel);
-//         JScrollPane tableScrollPane = new JScrollPane(complaintTable);
-//         add(tableScrollPane, BorderLayout.WEST);
-
-//         complaintTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//         complaintTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-//             @Override
-//             public void valueChanged(ListSelectionEvent e) {
-//                 if (!e.getValueIsAdjusting()) {
-//                     int selectedRow = complaintTable.getSelectedRow();
-//                     if (selectedRow != -1) {
-//                         String complaintId = (String) tableModel.getValueAt(selectedRow, 0);
-//                         updateChat(complaintId);
-//                         sendButton.setText("Send Message");
-//                     } else {
-//                         chatArea.setText(""); // Clear chat when unselected
-//                         sendButton.setText("Create Complaint");
-//                     }
-//                 }
-//             }
-//         });
-
-//         chatArea = new JTextArea();
-//         chatArea.setEditable(false);
-//         JScrollPane chatScrollPane = new JScrollPane(chatArea);
-//         add(chatScrollPane, BorderLayout.CENTER);
-
-//         // Add chat input field & send button
-//         JPanel inputPanel = new JPanel(new BorderLayout());
-//         inputField = new JTextField();
-//         sendButton = new JButton("Create Complaint");
-
-//         sendButton.addActionListener(e -> sendMessage(inputField));
-
-//         inputPanel.add(inputField, BorderLayout.CENTER);
-//         inputPanel.add(sendButton, BorderLayout.EAST);
-//         add(inputPanel, BorderLayout.SOUTH);
-//     }
-    
-
-//     public void updateTable() {
-//         tableModel.setRowCount(0);
-//         for (Map.Entry<String, Complaint> entry : ComplaintSystem.complaintMap.entrySet()) {
-//             tableModel.addRow(new Object[]{entry.getKey(), entry.getValue().isResolved() ? "Resolved" : "Ongoing"});
-//         }
-//     }
-
-
-//     public void updateChat(String complaintId) {
-//         chatArea.setText("");
-//         Complaint complaint = ComplaintSystem.complaintMap.get(complaintId);
-//         if (complaint != null) {
-//             for (String message : complaint.getMessages()) {
-//                 chatArea.append(message + "\n");
-//             }
-//         }
-//     }
-
-//     private void sendComplaint() {
-//         String message = JOptionPane.showInputDialog(this, "Enter your complaint:");
-//         if (message != null && !message.trim().isEmpty()) {
-//             ComplaintSystem.addComplaint("Customer" + UserHandling.getCUid(), message);
-//             updateTable();
-//         }
-//     }
-
-//     private void sendMessage(JTextField inputField) {
-//         String message = inputField.getText().trim();
-//         if (!message.isEmpty()) {
-//             int selectedRow = complaintTable.getSelectedRow();
-//             if (selectedRow != -1) { // If a complaint is selected, continue chat
-//                 String complaintId = (String) tableModel.getValueAt(selectedRow, 0);
-//                 Complaint complaint = ComplaintSystem.complaintMap.get(complaintId);
-//                 if (complaint != null && !complaint.isResolved()) {
-//                     complaint.addMessage("User", message);
-//                     inputField.setText("");
-//                     updateChat(complaintId);
-//                 }
-//             } else { // Otherwise, create a new complaint
-//                 sendComplaint();
-//             }
-//         }
-//     }
-    
-    
-// }
 

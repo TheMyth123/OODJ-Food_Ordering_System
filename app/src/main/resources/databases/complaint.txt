@@ -3,7 +3,8 @@
     "Messages": [
       "Order was late",
       "No response from support",
-      "User: hee"
+      "User: hee",
+      "User: cscsa"
     ],
     "ComplaintID": "CM00001",
     "Resolved": false,
@@ -33,6 +34,12 @@
       "User: nfifijioef"
     ],
     "ComplaintID": "CM3",
+    "Resolved": false,
+    "CustomerID": "Customer12"
+  },
+  {
+    "Messages": ["User: fcff"],
+    "ComplaintID": "CM4",
     "Resolved": false,
     "CustomerID": "Customer12"
   }
