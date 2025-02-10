@@ -114,7 +114,7 @@ public class ManageCustomer extends javax.swing.JFrame {
                     String address = customerData.getString("Address");
                     String dob = customerData.getString("DOB");
     
-                    Customer customer = new Customer(customerID, username, name, phone, password, gender, dob, email, address, true);
+                    Customer customer = new Customer(customerID, username, name, phone, password, gender, dob, email, address, true, 0);
                     Customers.add(customer);
                 }
             }
@@ -162,13 +162,14 @@ public class ManageCustomer extends javax.swing.JFrame {
         btn_ManageVen = new javax.swing.JButton();
         btn_ManageRun = new javax.swing.JButton();
         btn_topup = new javax.swing.JButton();
-        btn_profile = new javax.swing.JButton();
         btn_container2 = new javax.swing.JPanel();
         btn_logout = new javax.swing.JButton();
         Line = new javax.swing.JPanel();
         Main = new javax.swing.JPanel();
         m1 = new javax.swing.JPanel();
         title_container = new javax.swing.JPanel();
+        margin2 = new javax.swing.JPanel();
+        margin3 = new javax.swing.JPanel();
         title = new javax.swing.JLabel();
         m2 = new javax.swing.JPanel();
         Line1 = new javax.swing.JPanel();
@@ -235,7 +236,7 @@ public class ManageCustomer extends javax.swing.JFrame {
         systemName.setFont(new java.awt.Font("Segoe Print", 1, 36)); // NOI18N
         systemName.setForeground(new java.awt.Color(255, 169, 140));
         systemName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        systemName.setText("Car Connect");
+        systemName.setText("Food Connect");
         systemName.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         systemName.setAlignmentX(0.5F);
         systemName.setMaximumSize(new java.awt.Dimension(300, 50));
@@ -245,10 +246,28 @@ public class ManageCustomer extends javax.swing.JFrame {
 
         Sidebar.add(Logo_container);
 
+        margin2.setBackground(new java.awt.Color(31, 31, 31));
+        margin2.setMaximumSize(new java.awt.Dimension(300, 50));
+        margin2.setMinimumSize(new java.awt.Dimension(300, 50));
+        margin2.setPreferredSize(new java.awt.Dimension(300, 50));
+
+        javax.swing.GroupLayout margin2Layout = new javax.swing.GroupLayout(margin2);
+        margin2.setLayout(margin2Layout);
+        margin2Layout.setHorizontalGroup(
+            margin2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        margin2Layout.setVerticalGroup(
+            margin2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 50, Short.MAX_VALUE)
+        );
+
+        Sidebar.add(margin2);
+
         btn_container1.setBackground(new java.awt.Color(31, 31, 31));
         btn_container1.setMaximumSize(new java.awt.Dimension(300, 320));
         btn_container1.setMinimumSize(new java.awt.Dimension(300, 320));
-        btn_container1.setPreferredSize(new java.awt.Dimension(300, 450));
+        btn_container1.setPreferredSize(new java.awt.Dimension(300, 320));
         btn_container1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 30));
 
         btn_ManageCus.setBackground(new java.awt.Color(43, 43, 43));
@@ -323,25 +342,25 @@ public class ManageCustomer extends javax.swing.JFrame {
         });
         btn_container1.add(btn_topup);
 
-        btn_profile.setBackground(new java.awt.Color(31, 31, 31));
-        btn_profile.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_profile.setForeground(new java.awt.Color(245, 251, 254));
-        btn_profile.setText("Profile");
-        btn_profile.setBorder(null);
-        btn_profile.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_profile.setFocusable(false);
-        btn_profile.setMargin(new java.awt.Insets(15, 50, 15, 50));
-        btn_profile.setMaximumSize(new java.awt.Dimension(250, 40));
-        btn_profile.setMinimumSize(new java.awt.Dimension(250, 40));
-        btn_profile.setPreferredSize(new java.awt.Dimension(250, 40));
-        btn_profile.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_profileActionPerformed(evt);
-            }
-        });
-        btn_container1.add(btn_profile);
-
         Sidebar.add(btn_container1);
+
+        margin3.setBackground(new java.awt.Color(31, 31, 31));
+        margin3.setMaximumSize(new java.awt.Dimension(300, 100));
+        margin3.setMinimumSize(new java.awt.Dimension(300, 100));
+        margin3.setPreferredSize(new java.awt.Dimension(300, 80));
+
+        javax.swing.GroupLayout margin3Layout = new javax.swing.GroupLayout(margin3);
+        margin3.setLayout(margin3Layout);
+        margin3Layout.setHorizontalGroup(
+            margin3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        margin3Layout.setVerticalGroup(
+            margin3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        Sidebar.add(margin3);
 
         btn_container2.setBackground(new java.awt.Color(31, 31, 31));
         btn_container2.setMaximumSize(new java.awt.Dimension(300, 50));
@@ -877,16 +896,9 @@ public class ManageCustomer extends javax.swing.JFrame {
     }     
 
     private void btn_topupActionPerformed(java.awt.event.ActionEvent evt) {       
-        // TODO call customer data page                                    
-        // dispose();
-        // new ViewCusData().setVisible(true);
-    }                                                          
-
-    private void btn_profileActionPerformed(java.awt.event.ActionEvent evt) {   
-        // TODO call profile page                                         
-        // dispose();
-        // new AdminData().setVisible(true);
-    }                                           
+        dispose();
+        new ManageTopUp().setVisible(true);
+    }                                                                                            
 
     private void btn_logoutActionPerformed(java.awt.event.ActionEvent evt) {                                           
         boolean confirm = DialogBox.confirmMessage("Are you sure you want to logout?", "Logout");
@@ -936,13 +948,14 @@ public class ManageCustomer extends javax.swing.JFrame {
         String dob = customer.getDOB();
         String password = customer.getPassword();
         Boolean status = customer.getStatus();
+        Double balance = customer.getBalance();
 
         dispose();
         ManageCustomer manageCustomer = new ManageCustomer();
         manageCustomer.setVisible(true);
         manageCustomer.setEnabled(false);
 
-        EditCustomer editCustomer = new EditCustomer(manageCustomer, customerID, name, username, email, phone, gender, address, dob, password, status);
+        EditCustomer editCustomer = new EditCustomer(manageCustomer, customerID, name, username, email, phone, gender, address, dob, password, status, balance);
 
         editCustomer.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
@@ -1051,7 +1064,6 @@ public class ManageCustomer extends javax.swing.JFrame {
     private javax.swing.JButton btn_ManageCus;
     private javax.swing.JButton btn_ManageRun;
     private javax.swing.JButton btn_logout;
-    private javax.swing.JButton btn_profile;
     private javax.swing.JButton editButton;
     private javax.swing.JButton deleteButton;
     private javax.swing.JScrollPane jScrollPane1;
@@ -1064,6 +1076,8 @@ public class ManageCustomer extends javax.swing.JFrame {
     private javax.swing.JPanel m6;
     private javax.swing.JPanel m7;
     private javax.swing.JPanel margin1;
+    private javax.swing.JPanel margin2;
+    private javax.swing.JPanel margin3;
     private javax.swing.JPanel margin5;
     private javax.swing.JPanel margin6;
     private javax.swing.JPanel margin7;

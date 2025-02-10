@@ -1,46 +1,46 @@
 [
   {
+    "Status": "True",
+    "ReadStatus": "False",
+    "Type": "Top Up Request Accepted",
     "NotificationID": "NT00001",
     "UserID": "CS00001",
-    "Timestamp": "2024-12-20 10:00:00",
+    "Content": "Your top-up request has been confirmed. Please check the transaction details below.",
     "Title": "Top Up Approved",
-    "Content": "Your top up request has been confirmed. Here is the transaction receipt.",
-    "Type": "Customer Top Up",
-    "ReadStatus": "False",
-    "Status": "True",
-    "ActionLink": "TP00001"
+    "Timestamp": "2024-12-20 10:00:00",
+    "ActionLink": "CR00001"
   },
   {
+    "Status": "True",
+    "ReadStatus": "True",
+    "Type": "New Top Up Request",
     "NotificationID": "NT00002",
     "UserID": "Admin",
-    "Timestamp": "2024-12-21 14:30:00",
-    "Title": "Pending Top Up",
     "Content": "Customer CS00002 has just created a new top up request. Please review it",
-    "Type": "New Top Up Request",
-    "ReadStatus": "False",
-    "Status": "True",
-    "ActionLink": "TP00002"
+    "Title": "Pending Top Up",
+    "Timestamp": "2024-12-21 14:30:00",
+    "ActionLink": "CR00001"
   },
   {
+    "Status": "True",
+    "ReadStatus": "True",
+    "Type": "New Top Up Request",
     "NotificationID": "NT00003",
     "UserID": "Admin",
-    "Timestamp": "2024-12-21 14:30:00",
-    "Title": "Pending Top Up",
     "Content": "Customer CS00002 has just created a new top up request. Please review it",
-    "Type": "New Top Up Request",
-    "ReadStatus": "False",
-    "Status": "True",
-    "ActionLink": "TP00003"
+    "Title": "Pending Top Up",
+    "Timestamp": "2024-12-21 14:30:00",
+    "ActionLink": "CR00002"
   },
   {
-    "NotificationID": "NT00004",
-    "UserID": "VD00001",
-    "Timestamp": "2024-12-21 14:30:00",
-    "Title": "One Request",
-    "Content": "Test",
-    "Type": "Request",
-    "ReadStatus": "False",
     "Status": "True",
-    "ActionLink": "TP00004"
+    "ReadStatus": "False",
+    "Type": "Top Up Request Accepted",
+    "NotificationID": "NT00004",
+    "UserID": "CS00002",
+    "Content": "Your top-up request has been confirmed. Please check the transaction details below.",
+    "Title": "Top Up Approved",
+    "Timestamp": "2025-02-04T00:48:07.271720",
+    "ActionLink": "CR00002"
   }
 ]

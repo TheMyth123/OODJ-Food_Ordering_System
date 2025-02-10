@@ -22,6 +22,11 @@ public class NotificationPanel extends javax.swing.JPanel{
         scroll.getViewport().setOpaque(false);
         scroll.setViewportBorder(null);
         panel.setLayout(new MigLayout("inset 0, fillx, wrap", "[fill]"));
+
+        if (notifications.isEmpty()) {
+            setPreferredSize(new java.awt.Dimension(388, 466));
+        }
+
         loadNoti();
     }
     

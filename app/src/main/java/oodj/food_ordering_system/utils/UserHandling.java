@@ -20,6 +20,7 @@ import oodj.food_ordering_system.models.Customer;
 import oodj.food_ordering_system.models.Manager;
 import oodj.food_ordering_system.models.DeliveryRunner;
 import oodj.food_ordering_system.models.Vendor;
+import oodj.food_ordering_system.models.Menu;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 
@@ -30,6 +31,9 @@ public class UserHandling {
     private static final String MANAGER = FileHandling.filePath.MANAGER_PATH.getValue();
     private static final String DELIVERY = FileHandling.filePath.DELIVERY_PATH.getValue();
     private static final String VENDOR = FileHandling.filePath.VENDOR_PATH.getValue();
+    private static final String TOPUP = FileHandling.filePath.TOPUP_PATH.getValue();
+    private static final String NOTIFICATION = FileHandling.filePath.NOTIFICATION_PATH.getValue();
+    private static final String MENU = FileHandling.filePath.MENU_PATH.getValue();
 
 
     public static int getCUid() {
@@ -130,6 +134,27 @@ public class UserHandling {
                 JSONObject vendorData = vendorsArray.getJSONObject(i);
                 String vendorID = vendorData.getString("VendorID");
                 if (vendorID.contains("VD")) {
+                    tempCount++;
+                }
+            }
+        } catch (Exception e) {
+            DialogBox.errorMessage("Error reading or parsing vendor JSON file: " + e.getMessage(), "Error");
+        }
+    
+        return tempCount;
+    }
+
+    public static int getNTId() {
+        int tempCount = 0;
+
+        try {
+            String jsonData = new String(Files.readAllBytes(Paths.get(NOTIFICATION)));
+            JSONArray notificationsArray = new JSONArray(jsonData);
+    
+            for (int i = 0; i < notificationsArray.length(); i++) {
+                JSONObject notificationData = notificationsArray.getJSONObject(i);
+                String notificationID = notificationData.getString("NotificationID");
+                if (notificationID.contains("NT")) {
                     tempCount++;
                 }
             }
@@ -679,6 +704,73 @@ public class UserHandling {
         } catch (Exception e) {
             // Handle any errors (e.g., file reading or JSON parsing)
             DialogBox.errorMessage("Error reading or parsing runner JSON file: " + e.getMessage(), "Error");
+            return null;
+        }
+    }   
+
+    public static Credit getTopUpByID(String creditID) {
+        try {
+            // Read the JSON file
+            String jsonData = new String(Files.readAllBytes(Paths.get(TOPUP)));
+            JSONArray creditsArray = new JSONArray(jsonData);
+    
+            // Iterate through the topup data to find the matching ID
+            for (int i = 0; i < creditsArray.length(); i++) {
+                JSONObject creditData = creditsArray.getJSONObject(i);
+    
+                // Check if the creditID matches
+                if (creditData.getString("CreditID").equals(creditID)) {
+                    String status = creditData.getString("Status");
+                    String receiptpath = creditData.getString("ReceiptImagePath");
+                    Double amount = creditData.getDouble("CreditAmount");
+                    String customerID = creditData.getString("CustomerID");
+                    String lastupdated = creditData.getString("LastUpdated");
+
+                    LocalDate lastUpdatedDate = LocalDate.parse(lastupdated, DateTimeFormatter.ISO_DATE);
+                    return new Credit(creditID, customerID, amount, lastUpdatedDate, status, receiptpath);
+                }
+            }
+    
+            // If no matching topup is found
+            DialogBox.errorMessage("Topup request with ID " + creditID + " not found.", "Error");
+            return null;
+    
+        } catch (Exception e) {
+            // Handle any errors (e.g., file reading or JSON parsing)
+            DialogBox.errorMessage("Error reading or parsing topup JSON file: " + e.getMessage(), "Error");
+            return null;
+        }
+    }   
+
+    public static Menu getMenuByID(String menuID) {
+        try {
+            // Read the JSON file
+            String jsonData = new String(Files.readAllBytes(Paths.get(MENU)));
+            JSONArray itemsArray = new JSONArray(jsonData);
+    
+            // Iterate through the menu data to find the matching ID
+            for (int i = 0; i < itemsArray.length(); i++) {
+                JSONObject itemData = itemsArray.getJSONObject(i);
+    
+                // Check if the menuID matches
+                if (itemData.getString("id").equals(menuID)) {
+                    String status = itemData.getString("Status");
+                    String vendorID = itemData.getString("VendorID");
+                    String name = itemData.getString("name");
+                    String description = itemData.getString("description");
+                    String price = itemData.getString("price");
+                    String imagePath = itemData.getString("imagePath");
+                    return new Menu(status, menuID, vendorID, name, description, price, imagePath);
+                }
+            }
+    
+            // If no matching topup is found
+            DialogBox.errorMessage("Menu item with ID " + menuID + " not found.", "Error");
+            return null;
+    
+        } catch (Exception e) {
+            // Handle any errors (e.g., file reading or JSON parsing)
+            DialogBox.errorMessage("Error reading or parsing menu JSON file: " + e.getMessage(), "Error");
             return null;
         }
     }   

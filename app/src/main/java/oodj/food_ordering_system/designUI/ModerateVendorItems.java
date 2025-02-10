@@ -1,0 +1,518 @@
+package oodj.food_ordering_system.designUI;
+
+import oodj.food_ordering_system.models.Notification;
+import oodj.food_ordering_system.utils.DialogBox;
+import oodj.food_ordering_system.utils.NotificationUtils;
+import oodj.food_ordering_system.models.Menu;
+import raven.glasspanepopup.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.border.Border;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import net.miginfocom.layout.ComponentWrapper;
+import net.miginfocom.layout.LayoutCallback;
+
+public class ModerateVendorItems extends javax.swing.JFrame {
+
+    public static void main(String[] args) {
+        java.awt.EventQueue.invokeLater(() -> {
+            new ModerateVendorItems().setVisible(true);
+        });
+    }
+
+    public ModerateVendorItems() {
+        initComponents();
+        GlassPanePopup.install(this);
+        loadItems();
+    }
+
+    private void loadItems() {
+        String jsonText = getAllVendorItems();
+        List<Menu> validItems = getValidVendorItems(jsonText);
+        
+        for (Menu menu : validItems) {
+            contentPanel.add(new ManagerMenuItems(
+                menu.getId(),
+                menu.getName(),
+                menu.getDescription(),
+                Double.parseDouble(menu.getPrice().substring(1)), // Ignore the first character and parse to double
+                menu.getImagePath(),
+                menu.getStatus(),
+                menu.getVendorID()
+            ));
+        }
+    }
+    
+    public static String getAllVendorItems() {
+        try {
+            String path = "app\\src\\main\\resources\\databases\\menu.txt";
+            File file = new File(path);
+
+            if (file.exists()) {
+                // Read all lines from the file into a single string
+                return new String(Files.readAllBytes(Paths.get(path)));
+            } else {
+                System.out.println("File not found: " + path);
+                return "";
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public static List<Menu> getValidVendorItems(String jsonText){
+        List<Menu> items = new ArrayList<>();
+        
+        JSONArray itemsArray = new JSONArray(jsonText);
+
+        for (int i = 0; i < itemsArray.length(); i++) {
+            JSONObject menuObject = itemsArray.getJSONObject(i);
+
+            String status = menuObject.getString("Status");
+
+            if ("True".equals(status)) {
+                String itemID = menuObject.getString("id");
+                String vendorID = menuObject.getString("VendorID");
+                String name = menuObject.getString("name");
+                String description = menuObject.getString("description");
+                String price = menuObject.getString("price");
+                String imagePath = menuObject.getString("imagePath");
+
+                Menu menu = new Menu(status, itemID, vendorID, name, description, price, imagePath);
+                items.add(menu);
+            }
+        }
+        return items;
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    private void initComponents() {
+
+        Line = new javax.swing.JPanel();
+        Sidebar = new javax.swing.JPanel();
+        margin1 = new javax.swing.JPanel();
+        m1 = new javax.swing.JPanel();
+        m2 = new javax.swing.JPanel();
+        Logo_container = new javax.swing.JPanel();
+        systemName = new javax.swing.JLabel();
+        margin2 = new javax.swing.JPanel();
+        margin3 = new javax.swing.JPanel();
+        btn_container1 = new javax.swing.JPanel();
+        btn_VendorRevenue = new javax.swing.JButton();
+        btn_RunnerFeedback = new javax.swing.JButton();
+        btn_ManageComplaints = new javax.swing.JButton();
+        btn_ModerateVItems = new javax.swing.JButton();
+        btn_container2 = new javax.swing.JPanel();
+        btn_logout = new javax.swing.JButton();
+        Main = new javax.swing.JPanel();
+        title_container = new javax.swing.JPanel();
+        title = new javax.swing.JLabel();
+        scrollPane = new javax.swing.JScrollPane();
+        contentPanel = new javax.swing.JPanel();
+        btn_Noti = new oodj.food_ordering_system.designUI.Button();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Manager Menu");
+        setBackground(new java.awt.Color(25, 25, 25));
+        setMinimumSize(new java.awt.Dimension(1300, 700));
+        setSize(new java.awt.Dimension(1300, 700));
+        getContentPane().setLayout(null);
+
+        Sidebar.setBackground(new java.awt.Color(31, 31, 31));
+        Sidebar.setAlignmentX(0.0F);
+        Sidebar.setAlignmentY(0.0F);
+        Sidebar.setMaximumSize(new java.awt.Dimension(300, 670));
+        Sidebar.setMinimumSize(new java.awt.Dimension(300, 670));
+        Sidebar.setPreferredSize(new java.awt.Dimension(300, 670));
+        Sidebar.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
+
+        margin1.setBackground(new java.awt.Color(31, 31, 31));
+
+        javax.swing.GroupLayout margin1Layout = new javax.swing.GroupLayout(margin1);
+        margin1.setLayout(margin1Layout);
+        margin1Layout.setHorizontalGroup(
+            margin1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+        margin1Layout.setVerticalGroup(
+            margin1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 50, Short.MAX_VALUE)
+        );
+
+        Sidebar.add(margin1);
+
+        Logo_container.setBackground(new java.awt.Color(31, 31, 31));
+        Logo_container.setMaximumSize(new java.awt.Dimension(300, 100));
+        Logo_container.setMinimumSize(new java.awt.Dimension(300, 100));
+        Logo_container.setPreferredSize(new java.awt.Dimension(300, 100));
+        Logo_container.setLayout(new javax.swing.BoxLayout(Logo_container, javax.swing.BoxLayout.LINE_AXIS));
+
+        systemName.setBackground(new java.awt.Color(31, 31, 31));
+        systemName.setFont(new java.awt.Font("Segoe Print", 1, 36)); // NOI18N
+        systemName.setForeground(new java.awt.Color(255, 169, 140));
+        systemName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        systemName.setText("Food Connect");
+        systemName.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        systemName.setAlignmentX(0.5F);
+        systemName.setMaximumSize(new java.awt.Dimension(300, 50));
+        systemName.setMinimumSize(new java.awt.Dimension(300, 50));
+        systemName.setPreferredSize(new java.awt.Dimension(300, 50));
+        Logo_container.add(systemName);
+
+        Sidebar.add(Logo_container);
+
+        margin2.setBackground(new java.awt.Color(31, 31, 31));
+        margin2.setMaximumSize(new java.awt.Dimension(300, 50));
+        margin2.setMinimumSize(new java.awt.Dimension(300, 50));
+        margin2.setPreferredSize(new java.awt.Dimension(300, 50));
+
+        javax.swing.GroupLayout margin2Layout = new javax.swing.GroupLayout(margin2);
+        margin2.setLayout(margin2Layout);
+        margin2Layout.setHorizontalGroup(
+            margin2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        margin2Layout.setVerticalGroup(
+            margin2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 50, Short.MAX_VALUE)
+        );
+
+        Sidebar.add(margin2);
+
+        btn_container1.setBackground(new java.awt.Color(31, 31, 31));
+        btn_container1.setMaximumSize(new java.awt.Dimension(300, 320));
+        btn_container1.setMinimumSize(new java.awt.Dimension(300, 320));
+        btn_container1.setPreferredSize(new java.awt.Dimension(300, 320));
+        btn_container1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 30));
+
+        btn_VendorRevenue.setBackground(new java.awt.Color(31, 31, 31));
+        btn_VendorRevenue.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btn_VendorRevenue.setForeground(new java.awt.Color(245, 251, 254));
+        btn_VendorRevenue.setText("View Vendor Revenue");
+        btn_VendorRevenue.setBorder(null);
+        btn_VendorRevenue.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_VendorRevenue.setFocusable(false);
+        btn_VendorRevenue.setMargin(new java.awt.Insets(15, 50, 15, 50));
+        btn_VendorRevenue.setMaximumSize(new java.awt.Dimension(250, 40));
+        btn_VendorRevenue.setMinimumSize(new java.awt.Dimension(250, 40));
+        btn_VendorRevenue.setPreferredSize(new java.awt.Dimension(250, 40));
+        btn_VendorRevenue.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_VendorRevenueActionPerformed(evt);
+            }
+        });
+        btn_container1.add(btn_VendorRevenue);
+
+        btn_RunnerFeedback.setBackground(new java.awt.Color(31, 31, 31));
+        btn_RunnerFeedback.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btn_RunnerFeedback.setForeground(new java.awt.Color(245, 251, 254));
+        btn_RunnerFeedback.setText("Review Runner Feedback");
+        btn_RunnerFeedback.setBorder(null);
+        btn_RunnerFeedback.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_RunnerFeedback.setFocusable(false);
+        btn_RunnerFeedback.setMargin(new java.awt.Insets(15, 50, 15, 50));
+        btn_RunnerFeedback.setMaximumSize(new java.awt.Dimension(250, 40));
+        btn_RunnerFeedback.setMinimumSize(new java.awt.Dimension(250, 40));
+        btn_RunnerFeedback.setPreferredSize(new java.awt.Dimension(250, 40));
+        btn_RunnerFeedback.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_RunnerFeedbackActionPerformed(evt);
+            }
+        });
+        btn_container1.add(btn_RunnerFeedback);
+
+        btn_ManageComplaints.setBackground(new java.awt.Color(31, 31, 31));
+        btn_ManageComplaints.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btn_ManageComplaints.setForeground(new java.awt.Color(245, 251, 254));
+        btn_ManageComplaints.setText("Manage Customer Complaints");
+        btn_ManageComplaints.setBorder(null);
+        btn_ManageComplaints.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_ManageComplaints.setFocusable(false);
+        btn_ManageComplaints.setMargin(new java.awt.Insets(15, 50, 15, 50));
+        btn_ManageComplaints.setMaximumSize(new java.awt.Dimension(250, 40));
+        btn_ManageComplaints.setMinimumSize(new java.awt.Dimension(250, 40));
+        btn_ManageComplaints.setPreferredSize(new java.awt.Dimension(250, 40));
+        btn_ManageComplaints.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ManageComplaintsActionPerformed(evt);
+            }
+        });
+        btn_container1.add(btn_ManageComplaints);
+
+        btn_ModerateVItems.setBackground(new java.awt.Color(43, 43, 43));
+        btn_ModerateVItems.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btn_ModerateVItems.setForeground(new java.awt.Color(255, 169, 140));
+        btn_ModerateVItems.setText("Moderate Vendor Items");
+        btn_ModerateVItems.setBorder(null);
+        btn_ModerateVItems.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_ModerateVItems.setFocusable(false);
+        btn_ModerateVItems.setMargin(new java.awt.Insets(15, 50, 15, 50));
+        btn_ModerateVItems.setMaximumSize(new java.awt.Dimension(250, 40));
+        btn_ModerateVItems.setMinimumSize(new java.awt.Dimension(250, 40));
+        btn_ModerateVItems.setPreferredSize(new java.awt.Dimension(250, 40));
+        btn_ModerateVItems.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ModerateVItemsActionPerformed(evt);
+            }
+        });
+        btn_container1.add(btn_ModerateVItems);
+
+        Sidebar.add(btn_container1);
+
+        margin3.setBackground(new java.awt.Color(31, 31, 31));
+        margin3.setMaximumSize(new java.awt.Dimension(300, 100));
+        margin3.setMinimumSize(new java.awt.Dimension(300, 100));
+        margin3.setPreferredSize(new java.awt.Dimension(300, 80));
+
+        javax.swing.GroupLayout margin3Layout = new javax.swing.GroupLayout(margin3);
+        margin3.setLayout(margin3Layout);
+        margin3Layout.setHorizontalGroup(
+            margin3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        margin3Layout.setVerticalGroup(
+            margin3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        Sidebar.add(margin3);
+
+        btn_container2.setBackground(new java.awt.Color(31, 31, 31));
+        btn_container2.setMaximumSize(new java.awt.Dimension(300, 50));
+        btn_container2.setMinimumSize(new java.awt.Dimension(300, 50));
+        btn_container2.setPreferredSize(new java.awt.Dimension(300, 50));
+        btn_container2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
+
+        btn_logout.setBackground(new java.awt.Color(31, 31, 31));
+        btn_logout.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btn_logout.setForeground(new java.awt.Color(245, 251, 254));
+        btn_logout.setText("Logout");
+        btn_logout.setBorder(null);
+        btn_logout.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_logout.setFocusable(false);
+        btn_logout.setMargin(new java.awt.Insets(15, 50, 15, 50));
+        btn_logout.setMaximumSize(new java.awt.Dimension(250, 40));
+        btn_logout.setMinimumSize(new java.awt.Dimension(250, 40));
+        btn_logout.setPreferredSize(new java.awt.Dimension(250, 40));
+        btn_logout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_logoutActionPerformed(evt);
+            }
+        });
+        btn_container2.add(btn_logout);
+
+        Sidebar.add(btn_container2);
+
+        getContentPane().add(Sidebar);
+        Sidebar.setBounds(0, 0, 300, 670);
+
+        Line.setBackground(new java.awt.Color(50, 50, 50));
+        Line.setMaximumSize(new java.awt.Dimension(300, 700));
+        Line.setMinimumSize(new java.awt.Dimension(300, 700));
+
+        javax.swing.GroupLayout LineLayout = new javax.swing.GroupLayout(Line);
+        Line.setLayout(LineLayout);
+        LineLayout.setHorizontalGroup(
+            LineLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+        LineLayout.setVerticalGroup(
+            LineLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 700, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(Line);
+        Line.setBounds(300, 0, 2, 700);
+
+        Main.setBackground(new java.awt.Color(31, 31, 31));
+        Main.setAlignmentX(0.0F);
+        Main.setAlignmentY(0.0F);
+        Main.setMaximumSize(new java.awt.Dimension(1000, 670));
+        Main.setMinimumSize(new java.awt.Dimension(1000, 670));
+        Main.setPreferredSize(new java.awt.Dimension(1000, 670));
+        Main.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
+
+        m1.setBackground(new java.awt.Color(31, 31, 31));
+        m1.setMaximumSize(new java.awt.Dimension(1000, 30));
+        m1.setMinimumSize(new java.awt.Dimension(1000, 30));
+
+        javax.swing.GroupLayout m1Layout = new javax.swing.GroupLayout(m1);
+        m1.setLayout(m1Layout);
+        m1Layout.setHorizontalGroup(
+            m1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1000, Short.MAX_VALUE)
+        );
+        m1Layout.setVerticalGroup(
+            m1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+
+        Main.add(m1);
+
+        title_container.setBackground(new java.awt.Color(31, 31, 31));
+        title_container.setMaximumSize(new java.awt.Dimension(1000, 100));
+        title_container.setMinimumSize(new java.awt.Dimension(1000, 100));
+        title_container.setPreferredSize(new java.awt.Dimension(1000, 50));
+        title_container.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
+
+        title.setBackground(new java.awt.Color(31, 31, 31));
+        title.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        title.setForeground(new java.awt.Color(255, 169, 140));
+        title.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        title.setText("Moderate Vendor Items");
+        title.setAlignmentX(0.5F);
+        title.setMaximumSize(new java.awt.Dimension(130, 50));
+        title.setMinimumSize(new java.awt.Dimension(130, 50));
+        title.setPreferredSize(new java.awt.Dimension(800, 50));
+        title_container.add(title);
+
+        btn_Noti.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/noti.png"))); // NOI18N
+        btn_Noti.setPreferredSize(new java.awt.Dimension(50, 50));
+        btn_Noti.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_NotiActionPerformed(evt);
+            }
+        });
+        title_container.add(btn_Noti);
+
+        Main.add(title_container);
+
+        m2.setBackground(new java.awt.Color(31, 31, 31));
+        m2.setMaximumSize(new java.awt.Dimension(1000, 50));
+        m2.setMinimumSize(new java.awt.Dimension(1000, 50));
+        m2.setPreferredSize(new java.awt.Dimension(1000, 50));
+
+        javax.swing.GroupLayout m2Layout = new javax.swing.GroupLayout(m2);
+        m2.setLayout(m2Layout);
+        m2Layout.setHorizontalGroup(
+            m2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1000, Short.MAX_VALUE)
+        );
+        m2Layout.setVerticalGroup(
+            m2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+
+        Main.add(m2);
+
+        contentPanel = new JPanel();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        contentPanel.setBackground(new java.awt.Color(31, 31, 31));
+        
+        Border roundedBorder = BorderFactory.createLineBorder(new java.awt.Color(80, 80, 80), 3, true);
+        contentPanel.setBorder(roundedBorder);
+
+        scrollPane = new JScrollPane(contentPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(null);
+        scrollPane.setPreferredSize(new java.awt.Dimension(880, 480));
+        scrollPane.getVerticalScrollBar().setUnitIncrement(10); // Adjust for smoothness
+
+
+        Main.add(scrollPane);
+
+        getContentPane().add(Main);
+        Main.setBounds(300, 0, 1000, 670);
+
+        pack();
+        setLocationRelativeTo(null);
+    }// </editor-fold>    
+
+    List<Notification> notifications = NotificationUtils.getAdminUnreadNotifications(NotificationUtils.getAllNotifications());
+    
+    private void btn_NotiActionPerformed(java.awt.event.ActionEvent evt) {                                  
+        GlassPanePopup.showPopup(new NotificationPanel(notifications), new DefaultOption(){
+            @Override
+            public float opacity() {
+                return 0;
+            }
+
+            @Override
+            public LayoutCallback getLayoutCallBack(java.awt.Component parent) {
+                return new DefaultLayoutCallBack(parent){
+                    @Override
+                    public void correctBounds(ComponentWrapper cw) {
+                        if (parent.isVisible()){
+                            java.awt.Point pl = parent.getLocationOnScreen();
+                            java.awt.Point bl = btn_Noti.getLocationOnScreen();
+                            int x = bl.x - pl.x;
+                            int y = bl.y - pl.y;
+                            cw.setBounds(x - cw.getWidth() + btn_Noti.getWidth(), y + btn_Noti.getHeight(), cw.getWidth(), cw.getHeight());
+                        } else {
+                            super.correctBounds(cw);
+                        }
+                    }
+                };
+            }
+
+        });
+    }   
+
+    private void btn_VendorRevenueActionPerformed(java.awt.event.ActionEvent evt) {  
+        dispose();
+        new ManageCustomer().setVisible(true);                                       
+    }   
+    
+    private void btn_RunnerFeedbackActionPerformed(java.awt.event.ActionEvent evt) {     
+        dispose();
+        new ManageVendor().setVisible(true);
+    }                                           
+
+    private void btn_ManageComplaintsActionPerformed(java.awt.event.ActionEvent evt) {  
+        dispose();
+        new ManageRunner().setVisible(true);
+    }     
+
+    private void btn_ModerateVItemsActionPerformed(java.awt.event.ActionEvent evt) {       
+    }                                                                        
+
+    private void btn_logoutActionPerformed(java.awt.event.ActionEvent evt) {                                           
+        boolean confirm = DialogBox.confirmMessage("Are you sure you want to logout?", "Logout");
+        if (confirm) {
+            dispose();
+            new LoginPage().setVisible(true);
+        }
+    }                                                                             
+
+    // Variables declaration - do not modify                     
+    private javax.swing.JPanel Line;
+    private javax.swing.JPanel Logo_container;
+    private javax.swing.JPanel Main;
+    private javax.swing.JPanel Sidebar;
+    private javax.swing.JButton btn_RunnerFeedback;
+    private javax.swing.JPanel btn_container1;
+    private javax.swing.JPanel btn_container2;
+    private javax.swing.JButton btn_ManageComplaints;
+    private javax.swing.JButton btn_VendorRevenue;
+    private javax.swing.JButton btn_ModerateVItems;
+    private javax.swing.JButton btn_logout;
+    private javax.swing.JPanel margin1;
+    private javax.swing.JPanel margin2;
+    private javax.swing.JPanel margin3;
+    private javax.swing.JPanel m1;
+    private javax.swing.JPanel m2;
+    private javax.swing.JLabel systemName;
+    private javax.swing.JPanel title_container;
+    private javax.swing.JLabel title;
+    private javax.swing.JScrollPane scrollPane;
+    private javax.swing.JPanel contentPanel;
+    private javax.swing.JButton btn_Noti;
+    // End of variables declaration                   
+}
+
+

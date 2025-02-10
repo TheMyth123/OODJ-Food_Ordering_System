@@ -33,9 +33,9 @@ public class EditCustomer extends javax.swing.JFrame {
         setUpDateChooser();
     }
 
-    public EditCustomer(ManageCustomer parent, String customerID, String name, String username, String email, String phone, String gender, String address, String dob, String password, Boolean status) {
+    public EditCustomer(ManageCustomer parent, String customerID, String name, String username, String email, String phone, String gender, String address, String dob, String password, Boolean status, Double balance) {
         this.parent = parent;
-        this.customer = new Customer(customerID, username, name, phone, password, gender, dob, email, address, status);
+        this.customer = new Customer(customerID, username, name, phone, password, gender, dob, email, address, status, balance);
         initComponents();
         displayCustomerDetails();
         setUpDateChooser();

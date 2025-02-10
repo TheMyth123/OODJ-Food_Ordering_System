@@ -8,6 +8,7 @@ import static oodj.food_ordering_system.designUI.LoginPage.loginID;
 
 import java.awt.*;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -135,6 +136,42 @@ public class NotificationUtils{
         return notifications;
     }
 
+    public static void NotificationCreator(String userID, String type, String content, String title, String actionlink){
+        try {
+            // Adjust the path to your notification.txt file
+            String path = "app/src/main/resources/databases/notification.txt";
+            File file = new File(path);
+
+            if (file.exists()) {
+                String jsonText = new String(Files.readAllBytes(Paths.get(path)));
+                JSONArray notificationsArray = new JSONArray(jsonText);
+
+                String notificationID = "NT" + String.format("%05d", UserHandling.getNTId() + 1);
+
+                JSONObject notification = new JSONObject();
+                notification.put("UserID", userID);
+                notification.put("ReadStatus", "False");
+                notification.put("Status", "True");
+                notification.put("Timestamp", java.time.LocalDateTime.now().toString());
+                notification.put("Title", title);
+                notification.put("Content", content);
+                notification.put("ActionLink", actionlink);
+                notification.put("Type", type);
+                notification.put("NotificationID", notificationID);
+
+                notificationsArray.put(notification);
+
+                try (FileWriter fileWriter = new FileWriter(path)) {
+                    fileWriter.write(notificationsArray.toString(2)); // Pretty print with indentation
+                    fileWriter.flush();
+                }
+            } else {
+                System.out.println("File not found: " + path);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }   
+    }
 }
 
 
