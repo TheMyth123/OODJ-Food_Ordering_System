@@ -2,6 +2,11 @@ package oodj.food_ordering_system.designUI;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.awt.Component;
@@ -12,29 +17,32 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import oodj.food_ordering_system.models.Credit;
+import oodj.food_ordering_system.models.Customer;
+import oodj.food_ordering_system.utils.FileHandling;
 import oodj.food_ordering_system.utils.OrderHandling;
+import oodj.food_ordering_system.utils.UserHandling;
 
 // TODO after payment successfull dispose the payment page
-public class Payment extends javax.swing.JFrame {
+public class CusPayment extends javax.swing.JFrame {
 
-    private String orderID;
     private String foodName;
     private String quantity;
-    private String totalAmount;
+    private double totalAmount;
     private JTextField addressField;
-    private Credit credit;
-    private String receiptImagePath;
+    private JSONArray orderItems;
+    private String serviceType;
+    private Customer endUser;
 
 
-    
-
-    public Payment(String orderID, String foodName, String quantity, String totalAmount, Credit credit) {
-        this.orderID = orderID;
-        this.foodName = foodName;
-        this.quantity = quantity;
+    public CusPayment(String orderID, JSONArray orderItems,Customer endUser, double totalAmount, String paymentStatus, String serviceType) {
+        this.endUser = endUser;
+        this.orderItems = orderItems;
         this.totalAmount = totalAmount;
-        this.credit = credit;
+        this.serviceType = serviceType;
         initComponents();
     }
 
@@ -142,18 +150,50 @@ public class Payment extends javax.swing.JFrame {
         m3.setLayout(new BoxLayout(m3, BoxLayout.Y_AXIS));
 
 // Food Name
-        JLabel foodNameLabel = new JLabel("Food Name: " + foodName);
-        foodNameLabel.setForeground(new Color(255, 169, 140));
-        foodNameLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-        foodNameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        m3.add(foodNameLabel);
 
-        // Quantity
-        JLabel quantityLabel = new JLabel("Quantity: " + quantity);
-        quantityLabel.setForeground(new Color(255, 169, 140));
-        quantityLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-        quantityLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        m3.add(quantityLabel);
+        JLabel nameLabel = new JLabel("Name: " + endUser.getName());
+        nameLabel.setForeground(new Color(255, 169, 140));
+        nameLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        m3.add(nameLabel);
+
+        JLabel addressLabel = new JLabel("Address: " + endUser.getAddress());
+        addressLabel.setForeground(new Color(255, 169, 140));
+        addressLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        addressLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        m3.add(addressLabel);
+
+        JLabel phoneLabel = new JLabel("Phone: " + endUser.getContactnumber());
+        phoneLabel.setForeground(new Color(255, 169, 140));
+        phoneLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        phoneLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        m3.add(phoneLabel);
+
+        for (int i = 0; i < orderItems.length(); i++) {
+            JSONObject orderItem = orderItems.getJSONObject(i);
+            String menuID = orderItem.getString("menuID");
+            int quantity = orderItem.getInt("quantity");
+
+
+            // String foodName = getFoodNameFromMenu(menuItems, menuID);
+
+
+
+        
+
+            // JLabel foodNameLabel = new JLabel("Food Name: " + name);
+            // foodNameLabel.setForeground(new Color(255, 169, 140));
+            // foodNameLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+            // foodNameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            // m3.add(foodNameLabel);
+
+            // Quantity
+            JLabel quantityLabel = new JLabel("Quantity: " + quantity);
+            quantityLabel.setForeground(new Color(255, 169, 140));
+            quantityLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+            quantityLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            m3.add(quantityLabel);
+        }
 
         // Total Amount
         JLabel totalAmountLabel = new JLabel("Total Amount: " + totalAmount);
@@ -162,11 +202,11 @@ public class Payment extends javax.swing.JFrame {
         totalAmountLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         m3.add(totalAmountLabel);
 
-        JLabel addressLabel = new JLabel("Enter Address:");
-        addressLabel.setForeground(new Color(255, 169, 140));
-        addressLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-        addressLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        m3.add(addressLabel);
+        JLabel enterAddressLabel = new JLabel("Enter Address:");
+        enterAddressLabel.setForeground(new Color(255, 169, 140));
+        enterAddressLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        enterAddressLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        m3.add(enterAddressLabel);
 
         addressField = new JTextField();
         addressField.setPreferredSize(new Dimension(200, 30));
@@ -253,62 +293,88 @@ public class Payment extends javax.swing.JFrame {
         dispose();
     }                                       
 
+     
+
+
+    private void processPayment(String address, JSONArray orderItems, String serviceType, double totalAmount) {
+        try {
+            double customerBalance = endUser.getBalance();
+    
+            System.out.println("Available credit: " + customerBalance);
+            System.out.println("Total amount: " + totalAmount);
+    
+            // Check if the customer has enough balance
+            if (customerBalance >= totalAmount) {
+                // Deduct the total amount from the customer's balance
+                endUser.setBalance(customerBalance - totalAmount);
+    
+                // Update the customer's balance in the customer list
+                ArrayList<Customer> customers = UserHandling.getCustomers();
+                for (Customer customer : customers) {
+                    if (customer.getID().equals(endUser.getID())) {
+                        customer.setBalance(endUser.getBalance());
+                        break;
+                    }
+                }
+    
+                // Save the updated customer list to the file
+                OrderHandling.updateCustomerBalance(endUser.getID(), endUser.getBalance());
+    
+                // Generate OrderID
+                String orderID = "OR" + String.format("%05d", OrderHandling.getORid() + 1);
+    
+                // Call savePayment to save the payment details
+                OrderHandling.savePayment(orderID, endUser.getID(), orderItems, totalAmount, "Completed", serviceType, address);
+    
+                // Clear the cart file after successful payment
+                Path cartPath = Paths.get(FileHandling.filePath.CART_PATH.getValue());
+                Files.write(cartPath, new JSONArray().toString().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+    
+                // Read and print the saved payment data
+                Path paymentPath = Paths.get(FileHandling.filePath.PAYMENT_PATH.getValue());
+                String paymentData = new String(Files.readAllBytes(paymentPath));
+    
+                JOptionPane.showMessageDialog(this, "Payment successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                dispose(); // Close the payment page
+    
+            } else {
+                // Notify the user of insufficient credit
+                JOptionPane.showMessageDialog(this, "Insufficient credit to complete the payment.", "Payment Failed", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error processing payment: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Invalid total amount format.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     private void payButtonActionPerformed(java.awt.event.ActionEvent evt) {                                          
-        // Check if the user entered a valid address
         String address = addressField.getText();
         if (address != null && !address.trim().isEmpty()) {
-            // Proceed with the payment process
-            payment(address);
+            processPayment(address, orderItems, serviceType, totalAmount);
+
         } else {
             JOptionPane.showMessageDialog(this, "Address is required to proceed with the payment.", "Invalid Address", JOptionPane.ERROR_MESSAGE);
         }
-    } 
-
-    private void payment(String address) {
-        // Validate and clean totalAmount
-        double totalAmountDouble;
-        try {
-            String cleanedTotalAmount = totalAmount.replaceAll("[^\\d.]", ""); // Remove non-numeric characters
-            totalAmountDouble = Double.parseDouble(cleanedTotalAmount);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Invalid total amount.", "Payment Failed", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // Check if the credit object is not null
-        if (credit == null) {
-            JOptionPane.showMessageDialog(this, "Credit information is missing.", "Payment Failed", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // Check if the customer has enough credit
-        if (credit.getAmount() >= totalAmountDouble) {
-            // Deduct the total amount from the customer's credit
-            credit.setAmount(credit.getAmount() - totalAmountDouble);
-            credit.setDate(LocalDate.now());
-
-            // Save updated credit information
-            ArrayList<Credit> credits = OrderHandling.getCredits();
-            for (Credit c : credits) {
-                if (c.getCustomerID().equals(credit.getCustomerID())) {
-                    c.setAmount(credit.getAmount());
-                    c.setDate(credit.getDate());
-                    break;
-                }
-            }
-            // TODO edit this
-            OrderHandling.saveCredits(credit, receiptImagePath);
-
-            OrderHandling.savePayment(orderID, credit.getCustomerID(), foodName, quantity, totalAmountDouble, address);
-
-
-            System.out.println("Payment processed for address: " + address);
-            JOptionPane.showMessageDialog(this, "Payment successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            dispose(); // Close the Payment page
-        } else {
-            JOptionPane.showMessageDialog(this, "Insufficient credit to complete the payment.", "Payment Failed", JOptionPane.ERROR_MESSAGE);
-        }
     }
+
+    private static String getFoodNameFromMenu(JSONArray menuItems, String menuID) {
+        for (int j = 0; j < menuItems.length(); j++) {
+            JSONObject menuItem = menuItems.getJSONObject(j);
+            if (menuItem.getString("menuID").equals(menuID)) {
+                return menuItem.getString("foodName");
+            }
+        }
+        return "Unknown Item";  // Default if menuID is not found
+    }
+    
+    
+    
+    
+    
+
+    
 
 
     // Variables declaration - do not modify                     

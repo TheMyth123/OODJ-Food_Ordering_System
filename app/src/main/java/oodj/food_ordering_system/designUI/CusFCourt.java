@@ -27,9 +27,11 @@ public class CusFCourt extends javax.swing.JFrame {
     private void initComponents() {
         mainPanel = new JPanel(new CardLayout());
         restaurantListPanel = new JPanel();
-        restaurantListPanel.setLayout(new GridLayout(0, 2, 50, 50)); // 2 columns, dynamic rows, 50px horizontal and vertical gaps
+        restaurantListPanel.setLayout(new GridLayout(0, 3, 50, 50)); // 2 columns, dynamic rows, 50px horizontal and vertical gaps
         restaurantListPanel.setBackground(new Color(31, 31, 31));
-// TODO check again what error
+        restaurantListPanel.setBorder(BorderFactory.createEmptyBorder(50, 0, 0, 0)); // 50px top gap, 0px left, bottom, and right gaps
+
+        // TODO check again what error
         List<Vendor> vendors = UserHandling.getVendors();
         for (Vendor vendor : vendors) {
             String foodCourtName = vendor.getFoodCourtName();

@@ -1,0 +1,46 @@
+[
+  {
+    "Messages": [
+      "Order was late",
+      "No response from support",
+      "User: hee",
+      "User: cscsa"
+    ],
+    "ComplaintID": "CM00001",
+    "Resolved": false,
+    "CustomerID": "CS00001"
+  },
+  {
+    "Messages": [
+      "Received wrong item",
+      "Requested a refund"
+    ],
+    "ComplaintID": "CM00002",
+    "Resolved": true,
+    "CustomerID": "CS00001"
+  },
+  {
+    "Messages": [
+      "Food was cold",
+      "Delivery was unprofessional"
+    ],
+    "ComplaintID": "CM003",
+    "Resolved": false,
+    "CustomerID": "CS00001"
+  },
+  {
+    "Messages": [
+      "User: cef",
+      "User: nfifijioef"
+    ],
+    "ComplaintID": "CM3",
+    "Resolved": false,
+    "CustomerID": "Customer12"
+  },
+  {
+    "Messages": ["User: fcff"],
+    "ComplaintID": "CM4",
+    "Resolved": false,
+    "CustomerID": "Customer12"
+  }
+]

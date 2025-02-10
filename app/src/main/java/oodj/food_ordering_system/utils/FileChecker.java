@@ -15,10 +15,12 @@ public class FileChecker {
         File notificationFile = new File("app\\\\src\\\\main\\\\resources\\\\databases\\\\notification.txt");
         File menuFile = new File("app\\\\src\\\\main\\\\resources\\\\databases\\\\menu.txt");
         File cartFile = new File("app\\\\src\\\\main\\\\resources\\\\databases\\\\cart.txt");
-
+        File paymentFile = new File("app\\\\src\\\\main\\\\resources\\\\databases\\\\payment.txt");
+        File ratingFile = new File("app\\\\src\\\\main\\\\resources\\\\databases\\\\rating.txt"); 
+        File complaintFile = new File("app\\\\src\\\\main\\\\resources\\\\databases\\\\complaint.txt");
         // TODO : ADD EVERY DATABASE FILE HERE
 
-        if (!managerFile.exists() || !adminFile.exists() || !customerFile.exists() || !deliveryFile.exists() || !vendorFile.exists() || !notificationFile.exists()) {
+        if (!managerFile.exists() || !adminFile.exists() || !customerFile.exists() || !deliveryFile.exists() || !vendorFile.exists() || !notificationFile.exists() || !menuFile.exists() || !cartFile.exists() || !paymentFile.exists() || !ratingFile.exists() || !complaintFile.exists()) {
             if (!managerFile.exists()) {
                 managerFile.createNewFile();
                 writeEmptyJsonArray(managerFile);
@@ -59,6 +61,26 @@ public class FileChecker {
                 writeEmptyJsonArray(cartFile);
                 System.out.println("Cart file created successfully");
             }
+
+            if (!paymentFile.exists()) {
+                paymentFile.createNewFile();
+                writeEmptyJsonArray(paymentFile);
+                System.out.println("Payment file created successfully");
+            }
+
+            if (!ratingFile.exists()) {
+                ratingFile.createNewFile();
+                writeEmptyJsonArray(ratingFile);
+                System.out.println("Rating file created successfully");
+            }
+
+            if (!complaintFile.exists()) {
+                complaintFile.createNewFile();
+                writeEmptyJsonArray(complaintFile);
+                System.out.println("Complaint file created successfully");
+            }
+
+            
             return true;
         }
         return false;

@@ -1,20 +1,32 @@
 [
   {
-    "Address": "jtyhjrth",
-    "Quantity": "1",
-    "CustomerID": "CS00001",
-    "TotalAmount": 35,
-    "OrderID": "images/filet_mignon.jpg",
-    "Date": "2025-01-04",
-    "FoodName": "Filet Mignon"
-  },
-  {
-    "Address": "cawfawe",
-    "Quantity": "2",
+    "OrderItems": [{
+      "quantity": 1,
+      "totalPrice": 25,
+      "price": 25,
+      "menuID": "MN00001"
+    }],
+    "ServiceType": "Request for Delivery",
+    "DeliveryAddress": "fo",
     "CustomerID": "CS00001",
     "TotalAmount": 25,
-    "OrderID": "images/seared_salmon.jpg",
-    "Date": "2025-01-05",
-    "FoodName": "Seared Salmon"
+    "OrderID": "OR00001",
+    "PaymentStatus": "Completed",
+    "Date": "2025-02-04"
+  },
+  {
+    "OrderItems": [{
+      "quantity": 1,
+      "totalPrice": 25,
+      "price": 25,
+      "menuID": "MN00001"
+    }],
+    "ServiceType": "Request for Delivery",
+    "DeliveryAddress": "fop4w",
+    "CustomerID": "CS00001",
+    "TotalAmount": 25,
+    "OrderID": "OR00002",
+    "PaymentStatus": "Completed",
+    "Date": "2025-02-04"
   }
 ]
