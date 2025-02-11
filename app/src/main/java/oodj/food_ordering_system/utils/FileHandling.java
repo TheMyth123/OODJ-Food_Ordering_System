@@ -19,7 +19,7 @@ public class FileHandling {
     public enum filePath {
         MANAGER_PATH("Manager", "app\\src\\main\\resources\\databases\\manager.txt"),
         ADMIN_PATH("Admin", "app\\src\\main\\resources\\databases\\admin.txt"),
-        CUSTOMER_PATH("Customer", "app\\src\\main\\resources\\databases\\custom er.txt"),
+        CUSTOMER_PATH("Customer", "app\\src\\main\\resources\\databases\\customer.txt"),
         DELIVERY_PATH("Delivery", "app\\src\\main\\resources\\databases\\delivery_runner.txt"),
         VENDOR_PATH("Vendor", "app\\src\\main\\resources\\databases\\vendor.txt"),
         MENU_PATH("Menu", "app\\src\\main\\resources\\databases\\menu.txt"),
