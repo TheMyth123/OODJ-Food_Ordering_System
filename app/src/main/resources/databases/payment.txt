@@ -1,32 +1,50 @@
 [
   {
+    "OrderStatus": "Pending",
     "OrderItems": [{
       "quantity": 1,
       "totalPrice": 25,
       "price": 25,
       "menuID": "MN00001"
     }],
-    "ServiceType": "Request for Delivery",
-    "DeliveryAddress": "fo",
+    "ServiceType": "Take-Away",
+    "DeliveryAddress": "vrfvr",
     "CustomerID": "CS00001",
     "TotalAmount": 25,
     "OrderID": "OR00001",
     "PaymentStatus": "Completed",
-    "Date": "2025-02-04"
+    "Date": "2025-02-11"
   },
   {
+    "OrderStatus": "Pending",
     "OrderItems": [{
       "quantity": 1,
       "totalPrice": 25,
       "price": 25,
       "menuID": "MN00001"
     }],
-    "ServiceType": "Request for Delivery",
-    "DeliveryAddress": "fop4w",
+    "ServiceType": "Take-Away",
+    "DeliveryAddress": "cccc",
     "CustomerID": "CS00001",
     "TotalAmount": 25,
     "OrderID": "OR00002",
     "PaymentStatus": "Completed",
-    "Date": "2025-02-04"
+    "Date": "2025-02-11"
+  },
+  {
+    "OrderStatus": "Pending",
+    "OrderItems": [{
+      "quantity": 1,
+      "totalPrice": 35,
+      "price": 35,
+      "menuID": "MN00002"
+    }],
+    "ServiceType": "Dine In",
+    "DeliveryAddress": "daiuhw",
+    "CustomerID": "CS00001",
+    "TotalAmount": 35,
+    "OrderID": "OR00003",
+    "PaymentStatus": "Completed",
+    "Date": "2025-02-11"
   }
 ]

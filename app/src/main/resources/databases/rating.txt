@@ -1,6 +1,23 @@
-[{
-  "Status": true,
-  "Rating": 5,
-  "CustomerID": "CS00001",
-  "OrderID": "OR00001"
-}]
+[
+  {
+    "Status": true,
+    "RatingType": "FOOD",
+    "Rating": 5,
+    "CustomerID": "CS00001",
+    "OrderID": "OR00001"
+  },
+  {
+    "Status": true,
+    "RatingType": "VENDOR",
+    "Rating": 5,
+    "CustomerID": "CS00001",
+    "OrderID": "OR00001"
+  },
+  {
+    "Status": true,
+    "RatingType": "RUNNER",
+    "Rating": 2,
+    "CustomerID": "CS00001",
+    "OrderID": "OR00001"
+  }
+]

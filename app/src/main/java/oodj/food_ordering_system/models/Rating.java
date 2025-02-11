@@ -5,13 +5,19 @@ public class Rating {
     private Customer customerID;
     private int rating;
     private Boolean status;
+    private RatingType ratingType; // New field to categorize ratings
 
+    // Enum for Rating Categories
+    public enum RatingType {
+        FOOD, VENDOR, RUNNER
+    }
 
-    public Rating(Payment orderID, Customer customerID, int rating, Boolean status) {
+    public Rating(Payment orderID, Customer customerID, int rating, Boolean status, RatingType ratingType) {
         this.orderID = orderID;
         this.customerID = customerID;
         this.rating = rating;
         this.status = status;
+        this.ratingType = ratingType;
     }
 
     // Getter and Setter methods
@@ -43,7 +49,16 @@ public class Rating {
     public Boolean getStatus() {
         return status;
     }
+
     public void setStatus(Boolean status) {
         this.status = status;
+    }
+
+    public RatingType getRatingType() {
+        return ratingType;
+    }
+
+    public void setRatingType(RatingType ratingType) {
+        this.ratingType = ratingType;
     }
 }

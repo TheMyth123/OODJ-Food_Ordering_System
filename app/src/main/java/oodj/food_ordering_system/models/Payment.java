@@ -12,8 +12,9 @@ public class Payment {
     private String paymentStatus;
     private String address;
     private String date;
+    private String orderStatus;
 
-    public Payment(String orderID, String customerID, String serviceType, double totalAmount, String paymentStatus, String address, String dateString) {
+    public Payment(String orderID, String customerID, String serviceType, double totalAmount, String paymentStatus, String address, String dateString, String orderStatus) {
         this.orderID = orderID;
         this.customerID = customerID;
         this.serviceType = serviceType;
@@ -21,10 +22,7 @@ public class Payment {
         this.paymentStatus = paymentStatus; 
         this.address = address;       
         this.date = dateString;
-
-
-        // Convert JSONArray to ArrayList<OrderItem>
-        
+        this.orderStatus = orderStatus;        
     }
 
     // Getter and Setter methods
@@ -87,6 +85,14 @@ public class Payment {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
     }
 
 

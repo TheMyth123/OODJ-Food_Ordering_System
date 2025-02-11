@@ -6,6 +6,7 @@ import oodj.food_ordering_system.models.CusOrder;
 import oodj.food_ordering_system.models.Customer;
 import oodj.food_ordering_system.models.Notification;
 import oodj.food_ordering_system.models.Payment;
+import oodj.food_ordering_system.models.Rating;
 import oodj.food_ordering_system.utils.DialogBox;
 import oodj.food_ordering_system.utils.NotificationUtils;
 import oodj.food_ordering_system.utils.OrderHandling;
@@ -76,7 +77,7 @@ public class OrderHistory extends javax.swing.JFrame {
         if (historyTable == null) {
             historyTable = new JTable(new DefaultTableModel(
                 new Object[][]{},
-                new String[]{"Order ID", "Service Type", "Delivery Address", "Total Amount", "Date"}
+                new String[]{"Order ID", "Service Type", "Delivery Address", "Total Amount", "Date", "Order Status", "Payment Status"}
             ));
         
         }
@@ -95,11 +96,12 @@ public class OrderHistory extends javax.swing.JFrame {
                   // Assuming getOrderItems() returns a list of CusOrder objects
                     model.addRow(new Object[]{
                         payment.getOrderID(),
-                
                         payment.getServiceType(),
                         payment.getAddress(), // Ensure this field exists in Payment class
                         payment.getTotalAmount(),
                         payment.getDate(), // Ensure this field exists in Payment class
+                        payment.getOrderStatus(), // Ensure this field exists in Payment class
+                        payment.getPaymentStatus() // Ensure this field exists in Payment class
                     });
                 
             }
@@ -132,30 +134,90 @@ public class OrderHistory extends javax.swing.JFrame {
         title_container1.repaint();
     }
 
+    // private void showRatingDialog(String orderID) {
+    //     String[] ratings = {"1", "2", "3", "4", "5"};
+    //     String ratingStr = (String) JOptionPane.showInputDialog(
+    //             null,
+    //             "Rate Order ID: " + orderID,
+    //             "Order Rating",
+    //             JOptionPane.QUESTION_MESSAGE,
+    //             null,
+    //             ratings,
+    //             ratings[4] // Default rating is 5
+    //     );
+    
+    //     if (ratingStr != null) {
+    //         int rating = Integer.parseInt(ratingStr); // Convert String to int
+    
+    //         JOptionPane.showMessageDialog(null, "You rated Order " + orderID + " with " + rating + " stars.");
+            
+    //         Payment payment = OrderHandling.getPaymentByID(orderID); 
+    //         Customer customer = UserHandling.getCustomerByID(endUser.getID()); 
+    
+    //         OrderHandling.saveRating(payment, customer, rating); 
+    //         // Store the rating in the database or update the order history
+    //     }
+    // }
+
     private void showRatingDialog(String orderID) {
         String[] ratings = {"1", "2", "3", "4", "5"};
-        String ratingStr = (String) JOptionPane.showInputDialog(
+
+        // Step 1: Get the Food Rating
+        String foodRatingStr = (String) JOptionPane.showInputDialog(
                 null,
-                "Rate Order ID: " + orderID,
-                "Order Rating",
+                "Rate the FOOD for Order ID: " + orderID,
+                "Food Rating",
                 JOptionPane.QUESTION_MESSAGE,
                 null,
                 ratings,
                 ratings[4] // Default rating is 5
         );
-    
-        if (ratingStr != null) {
-            int rating = Integer.parseInt(ratingStr); // Convert String to int
-    
-            JOptionPane.showMessageDialog(null, "You rated Order " + orderID + " with " + rating + " stars.");
-            
-            Payment payment = OrderHandling.getPaymentByID(orderID); 
-            Customer customer = UserHandling.getCustomerByID(endUser.getID()); 
-    
-            OrderHandling.saveRating(payment, customer, rating); 
-            // Store the rating in the database or update the order history
+
+        // Step 2: Get the Vendor Rating
+        String vendorRatingStr = (String) JOptionPane.showInputDialog(
+                null,
+                "Rate the VENDOR service for Order ID: " + orderID,
+                "Vendor Rating",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                ratings,
+                ratings[4]
+        );
+
+        // Step 3: Get the Runner Rating
+        String runnerRatingStr = (String) JOptionPane.showInputDialog(
+                null,
+                "Rate the DELIVERY RUNNER for Order ID: " + orderID,
+                "Runner Rating",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                ratings,
+                ratings[4]
+        );
+
+        if (foodRatingStr != null && vendorRatingStr != null && runnerRatingStr != null) {
+            int foodRating = Integer.parseInt(foodRatingStr);
+            int vendorRating = Integer.parseInt(vendorRatingStr);
+            int runnerRating = Integer.parseInt(runnerRatingStr);
+
+            JOptionPane.showMessageDialog(null,
+                    "Your Ratings for Order " + orderID + ":\n"
+                            + "Food: " + foodRating + " stars\n"
+                            + "Vendor: " + vendorRating + " stars\n"
+                            + "Runner: " + runnerRating + " stars");
+
+            Payment payment = OrderHandling.getPaymentByID(orderID);
+            Customer customer = UserHandling.getCustomerByID(endUser.getID());
+
+            // Step 4: Save each rating separately
+
+            OrderHandling.saveRating(payment, customer, foodRating, Rating.RatingType.FOOD);
+            OrderHandling.saveRating(payment, customer, vendorRating, Rating.RatingType.VENDOR);
+            OrderHandling.saveRating(payment, customer, runnerRating, Rating.RatingType.RUNNER);
+
         }
     }
+
     
     
 

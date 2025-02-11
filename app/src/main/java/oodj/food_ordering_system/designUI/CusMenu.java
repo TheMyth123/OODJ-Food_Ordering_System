@@ -49,7 +49,7 @@ public class CusMenu extends javax.swing.JFrame {
 
         initComponents(vendorID);
     }
-
+// TODO need OOP
     private void addToCart() throws IOException {
         String filePath = FileHandling.filePath.CART_PATH.getValue();
         JSONArray cartArray = new JSONArray();
@@ -97,12 +97,11 @@ public class CusMenu extends javax.swing.JFrame {
             if (!found) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("MenuID", menuID);
-                jsonObject.put("CustomerID", customerID); // Use the customerID field
-                jsonObject.put("name", item[1]);
-                jsonObject.put("description", item[2]);
                 jsonObject.put("quantity", quantityToAdd);
-                jsonObject.put("price", item[4]);
-                jsonObject.put("imagePath", item[5]);
+                double price = Double.parseDouble(item[4].replace("RM", "").trim()); // Remove "RM" prefix and parse to double
+                jsonObject.put("price", price);
+                jsonObject.put("name", item[1]);
+                jsonObject.put("CustomerID", customerID); // Use the customerID field
     
                 cartArray.put(jsonObject);
             }

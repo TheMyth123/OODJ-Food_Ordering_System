@@ -1,3 +1,6 @@
+// TODO discard got error it dlt the upper one
+// when  i make one payment all the items in the cart disappear
+
 package oodj.food_ordering_system.designUI;
 
 
@@ -69,7 +72,7 @@ public class Cart extends javax.swing.JFrame {
         addWindowFocusListener(new java.awt.event.WindowFocusListener() {
             @Override
             public void windowGainedFocus(java.awt.event.WindowEvent evt) {
-                // refreshCart();
+                refreshCart();
             }
             @Override
             public void windowLostFocus(java.awt.event.WindowEvent evt) {
@@ -78,70 +81,7 @@ public class Cart extends javax.swing.JFrame {
         });
         
     }
-    // private void updateCartQuantity(String foodName, int newQuantity) {
-    //         String filePath = FileHandling.filePath.CART_PATH.getValue();
-    //         try {
-    //             String content = new String(Files.readAllBytes(Paths.get(filePath)));
-    //             JSONArray cartArray = new JSONArray(content);
-    //             for (int i = 0; i < cartArray.length(); i++) {
-    //                 JSONObject item = cartArray.getJSONObject(i);
-    //                 if (item.getString("name").equals(foodName)) {
-    //                     System.out.println("Updating quantity for " + foodName + " to " + newQuantity); // Debugging statement
-    //                     item.put("quantity", j);
-    //                 break;
-    //             }
-    //         }
-    //         FileHandling.saveToFile(cartArray, filePath);
-    //         System.out.println("Cart updated successfully."); // Debugging statement
-    //     } catch (IOException e) {
-    //         e.printStackTrace();
-    //     }
-    // }
-
-
-    // private void displayCart(ArrayList<CusOrder> cart) {
-    // // Ensure cartTable is initialized
-    //     if (cartTable == null) {
-    //         cartTable = new JTable(new DefaultTableModel(
-    //             new Object[][]{},
-    //             new String[]{"Menu ID", "Quantity", "Unit Price", "Name"}
-    //         ));
-
-    //         // Enable multiple row selection
-    //         cartTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-    //         cartTable.setRowSelectionAllowed(true);
-    //         cartTable.setColumnSelectionAllowed(false);
-    //     } else {
-    //         cartTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-    //     }
-
-    //     // Modify selection model to allow multiple selections without Ctrl and allow deselecting
-    //     cartTable.setSelectionModel(new DefaultListSelectionModel() {
-    //         @Override
-    //         public void setSelectionInterval(int index0, int index1) {
-    //             if (super.isSelectedIndex(index0)) {
-    //                 super.removeSelectionInterval(index0, index1);  // Deselect if already selected
-    //             } else {
-    //                 super.addSelectionInterval(index0, index1);  // Select if not selected
-    //             }
-    //         }
-    //     });
-
-    //     // Get the table model
-    //     DefaultTableModel model = (DefaultTableModel) cartTable.getModel();
-
-    //     // Clear existing rows
-    //     model.setRowCount(0);
-
-    //     // Add rows for each CusOrder in the cart
-    //     for (CusOrder order : cart) {
-    //         model.addRow(new Object[]{
-    //             order.getMenuID(),
-    //             order.getQuantity(),
-    //             order.getPrice(),
-    //             order.getName(),
-    //         });
-    //     }
+    
     private void displayCart(ArrayList<CusOrder> cart, String endUser) {
         // Ensure cartTable is initialized
         if (cartTable == null) {
@@ -190,7 +130,6 @@ public class Cart extends javax.swing.JFrame {
     
     
 
-        // Add cartTable to title_container1 with a scroll pane
         JScrollPane scrollPane = new JScrollPane(cartTable);
         scrollPane.setPreferredSize(new Dimension(500, 200));
 
@@ -244,14 +183,33 @@ public class Cart extends javax.swing.JFrame {
         // **Discard Button**
         JButton discardButton = new JButton("Discard");
         discardButton.addActionListener(evt -> {
-            int[] selectedRows = cartTable.getSelectedRows();
+            int[] selectedRows = cartTable.getSelectedRows(); // Get selected rows
+
             if (selectedRows.length > 0) {
-                JOptionPane.showMessageDialog(null, "Discarded rows: " + Arrays.toString(selectedRows));
-                // Implement discard logic here
+                ArrayList<CusOrder> cartItems = OrderHandling.getCart(); // Get current cart list
+                // DefaultTableModel tableModel = (DefaultTableModel) cartTable.getModel(); // Table model
+
+                // Convert selected rows into item indices
+                ArrayList<CusOrder> itemsToRemove = new ArrayList<>();
+                for (int rowIndex : selectedRows) {
+                    itemsToRemove.add(cartItems.get(rowIndex));
+                }
+
+                // Remove only the selected items from cart list
+                cartItems.removeAll(itemsToRemove);
+                OrderHandling.saveCart(cartItems); // Save updated cart list
+
+                // Remove rows from JTable
+                for (int i = selectedRows.length - 1; i >= 0; i--) {
+                    model.removeRow(selectedRows[i]); // Remove from the table model
+                }
+
+                JOptionPane.showMessageDialog(null, "Discarded items successfully.");
             } else {
                 JOptionPane.showMessageDialog(null, "Please select items to discard.");
             }
         });
+
 
         // Add buttons to the panel
         buttonPanel.add(payButton);
@@ -291,12 +249,13 @@ public class Cart extends javax.swing.JFrame {
         }
     }
     
-    // public void refreshCart() {
-    //     title_container1.removeAll();  // Clear the cart UI components
-    //     displayCart();            // Reload the cart items
-    //     title_container1.revalidate();  // Refresh layout
-    //     title_container1.repaint();     // Repaint UI
-    // }
+    public void refreshCart() {
+        title_container1.removeAll();  // Clear the cart UI components
+        ArrayList<CusOrder> cart = OrderHandling.getCart();
+        displayCart(cart, endUser.getID());            // Reload the cart items
+        title_container1.revalidate();  // Refresh layout
+        title_container1.repaint();     // Repaint UI
+    }
     
 
     private void checkout(JSONArray orderItems, double totalAmount) throws IOException {

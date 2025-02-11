@@ -175,19 +175,7 @@ public class CusPayment extends javax.swing.JFrame {
             int quantity = orderItem.getInt("quantity");
 
 
-            // String foodName = getFoodNameFromMenu(menuItems, menuID);
-
-
-
-        
-
-            // JLabel foodNameLabel = new JLabel("Food Name: " + name);
-            // foodNameLabel.setForeground(new Color(255, 169, 140));
-            // foodNameLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-            // foodNameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            // m3.add(foodNameLabel);
-
-            // Quantity
+            
             JLabel quantityLabel = new JLabel("Quantity: " + quantity);
             quantityLabel.setForeground(new Color(255, 169, 140));
             quantityLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
@@ -324,9 +312,9 @@ public class CusPayment extends javax.swing.JFrame {
                 String orderID = "OR" + String.format("%05d", OrderHandling.getORid() + 1);
     
                 // Call savePayment to save the payment details
-                OrderHandling.savePayment(orderID, endUser.getID(), orderItems, totalAmount, "Completed", serviceType, address);
+                OrderHandling.savePayment(orderID, endUser.getID(), orderItems, totalAmount, "Completed", serviceType, address, "Pending");
     
-                // Clear the cart file after successful payment
+                // Clear the cart file after successful payment (here got error)
                 Path cartPath = Paths.get(FileHandling.filePath.CART_PATH.getValue());
                 Files.write(cartPath, new JSONArray().toString().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
     

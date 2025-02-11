@@ -620,7 +620,7 @@ public class CusDash extends javax.swing.JFrame {
 
     private void btn_complaintActionPerformed(java.awt.event.ActionEvent evt) {                                            
         dispose();
-        new ComplaintSystem(endUser).setVisible(true);
+        new CustomerComplaint(endUser).setVisible(true);
     }
 
                                                                              
