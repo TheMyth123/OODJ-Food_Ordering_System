@@ -555,7 +555,7 @@ public class OrderHandling {
             }
 
             if (orderUpdated) {
-                FileHandling.writeToFile(ORDER, ordersArray.toString(4), false);
+                FileHandling.writeToFile(ORDER, ordersArray, false);
                 DialogBox.successMessage("Order " + orderID + " status updated to: " + newStatus, "Success");
             } else {
                 DialogBox.errorMessage("Order with ID " + orderID + " not found!", "Error");

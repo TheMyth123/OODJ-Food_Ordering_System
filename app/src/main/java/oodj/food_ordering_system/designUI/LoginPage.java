@@ -141,7 +141,7 @@ public class LoginPage extends javax.swing.JFrame {
                     //setVisible(false);
                     //TODO Develop Vendor Main Menu
                     setVisible(false);
-                    new VendorTest(loginID).setVisible(true); 
+                    //new VendorTest(loginID).setVisible(true); 
                     System.out.println("Vendor: "+username+" Logged In");
                     break;
                 default:

@@ -852,7 +852,7 @@ public class ManageCustomer extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>     
     
-    List<Notification> notifications = NotificationUtils.getAdminUnreadNotifications(NotificationUtils.getAllNotifications());
+    List<Notification> notifications = NotificationUtils.getUnreadNotifications(NotificationUtils.getAllNotifications());
     
     private void btn_NotiActionPerformed(java.awt.event.ActionEvent evt) {                                  
         GlassPanePopup.showPopup(new NotificationPanel(notifications), new DefaultOption(){
