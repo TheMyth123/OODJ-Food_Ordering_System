@@ -9,7 +9,7 @@
     "DOB": "1/January/1910",
     "CustomerID": "CS00001",
     "Gender": "Male",
-    "Balance": 544,
+    "Balance": 449,
     "Name": "c",
     "Password": "a55555"
   },

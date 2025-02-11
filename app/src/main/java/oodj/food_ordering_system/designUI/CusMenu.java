@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import oodj.food_ordering_system.models.Menu;
+import oodj.food_ordering_system.utils.DialogBox;
 // TODO import dialog box after added cart
 // import oodj.food_ordering_system.utils.DialogBox;
 import oodj.food_ordering_system.utils.FileHandling;
@@ -18,6 +19,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +31,14 @@ import java.util.Map;
 public class CusMenu extends javax.swing.JFrame {
 
     private JPanel menuPanel;
+    private JPanel itemsPanel;
     
     private String[] selectedItem;
     private List<String[]> cart;
     private JPanel selectedItemPanel;
     private String customerID;
     private Map<String, Integer> itemQuantities;
+    private List<Menu> menuItems; // Store all menu items globally
 
     
     
@@ -48,6 +53,7 @@ public class CusMenu extends javax.swing.JFrame {
 
 
         initComponents(vendorID);
+        
     }
 // TODO need OOP
     private void addToCart() throws IOException {
@@ -208,6 +214,8 @@ public class CusMenu extends javax.swing.JFrame {
         
         addContainer = new javax.swing.JPanel();
         addButton = new javax.swing.JButton();
+
+        
     
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(31, 31, 31));
@@ -274,6 +282,10 @@ public class CusMenu extends javax.swing.JFrame {
             }
         });
         back_icon.add(backBtn);
+
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        titlePanel.setBackground(new java.awt.Color(25, 25, 25));
+        titlePanel.setPreferredSize(new Dimension(800, 50));
     
         title.setBackground(new java.awt.Color(25, 25, 25));
         title.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -284,9 +296,58 @@ public class CusMenu extends javax.swing.JFrame {
         title.setMaximumSize(new java.awt.Dimension(694, 50));
         title.setMinimumSize(new java.awt.Dimension(694, 50));
         title.setPreferredSize(new java.awt.Dimension(694, 50));
+        
+        // Title Panel
+        
+
+        
+
+        // Search Panel (Right-Aligned)
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JTextField searchField = new JTextField();
+        searchField.setPreferredSize(new Dimension(200, 30));
+
+        JButton searchButton = new JButton("Search");
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String searchTerm = searchField.getText().trim().toLowerCase();
+            List<Menu> filteredItems = new ArrayList<>();
+        
+            for (Menu item : menuItems) {
+                if (searchTerm.isEmpty() || item.getName().toLowerCase().contains(searchTerm)) {
+                    filteredItems.add(item); // Add matching items
+                }
+            }
+        
+            // If no match, show all items
+            if (filteredItems.isEmpty()) {
+                DialogBox.errorMessage("No matches found.", "Error");
+                displayMenuItems(menuItems); // Reset to all items
+            } else {
+                displayMenuItems(filteredItems);
+            }
+            }
+        });
+
+        // Add search components
+        searchPanel.add(searchField);
+        searchPanel.add(searchButton);
+
+        // Add title and search panel to titlePanel
+        titlePanel.add(title, BorderLayout.CENTER);
+        titlePanel.add(searchPanel, BorderLayout.EAST);
+        titlePanel.add(back_icon, BorderLayout.WEST);
+
+        // Add titlePanel to wrapper
+        wrapper.add(titlePanel);
+
+        
+
+        
         back_icon.add(title);
     
-        wrapper.add(back_icon);
+        // wrapper.add(back_icon);
     
         m3.setBackground(new java.awt.Color(25, 25, 25));
         m3.setMaximumSize(new java.awt.Dimension(800, 30));
@@ -510,6 +571,61 @@ public class CusMenu extends javax.swing.JFrame {
         public List<String[]> getCart() {
             return cart;
         }
+
+        private void displayMenuItems(List<Menu> items) {
+            itemsPanel.removeAll(); // Clear previous items
+        
+            for (Menu item : items) {
+                JPanel itemPanel = new JPanel();
+                itemPanel.setLayout(new BorderLayout());
+                itemPanel.setBackground(new Color(43, 43, 43));
+                itemPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+                itemPanel.setPreferredSize(new Dimension(300, 155));
+        
+                JPanel detailsPanel = new JPanel();
+                detailsPanel.setLayout(new BoxLayout(detailsPanel, BoxLayout.Y_AXIS));
+                detailsPanel.setBackground(new Color(43, 43, 43));
+        
+                JLabel nameLabel = new JLabel(item.getName());
+                nameLabel.setForeground(new Color(255, 169, 140));
+                nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
+                detailsPanel.add(nameLabel);
+        
+                JLabel descriptionLabel = new JLabel(item.getDescription());
+                descriptionLabel.setForeground(new Color(255, 169, 140));
+                descriptionLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+                detailsPanel.add(descriptionLabel);
+        
+                JLabel priceLabel = new JLabel("Price: " + item.getPrice());
+                priceLabel.setForeground(new Color(255, 169, 140));
+                priceLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+                detailsPanel.add(priceLabel);
+        
+                itemPanel.add(detailsPanel, BorderLayout.CENTER);
+        
+                // Load Image
+                String imagePath = OrderHandling.getImagePathByMenuID(item.getId());
+                if (imagePath != null) {
+                    URL imageUrl = getClass().getResource(imagePath);
+                    if (imageUrl != null) {
+                        ImageIcon originalIcon = new ImageIcon(imageUrl);
+                        Image resizedImage = originalIcon.getImage().getScaledInstance(120, 90, Image.SCALE_SMOOTH);
+                        JLabel imageLabel = new JLabel(new ImageIcon(resizedImage));
+                        imageLabel.setPreferredSize(new Dimension(120, 90));
+                        itemPanel.add(imageLabel, BorderLayout.NORTH);
+                    }
+                }
+        
+                itemsPanel.add(itemPanel);
+            }
+        
+            itemsPanel.revalidate();
+            itemsPanel.repaint();
+        }
+        
+
+        
+        
         
 
   

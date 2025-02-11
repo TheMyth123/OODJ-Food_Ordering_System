@@ -2,19 +2,32 @@ package oodj.food_ordering_system.designUI;
 
 import oodj.food_ordering_system.models.Customer;
 import oodj.food_ordering_system.models.Notification;
+import oodj.food_ordering_system.models.Vendor;
 // import oodj.food_ordering_system.models.Notification;
 import oodj.food_ordering_system.utils.DialogBox;
 import oodj.food_ordering_system.utils.NotificationUtils;
+import oodj.food_ordering_system.utils.UserHandling;
 // import oodj.food_ordering_system.utils.NotificationUtils;
 import raven.glasspanepopup.*;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 
 // import java.util.List;
 
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
@@ -26,6 +39,9 @@ public class CusDash extends javax.swing.JFrame {
 
     private Customer endUser;
     private List<Notification> notifications;
+    private JTextField searchField;
+    private JButton searchButton;
+    private ArrayList<Vendor> vendors;
 
 // add run method
     // public static void run() {
@@ -36,7 +52,12 @@ public class CusDash extends javax.swing.JFrame {
 
 // TODO check again customerID
     public CusDash() {
-        this.endUser = LoginPage.getEndUser();        
+
+        this.endUser = LoginPage.getEndUser();      
+        vendors = UserHandling.getVendors(); // ✅ Initialize vendors list here
+        if (vendors == null) {
+            vendors = new ArrayList<>(); // ✅ Prevent NullPointerException
+        }  
         System.out.println("CusDash initialized with customerID: " + endUser.getID()); // Debugging statement
 
         initComponents();
@@ -51,12 +72,44 @@ public class CusDash extends javax.swing.JFrame {
         customer_username.setText(endUser.getUsername());
     }
 
+    private void searchFCourt() {
+        String name = searchField.getText().trim().toLowerCase(); // Convert to lowercase for case-insensitive search
+        List<Vendor> filteredVendors = new ArrayList<>();
+    
+        for (Vendor vendor : vendors) {
+            if (name.isEmpty() || vendor.getFoodCourtName().toLowerCase().contains(name)) { // Partial search
+                filteredVendors.add(vendor);
+            }
+        }
+    
+        if (filteredVendors.isEmpty()) {
+            DialogBox.errorMessage("No matches found.", "Error");
+            CusFCourt.displayVendors(vendors); // Reset to all vendors if no match
+        } else {
+            CusFCourt.displayVendors(filteredVendors);
+        }
+    }
+    
+
     private void addRestaurantPanel() {
+        searchField = new JTextField();
+        searchField.setPreferredSize(new java.awt.Dimension(200, 30));
+
+        searchButton = new JButton("Search");
+        searchButton.addActionListener(evt -> searchFCourt());
+
+        JPanel searchPanel = new JPanel(new BorderLayout());
+        searchPanel.add(searchField, BorderLayout.CENTER);
+        searchPanel.add(searchButton, BorderLayout.EAST);
+    
+        title_container1.add(searchPanel, BorderLayout.NORTH);
+
+
         CusFCourt cusRestaurant = new CusFCourt();
         JPanel mainPanel = cusRestaurant.getMainPanel();
         title_container1.add(mainPanel);
     }
-
+    
 
 
 

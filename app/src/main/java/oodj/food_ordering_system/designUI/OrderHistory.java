@@ -20,6 +20,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +37,9 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JScrollPane;
 import org.json.JSONArray;
@@ -72,46 +76,141 @@ public class OrderHistory extends javax.swing.JFrame {
         
     }
 
+    // private void displayHistory(ArrayList<Payment> paymentList, String endUserID) {
+    // // Ensure historyTable is initialized
+    //     if (historyTable == null) {
+    //         historyTable = new JTable(new DefaultTableModel(
+    //             new Object[][]{},
+    //             new String[]{"Order ID", "Service Type", "Delivery Address", "Total Amount", "Date", "Order Status", "Payment Status"}
+    //         ));
+        
+    //     }
+
+    //     DefaultTableModel model = (DefaultTableModel) historyTable.getModel();
+
+
+        
+
+    //     // Clear existing rows
+    //     model.setRowCount(0);
+
+    //     // Populate the table only for the specified customer
+    //     for (Payment payment : paymentList) {
+    //         if (payment.getCustomerID().equals(endUserID)) {  // Check if the customer ID matches
+    //               // Assuming getOrderItems() returns a list of CusOrder objects
+    //                 model.addRow(new Object[]{
+    //                     payment.getOrderID(),
+    //                     payment.getServiceType(),
+    //                     payment.getAddress(), // Ensure this field exists in Payment class
+    //                     payment.getTotalAmount(),
+    //                     payment.getDate(), // Ensure this field exists in Payment class
+    //                     payment.getOrderStatus(), // Ensure this field exists in Payment class
+    //                     payment.getPaymentStatus() // Ensure this field exists in Payment class
+    //                 });
+                
+    //         }
+    //     }
+
+
+    //     // Add table to scroll pane
+    //     JScrollPane scrollPane = new JScrollPane(historyTable);
+    //     scrollPane.setPreferredSize(new Dimension(500, 200));
+        
+    //     JButton rateButton = new JButton("Rate");
+    //     rateButton.addActionListener(e -> {
+    //         int selectedRow = historyTable.getSelectedRow();
+    //         if (selectedRow != -1) {
+    //             String selectedOrderID = model.getValueAt(selectedRow, 0).toString();
+    //             showRatingDialog(selectedOrderID);
+    //         } else {
+    //             JOptionPane.showMessageDialog(null, "Please select an order to rate.");
+    //         }
+    //     });
+    //     JPanel buttonPanel = new JPanel();
+    //     buttonPanel.add(rateButton);
+
+    //     // Add components to main container
+    //     title_container1.removeAll();
+    //     title_container1.setLayout(new BorderLayout());
+    //     title_container1.add(scrollPane, BorderLayout.CENTER);
+    //     title_container1.add(buttonPanel, BorderLayout.SOUTH);
+    //     title_container1.revalidate();
+    //     title_container1.repaint();
+    // }
+
     private void displayHistory(ArrayList<Payment> paymentList, String endUserID) {
-    // Ensure historyTable is initialized
+        // Ensure historyTable is initialized
         if (historyTable == null) {
             historyTable = new JTable(new DefaultTableModel(
                 new Object[][]{},
                 new String[]{"Order ID", "Service Type", "Delivery Address", "Total Amount", "Date", "Order Status", "Payment Status"}
             ));
-        
         }
 
         DefaultTableModel model = (DefaultTableModel) historyTable.getModel();
-
-
-        
 
         // Clear existing rows
         model.setRowCount(0);
 
         // Populate the table only for the specified customer
         for (Payment payment : paymentList) {
-            if (payment.getCustomerID().equals(endUserID)) {  // Check if the customer ID matches
-                  // Assuming getOrderItems() returns a list of CusOrder objects
-                    model.addRow(new Object[]{
-                        payment.getOrderID(),
-                        payment.getServiceType(),
-                        payment.getAddress(), // Ensure this field exists in Payment class
-                        payment.getTotalAmount(),
-                        payment.getDate(), // Ensure this field exists in Payment class
-                        payment.getOrderStatus(), // Ensure this field exists in Payment class
-                        payment.getPaymentStatus() // Ensure this field exists in Payment class
-                    });
-                
+            if (payment.getCustomerID().equals(endUserID)) {
+                model.addRow(new Object[]{
+                    payment.getOrderID(),
+                    payment.getServiceType(),
+                    payment.getAddress(),
+                    payment.getTotalAmount(),
+                    payment.getDate(),
+                    payment.getOrderStatus(),
+                    payment.getPaymentStatus()
+                });
             }
         }
 
+        // **Search Field and Button**
+        JTextField searchField = new JTextField();
+        searchField.setPreferredSize(new Dimension(200, 30));
 
-        // Add table to scroll pane
+        JButton searchButton = new JButton("Search");
+
+        // **Set TableRowSorter for Filtering**
+        TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
+        historyTable.setRowSorter(rowSorter);
+
+        // **Search Button Click Event**
+        searchButton.addActionListener(e -> {
+            String searchTerm = searchField.getText().trim();
+            if (searchTerm.isEmpty()) {
+                rowSorter.setRowFilter(null); // ✅ Show all rows when search is empty
+            } else {
+                rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm)); // Case-insensitive search
+            }
+        });
+
+        // **Real-Time Search (While Typing)**
+        searchField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                String searchTerm = searchField.getText().trim();
+                if (searchTerm.isEmpty()) {
+                    rowSorter.setRowFilter(null); // ✅ Show all rows when search is cleared
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm)); // Case-insensitive search
+                }
+            }
+        });
+
+        // **Create Search Panel**
+        JPanel searchPanel = new JPanel();
+        searchPanel.add(new JLabel("Search:"));
+        searchPanel.add(searchField);
+        searchPanel.add(searchButton);
+
+        // **Scroll Pane for Order History Table**
         JScrollPane scrollPane = new JScrollPane(historyTable);
         scrollPane.setPreferredSize(new Dimension(500, 200));
-        
+
+        // **Rate Button**
         JButton rateButton = new JButton("Rate");
         rateButton.addActionListener(e -> {
             int selectedRow = historyTable.getSelectedRow();
@@ -122,17 +221,20 @@ public class OrderHistory extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Please select an order to rate.");
             }
         });
+
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(rateButton);
 
-        // Add components to main container
+        // **Update UI**
         title_container1.removeAll();
         title_container1.setLayout(new BorderLayout());
+        title_container1.add(searchPanel, BorderLayout.NORTH); // ✅ Search Panel at the Top
         title_container1.add(scrollPane, BorderLayout.CENTER);
         title_container1.add(buttonPanel, BorderLayout.SOUTH);
         title_container1.revalidate();
         title_container1.repaint();
     }
+
 
     // private void showRatingDialog(String orderID) {
     //     String[] ratings = {"1", "2", "3", "4", "5"};

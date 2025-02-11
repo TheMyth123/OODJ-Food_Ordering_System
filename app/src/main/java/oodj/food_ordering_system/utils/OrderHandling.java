@@ -210,6 +210,34 @@ public class OrderHandling {
         FileHandling.saveToFile(cartArray, CART); // Write updated cart list
     }
 
+    public static void updateCart(ArrayList<CusOrder> cartItems, String customerID) {
+        JSONArray cartArray = new JSONArray();
+    
+        ArrayList<CusOrder> allCartItems = getCart(); // Get all items from the cart file
+    
+        for (CusOrder order : allCartItems) {
+            // Only modify items belonging to the logged-in customer
+            if (order.getCustomer().getID().equals(customerID)) {
+                if (!cartItems.contains(order)) {
+                    continue; // Skip items that were removed
+                }
+            }
+    
+            // Keep other customers' items intact
+            JSONObject obj = new JSONObject();
+            obj.put("MenuID", order.getMenuID());
+            obj.put("quantity", order.getQuantity());
+            obj.put("price", order.getPrice());
+            obj.put("name", order.getName());
+            obj.put("CustomerID", order.getCustomer().getID());
+    
+            cartArray.put(obj);
+        }
+    
+        FileHandling.saveToFile(cartArray, CART); // Write the updated cart list
+    }
+    
+    
 
     public static ArrayList<Credit> getCredits() {
         ArrayList<Credit> buffer = new ArrayList<>();

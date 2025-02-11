@@ -12,6 +12,7 @@ import oodj.food_ordering_system.utils.DialogBox;
 import oodj.food_ordering_system.utils.FileHandling;
 import oodj.food_ordering_system.utils.NotificationUtils;
 import oodj.food_ordering_system.utils.OrderHandling;
+import oodj.food_ordering_system.utils.UserHandling;
 import raven.glasspanepopup.*;
 
 import static oodj.food_ordering_system.designUI.LoginPage.loginID;
@@ -24,6 +25,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -44,7 +47,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -82,6 +88,275 @@ public class Cart extends javax.swing.JFrame {
         
     }
     
+    // private void displayCart(ArrayList<CusOrder> cart, String endUser) {
+    //     // Ensure cartTable is initialized
+    //     if (cartTable == null) {
+    //         cartTable = new JTable(new DefaultTableModel(
+    //             new Object[][]{},
+    //             new String[]{"Menu ID", "Quantity", "Unit Price", "Name"}
+    //         ));
+    
+    //         // Enable multiple row selection
+    //         cartTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+    //         cartTable.setRowSelectionAllowed(true);
+    //         cartTable.setColumnSelectionAllowed(false);
+    //     } else {
+    //         cartTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+    //     }
+    
+    //     // Modify selection model to allow multiple selections without Ctrl and allow deselecting
+    //     cartTable.setSelectionModel(new DefaultListSelectionModel() {
+    //         @Override
+    //         public void setSelectionInterval(int index0, int index1) {
+    //             if (super.isSelectedIndex(index0)) {
+    //                 super.removeSelectionInterval(index0, index1);  // Deselect if already selected
+    //             } else {
+    //                 super.addSelectionInterval(index0, index1);  // Select if not selected
+    //             }
+    //         }
+    //     });
+    
+   //     // Get the table model
+    //     DefaultTableModel model = (DefaultTableModel) cartTable.getModel();
+    
+    //     // Clear existing rows
+    //     model.setRowCount(0);
+    
+    //     // Add rows only if CustomerID matches endUser
+    //     for (CusOrder order : cart) {
+    //         if (order.getCustomer().getID().equals(endUser)) {  // Check if the customer ID matches
+    //             model.addRow(new Object[]{
+    //                 order.getMenuID(),
+    //                 order.getQuantity(),
+    //                 order.getPrice(),
+    //                 order.getName(),
+    //             });
+    //         }
+    //     }
+    
+    
+
+    //     JScrollPane scrollPane = new JScrollPane(cartTable);
+    //     scrollPane.setPreferredSize(new Dimension(500, 200));
+
+    //     JPanel buttonPanel = new JPanel();
+    //     buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+
+    //     // **Pay Button**
+    //     JButton payButton = new JButton("Pay");
+    //     payButton.addActionListener(evt -> {
+    //         int[] selectedRows = cartTable.getSelectedRows();
+    //         if (selectedRows.length > 0) {
+    //             double totalAmount = 0; // Initialize total amount
+        
+    //             DefaultTableModel tableModel = (DefaultTableModel) cartTable.getModel();
+                
+    //             JSONArray orderItems = new JSONArray();
+        
+    //             for (int row : selectedRows) {
+    //                 String menuID = tableModel.getValueAt(row, 0).toString();
+    //                 int quantity = Integer.parseInt(tableModel.getValueAt(row, 1).toString());
+    //                 double price = Double.parseDouble(tableModel.getValueAt(row, 2).toString());
+        
+    //                 double itemTotal = quantity * price;  // Calculate item total
+    //                 totalAmount += itemTotal;  // Add to total amount
+        
+    //                 JSONObject orderItem = new JSONObject();
+    //                 orderItem.put("menuID", menuID);
+    //                 orderItem.put("quantity", quantity);
+    //                 orderItem.put("price", price);
+    //                 orderItem.put("totalPrice", itemTotal);
+        
+    //                 orderItems.put(orderItem);
+    //             }
+        
+    //             JOptionPane.showMessageDialog(null, "Total Amount: RM" + totalAmount);
+        
+            
+    //             try {
+    //                 checkout(orderItems, totalAmount);
+    //             } catch (IOException e) {
+    //                 // TODO Auto-generated catch block
+    //                 e.printStackTrace();
+    //             }
+                
+    //         } else {
+    //             JOptionPane.showMessageDialog(null, "Please select items to pay for.");
+    //         }
+    //     });
+
+    // private void displayCart(ArrayList<CusOrder> cart, String endUser) {
+    //     // Ensure cartTable is initialized
+    //     if (cartTable == null) {
+    //         cartTable = new JTable(new DefaultTableModel(
+    //             new Object[][]{},
+    //             new String[]{"Menu ID", "Quantity", "Unit Price", "Name"}
+    //         ));
+    
+    //         // Enable multiple row selection
+    //         cartTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+    //         cartTable.setRowSelectionAllowed(true);
+    //         cartTable.setColumnSelectionAllowed(false);
+    //     } else {
+    //         cartTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+    //     }
+    
+    //     // Modify selection model to allow multiple selections without Ctrl and allow deselecting
+    //     cartTable.setSelectionModel(new DefaultListSelectionModel() {
+    //         @Override
+    //         public void setSelectionInterval(int index0, int index1) {
+    //             if (super.isSelectedIndex(index0)) {
+    //                 super.removeSelectionInterval(index0, index1);  // Deselect if already selected
+    //             } else {
+    //                 super.addSelectionInterval(index0, index1);  // Select if not selected
+    //             }
+    //         }
+    //     });
+    
+    //     // Get the table model
+    //     DefaultTableModel model = (DefaultTableModel) cartTable.getModel();
+    
+    //     // Clear existing rows
+    //     model.setRowCount(0);
+    
+    //     // Add rows only if CustomerID matches endUser
+    //     for (CusOrder order : cart) {
+    //         if (order.getCustomer().getID().equals(endUser)) {  // Check if the customer ID matches
+    //             model.addRow(new Object[]{
+    //                 order.getMenuID(),
+    //                 order.getQuantity(),
+    //                 order.getPrice(),
+    //                 order.getName(),
+    //             });
+    //         }
+    //     }
+    
+    //     // **Search Field and Button**
+    //     JTextField searchField = new JTextField();
+    //     searchField.setPreferredSize(new Dimension(200, 30));
+    
+    //     JButton searchButton = new JButton("Search");
+    
+    //     // **Set TableRowSorter (AFTER initializing cartTable)**
+    //     TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
+    //     cartTable.setRowSorter(rowSorter);
+    
+    //     searchButton.addActionListener(new ActionListener() {
+    //         @Override
+    //         public void actionPerformed(ActionEvent e) {
+    //             String searchTerm = searchField.getText().trim();
+    //             if (searchTerm.isEmpty()) {
+    //                 rowSorter.setRowFilter(null); // Show all rows if search is empty
+    //             } else {
+    //                 rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm)); // Case-insensitive search
+    //             }
+    //         }
+    //     });
+    
+    //     // **UI Layout**
+    //     JPanel searchPanel = new JPanel();
+    //     searchPanel.add(new JLabel("Search:"));
+
+    //     searchPanel.add(searchField);
+    //     searchPanel.add(searchButton);
+    
+    //     JScrollPane scrollPane = new JScrollPane(cartTable);
+    //     scrollPane.setPreferredSize(new Dimension(500, 200));
+    
+    //     // **Add Components to Main Panel**
+    //     // JPanel mainPanel = new JPanel(new BorderLayout());
+    //     title_container1.add(searchPanel, BorderLayout.NORTH);
+    //     title_container1.add(scrollPane, BorderLayout.CENTER);
+    
+    //     // Display the main panel
+    //     // JOptionPane.showMessageDialog(null, mainPanel, "Cart", JOptionPane.PLAIN_MESSAGE);
+    
+    
+    //     scrollPane.setPreferredSize(new Dimension(500, 200));
+
+    //     JPanel buttonPanel = new JPanel();
+    //     buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+
+    //     // **Pay Button**
+    //     JButton payButton = new JButton("Pay");
+    //     payButton.addActionListener(evt -> {
+    //         int[] selectedRows = cartTable.getSelectedRows();
+    //         if (selectedRows.length > 0) {
+    //             double totalAmount = 0; // Initialize total amount
+        
+    //             DefaultTableModel tableModel = (DefaultTableModel) cartTable.getModel();
+                
+    //             JSONArray orderItems = new JSONArray();
+        
+    //             for (int row : selectedRows) {
+    //                 String menuID = tableModel.getValueAt(row, 0).toString();
+    //                 int quantity = Integer.parseInt(tableModel.getValueAt(row, 1).toString());
+    //                 double price = Double.parseDouble(tableModel.getValueAt(row, 2).toString());
+        
+    //                 double itemTotal = quantity * price;  // Calculate item total
+    //                 totalAmount += itemTotal;  // Add to total amount
+        
+    //                 JSONObject orderItem = new JSONObject();
+    //                 orderItem.put("menuID", menuID);
+    //                 orderItem.put("quantity", quantity);
+    //                 orderItem.put("price", price);
+    //                 orderItem.put("totalPrice", itemTotal);
+        
+    //                 orderItems.put(orderItem);
+    //             }
+        
+    //             JOptionPane.showMessageDialog(null, "Total Amount: RM" + totalAmount);
+        
+            
+    //             try {
+    //                 checkout(orderItems, totalAmount);
+    //             } catch (IOException e) {
+    //                 // TODO Auto-generated catch block
+    //                 e.printStackTrace();
+    //             }
+                
+    //         } else {
+    //             JOptionPane.showMessageDialog(null, "Please select items to pay for.");
+    //         }
+    //     });
+
+    //     // **Discard Button**
+    //     JButton discardButton = new JButton("Discard");
+    //     discardButton.addActionListener(evt -> {
+    //         int[] selectedRows = cartTable.getSelectedRows();
+    //         if (selectedRows.length > 0) {
+    //             DefaultTableModel tableModel = (DefaultTableModel) cartTable.getModel();
+    //             ArrayList<CusOrder> cartItems = OrderHandling.getCart();
+    //             for (int row : selectedRows) {
+    //                 String menuID = tableModel.getValueAt(row, 0).toString();
+    //                 for (CusOrder order : cartItems) {
+    //                     if (order.getMenuID().equals(menuID) && order.getCustomer().getID().equals(endUser)) {
+    //                         cartItems.remove(order);
+    //                         break;
+    //                     }
+    //                 }
+    //             }
+    //             OrderHandling.updateCart(cartItems, endUser); // Save updated cart list
+    //             refreshCart();
+    //         } else {
+    //             JOptionPane.showMessageDialog(null, "Please select items to discard.");
+    //         }
+    //     });
+
+
+    //     // Add buttons to the panel
+    //     buttonPanel.add(payButton);
+    //     buttonPanel.add(discardButton);
+
+    //     title_container1.removeAll(); // Remove previous content
+    //     title_container1.setLayout(new BorderLayout()); // Set layout manager
+    //     title_container1.add(scrollPane, BorderLayout.CENTER); // Add scroll pane
+    //     title_container1.add(buttonPanel, BorderLayout.SOUTH); // Add button panel
+        
+    //     title_container1.revalidate(); // Revalidate to refresh
+    //     title_container1.repaint();   // Repaint to update UI
+    // }
+
     private void displayCart(ArrayList<CusOrder> cart, String endUser) {
         // Ensure cartTable is initialized
         if (cartTable == null) {
@@ -89,7 +364,7 @@ public class Cart extends javax.swing.JFrame {
                 new Object[][]{},
                 new String[]{"Menu ID", "Quantity", "Unit Price", "Name"}
             ));
-    
+        
             // Enable multiple row selection
             cartTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
             cartTable.setRowSelectionAllowed(true);
@@ -118,7 +393,7 @@ public class Cart extends javax.swing.JFrame {
     
         // Add rows only if CustomerID matches endUser
         for (CusOrder order : cart) {
-            if (order.getCustomer().getID().equals(endUser)) {  // Check if the customer ID matches
+            if (order.getCustomer().getID().equals(endUser)) {
                 model.addRow(new Object[]{
                     order.getMenuID(),
                     order.getQuantity(),
@@ -128,100 +403,130 @@ public class Cart extends javax.swing.JFrame {
             }
         }
     
+        // **Search Field and Button**
+        JTextField searchField = new JTextField();
+        searchField.setPreferredSize(new Dimension(200, 30));
     
+        JButton searchButton = new JButton("Search");
+    
+        // **Set TableRowSorter (AFTER initializing cartTable)**
+        TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
+        cartTable.setRowSorter(rowSorter);
+    
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String searchTerm = searchField.getText().trim();
+                if (searchTerm.isEmpty()) {
+                    rowSorter.setRowFilter(null); // Show all rows if search is empty
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm)); // Case-insensitive search
+                }
+            }
+        });
 
+        searchField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                String searchTerm = searchField.getText().trim();
+        
+                if (searchTerm.isEmpty()) {
+                    rowSorter.setRowFilter(null); // ✅ Show all rows when search is cleared
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm)); // Case-insensitive search
+                }
+            }
+        });
+    
+        // **Create Search Panel**
+        JPanel searchPanel = new JPanel();
+        searchPanel.add(new JLabel("Search:"));
+        searchPanel.add(searchField);
+        searchPanel.add(searchButton);
+    
         JScrollPane scrollPane = new JScrollPane(cartTable);
         scrollPane.setPreferredSize(new Dimension(500, 200));
-
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-
+    
         // **Pay Button**
         JButton payButton = new JButton("Pay");
         payButton.addActionListener(evt -> {
             int[] selectedRows = cartTable.getSelectedRows();
             if (selectedRows.length > 0) {
                 double totalAmount = 0; // Initialize total amount
-        
+    
                 DefaultTableModel tableModel = (DefaultTableModel) cartTable.getModel();
                 
                 JSONArray orderItems = new JSONArray();
-        
+    
                 for (int row : selectedRows) {
                     String menuID = tableModel.getValueAt(row, 0).toString();
                     int quantity = Integer.parseInt(tableModel.getValueAt(row, 1).toString());
                     double price = Double.parseDouble(tableModel.getValueAt(row, 2).toString());
-        
+    
                     double itemTotal = quantity * price;  // Calculate item total
                     totalAmount += itemTotal;  // Add to total amount
-        
+    
                     JSONObject orderItem = new JSONObject();
                     orderItem.put("menuID", menuID);
                     orderItem.put("quantity", quantity);
                     orderItem.put("price", price);
                     orderItem.put("totalPrice", itemTotal);
-        
+    
                     orderItems.put(orderItem);
                 }
-        
+    
                 JOptionPane.showMessageDialog(null, "Total Amount: RM" + totalAmount);
-        
-            
+    
                 try {
                     checkout(orderItems, totalAmount);
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                
+    
             } else {
                 JOptionPane.showMessageDialog(null, "Please select items to pay for.");
             }
         });
-        
-
+    
         // **Discard Button**
         JButton discardButton = new JButton("Discard");
         discardButton.addActionListener(evt -> {
-            int[] selectedRows = cartTable.getSelectedRows(); // Get selected rows
-
+            int[] selectedRows = cartTable.getSelectedRows();
             if (selectedRows.length > 0) {
-                ArrayList<CusOrder> cartItems = OrderHandling.getCart(); // Get current cart list
-                // DefaultTableModel tableModel = (DefaultTableModel) cartTable.getModel(); // Table model
-
-                // Convert selected rows into item indices
-                ArrayList<CusOrder> itemsToRemove = new ArrayList<>();
-                for (int rowIndex : selectedRows) {
-                    itemsToRemove.add(cartItems.get(rowIndex));
+                DefaultTableModel tableModel = (DefaultTableModel) cartTable.getModel();
+                ArrayList<CusOrder> cartItems = OrderHandling.getCart();
+                for (int row : selectedRows) {
+                    String menuID = tableModel.getValueAt(row, 0).toString();
+                    for (CusOrder order : cartItems) {
+                        if (order.getMenuID().equals(menuID) && order.getCustomer().getID().equals(endUser)) {
+                            cartItems.remove(order);
+                            break;
+                        }
+                    }
                 }
-
-                // Remove only the selected items from cart list
-                cartItems.removeAll(itemsToRemove);
-                OrderHandling.saveCart(cartItems); // Save updated cart list
-
-                // Remove rows from JTable
-                for (int i = selectedRows.length - 1; i >= 0; i--) {
-                    model.removeRow(selectedRows[i]); // Remove from the table model
-                }
-
-                JOptionPane.showMessageDialog(null, "Discarded items successfully.");
+                OrderHandling.updateCart(cartItems, endUser); // Save updated cart list
+                refreshCart();
             } else {
                 JOptionPane.showMessageDialog(null, "Please select items to discard.");
             }
         });
-
-
-        // Add buttons to the panel
+    
+        // **Button Panel**
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonPanel.add(payButton);
         buttonPanel.add(discardButton);
-
-        title_container1.removeAll(); // Remove previous content
-        title_container1.setLayout(new BorderLayout()); // Set layout manager
-        title_container1.add(scrollPane, BorderLayout.CENTER); // Add scroll pane
-        title_container1.add(buttonPanel, BorderLayout.SOUTH); // Add button panel
-        title_container1.revalidate(); // Revalidate to refresh
-        title_container1.repaint();   // Repaint to update UI
+    
+        // **Fix: Remove Everything and Re-add Properly**
+        title_container1.removeAll();  // Clear previous content
+        title_container1.setLayout(new BorderLayout());  // Set layout manager
+        title_container1.add(searchPanel, BorderLayout.NORTH); // **Make sure search panel is re-added**
+        title_container1.add(scrollPane, BorderLayout.CENTER); // Add table
+        title_container1.add(buttonPanel, BorderLayout.SOUTH); // Add buttons
+    
+        title_container1.revalidate(); // **Refresh UI**
+        title_container1.repaint();   // **Update UI**
     }
+    
 
     
     // Method to update the quantity in the cart
@@ -300,19 +605,54 @@ public class Cart extends javax.swing.JFrame {
                 break;
             }
         }
-    
+
         if (customerCredit != null) {
-            // Open payment page
-            new CusPayment(
-                "ORDER" + System.currentTimeMillis(),  // Auto-generate Order ID
+            // **Get the cart list**
+            ArrayList<CusOrder> cartItems = OrderHandling.getCart();
+            DefaultTableModel tableModel = (DefaultTableModel) cartTable.getModel();
+        
+            // Convert selected rows into items to be removed
+            ArrayList<CusOrder> itemsToRemove = new ArrayList<>();
+            int[] selectedRows = cartTable.getSelectedRows();
+            for (int rowIndex : selectedRows) {
+                String menuID = tableModel.getValueAt(rowIndex, 0).toString();
+                for (CusOrder order : cartItems) {
+                    if (order.getMenuID().equals(menuID) && order.getCustomer().getID().equals(endUser.getID())) {
+                        itemsToRemove.add(order);
+                        break;
+                    }
+                }
+            }
+        
+            // **Open payment page first, do NOT remove items yet**
+            CusPayment paymentWindow = new CusPayment(
+                "OR" + String.format("%05d", OrderHandling.getORid() + 1),  // Auto-generate Order ID
                 orderItems, endUser,
                 totalAmount,
                 "Completed",
                 serviceType
-            ).setVisible(true);
+            );
+        
+            // **Wait for payment window to close before removing items**
+            paymentWindow.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent e) {
+                    // **Now remove items from cart AFTER payment is done**
+                    cartItems.removeAll(itemsToRemove);
+                    OrderHandling.updateCart(cartItems, endUser.getID()); // Save updated cart list
+                    
+                    // Refresh UI after payment
+                    SwingUtilities.invokeLater(() -> refreshCart());
+                }
+            });
+        
+            paymentWindow.setVisible(true);
+        
         } else {
             JOptionPane.showMessageDialog(this, "Credit information not found for customer ID: " + endUser.getID(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+        
+
     }
     
     
@@ -646,8 +986,25 @@ public class Cart extends javax.swing.JFrame {
 
         title_container.add(m5);
 
-        // TODO title container add credit
+        // // TODO title container add credit
 
+        // welcome.setBackground(new java.awt.Color(31, 31, 31));
+        // welcome.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        // welcome.setForeground(new java.awt.Color(255, 169, 140));
+        // welcome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        // welcome.setText("Cart");
+        // welcome.setAlignmentX(0.5F);
+        // welcome.setMaximumSize(new java.awt.Dimension(50, 50));
+        // welcome.setMinimumSize(new java.awt.Dimension(50, 50));
+        // welcome.setPreferredSize(new java.awt.Dimension(50, 50));
+
+        // JPanel titlePanel = new JPanel(new BorderLayout());
+        // titlePanel.setBackground(new java.awt.Color(31, 31, 31));
+        // titlePanel.setMaximumSize(new java.awt.Dimension(850, 50));
+        // titlePanel.setMinimumSize(new java.awt.Dimension(850, 50));
+        // titlePanel.setPreferredSize(new java.awt.Dimension(850, 50));
+
+        JLabel welcome = new JLabel();
         welcome.setBackground(new java.awt.Color(31, 31, 31));
         welcome.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         welcome.setForeground(new java.awt.Color(255, 169, 140));
@@ -657,7 +1014,41 @@ public class Cart extends javax.swing.JFrame {
         welcome.setMaximumSize(new java.awt.Dimension(50, 50));
         welcome.setMinimumSize(new java.awt.Dimension(50, 50));
         welcome.setPreferredSize(new java.awt.Dimension(50, 50));
+
+        // JTextField searchField = new JTextField();
+        // searchField.setPreferredSize(new java.awt.Dimension(200, 30));
+
+        // JButton searchButton = new JButton("Search");
+
+        // // DefaultTableModel model = (DefaultTableModel) cartTable.getModel();
+        // TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
+        // cartTable.setRowSorter(rowSorter);
+
+        // searchButton.addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         String searchTerm = searchField.getText().trim();
+        //         if (searchTerm.isEmpty()) {
+        //             rowSorter.setRowFilter(null); // Show all rows if search is empty
+        //         } else {
+        //             rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm)); // Case-insensitive search
+        //         }
+        //     }
+        // });
+
+        // JPanel searchPanel = new JPanel();
+        // // searchPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 250));
+        //  // Add padding to the right        
+        // searchPanel.add(searchField);
+        // searchPanel.add(searchButton);
+
+        // titlePanel.add(welcome, BorderLayout.CENTER);
+        // titlePanel.add(searchPanel, BorderLayout.EAST);
+
+        // Add titlePanel to the title_container
         title_container.add(welcome);
+
+        // title_container.add(titlePanel);
 
         
 
