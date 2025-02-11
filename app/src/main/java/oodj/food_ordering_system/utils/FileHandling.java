@@ -2,7 +2,9 @@ package oodj.food_ordering_system.utils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -17,7 +19,7 @@ public class FileHandling {
     public enum filePath {
         MANAGER_PATH("Manager", "app\\src\\main\\resources\\databases\\manager.txt"),
         ADMIN_PATH("Admin", "app\\src\\main\\resources\\databases\\admin.txt"),
-        CUSTOMER_PATH("Customer", "app\\src\\main\\resources\\databases\\customer.txt"),
+        CUSTOMER_PATH("Customer", "app\\src\\main\\resources\\databases\\custom er.txt"),
         DELIVERY_PATH("Delivery", "app\\src\\main\\resources\\databases\\delivery_runner.txt"),
         VENDOR_PATH("Vendor", "app\\src\\main\\resources\\databases\\vendor.txt"),
         MENU_PATH("Menu", "app\\src\\main\\resources\\databases\\menu.txt"),
@@ -27,7 +29,8 @@ public class FileHandling {
         PAYMENT_PATH("Payment", "app\\src\\main\\resources\\databases\\payment.txt"),
         RATING_PATH("Rating", "app\\src\\main\\resources\\databases\\rating.txt"),
         COMPLAINT_PATH("Complaint", "app\\src\\main\\resources\\databases\\complaint.txt"),
-        NOTIFICATION_PATH("Notification", "app\\src\\main\\resources\\databases\\notification.txt");
+        NOTIFICATION_PATH("Notification", "app\\src\\main\\resources\\databases\\notification.txt"),
+        ORDER_PATH("Order", "app\\src\\main\\resources\\databases\\order.txt");
 
         private final String key, value;
 
@@ -57,6 +60,7 @@ public class FileHandling {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, append))) {
             writer.write(jsonArray.toString(4)); // Pretty print with indentation
             writer.newLine();
+            writer.flush();
         }
     }
 

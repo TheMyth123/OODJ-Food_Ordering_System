@@ -1,7 +1,7 @@
 package oodj.food_ordering_system.models;
 
 public class Vendor extends User{
-    private String ID, name, foodcourtname, DOB, contactnumber, email;    
+    private String ID, name, foodcourtname, DOB, contactnumber, email, username, password;    
     private Boolean status;
     public Vendor(String ID, String name, String foodcourtname, String contactnumber, String username, String password, Boolean status, String DOB, String email){
         super(username, password);
@@ -12,6 +12,8 @@ public class Vendor extends User{
         this.foodcourtname = foodcourtname;
         this.status = status;
         this.email = email;
+        this.username = username;
+        this.password = password;
     }
     
     public Vendor(String ID, String foodCourtName) {
@@ -74,5 +76,39 @@ public class Vendor extends User{
 
     public void setStatus(Boolean status){
         this.status = status;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    // Methods
+    public void activateVendor() {
+        this.status = true;
+    }
+
+    public void deactivateVendor() {
+        this.status = false;
+    }
+
+    public String displayVendorInfo() {
+        return "VendorID: " + ID + 
+               "\nVendorName: " + name + 
+               "\nFoodCourtName: " + foodcourtname + 
+               "\nContactNumber: " + contactnumber + 
+               "\nStatus: " + (status ? "Active" : "Inactive") +
+               "\nDateRegistered: " + DOB;
     }
 }
