@@ -1,28 +1,23 @@
 package oodj.food_ordering_system.utils;
 
-import oodj.food_ordering_system.models.Admin;
-import oodj.food_ordering_system.models.Credit;
-import oodj.food_ordering_system.models.CusOrder;
-import oodj.food_ordering_system.models.Customer;
-import oodj.food_ordering_system.models.Menu;
-import oodj.food_ordering_system.models.Payment;
-import oodj.food_ordering_system.models.Rating;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import oodj.food_ordering_system.models.Credit;
+import oodj.food_ordering_system.models.CusOrder;
+import oodj.food_ordering_system.models.Customer;
+import oodj.food_ordering_system.models.Menu;
+import oodj.food_ordering_system.models.Payment;
+import oodj.food_ordering_system.models.Vendor;
 
 // change to OOP
 public class OrderHandling {
@@ -532,9 +527,9 @@ public class OrderHandling {
         }
     } 
 
-    // dine in status: Order placed > Kitchen is preparing > Order is being served > Payment completed
-    // takeaway status: Order placed > Kitchen is preparing > Order is ready for pickup > Order picked up > Order completed
-    // delivery status: Order received > Kitchen is preparing > Order is ready for pickup > Rider has picked up the order > Order delivered > Order completed
+    // dine in status: Order placed > Order preparing > Order is being served > Payment completed
+    // takeaway status: Order placed > Order preparing > Order is ready for pickup > Order picked up > Order completed
+    // delivery status: Order received > Order preparing > Order is ready for pickup > Runner has picked up the order > Order delivered > Order completed
 
     // Update order status manually
     public static void updateOrderStatus(String orderID, String newStatus) {
@@ -568,9 +563,185 @@ public class OrderHandling {
 
 
     // test the code
-    public static void main(String[] args) {
-        // updateOrderStatus("ORD001", "Kitchen is preparing");
+    // public static void main(String[] args) {
+    //     // updateOrderStatus("ORD001", "Kitchen is preparing");
+    // }
+
+    
+    // CRUD menu 
+
+    public static String getMenuID() {
+        int highestID = 0;
+    
+        try {
+            String jsonData = new String(Files.readAllBytes(Paths.get(MENU)));
+            JSONArray menusArray = jsonData.trim().isEmpty() ? new JSONArray() : new JSONArray(jsonData);
+    
+            for (int i = 0; i < menusArray.length(); i++) {
+                JSONObject menuData = menusArray.getJSONObject(i);
+    
+                String menuID = menuData.getString("id");
+                if (menuID.startsWith("MN")) {
+                    try {
+                        int number = Integer.parseInt(menuID.substring(2));
+                        if (number > highestID) {
+                            highestID = number; // Update the ID
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid MenuID: " + menuID);
+                        DialogBox.errorMessage("Invalid data or format for menu: " + menuID, "Error");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            DialogBox.errorMessage("Error reading or parsing menu JSON file: " + e.getMessage(), "Error");
+        }
+    
+        return "MN" + String.format("%05d", highestID + 1);
     }
+    
+
+    public static void createMenu(Vendor vendor, String name, String description, String price, String imagePath, boolean status) {
+        try {
+            String jsonData = new String(Files.readAllBytes(Paths.get(MENU)));
+            JSONArray menusArray = jsonData.trim().isEmpty() ? new JSONArray() : new JSONArray(jsonData);
+    
+            String id = getMenuID();
+    
+            JSONObject menuObject = new JSONObject();
+            menuObject.put("id", id);
+            menuObject.put("VendorID", vendor.getID());
+            menuObject.put("name", name);
+            menuObject.put("description", description);
+            menuObject.put("price", price); 
+            menuObject.put("imagePath", imagePath);
+            menuObject.put("Status", String.valueOf(status));
+    
+            menusArray.put(menuObject);
+            FileHandling.writeToFile(MENU, menusArray, false);
+
+            DialogBox.successMessage("Menu " + name + " added successfully!", "Success");
+    
+        } catch (Exception e) {
+            DialogBox.errorMessage("Error adding menu: " + e.getMessage(), "Error");
+        }
+    }
+
+    public static ArrayList<Menu> getMenu() {
+        ArrayList<Menu> menus = new ArrayList<>();
+    
+        try {
+            String jsonData = new String(Files.readAllBytes(Paths.get(MENU)));
+            JSONArray menusArray = jsonData.trim().isEmpty() ? new JSONArray() : new JSONArray(jsonData);
+    
+            for (int i = 0; i < menusArray.length(); i++) {
+                JSONObject menuData = menusArray.getJSONObject(i);
+    
+                String id = menuData.getString("id"); 
+                String vendorID = menuData.getString("VendorID"); 
+                String name = menuData.getString("name");
+                String description = menuData.getString("description"); 
+                String price = menuData.getString("price");
+                String imagePath = menuData.getString("imagePath"); 
+                String status = menuData.getString("Status"); 
+    
+                Menu menu = new Menu(status, id, vendorID, name, description, price, imagePath);
+                menus.add(menu);
+            }
+    
+        } catch (Exception e) {
+            DialogBox.errorMessage("Error retrieving menus: " + e.getMessage(), "Error");
+        }
+    
+        return menus;
+    }
+
+    public static void updateMenuInfo(String menuID, String newName, String newDescription, String newPrice, String newImagePath, boolean newStatus) {
+        try {
+            String jsonData = new String(Files.readAllBytes(Paths.get(MENU)));
+            JSONArray menusArray = jsonData.trim().isEmpty() ? new JSONArray() : new JSONArray(jsonData);
+    
+            boolean menuUpdated = false;
+    
+            for (int i = 0; i < menusArray.length(); i++) {
+                JSONObject menuData = menusArray.getJSONObject(i);
+    
+                if (menuData.getString("id").equals(menuID)) { 
+                    menuData.put("name", newName);
+                    menuData.put("description", newDescription);
+                    menuData.put("price", newPrice);
+                    menuData.put("imagePath", newImagePath);
+                    menuData.put("Status", String.valueOf(newStatus));
+    
+                    menuUpdated = true;
+                    break;
+                }
+            }
+    
+            if (menuUpdated) {
+                FileHandling.writeToFile(MENU, menusArray, false);
+                DialogBox.successMessage("Menu " + menuID + " - " + newName + " updated successfully!", "Success");
+            } else {
+                DialogBox.errorMessage("Menu with ID " + menuID + " not found!", "Error");
+            }
+    
+        } catch (Exception e) {
+            DialogBox.errorMessage("Error updating menu: " + e.getMessage(), "Error");
+        }
+    }
+
+    public static void deleteMenu(String menuID, String name) {
+        try {
+            String jsonData = new String(Files.readAllBytes(Paths.get(MENU)));
+            JSONArray menusArray = jsonData.trim().isEmpty() ? new JSONArray() : new JSONArray(jsonData);
+    
+            boolean menuDeleted = false;
+    
+            for (int i = 0; i < menusArray.length(); i++) {
+                JSONObject menuData = menusArray.getJSONObject(i);
+    
+                if (menuData.getString("id").equals(menuID)) { // Match the correct key
+                    menusArray.remove(i);
+                    menuDeleted = true;
+                    break;
+                }
+            }
+    
+            if (menuDeleted) {
+                FileHandling.writeToFile(MENU, menusArray, false);
+                DialogBox.successMessage("Menu " + menuID + " - " + name + " deleted successfully!", "Success");
+            } else {
+                DialogBox.errorMessage("Menu with ID " + menuID + " not found!", "Error");
+            }
+    
+        } catch (Exception e) {
+            DialogBox.errorMessage("Error deleting menu: " + e.getMessage(), "Error");
+        }
+    }
+    
+    public static void main(String[] args) {
+        // Vendor vendor = new Vendor("VN001", "Food Court 1");
+        // createMenu(vendor, "Nasi Lemak", "Coconut rice with sambal, fried anchovies, peanuts, and cucumber", "RM5.50", "nasi_lemak.jpg", true);
+        
+        // ArrayList<Menu> menuList = getMenu(); 
+        // if (!menuList.isEmpty()) {
+        //     for (Menu menu : menuList) {
+        //         System.out.println(menu.displayMenuInfo()); 
+        //         System.out.println("------------------------------------------------");
+        //     }
+        // } else {
+        //     System.out.println("No menus found in the database.");
+        // }
+
+        // updateMenuInfo("MN00005", "Nasi Lemak", "Coconut rice with sambal, fried anchovies, peanuts, and cucumber", "RM6", "nasi_lemak.jpg", true);
+        // make a menu unavailable
+        // updateMenuInfo("MN00005", "Nasi Lemak", "Coconut rice with sambal, fried anchovies, peanuts, and cucumber", "RM6", "nasi_lemak.jpg", false);
+
+        // deleteMenu("MN00005", "Nasi Lemak");
+        
+    }
+
+    
     
     
 }
