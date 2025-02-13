@@ -314,13 +314,15 @@ public class CusPayment extends javax.swing.JFrame {
                 // Call savePayment to save the payment details
                 OrderHandling.savePayment(orderID, endUser.getID(), orderItems, totalAmount, "Completed", serviceType, address, "Pending");
     
-                // Clear the cart file after successful payment (here got error)
-                Path cartPath = Paths.get(FileHandling.filePath.CART_PATH.getValue());
-                Files.write(cartPath, new JSONArray().toString().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+                // // Clear the cart file after successful payment (here got error)
+                // Path cartPath = Paths.get(FileHandling.filePath.CART_PATH.getValue());
+                // Files.write(cartPath, new JSONArray().toString().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
     
                 // Read and print the saved payment data
-                Path paymentPath = Paths.get(FileHandling.filePath.PAYMENT_PATH.getValue());
-                String paymentData = new String(Files.readAllBytes(paymentPath));
+                // Path paymentPath = Paths.get(FileHandling.filePath.PAYMENT_PATH.getValue());
+                // String paymentData = new String(Files.readAllBytes(paymentPath));
+                // System.out.println(paymentData);
+
     
                 JOptionPane.showMessageDialog(this, "Payment successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 dispose(); // Close the payment page
@@ -329,9 +331,6 @@ public class CusPayment extends javax.swing.JFrame {
                 // Notify the user of insufficient credit
                 JOptionPane.showMessageDialog(this, "Insufficient credit to complete the payment.", "Payment Failed", JOptionPane.ERROR_MESSAGE);
             }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error processing payment: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Invalid total amount format.", "Error", JOptionPane.ERROR_MESSAGE);
         }

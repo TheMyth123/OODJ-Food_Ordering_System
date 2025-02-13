@@ -28,6 +28,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -65,6 +66,7 @@ public class Cart extends javax.swing.JFrame {
 
     private Customer endUser;
     private JTable cartTable;
+    private ArrayList<String> selectedMenuIDs = new ArrayList<>(); // Ensure it's always initialized
 
 // make the cart refresh after i finish payment
 
@@ -87,276 +89,10 @@ public class Cart extends javax.swing.JFrame {
         });
         
     }
-    
-    // private void displayCart(ArrayList<CusOrder> cart, String endUser) {
-    //     // Ensure cartTable is initialized
-    //     if (cartTable == null) {
-    //         cartTable = new JTable(new DefaultTableModel(
-    //             new Object[][]{},
-    //             new String[]{"Menu ID", "Quantity", "Unit Price", "Name"}
-    //         ));
-    
-    //         // Enable multiple row selection
-    //         cartTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-    //         cartTable.setRowSelectionAllowed(true);
-    //         cartTable.setColumnSelectionAllowed(false);
-    //     } else {
-    //         cartTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-    //     }
-    
-    //     // Modify selection model to allow multiple selections without Ctrl and allow deselecting
-    //     cartTable.setSelectionModel(new DefaultListSelectionModel() {
-    //         @Override
-    //         public void setSelectionInterval(int index0, int index1) {
-    //             if (super.isSelectedIndex(index0)) {
-    //                 super.removeSelectionInterval(index0, index1);  // Deselect if already selected
-    //             } else {
-    //                 super.addSelectionInterval(index0, index1);  // Select if not selected
-    //             }
-    //         }
-    //     });
-    
-   //     // Get the table model
-    //     DefaultTableModel model = (DefaultTableModel) cartTable.getModel();
-    
-    //     // Clear existing rows
-    //     model.setRowCount(0);
-    
-    //     // Add rows only if CustomerID matches endUser
-    //     for (CusOrder order : cart) {
-    //         if (order.getCustomer().getID().equals(endUser)) {  // Check if the customer ID matches
-    //             model.addRow(new Object[]{
-    //                 order.getMenuID(),
-    //                 order.getQuantity(),
-    //                 order.getPrice(),
-    //                 order.getName(),
-    //             });
-    //         }
-    //     }
-    
-    
 
-    //     JScrollPane scrollPane = new JScrollPane(cartTable);
-    //     scrollPane.setPreferredSize(new Dimension(500, 200));
-
-    //     JPanel buttonPanel = new JPanel();
-    //     buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-
-    //     // **Pay Button**
-    //     JButton payButton = new JButton("Pay");
-    //     payButton.addActionListener(evt -> {
-    //         int[] selectedRows = cartTable.getSelectedRows();
-    //         if (selectedRows.length > 0) {
-    //             double totalAmount = 0; // Initialize total amount
-        
-    //             DefaultTableModel tableModel = (DefaultTableModel) cartTable.getModel();
-                
-    //             JSONArray orderItems = new JSONArray();
-        
-    //             for (int row : selectedRows) {
-    //                 String menuID = tableModel.getValueAt(row, 0).toString();
-    //                 int quantity = Integer.parseInt(tableModel.getValueAt(row, 1).toString());
-    //                 double price = Double.parseDouble(tableModel.getValueAt(row, 2).toString());
-        
-    //                 double itemTotal = quantity * price;  // Calculate item total
-    //                 totalAmount += itemTotal;  // Add to total amount
-        
-    //                 JSONObject orderItem = new JSONObject();
-    //                 orderItem.put("menuID", menuID);
-    //                 orderItem.put("quantity", quantity);
-    //                 orderItem.put("price", price);
-    //                 orderItem.put("totalPrice", itemTotal);
-        
-    //                 orderItems.put(orderItem);
-    //             }
-        
-    //             JOptionPane.showMessageDialog(null, "Total Amount: RM" + totalAmount);
-        
-            
-    //             try {
-    //                 checkout(orderItems, totalAmount);
-    //             } catch (IOException e) {
-    //                 // TODO Auto-generated catch block
-    //                 e.printStackTrace();
-    //             }
-                
-    //         } else {
-    //             JOptionPane.showMessageDialog(null, "Please select items to pay for.");
-    //         }
-    //     });
-
-    // private void displayCart(ArrayList<CusOrder> cart, String endUser) {
-    //     // Ensure cartTable is initialized
-    //     if (cartTable == null) {
-    //         cartTable = new JTable(new DefaultTableModel(
-    //             new Object[][]{},
-    //             new String[]{"Menu ID", "Quantity", "Unit Price", "Name"}
-    //         ));
-    
-    //         // Enable multiple row selection
-    //         cartTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-    //         cartTable.setRowSelectionAllowed(true);
-    //         cartTable.setColumnSelectionAllowed(false);
-    //     } else {
-    //         cartTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-    //     }
-    
-    //     // Modify selection model to allow multiple selections without Ctrl and allow deselecting
-    //     cartTable.setSelectionModel(new DefaultListSelectionModel() {
-    //         @Override
-    //         public void setSelectionInterval(int index0, int index1) {
-    //             if (super.isSelectedIndex(index0)) {
-    //                 super.removeSelectionInterval(index0, index1);  // Deselect if already selected
-    //             } else {
-    //                 super.addSelectionInterval(index0, index1);  // Select if not selected
-    //             }
-    //         }
-    //     });
-    
-    //     // Get the table model
-    //     DefaultTableModel model = (DefaultTableModel) cartTable.getModel();
-    
-    //     // Clear existing rows
-    //     model.setRowCount(0);
-    
-    //     // Add rows only if CustomerID matches endUser
-    //     for (CusOrder order : cart) {
-    //         if (order.getCustomer().getID().equals(endUser)) {  // Check if the customer ID matches
-    //             model.addRow(new Object[]{
-    //                 order.getMenuID(),
-    //                 order.getQuantity(),
-    //                 order.getPrice(),
-    //                 order.getName(),
-    //             });
-    //         }
-    //     }
-    
-    //     // **Search Field and Button**
-    //     JTextField searchField = new JTextField();
-    //     searchField.setPreferredSize(new Dimension(200, 30));
-    
-    //     JButton searchButton = new JButton("Search");
-    
-    //     // **Set TableRowSorter (AFTER initializing cartTable)**
-    //     TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
-    //     cartTable.setRowSorter(rowSorter);
-    
-    //     searchButton.addActionListener(new ActionListener() {
-    //         @Override
-    //         public void actionPerformed(ActionEvent e) {
-    //             String searchTerm = searchField.getText().trim();
-    //             if (searchTerm.isEmpty()) {
-    //                 rowSorter.setRowFilter(null); // Show all rows if search is empty
-    //             } else {
-    //                 rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm)); // Case-insensitive search
-    //             }
-    //         }
-    //     });
-    
-    //     // **UI Layout**
-    //     JPanel searchPanel = new JPanel();
-    //     searchPanel.add(new JLabel("Search:"));
-
-    //     searchPanel.add(searchField);
-    //     searchPanel.add(searchButton);
-    
-    //     JScrollPane scrollPane = new JScrollPane(cartTable);
-    //     scrollPane.setPreferredSize(new Dimension(500, 200));
-    
-    //     // **Add Components to Main Panel**
-    //     // JPanel mainPanel = new JPanel(new BorderLayout());
-    //     title_container1.add(searchPanel, BorderLayout.NORTH);
-    //     title_container1.add(scrollPane, BorderLayout.CENTER);
-    
-    //     // Display the main panel
-    //     // JOptionPane.showMessageDialog(null, mainPanel, "Cart", JOptionPane.PLAIN_MESSAGE);
     
     
-    //     scrollPane.setPreferredSize(new Dimension(500, 200));
-
-    //     JPanel buttonPanel = new JPanel();
-    //     buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-
-    //     // **Pay Button**
-    //     JButton payButton = new JButton("Pay");
-    //     payButton.addActionListener(evt -> {
-    //         int[] selectedRows = cartTable.getSelectedRows();
-    //         if (selectedRows.length > 0) {
-    //             double totalAmount = 0; // Initialize total amount
-        
-    //             DefaultTableModel tableModel = (DefaultTableModel) cartTable.getModel();
-                
-    //             JSONArray orderItems = new JSONArray();
-        
-    //             for (int row : selectedRows) {
-    //                 String menuID = tableModel.getValueAt(row, 0).toString();
-    //                 int quantity = Integer.parseInt(tableModel.getValueAt(row, 1).toString());
-    //                 double price = Double.parseDouble(tableModel.getValueAt(row, 2).toString());
-        
-    //                 double itemTotal = quantity * price;  // Calculate item total
-    //                 totalAmount += itemTotal;  // Add to total amount
-        
-    //                 JSONObject orderItem = new JSONObject();
-    //                 orderItem.put("menuID", menuID);
-    //                 orderItem.put("quantity", quantity);
-    //                 orderItem.put("price", price);
-    //                 orderItem.put("totalPrice", itemTotal);
-        
-    //                 orderItems.put(orderItem);
-    //             }
-        
-    //             JOptionPane.showMessageDialog(null, "Total Amount: RM" + totalAmount);
-        
-            
-    //             try {
-    //                 checkout(orderItems, totalAmount);
-    //             } catch (IOException e) {
-    //                 // TODO Auto-generated catch block
-    //                 e.printStackTrace();
-    //             }
-                
-    //         } else {
-    //             JOptionPane.showMessageDialog(null, "Please select items to pay for.");
-    //         }
-    //     });
-
-    //     // **Discard Button**
-    //     JButton discardButton = new JButton("Discard");
-    //     discardButton.addActionListener(evt -> {
-    //         int[] selectedRows = cartTable.getSelectedRows();
-    //         if (selectedRows.length > 0) {
-    //             DefaultTableModel tableModel = (DefaultTableModel) cartTable.getModel();
-    //             ArrayList<CusOrder> cartItems = OrderHandling.getCart();
-    //             for (int row : selectedRows) {
-    //                 String menuID = tableModel.getValueAt(row, 0).toString();
-    //                 for (CusOrder order : cartItems) {
-    //                     if (order.getMenuID().equals(menuID) && order.getCustomer().getID().equals(endUser)) {
-    //                         cartItems.remove(order);
-    //                         break;
-    //                     }
-    //                 }
-    //             }
-    //             OrderHandling.updateCart(cartItems, endUser); // Save updated cart list
-    //             refreshCart();
-    //         } else {
-    //             JOptionPane.showMessageDialog(null, "Please select items to discard.");
-    //         }
-    //     });
-
-
-    //     // Add buttons to the panel
-    //     buttonPanel.add(payButton);
-    //     buttonPanel.add(discardButton);
-
-    //     title_container1.removeAll(); // Remove previous content
-    //     title_container1.setLayout(new BorderLayout()); // Set layout manager
-    //     title_container1.add(scrollPane, BorderLayout.CENTER); // Add scroll pane
-    //     title_container1.add(buttonPanel, BorderLayout.SOUTH); // Add button panel
-        
-    //     title_container1.revalidate(); // Revalidate to refresh
-    //     title_container1.repaint();   // Repaint to update UI
-    // }
-
+    
     private void displayCart(ArrayList<CusOrder> cart, String endUser) {
         // Ensure cartTable is initialized
         if (cartTable == null) {
@@ -451,42 +187,52 @@ public class Cart extends javax.swing.JFrame {
         JButton payButton = new JButton("Pay");
         payButton.addActionListener(evt -> {
             int[] selectedRows = cartTable.getSelectedRows();
+            
             if (selectedRows.length > 0) {
                 double totalAmount = 0; // Initialize total amount
-    
                 DefaultTableModel tableModel = (DefaultTableModel) cartTable.getModel();
                 
                 JSONArray orderItems = new JSONArray();
-    
+                selectedMenuIDs.clear(); // Clear selectedMenuIDs before adding new ones
+
+                System.out.println("DEBUG: Selected rows count: " + selectedRows.length);
+        
                 for (int row : selectedRows) {
-                    String menuID = tableModel.getValueAt(row, 0).toString();
+                    String menuID = tableModel.getValueAt(row, 0).toString();  // Get MenuID
                     int quantity = Integer.parseInt(tableModel.getValueAt(row, 1).toString());
                     double price = Double.parseDouble(tableModel.getValueAt(row, 2).toString());
-    
+        
                     double itemTotal = quantity * price;  // Calculate item total
                     totalAmount += itemTotal;  // Add to total amount
-    
+                    
                     JSONObject orderItem = new JSONObject();
                     orderItem.put("menuID", menuID);
                     orderItem.put("quantity", quantity);
                     orderItem.put("price", price);
                     orderItem.put("totalPrice", itemTotal);
-    
+        
                     orderItems.put(orderItem);
+                    selectedMenuIDs.add(menuID); // Store MenuID for reference
+                    
+                    System.out.println("DEBUG: Selected MenuID: " + menuID + ", Quantity: " + quantity + ", Price: " + price);
                 }
-    
+        
+                System.out.println("DEBUG: Final Selected MenuIDs for Payment: " + selectedMenuIDs);
+                System.out.println("DEBUG: Total Amount to Pay: RM" + totalAmount);
+        
                 JOptionPane.showMessageDialog(null, "Total Amount: RM" + totalAmount);
-    
+        
                 try {
                     checkout(orderItems, totalAmount);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-    
+        
             } else {
                 JOptionPane.showMessageDialog(null, "Please select items to pay for.");
             }
         });
+        
     
         // **Discard Button**
         JButton discardButton = new JButton("Discard");
@@ -494,22 +240,33 @@ public class Cart extends javax.swing.JFrame {
             int[] selectedRows = cartTable.getSelectedRows();
             if (selectedRows.length > 0) {
                 DefaultTableModel tableModel = (DefaultTableModel) cartTable.getModel();
-                ArrayList<CusOrder> cartItems = OrderHandling.getCart();
+                // ArrayList<String> selectedMenuIDs = new ArrayList<>();
+                selectedMenuIDs.clear();
+
+                System.out.println("DEBUG: Selected rows count: " + selectedRows.length);
+
                 for (int row : selectedRows) {
                     String menuID = tableModel.getValueAt(row, 0).toString();
-                    for (CusOrder order : cartItems) {
-                        if (order.getMenuID().equals(menuID) && order.getCustomer().getID().equals(endUser)) {
-                            cartItems.remove(order);
-                            break;
-                        }
-                    }
+                    selectedMenuIDs.add(menuID);
+                    System.out.println("DEBUG: Selected MenuID to remove: " + menuID);
                 }
-                OrderHandling.updateCart(cartItems, endUser); // Save updated cart list
-                refreshCart();
+
+                System.out.println("DEBUG: Final Selected MenuIDs: " + selectedMenuIDs);
+
+                ArrayList<CusOrder> cartItems = OrderHandling.getCart();
+                System.out.println("Before update, cart has: " + cartItems.size() + " items.");
+                OrderHandling.updateCart(cartItems, endUser, selectedMenuIDs);
+                System.out.println("After update, cart should be updated.");
+
+                SwingUtilities.invokeLater(() -> displayCart(OrderHandling.getCart(), endUser));
             } else {
                 JOptionPane.showMessageDialog(null, "Please select items to discard.");
             }
         });
+
+
+        
+     
     
         // **Button Panel**
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
@@ -605,55 +362,62 @@ public class Cart extends javax.swing.JFrame {
                 break;
             }
         }
-
+    
         if (customerCredit != null) {
-            // **Get the cart list**
-            ArrayList<CusOrder> cartItems = OrderHandling.getCart();
-            DefaultTableModel tableModel = (DefaultTableModel) cartTable.getModel();
-        
-            // Convert selected rows into items to be removed
-            ArrayList<CusOrder> itemsToRemove = new ArrayList<>();
-            int[] selectedRows = cartTable.getSelectedRows();
-            for (int rowIndex : selectedRows) {
-                String menuID = tableModel.getValueAt(rowIndex, 0).toString();
-                for (CusOrder order : cartItems) {
-                    if (order.getMenuID().equals(menuID) && order.getCustomer().getID().equals(endUser.getID())) {
-                        itemsToRemove.add(order);
-                        break;
-                    }
-                }
+
+            if (selectedMenuIDs == null) {
+                selectedMenuIDs = new ArrayList<>(); // ✅ Fix potential null reference
             }
-        
-            // **Open payment page first, do NOT remove items yet**
+
+
+
+    
+            // **✅ Fix: Declare itemsToRemove outside**
+            // ArrayList<String> selectedMenuIDs = new ArrayList<>();
+            // DefaultTableModel tableModel = (DefaultTableModel) cartTable.getModel();
+            
+            // int[] selectedRows = cartTable.getSelectedRows();
+            // for (int rowIndex : selectedRows) {
+            //     String menuID = tableModel.getValueAt(rowIndex, 0).toString();
+            //     selectedMenuIDs.add(menuID);
+            // }
+    
+            System.out.println("DEBUG: Final Selected MenuIDs for Removal: " + selectedMenuIDs); // Check before proceeding
+    
+            // **✅ Fix: Pass `itemsToRemove` correctly**
+            ArrayList<CusOrder> cartItems = OrderHandling.getCart();      
+            System.out.println("Selected MenuIDs to remove: " + selectedMenuIDs);
+
+    
+            // Open payment window
             CusPayment paymentWindow = new CusPayment(
-                "OR" + String.format("%05d", OrderHandling.getORid() + 1),  // Auto-generate Order ID
+                "OR" + String.format("%05d", OrderHandling.getORid() + 1), // Auto-generate Order ID
                 orderItems, endUser,
                 totalAmount,
                 "Completed",
                 serviceType
             );
-        
-            // **Wait for payment window to close before removing items**
+    
+            // **✅ Fix: Ensure `itemsToRemove` is used in `windowClosed`**
             paymentWindow.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosed(java.awt.event.WindowEvent e) {
-                    // **Now remove items from cart AFTER payment is done**
-                    cartItems.removeAll(itemsToRemove);
-                    OrderHandling.updateCart(cartItems, endUser.getID()); // Save updated cart list
-                    
+                    System.out.println("DEBUG: Removing selected items from cart after payment: " + selectedMenuIDs);
+                    cartItems.removeIf(order -> selectedMenuIDs.contains(order.getMenuID()));
+                    OrderHandling.updateCart(cartItems, endUser.getID(), selectedMenuIDs); // ✅ Ensure itemsToRemove is passed correctly
+
                     // Refresh UI after payment
                     SwingUtilities.invokeLater(() -> refreshCart());
                 }
             });
-        
+    
             paymentWindow.setVisible(true);
-        
+    
         } else {
             JOptionPane.showMessageDialog(this, "Credit information not found for customer ID: " + endUser.getID(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-        
-
     }
+    
     
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          

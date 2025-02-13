@@ -210,20 +210,54 @@ public class OrderHandling {
         FileHandling.saveToFile(cartArray, CART); // Write updated cart list
     }
 
-    public static void updateCart(ArrayList<CusOrder> cartItems, String customerID) {
+    // public static void updateCart(ArrayList<CusOrder> cartItems, String customerID, ArrayList<CusOrder> cartItems2) {
+    //     JSONArray cartArray = new JSONArray();
+    
+    //     ArrayList<CusOrder> allCartItems = getCart(); // Get all items from the cart file
+    
+    //     for (CusOrder order : allCartItems) {
+    //         // Only modify items belonging to the logged-in customer
+    //         if (order.getCustomer().getID().equals(customerID)) {
+    //             if (cartItems2.contains(order.getMenuID())) {
+    //                 continue; // Skip items that were removed
+    //             }
+    //         }
+    
+    //         // Keep other customers' items intact
+    //         JSONObject obj = new JSONObject();
+    //         obj.put("MenuID", order.getMenuID());
+    //         obj.put("quantity", order.getQuantity());
+    //         obj.put("price", order.getPrice());
+    //         obj.put("name", order.getName());
+    //         obj.put("CustomerID", order.getCustomer().getID());
+    
+    //         cartArray.put(obj);
+    //     }
+    
+    //     FileHandling.saveToFile(cartArray, CART); // Write the updated cart list
+    // }
+
+    public static void updateCart(ArrayList<CusOrder> allCartItems, String customerID, ArrayList<String> itemsToRemove) {
+        System.out.println("Updating cart for customer: " + customerID);
+        System.out.println("Selected MenuIDs to remove: " + itemsToRemove);
+    
+        if (itemsToRemove.isEmpty()) {
+            System.out.println("WARNING: No items were selected for removal.");
+            return; // 🚨 Exit early to prevent overwriting the cart with the same data
+        }
+    
         JSONArray cartArray = new JSONArray();
-    
-        ArrayList<CusOrder> allCartItems = getCart(); // Get all items from the cart file
-    
+        
         for (CusOrder order : allCartItems) {
-            // Only modify items belonging to the logged-in customer
-            if (order.getCustomer().getID().equals(customerID)) {
-                if (!cartItems.contains(order)) {
-                    continue; // Skip items that were removed
-                }
+            if (!order.getCustomer().getID().equals(customerID)) {
+                System.out.println("Keeping item for another customer: " + order.getMenuID());
+            } else if (itemsToRemove.contains(order.getMenuID())) {
+                System.out.println("Removing item: " + order.getMenuID());
+                continue; // Skip adding this item
+            } else {
+                System.out.println("Keeping item for current customer: " + order.getMenuID());
             }
     
-            // Keep other customers' items intact
             JSONObject obj = new JSONObject();
             obj.put("MenuID", order.getMenuID());
             obj.put("quantity", order.getQuantity());
@@ -234,8 +268,17 @@ public class OrderHandling {
             cartArray.put(obj);
         }
     
-        FileHandling.saveToFile(cartArray, CART); // Write the updated cart list
+        System.out.println("Final Cart Data to be saved: " + cartArray.toString(2));
+    
+        if (cartArray.length() == 0) {
+            System.out.println("WARNING: The cart is empty after update. Check logic.");
+        }
+    
+        FileHandling.saveToFile(cartArray, CART); // Update the cart file
     }
+    
+    
+    
     
     
 
