@@ -16,6 +16,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.JComboBox;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -29,9 +30,10 @@ import oodj.food_ordering_system.utils.UserHandling;
 // TODO after payment successfull dispose the payment page
 public class CusPayment extends javax.swing.JFrame {
 
-    private String foodName;
-    private String quantity;
+    // private String foodName;
+    // private String quantity;
     private double totalAmount;
+    private JComboBox<String> addressComboBox;
     private JTextField addressField;
     private JSONArray orderItems;
     private String serviceType;
@@ -46,6 +48,7 @@ public class CusPayment extends javax.swing.JFrame {
         initComponents();
     }
 
+    
 
 
     @SuppressWarnings("unchecked")
@@ -149,7 +152,30 @@ public class CusPayment extends javax.swing.JFrame {
         m3.setPreferredSize(new java.awt.Dimension(800, 200));
         m3.setLayout(new BoxLayout(m3, BoxLayout.Y_AXIS));
 
-// Food Name
+        JLabel addressLabel = new JLabel("Select Address:");
+        addressLabel.setForeground(new Color(255, 169, 140));
+        addressLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        addressLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        wrapper.add(addressLabel);
+
+        // Address selection dropdown
+        addressComboBox = new JComboBox<>(new String[]{endUser.getAddress(), "Other"});
+        addressComboBox.setMaximumSize(new Dimension(250, 30));
+        addressComboBox.setAlignmentX(Component.CENTER_ALIGNMENT);
+        addressComboBox.addActionListener(e -> handleAddressSelection());
+        wrapper.add(addressComboBox);    
+
+        // Manual address field (initially hidden)
+        addressField = new JTextField();
+        addressField.setPreferredSize(new Dimension(250, 30));
+        addressField.setMaximumSize(new Dimension(250, 30));
+        addressField.setAlignmentX(Component.CENTER_ALIGNMENT);
+        addressField.setVisible(false);
+        wrapper.add(addressField);
+
+        if (!serviceType.equals("Request for Delivery")) {
+            addressComboBox.setEnabled(false);
+        }
 
         JLabel nameLabel = new JLabel("Name: " + endUser.getName());
         nameLabel.setForeground(new Color(255, 169, 140));
@@ -157,11 +183,7 @@ public class CusPayment extends javax.swing.JFrame {
         nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         m3.add(nameLabel);
 
-        JLabel addressLabel = new JLabel("Address: " + endUser.getAddress());
-        addressLabel.setForeground(new Color(255, 169, 140));
-        addressLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-        addressLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        m3.add(addressLabel);
+        
 
         JLabel phoneLabel = new JLabel("Phone: " + endUser.getContactnumber());
         phoneLabel.setForeground(new Color(255, 169, 140));
@@ -175,7 +197,6 @@ public class CusPayment extends javax.swing.JFrame {
             int quantity = orderItem.getInt("quantity");
 
 
-            
             JLabel quantityLabel = new JLabel("Quantity: " + quantity);
             quantityLabel.setForeground(new Color(255, 169, 140));
             quantityLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
@@ -189,19 +210,6 @@ public class CusPayment extends javax.swing.JFrame {
         totalAmountLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
         totalAmountLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         m3.add(totalAmountLabel);
-
-        JLabel enterAddressLabel = new JLabel("Enter Address:");
-        enterAddressLabel.setForeground(new Color(255, 169, 140));
-        enterAddressLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-        enterAddressLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        m3.add(enterAddressLabel);
-
-        addressField = new JTextField();
-        addressField.setPreferredSize(new Dimension(200, 30));
-        addressField.setMaximumSize(new Dimension(200, 30));
-        addressField.setMinimumSize(new Dimension(200, 30));
-        addressField.setAlignmentX(Component.CENTER_ALIGNMENT);
-        m3.add(addressField);
 
         
         wrapper.add(m3);
@@ -336,26 +344,39 @@ public class CusPayment extends javax.swing.JFrame {
         }
     }
 
+    
+
     private void payButtonActionPerformed(java.awt.event.ActionEvent evt) {                                          
-        String address = addressField.getText();
-        if (address != null && !address.trim().isEmpty()) {
-            processPayment(address, orderItems, serviceType, totalAmount);
-
-        } else {
-            JOptionPane.showMessageDialog(this, "Address is required to proceed with the payment.", "Invalid Address", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private static String getFoodNameFromMenu(JSONArray menuItems, String menuID) {
-        for (int j = 0; j < menuItems.length(); j++) {
-            JSONObject menuItem = menuItems.getJSONObject(j);
-            if (menuItem.getString("menuID").equals(menuID)) {
-                return menuItem.getString("foodName");
+        String selectedAddress = addressComboBox.getSelectedItem().toString();
+        if (selectedAddress.equals("Other")) {
+            selectedAddress = addressField.getText().trim();
+            if (selectedAddress.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please enter a valid address.", "Invalid Address", JOptionPane.ERROR_MESSAGE);
+                return;
             }
         }
-        return "Unknown Item";  // Default if menuID is not found
+        processPayment(selectedAddress, orderItems, serviceType, totalAmount);
     }
+
+    // private static String getFoodNameFromMenu(JSONArray menuItems, String menuID) {
+    //     for (int j = 0; j < menuItems.length(); j++) {
+    //         JSONObject menuItem = menuItems.getJSONObject(j);
+    //         if (menuItem.getString("menuID").equals(menuID)) {
+    //             return menuItem.getString("foodName");
+    //         }
+    //     }
+    //     return "Unknown Item";  // Default if menuID is not found
+    // }
     
+    private void handleAddressSelection() {
+        if (addressComboBox.getSelectedItem().equals("Other")) {
+            addressField.setVisible(true);
+        } else {
+            addressField.setVisible(false);
+        }
+        wrapper.revalidate();
+        wrapper.repaint();
+    }
     
     
     

@@ -303,40 +303,40 @@ public class CusMenu extends javax.swing.JFrame {
         
 
         // Search Panel (Right-Aligned)
-        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JTextField searchField = new JTextField();
-        searchField.setPreferredSize(new Dimension(200, 30));
+        // JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        // JTextField searchField = new JTextField();
+        // searchField.setPreferredSize(new Dimension(200, 30));
 
-        JButton searchButton = new JButton("Search");
-        searchButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String searchTerm = searchField.getText().trim().toLowerCase();
-            List<Menu> filteredItems = new ArrayList<>();
+        // JButton searchButton = new JButton("Search");
+        // searchButton.addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         String searchTerm = searchField.getText().trim().toLowerCase();
+        //     List<Menu> filteredItems = new ArrayList<>();
         
-            for (Menu item : menuItems) {
-                if (searchTerm.isEmpty() || item.getName().toLowerCase().contains(searchTerm)) {
-                    filteredItems.add(item); // Add matching items
-                }
-            }
+        //     for (Menu item : menuItems) {
+        //         if (searchTerm.isEmpty() || item.getName().toLowerCase().contains(searchTerm)) {
+        //             filteredItems.add(item); // Add matching items
+        //         }
+        //     }
         
-            // If no match, show all items
-            if (filteredItems.isEmpty()) {
-                DialogBox.errorMessage("No matches found.", "Error");
-                displayMenuItems(menuItems); // Reset to all items
-            } else {
-                displayMenuItems(filteredItems);
-            }
-            }
-        });
+        //     // If no match, show all items
+        //     if (filteredItems.isEmpty()) {
+        //         DialogBox.errorMessage("No matches found.", "Error");
+        //         displayMenuItems(menuItems); // Reset to all items
+        //     } else {
+        //         displayMenuItems(filteredItems);
+        //     }
+        //     }
+        // });
 
         // Add search components
-        searchPanel.add(searchField);
-        searchPanel.add(searchButton);
+        // searchPanel.add(searchField);
+        // searchPanel.add(searchButton);
 
-        // Add title and search panel to titlePanel
+        // // Add title and search panel to titlePanel
         titlePanel.add(title, BorderLayout.CENTER);
-        titlePanel.add(searchPanel, BorderLayout.EAST);
+        // titlePanel.add(searchPanel, BorderLayout.EAST);
         titlePanel.add(back_icon, BorderLayout.WEST);
 
         // Add titlePanel to wrapper

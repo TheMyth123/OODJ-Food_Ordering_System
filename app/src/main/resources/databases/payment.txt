@@ -406,5 +406,61 @@
     "OrderID": "OR00025",
     "PaymentStatus": "Completed",
     "Date": "2025-02-13"
+  },
+  {
+    "OrderStatus": "Pending",
+    "OrderItems": [{
+      "quantity": 1,
+      "totalPrice": 25,
+      "price": 25,
+      "menuID": "MN00001"
+    }],
+    "ServiceType": "Dine In",
+    "DeliveryAddress": "ef",
+    "CustomerID": "CS00001",
+    "TotalAmount": 25,
+    "OrderID": "OR00026",
+    "PaymentStatus": "Completed",
+    "Date": "2025-02-13"
+  },
+  {
+    "OrderStatus": "Pending",
+    "OrderItems": [
+      {
+        "quantity": 1,
+        "totalPrice": 25,
+        "price": 25,
+        "menuID": "MN00001"
+      },
+      {
+        "quantity": 1,
+        "totalPrice": 20,
+        "price": 20,
+        "menuID": "MN00003"
+      }
+    ],
+    "ServiceType": "Dine In",
+    "DeliveryAddress": "jxojw",
+    "CustomerID": "CS00001",
+    "TotalAmount": 45,
+    "OrderID": "OR00027",
+    "PaymentStatus": "Completed",
+    "Date": "2025-02-14"
+  },
+  {
+    "OrderStatus": "Pending",
+    "OrderItems": [{
+      "quantity": 1,
+      "totalPrice": 25,
+      "price": 25,
+      "menuID": "MN00001"
+    }],
+    "ServiceType": "Request for Delivery",
+    "DeliveryAddress": "fwdf3wr",
+    "CustomerID": "CS00001",
+    "TotalAmount": 25,
+    "OrderID": "OR00028",
+    "PaymentStatus": "Completed",
+    "Date": "2025-02-15"
   }
 ]

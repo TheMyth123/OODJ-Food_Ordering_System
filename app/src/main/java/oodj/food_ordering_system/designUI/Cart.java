@@ -402,12 +402,17 @@ public class Cart extends javax.swing.JFrame {
             paymentWindow.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosed(java.awt.event.WindowEvent e) {
-                    System.out.println("DEBUG: Removing selected items from cart after payment: " + selectedMenuIDs);
-                    cartItems.removeIf(order -> selectedMenuIDs.contains(order.getMenuID()));
-                    OrderHandling.updateCart(cartItems, endUser.getID(), selectedMenuIDs); // ✅ Ensure itemsToRemove is passed correctly
-
-                    // Refresh UI after payment
-                    SwingUtilities.invokeLater(() -> refreshCart());
+                    // Check if payment status is "Completed"
+                    // if (paymentWindow.getPaymentStatus().equals("Completed")) {
+                    //     System.out.println("DEBUG: Removing selected items from cart after payment: " + selectedMenuIDs);
+                    //     cartItems.removeIf(order -> selectedMenuIDs.contains(order.getMenuID()));
+                    //     OrderHandling.updateCart(cartItems, endUser.getID(), selectedMenuIDs); // ✅ Ensure itemsToRemove is passed correctly
+        
+                    //     // Refresh UI after payment
+                    //     SwingUtilities.invokeLater(() -> refreshCart());
+                    // } else {
+                    //     System.out.println("DEBUG: Payment not completed. No items removed from cart.");
+                    // }
                 }
             });
     
