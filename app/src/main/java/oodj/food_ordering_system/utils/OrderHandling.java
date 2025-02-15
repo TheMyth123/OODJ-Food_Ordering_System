@@ -247,9 +247,10 @@ public class OrderHandling {
         }
     
         JSONArray cartArray = new JSONArray();
-        
+    
         for (CusOrder order : allCartItems) {
-            if (!order.getCustomer().getID().equals(customerID)) {
+            // ✅ Compare order's customer ID with the given `customerID`
+            if (!customerID.equals(order.getCustomer().getID())) {
                 System.out.println("Keeping item for another customer: " + order.getMenuID());
             } else if (itemsToRemove.contains(order.getMenuID())) {
                 System.out.println("Removing item: " + order.getMenuID());
@@ -276,6 +277,8 @@ public class OrderHandling {
     
         FileHandling.saveToFile(cartArray, CART); // Update the cart file
     }
+    
+    
     
     
     

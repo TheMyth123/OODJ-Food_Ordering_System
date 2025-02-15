@@ -15,7 +15,7 @@ import oodj.food_ordering_system.utils.OrderHandling;
 import oodj.food_ordering_system.utils.UserHandling;
 import raven.glasspanepopup.*;
 
-import static oodj.food_ordering_system.designUI.LoginPage.loginID;
+// import static oodj.food_ordering_system.designUI.LoginPage.loginID;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -72,11 +72,14 @@ public class Cart extends javax.swing.JFrame {
 
 
     public Cart(Customer endUser) {
-        this.endUser = endUser;            
-        System.out.println("CusDash initialized with customerID: " + endUser.getID()); // Debugging statement
+        this.endUser = endUser;   
+        
+    
+        
+        // System.out.println("CusDash initialized with customerID: " + endUser.getID()); // Debugging statement
         initComponents();
         ArrayList<CusOrder> cart = OrderHandling.getCart(); // Fetch cart items
-        displayCart(cart, endUser.getID()); // Display cart items
+        displayCart(cart, endUser); // Display cart items
         addWindowFocusListener(new java.awt.event.WindowFocusListener() {
             @Override
             public void windowGainedFocus(java.awt.event.WindowEvent evt) {
@@ -93,7 +96,7 @@ public class Cart extends javax.swing.JFrame {
     
     
     
-    private void displayCart(ArrayList<CusOrder> cart, String endUser) {
+    private void displayCart(ArrayList<CusOrder> cart, Customer endUser) {
         // Ensure cartTable is initialized
         if (cartTable == null) {
             cartTable = new JTable(new DefaultTableModel(
@@ -127,9 +130,12 @@ public class Cart extends javax.swing.JFrame {
         // Clear existing rows
         model.setRowCount(0);
     
-        // Add rows only if CustomerID matches endUser
         for (CusOrder order : cart) {
-            if (order.getCustomer().getID().equals(endUser)) {
+            System.out.println("DEBUG: Comparing Order CustomerID: " + order.getCustomer().getID() +
+                               " with Current User ID: " + endUser.getID());
+        
+            if (order.getCustomer().getID().equals(endUser.getID())) {
+                System.out.println("✅ MATCH: Adding item to cart display: " + order.getMenuID());
                 model.addRow(new Object[]{
                     order.getMenuID(),
                     order.getQuantity(),
@@ -240,7 +246,6 @@ public class Cart extends javax.swing.JFrame {
             int[] selectedRows = cartTable.getSelectedRows();
             if (selectedRows.length > 0) {
                 DefaultTableModel tableModel = (DefaultTableModel) cartTable.getModel();
-                // ArrayList<String> selectedMenuIDs = new ArrayList<>();
                 selectedMenuIDs.clear();
 
                 System.out.println("DEBUG: Selected rows count: " + selectedRows.length);
@@ -255,8 +260,17 @@ public class Cart extends javax.swing.JFrame {
 
                 ArrayList<CusOrder> cartItems = OrderHandling.getCart();
                 System.out.println("Before update, cart has: " + cartItems.size() + " items.");
-                OrderHandling.updateCart(cartItems, endUser, selectedMenuIDs);
+
+
+
+                OrderHandling.updateCart(cartItems, endUser.getID(), selectedMenuIDs);
+
+
+
                 System.out.println("After update, cart should be updated.");
+
+                // SwingUtilities.invokeLater(() -> displayCart(OrderHandling.getCart(), endUser.getID()));
+
 
                 SwingUtilities.invokeLater(() -> displayCart(OrderHandling.getCart(), endUser));
             } else {
@@ -314,7 +328,7 @@ public class Cart extends javax.swing.JFrame {
     public void refreshCart() {
         title_container1.removeAll();  // Clear the cart UI components
         ArrayList<CusOrder> cart = OrderHandling.getCart();
-        displayCart(cart, endUser.getID());            // Reload the cart items
+        displayCart(cart, endUser);            // Reload the cart items
         title_container1.revalidate();  // Refresh layout
         title_container1.repaint();     // Repaint UI
     }
@@ -368,19 +382,6 @@ public class Cart extends javax.swing.JFrame {
             if (selectedMenuIDs == null) {
                 selectedMenuIDs = new ArrayList<>(); // ✅ Fix potential null reference
             }
-
-
-
-    
-            // **✅ Fix: Declare itemsToRemove outside**
-            // ArrayList<String> selectedMenuIDs = new ArrayList<>();
-            // DefaultTableModel tableModel = (DefaultTableModel) cartTable.getModel();
-            
-            // int[] selectedRows = cartTable.getSelectedRows();
-            // for (int rowIndex : selectedRows) {
-            //     String menuID = tableModel.getValueAt(rowIndex, 0).toString();
-            //     selectedMenuIDs.add(menuID);
-            // }
     
             System.out.println("DEBUG: Final Selected MenuIDs for Removal: " + selectedMenuIDs); // Check before proceeding
     
@@ -394,27 +395,60 @@ public class Cart extends javax.swing.JFrame {
                 "OR" + String.format("%05d", OrderHandling.getORid() + 1), // Auto-generate Order ID
                 orderItems, endUser,
                 totalAmount,
-                "Completed",
+                "Pending",
                 serviceType
             );
     
             // **✅ Fix: Ensure `itemsToRemove` is used in `windowClosed`**
+            // paymentWindow.addWindowListener(new java.awt.event.WindowAdapter() {
+            //     @Override
+            //     public void windowClosed(java.awt.event.WindowEvent e) {
+            //         String paymentStatus = paymentWindow.getPaymentStatus(); // Store status
+            //         System.out.println("DEBUG: Payment window closed with status: " + paymentStatus);
+            
+            //         // 🛠 Ensure only "Completed" payments clear the cart
+            //         if ("Completed".equals(paymentStatus)) { 
+            //             System.out.println("DEBUG: Removing selected items from cart after payment: " + selectedMenuIDs);
+            //             cartItems.removeIf(order -> 
+            //                 order.getCustomer().getID().equals(endUser.getID()) && 
+            //                 selectedMenuIDs.contains(order.getMenuID())
+            //             );
+            
+            //             OrderHandling.updateCart(cartItems, endUser.getID(), selectedMenuIDs); // ✅ Ensure itemsToRemove is passed correctly
+                        
+            //             // Refresh UI after payment
+            //             SwingUtilities.invokeLater(() -> refreshCart());
+            //         } else {
+            //             System.out.println("DEBUG: Payment not completed. No items removed from cart.");
+            //         }
+            //     }
+            // });
+
             paymentWindow.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosed(java.awt.event.WindowEvent e) {
-                    // Check if payment status is "Completed"
-                    // if (paymentWindow.getPaymentStatus().equals("Completed")) {
-                    //     System.out.println("DEBUG: Removing selected items from cart after payment: " + selectedMenuIDs);
-                    //     cartItems.removeIf(order -> selectedMenuIDs.contains(order.getMenuID()));
-                    //     OrderHandling.updateCart(cartItems, endUser.getID(), selectedMenuIDs); // ✅ Ensure itemsToRemove is passed correctly
-        
-                    //     // Refresh UI after payment
-                    //     SwingUtilities.invokeLater(() -> refreshCart());
-                    // } else {
-                    //     System.out.println("DEBUG: Payment not completed. No items removed from cart.");
-                    // }
+                    String paymentStatus = paymentWindow.getPaymentStatus(); // Store status
+                    System.out.println("DEBUG: Payment window closed with status: " + paymentStatus);
+            
+                    // 🛠 Ensure only "Completed" payments clear the cart
+                    if ("Completed".equals(paymentStatus) && endUser.getBalance() >= totalAmount) { 
+                        System.out.println("DEBUG: Removing selected items from cart after payment: " + selectedMenuIDs);
+                        cartItems.removeIf(order -> 
+                            order.getCustomer().getID().equals(endUser.getID()) && 
+                            selectedMenuIDs.contains(order.getMenuID())
+                        );
+            
+                        OrderHandling.updateCart(cartItems, endUser.getID(), selectedMenuIDs); // ✅ Ensure itemsToRemove is passed correctly
+                        
+                        // Refresh UI after payment
+                        SwingUtilities.invokeLater(() -> refreshCart());
+                    } else {
+                        System.out.println("DEBUG: Payment not completed or insufficient balance. No items removed from cart.");
+                    }
                 }
             });
+            
+            
     
             paymentWindow.setVisible(true);
     
@@ -755,23 +789,6 @@ public class Cart extends javax.swing.JFrame {
 
         title_container.add(m5);
 
-        // // TODO title container add credit
-
-        // welcome.setBackground(new java.awt.Color(31, 31, 31));
-        // welcome.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        // welcome.setForeground(new java.awt.Color(255, 169, 140));
-        // welcome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        // welcome.setText("Cart");
-        // welcome.setAlignmentX(0.5F);
-        // welcome.setMaximumSize(new java.awt.Dimension(50, 50));
-        // welcome.setMinimumSize(new java.awt.Dimension(50, 50));
-        // welcome.setPreferredSize(new java.awt.Dimension(50, 50));
-
-        // JPanel titlePanel = new JPanel(new BorderLayout());
-        // titlePanel.setBackground(new java.awt.Color(31, 31, 31));
-        // titlePanel.setMaximumSize(new java.awt.Dimension(850, 50));
-        // titlePanel.setMinimumSize(new java.awt.Dimension(850, 50));
-        // titlePanel.setPreferredSize(new java.awt.Dimension(850, 50));
 
         JLabel welcome = new JLabel();
         welcome.setBackground(new java.awt.Color(31, 31, 31));
@@ -784,40 +801,9 @@ public class Cart extends javax.swing.JFrame {
         welcome.setMinimumSize(new java.awt.Dimension(50, 50));
         welcome.setPreferredSize(new java.awt.Dimension(50, 50));
 
-        // JTextField searchField = new JTextField();
-        // searchField.setPreferredSize(new java.awt.Dimension(200, 30));
-
-        // JButton searchButton = new JButton("Search");
-
-        // // DefaultTableModel model = (DefaultTableModel) cartTable.getModel();
-        // TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
-        // cartTable.setRowSorter(rowSorter);
-
-        // searchButton.addActionListener(new ActionListener() {
-        //     @Override
-        //     public void actionPerformed(ActionEvent e) {
-        //         String searchTerm = searchField.getText().trim();
-        //         if (searchTerm.isEmpty()) {
-        //             rowSorter.setRowFilter(null); // Show all rows if search is empty
-        //         } else {
-        //             rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm)); // Case-insensitive search
-        //         }
-        //     }
-        // });
-
-        // JPanel searchPanel = new JPanel();
-        // // searchPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 250));
-        //  // Add padding to the right        
-        // searchPanel.add(searchField);
-        // searchPanel.add(searchButton);
-
-        // titlePanel.add(welcome, BorderLayout.CENTER);
-        // titlePanel.add(searchPanel, BorderLayout.EAST);
-
-        // Add titlePanel to the title_container
+        
         title_container.add(welcome);
 
-        // title_container.add(titlePanel);
 
         
 

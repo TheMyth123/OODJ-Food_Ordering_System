@@ -38,6 +38,10 @@ public class CusPayment extends javax.swing.JFrame {
     private JSONArray orderItems;
     private String serviceType;
     private Customer endUser;
+    private String paymentStatus;
+    private CusPayment paymentWindow; // Declare globally
+
+
 
 
     public CusPayment(String orderID, JSONArray orderItems,Customer endUser, double totalAmount, String paymentStatus, String serviceType) {
@@ -45,8 +49,19 @@ public class CusPayment extends javax.swing.JFrame {
         this.orderItems = orderItems;
         this.totalAmount = totalAmount;
         this.serviceType = serviceType;
+        this.paymentStatus = paymentStatus;
+        this.paymentWindow = this; // Assign the current instance to the global variable
         initComponents();
     }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+    
+    public void setPaymentStatus(String status) {
+        this.paymentStatus = status;
+    }
+    
 
     
 
@@ -322,17 +337,11 @@ public class CusPayment extends javax.swing.JFrame {
                 // Call savePayment to save the payment details
                 OrderHandling.savePayment(orderID, endUser.getID(), orderItems, totalAmount, "Completed", serviceType, address, "Pending");
     
-                // // Clear the cart file after successful payment (here got error)
-                // Path cartPath = Paths.get(FileHandling.filePath.CART_PATH.getValue());
-                // Files.write(cartPath, new JSONArray().toString().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-    
-                // Read and print the saved payment data
-                // Path paymentPath = Paths.get(FileHandling.filePath.PAYMENT_PATH.getValue());
-                // String paymentData = new String(Files.readAllBytes(paymentPath));
-                // System.out.println(paymentData);
+                paymentWindow.setPaymentStatus("Completed");
 
     
                 JOptionPane.showMessageDialog(this, "Payment successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
                 dispose(); // Close the payment page
     
             } else {
