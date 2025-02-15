@@ -1,6 +1,3 @@
-// TODO discard got error it dlt the upper one
-// when  i make one payment all the items in the cart disappear
-
 package oodj.food_ordering_system.designUI;
 
 
@@ -256,36 +253,41 @@ public class Cart extends javax.swing.JFrame {
                     System.out.println("DEBUG: Selected MenuID to remove: " + menuID);
                 }
 
-                System.out.println("DEBUG: Final Selected MenuIDs: " + selectedMenuIDs);
+                boolean confirm = DialogBox.confirmMessage("Are you sure you want to discard item?", "Discard");
 
-                ArrayList<CusOrder> cartItems = OrderHandling.getCart();
-                System.out.println("Before update, cart has: " + cartItems.size() + " items.");
+                if (confirm) {
+                    System.out.println("DEBUG: Final Selected MenuIDs: " + selectedMenuIDs);
 
+                    ArrayList<CusOrder> cartItems = OrderHandling.getCart();
+                    System.out.println("Before update, cart has: " + cartItems.size() + " items.");
 
+                    OrderHandling.updateCart(cartItems, endUser.getID(), selectedMenuIDs);
 
-                OrderHandling.updateCart(cartItems, endUser.getID(), selectedMenuIDs);
+                    System.out.println("After update, cart should be updated.");
 
-
-
-                System.out.println("After update, cart should be updated.");
-
-                // SwingUtilities.invokeLater(() -> displayCart(OrderHandling.getCart(), endUser.getID()));
-
-
-                SwingUtilities.invokeLater(() -> displayCart(OrderHandling.getCart(), endUser));
+                    SwingUtilities.invokeLater(() -> displayCart(OrderHandling.getCart(), endUser));
+                }
+                
             } else {
                 JOptionPane.showMessageDialog(null, "Please select items to discard.");
             }
         });
 
 
+
+
+
         
-     
+        JButton editButton = new JButton("Edit Quantity");
+        editButton.addActionListener(evt -> editQuantity());
+
+
     
         // **Button Panel**
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonPanel.add(payButton);
         buttonPanel.add(discardButton);
+        buttonPanel.add(editButton);
     
         // **Fix: Remove Everything and Re-add Properly**
         title_container1.removeAll();  // Clear previous content
@@ -300,30 +302,71 @@ public class Cart extends javax.swing.JFrame {
     
 
     
-    // Method to update the quantity in the cart
-    private void updateCartQuantity(String foodName, int delta, JTextField quantityField, JLabel totalAmountLabel, double price) {
-        String filePath = FileHandling.filePath.CART_PATH.getValue();
-        try {
-            String content = new String(Files.readAllBytes(Paths.get(filePath)));
-            JSONArray cartArray = new JSONArray(content);
-            for (int i = 0; i < cartArray.length(); i++) {
-                JSONObject item = cartArray.getJSONObject(i);
-                if (item.getString("name").equals(foodName)) {
-                    int currentQuantity = item.getInt("quantity");
-                    int newQuantity = Math.max(currentQuantity + delta, 0);
-                    item.put("quantity", newQuantity);
-                    quantityField.setText(String.valueOf(newQuantity));
-                    double newTotalAmount = newQuantity * price;
-                    totalAmountLabel.setText(String.format("RM%.2f", newTotalAmount));
-                    break;
+    private void editQuantity() {
+        System.out.println("✅ editQuantity() function called!"); // Debugging step
+    
+        int selectedRow = cartTable.getSelectedRow();
+        
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select an item to edit.", "No Selection", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+    
+        DefaultTableModel model = (DefaultTableModel) cartTable.getModel();
+        String menuID = model.getValueAt(selectedRow, 0).toString();
+        int currentQuantity = Integer.parseInt(model.getValueAt(selectedRow, 1).toString());
+    
+        String newQuantityStr = JOptionPane.showInputDialog(this, 
+            "Enter new quantity for " + menuID + ":", currentQuantity);
+    
+        if (newQuantityStr != null) {
+            try {
+                int newQuantity = Integer.parseInt(newQuantityStr);
+    
+                if (newQuantity < 1) {
+                    JOptionPane.showMessageDialog(this, "Quantity must be at least 1.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
+    
+                // ✅ Debug: Checking if item is found
+                ArrayList<CusOrder> cartItems = OrderHandling.getCart();
+                boolean updated = false;
+    
+                for (CusOrder item : cartItems) {
+                    if (item.getMenuID().equals(menuID) && 
+                        item.getCustomer().getID().equals(endUser.getID())) {
+                        
+                        System.out.println("✅ Updating quantity for: " + menuID + " to " + newQuantity);
+                        item.setQuantity(newQuantity);
+                        updated = true;
+                        break;
+                    }
+                }
+    
+                if (updated) {
+                    // ✅ Debug: Ensure list is modified before saving
+                    System.out.println("🔹 Updated Cart Items: " + cartItems);
+    
+                    // ✅ Save updated cart
+                    OrderHandling.saveCart(cartItems);
+    
+                    // ✅ Debug: Check if file was updated
+                    System.out.println("✅ Cart saved successfully!");
+    
+                    // ✅ Refresh the UI
+                    refreshCart();
+                } else {
+                    System.out.println("⚠️ Item not found in cart for update.");
+                }
+    
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Please enter a valid number.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
             }
-            FileHandling.saveToFile(cartArray, filePath);
-            System.out.println("Cart updated successfully.");
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
+    
+    
+
     
     public void refreshCart() {
         title_container1.removeAll();  // Clear the cart UI components
@@ -399,30 +442,6 @@ public class Cart extends javax.swing.JFrame {
                 serviceType
             );
     
-            // **✅ Fix: Ensure `itemsToRemove` is used in `windowClosed`**
-            // paymentWindow.addWindowListener(new java.awt.event.WindowAdapter() {
-            //     @Override
-            //     public void windowClosed(java.awt.event.WindowEvent e) {
-            //         String paymentStatus = paymentWindow.getPaymentStatus(); // Store status
-            //         System.out.println("DEBUG: Payment window closed with status: " + paymentStatus);
-            
-            //         // 🛠 Ensure only "Completed" payments clear the cart
-            //         if ("Completed".equals(paymentStatus)) { 
-            //             System.out.println("DEBUG: Removing selected items from cart after payment: " + selectedMenuIDs);
-            //             cartItems.removeIf(order -> 
-            //                 order.getCustomer().getID().equals(endUser.getID()) && 
-            //                 selectedMenuIDs.contains(order.getMenuID())
-            //             );
-            
-            //             OrderHandling.updateCart(cartItems, endUser.getID(), selectedMenuIDs); // ✅ Ensure itemsToRemove is passed correctly
-                        
-            //             // Refresh UI after payment
-            //             SwingUtilities.invokeLater(() -> refreshCart());
-            //         } else {
-            //             System.out.println("DEBUG: Payment not completed. No items removed from cart.");
-            //         }
-            //     }
-            // });
 
             paymentWindow.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
@@ -919,15 +938,7 @@ public class Cart extends javax.swing.JFrame {
     // }   
 
 
-    private void discardItem(String item) {
-        // // Read the current cart items from the file
-        // ArrayList<CusOrder> cartItems = OrderHandling.getCart();
-        // // Remove the selected item from the list
-        // cartItems.remove(item);
-        // // Write the updated list back to the file
-        // OrderHandling.saveCart(cartItems);
-        // System.out.println("Discard item: " + item);
-    }
+    
 
     
 

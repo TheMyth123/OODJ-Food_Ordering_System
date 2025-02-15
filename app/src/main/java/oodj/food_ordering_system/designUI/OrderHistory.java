@@ -138,21 +138,114 @@ public class OrderHistory extends javax.swing.JFrame {
     //     title_container1.repaint();
     // }
 
+    // private void displayHistory(ArrayList<Payment> paymentList, String endUserID) {
+    //     // Ensure historyTable is initialized
+    //     if (historyTable == null) {
+    //         historyTable = new JTable(new DefaultTableModel(
+    //             new Object[][]{},
+    //             new String[]{"Order ID", "Service Type", "Delivery Address", "Total Amount", "Date", "Order Status", "Payment Status"}
+    //         ));
+    //     }
+
+    //     DefaultTableModel model = (DefaultTableModel) historyTable.getModel();
+
+    //     // Clear existing rows
+    //     model.setRowCount(0);
+
+    //     // Populate the table only for the specified customer
+    //     for (Payment payment : paymentList) {
+    //         if (payment.getCustomerID().equals(endUserID)) {
+    //             model.addRow(new Object[]{
+    //                 payment.getOrderID(),
+    //                 payment.getServiceType(),
+    //                 payment.getAddress(),
+    //                 payment.getTotalAmount(),
+    //                 payment.getDate(),
+    //                 payment.getOrderStatus(),
+    //                 payment.getPaymentStatus()
+    //             });
+    //         }
+    //     }
+
+    //     // **Search Field and Button**
+    //     JTextField searchField = new JTextField();
+    //     searchField.setPreferredSize(new Dimension(200, 30));
+
+    //     JButton searchButton = new JButton("Search");
+
+    //     // **Set TableRowSorter for Filtering**
+    //     TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
+    //     historyTable.setRowSorter(rowSorter);
+
+    //     // **Search Button Click Event**
+    //     searchButton.addActionListener(e -> {
+    //         String searchTerm = searchField.getText().trim();
+    //         if (searchTerm.isEmpty()) {
+    //             rowSorter.setRowFilter(null); // ✅ Show all rows when search is empty
+    //         } else {
+    //             rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm)); // Case-insensitive search
+    //         }
+    //     });
+
+    //     // **Real-Time Search (While Typing)**
+    //     searchField.addKeyListener(new KeyAdapter() {
+    //         @Override
+    //         public void keyReleased(KeyEvent e) {
+    //             String searchTerm = searchField.getText().trim();
+    //             if (searchTerm.isEmpty()) {
+    //                 rowSorter.setRowFilter(null); // ✅ Show all rows when search is cleared
+    //             } else {
+    //                 rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm)); // Case-insensitive search
+    //             }
+    //         }
+    //     });
+
+    //     // **Create Search Panel**
+    //     JPanel searchPanel = new JPanel();
+    //     searchPanel.add(new JLabel("Search:"));
+    //     searchPanel.add(searchField);
+    //     searchPanel.add(searchButton);
+
+    //     // **Scroll Pane for Order History Table**
+    //     JScrollPane scrollPane = new JScrollPane(historyTable);
+    //     scrollPane.setPreferredSize(new Dimension(500, 200));
+
+    //     // **Rate Button**
+    //     JButton rateButton = new JButton("Rate");
+    //     rateButton.addActionListener(e -> {
+    //         int selectedRow = historyTable.getSelectedRow();
+    //         if (selectedRow != -1) {
+    //             String selectedOrderID = model.getValueAt(selectedRow, 0).toString();
+    //             showRatingDialog(selectedOrderID);
+    //         } else {
+    //             JOptionPane.showMessageDialog(null, "Please select an order to rate.");
+    //         }
+    //     });
+
+    //     JPanel buttonPanel = new JPanel();
+    //     buttonPanel.add(rateButton);
+
+    //     // **Update UI**
+    //     title_container1.removeAll();
+    //     title_container1.setLayout(new BorderLayout());
+    //     title_container1.add(searchPanel, BorderLayout.NORTH); // ✅ Search Panel at the Top
+    //     title_container1.add(scrollPane, BorderLayout.CENTER);
+    //     title_container1.add(buttonPanel, BorderLayout.SOUTH);
+    //     title_container1.revalidate();
+    //     title_container1.repaint();
+    // }
+
     private void displayHistory(ArrayList<Payment> paymentList, String endUserID) {
-        // Ensure historyTable is initialized
         if (historyTable == null) {
             historyTable = new JTable(new DefaultTableModel(
                 new Object[][]{},
                 new String[]{"Order ID", "Service Type", "Delivery Address", "Total Amount", "Date", "Order Status", "Payment Status"}
             ));
         }
-
+    
         DefaultTableModel model = (DefaultTableModel) historyTable.getModel();
-
-        // Clear existing rows
-        model.setRowCount(0);
-
-        // Populate the table only for the specified customer
+        model.setRowCount(0); // Clear table before populating
+    
         for (Payment payment : paymentList) {
             if (payment.getCustomerID().equals(endUserID)) {
                 model.addRow(new Object[]{
@@ -167,7 +260,6 @@ public class OrderHistory extends javax.swing.JFrame {
             }
         }
 
-        // **Search Field and Button**
         JTextField searchField = new JTextField();
         searchField.setPreferredSize(new Dimension(200, 30));
 
@@ -206,11 +298,11 @@ public class OrderHistory extends javax.swing.JFrame {
         searchPanel.add(searchField);
         searchPanel.add(searchButton);
 
+    
         // **Scroll Pane for Order History Table**
         JScrollPane scrollPane = new JScrollPane(historyTable);
         scrollPane.setPreferredSize(new Dimension(500, 200));
 
-        // **Rate Button**
         JButton rateButton = new JButton("Rate");
         rateButton.addActionListener(e -> {
             int selectedRow = historyTable.getSelectedRow();
@@ -221,19 +313,96 @@ public class OrderHistory extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Please select an order to rate.");
             }
         });
-
+    
+        // **Reorder Button**
+        JButton reorderButton = new JButton("Reorder");
+        reorderButton.addActionListener(e -> {
+            int selectedRow = historyTable.getSelectedRow();
+            if (selectedRow != -1) {
+                String selectedOrderID = model.getValueAt(selectedRow, 0).toString();
+                reorderItems(selectedOrderID);
+            } else {
+                JOptionPane.showMessageDialog(null, "Please select an order to reorder.");
+            }
+        });
+    
+        // **View Receipt Button**
+        JButton viewReceiptButton = new JButton("View Receipt");
+        viewReceiptButton.addActionListener(e -> {
+            int selectedRow = historyTable.getSelectedRow();
+            if (selectedRow != -1) {
+                String selectedOrderID = model.getValueAt(selectedRow, 0).toString();
+                showReceipt(selectedOrderID);
+            } else {
+                JOptionPane.showMessageDialog(null, "Please select an order to view the receipt.");
+            }
+        });
+    
+        // **Button Panel**
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(rateButton);
-
+        buttonPanel.add(reorderButton);
+        buttonPanel.add(viewReceiptButton);
+    
         // **Update UI**
         title_container1.removeAll();
         title_container1.setLayout(new BorderLayout());
-        title_container1.add(searchPanel, BorderLayout.NORTH); // ✅ Search Panel at the Top
+        title_container1.add(searchPanel, BorderLayout.NORTH); 
         title_container1.add(scrollPane, BorderLayout.CENTER);
         title_container1.add(buttonPanel, BorderLayout.SOUTH);
         title_container1.revalidate();
         title_container1.repaint();
     }
+
+    private void reorderItems(String orderID) {
+        Payment payment = OrderHandling.getPaymentByID(orderID);
+        if (payment == null) {
+            JOptionPane.showMessageDialog(null, "Order not found!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+    
+        int confirm = JOptionPane.showConfirmDialog(
+            null, "Do you want to reorder this order?", "Reorder Confirmation",
+            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE
+        );
+    
+        // if (confirm == JOptionPane.YES_OPTION) {
+        //     ArrayList<CusOrder> cartItems = OrderHandling.getCart();
+        //     for (CusOrder item : payment.getOrderItems()) {
+        //         cartItems.add(new CusOrder(endUser, item.getMenuID(), item.getQuantity(), item.getPrice(), item.getName()));
+        //     }
+    
+        //     OrderHandling.saveCart(cartItems);
+        //     JOptionPane.showMessageDialog(null, "Items added to cart successfully!", "Reorder Success", JOptionPane.INFORMATION_MESSAGE);
+        // }
+    }
+    
+    private void showReceipt(String orderID) {
+        Payment payment = OrderHandling.getPaymentByID(orderID);
+        if (payment == null) {
+            JOptionPane.showMessageDialog(null, "Order not found!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+    
+        StringBuilder receipt = new StringBuilder();
+        receipt.append("Order ID: ").append(payment.getOrderID()).append("\n");
+        receipt.append("Service Type: ").append(payment.getServiceType()).append("\n");
+        receipt.append("Delivery Address: ").append(payment.getAddress()).append("\n");
+        receipt.append("Date: ").append(payment.getDate()).append("\n");
+        receipt.append("Order Status: ").append(payment.getOrderStatus()).append("\n");
+        receipt.append("Payment Status: ").append(payment.getPaymentStatus()).append("\n\n");
+    
+        receipt.append("Items:\n");
+        // for (CusOrder item : payment.getOrderItems()) {
+        //     receipt.append(" - ").append(item.getName()).append(" (x").append(item.getQuantity()).append(") - RM").append(item.getPrice()).append("\n");
+        // }
+    
+        receipt.append("\nTotal Amount: RM").append(payment.getTotalAmount());
+    
+        JOptionPane.showMessageDialog(null, receipt.toString(), "Receipt", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    
 
 
     // private void showRatingDialog(String orderID) {
