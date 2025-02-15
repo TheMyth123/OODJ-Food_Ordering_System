@@ -37,6 +37,12 @@ public class CusOrder {
 
     
 
+    // public CusOrder(String string, int int1, String string2, double double1, Customer customer2) {
+    //     //TODO Auto-generated constructor stub
+    // }
+
+
+
     // Getters and Setters
     public String getMenuID() { 
         return menuID; 

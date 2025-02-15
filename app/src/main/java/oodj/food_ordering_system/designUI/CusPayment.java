@@ -22,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import oodj.food_ordering_system.models.Credit;
+import oodj.food_ordering_system.models.CusOrder;
 import oodj.food_ordering_system.models.Customer;
 import oodj.food_ordering_system.utils.FileHandling;
 import oodj.food_ordering_system.utils.OrderHandling;
@@ -61,6 +62,11 @@ public class CusPayment extends javax.swing.JFrame {
     public void setPaymentStatus(String status) {
         this.paymentStatus = status;
     }
+
+    public JSONArray getOrderItems() {
+        return this.orderItems; // Ensure 'orderItems' is a valid field in Payment
+    }
+
     
 
     

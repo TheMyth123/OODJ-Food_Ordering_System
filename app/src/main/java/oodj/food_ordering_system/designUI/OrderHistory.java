@@ -45,6 +45,7 @@ import javax.swing.JScrollPane;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
@@ -76,164 +77,6 @@ public class OrderHistory extends javax.swing.JFrame {
         
     }
 
-    // private void displayHistory(ArrayList<Payment> paymentList, String endUserID) {
-    // // Ensure historyTable is initialized
-    //     if (historyTable == null) {
-    //         historyTable = new JTable(new DefaultTableModel(
-    //             new Object[][]{},
-    //             new String[]{"Order ID", "Service Type", "Delivery Address", "Total Amount", "Date", "Order Status", "Payment Status"}
-    //         ));
-        
-    //     }
-
-    //     DefaultTableModel model = (DefaultTableModel) historyTable.getModel();
-
-
-        
-
-    //     // Clear existing rows
-    //     model.setRowCount(0);
-
-    //     // Populate the table only for the specified customer
-    //     for (Payment payment : paymentList) {
-    //         if (payment.getCustomerID().equals(endUserID)) {  // Check if the customer ID matches
-    //               // Assuming getOrderItems() returns a list of CusOrder objects
-    //                 model.addRow(new Object[]{
-    //                     payment.getOrderID(),
-    //                     payment.getServiceType(),
-    //                     payment.getAddress(), // Ensure this field exists in Payment class
-    //                     payment.getTotalAmount(),
-    //                     payment.getDate(), // Ensure this field exists in Payment class
-    //                     payment.getOrderStatus(), // Ensure this field exists in Payment class
-    //                     payment.getPaymentStatus() // Ensure this field exists in Payment class
-    //                 });
-                
-    //         }
-    //     }
-
-
-    //     // Add table to scroll pane
-    //     JScrollPane scrollPane = new JScrollPane(historyTable);
-    //     scrollPane.setPreferredSize(new Dimension(500, 200));
-        
-    //     JButton rateButton = new JButton("Rate");
-    //     rateButton.addActionListener(e -> {
-    //         int selectedRow = historyTable.getSelectedRow();
-    //         if (selectedRow != -1) {
-    //             String selectedOrderID = model.getValueAt(selectedRow, 0).toString();
-    //             showRatingDialog(selectedOrderID);
-    //         } else {
-    //             JOptionPane.showMessageDialog(null, "Please select an order to rate.");
-    //         }
-    //     });
-    //     JPanel buttonPanel = new JPanel();
-    //     buttonPanel.add(rateButton);
-
-    //     // Add components to main container
-    //     title_container1.removeAll();
-    //     title_container1.setLayout(new BorderLayout());
-    //     title_container1.add(scrollPane, BorderLayout.CENTER);
-    //     title_container1.add(buttonPanel, BorderLayout.SOUTH);
-    //     title_container1.revalidate();
-    //     title_container1.repaint();
-    // }
-
-    // private void displayHistory(ArrayList<Payment> paymentList, String endUserID) {
-    //     // Ensure historyTable is initialized
-    //     if (historyTable == null) {
-    //         historyTable = new JTable(new DefaultTableModel(
-    //             new Object[][]{},
-    //             new String[]{"Order ID", "Service Type", "Delivery Address", "Total Amount", "Date", "Order Status", "Payment Status"}
-    //         ));
-    //     }
-
-    //     DefaultTableModel model = (DefaultTableModel) historyTable.getModel();
-
-    //     // Clear existing rows
-    //     model.setRowCount(0);
-
-    //     // Populate the table only for the specified customer
-    //     for (Payment payment : paymentList) {
-    //         if (payment.getCustomerID().equals(endUserID)) {
-    //             model.addRow(new Object[]{
-    //                 payment.getOrderID(),
-    //                 payment.getServiceType(),
-    //                 payment.getAddress(),
-    //                 payment.getTotalAmount(),
-    //                 payment.getDate(),
-    //                 payment.getOrderStatus(),
-    //                 payment.getPaymentStatus()
-    //             });
-    //         }
-    //     }
-
-    //     // **Search Field and Button**
-    //     JTextField searchField = new JTextField();
-    //     searchField.setPreferredSize(new Dimension(200, 30));
-
-    //     JButton searchButton = new JButton("Search");
-
-    //     // **Set TableRowSorter for Filtering**
-    //     TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
-    //     historyTable.setRowSorter(rowSorter);
-
-    //     // **Search Button Click Event**
-    //     searchButton.addActionListener(e -> {
-    //         String searchTerm = searchField.getText().trim();
-    //         if (searchTerm.isEmpty()) {
-    //             rowSorter.setRowFilter(null); // ✅ Show all rows when search is empty
-    //         } else {
-    //             rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm)); // Case-insensitive search
-    //         }
-    //     });
-
-    //     // **Real-Time Search (While Typing)**
-    //     searchField.addKeyListener(new KeyAdapter() {
-    //         @Override
-    //         public void keyReleased(KeyEvent e) {
-    //             String searchTerm = searchField.getText().trim();
-    //             if (searchTerm.isEmpty()) {
-    //                 rowSorter.setRowFilter(null); // ✅ Show all rows when search is cleared
-    //             } else {
-    //                 rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm)); // Case-insensitive search
-    //             }
-    //         }
-    //     });
-
-    //     // **Create Search Panel**
-    //     JPanel searchPanel = new JPanel();
-    //     searchPanel.add(new JLabel("Search:"));
-    //     searchPanel.add(searchField);
-    //     searchPanel.add(searchButton);
-
-    //     // **Scroll Pane for Order History Table**
-    //     JScrollPane scrollPane = new JScrollPane(historyTable);
-    //     scrollPane.setPreferredSize(new Dimension(500, 200));
-
-    //     // **Rate Button**
-    //     JButton rateButton = new JButton("Rate");
-    //     rateButton.addActionListener(e -> {
-    //         int selectedRow = historyTable.getSelectedRow();
-    //         if (selectedRow != -1) {
-    //             String selectedOrderID = model.getValueAt(selectedRow, 0).toString();
-    //             showRatingDialog(selectedOrderID);
-    //         } else {
-    //             JOptionPane.showMessageDialog(null, "Please select an order to rate.");
-    //         }
-    //     });
-
-    //     JPanel buttonPanel = new JPanel();
-    //     buttonPanel.add(rateButton);
-
-    //     // **Update UI**
-    //     title_container1.removeAll();
-    //     title_container1.setLayout(new BorderLayout());
-    //     title_container1.add(searchPanel, BorderLayout.NORTH); // ✅ Search Panel at the Top
-    //     title_container1.add(scrollPane, BorderLayout.CENTER);
-    //     title_container1.add(buttonPanel, BorderLayout.SOUTH);
-    //     title_container1.revalidate();
-    //     title_container1.repaint();
-    // }
 
     private void displayHistory(ArrayList<Payment> paymentList, String endUserID) {
         if (historyTable == null) {
@@ -337,11 +180,23 @@ public class OrderHistory extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Please select an order to view the receipt.");
             }
         });
+
+        JButton viewFeedbackButton = new JButton("View Feedback");
+        viewFeedbackButton.addActionListener(e -> {
+            int selectedRow = historyTable.getSelectedRow();
+            if (selectedRow != -1) {
+                String selectedOrderID = model.getValueAt(selectedRow, 0).toString();
+                showFeedback(selectedOrderID);
+            } else {
+                JOptionPane.showMessageDialog(null, "Please select an order to view feedback.");
+            }
+        });
     
         // **Button Panel**
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(rateButton);
         buttonPanel.add(reorderButton);
+        buttonPanel.add(viewFeedbackButton);
         buttonPanel.add(viewReceiptButton);
     
         // **Update UI**
@@ -353,6 +208,27 @@ public class OrderHistory extends javax.swing.JFrame {
         title_container1.revalidate();
         title_container1.repaint();
     }
+
+    private void showFeedback(String orderID) {
+        // Fetch ratings for the selected orderID
+        ArrayList<Rating> ratings = OrderHandling.getRatings();
+        StringBuilder feedback = new StringBuilder();
+    
+        for (Rating rating : ratings) {
+            if (rating.getOrderID().equals(orderID)) {
+                feedback.append("Customer ID: ").append(rating.getCustomerID()).append("\n");
+                feedback.append("Rating: ").append(rating.getRating()).append("\n");
+                feedback.append("Rating Type: ").append(rating.getRatingType()).append("\n");
+            }
+        }
+    
+        if (feedback.length() == 0) {
+            feedback.append("No feedback available for this order.");
+        }
+    
+        JOptionPane.showMessageDialog(null, feedback.toString(), "Feedback for Order " + orderID, JOptionPane.INFORMATION_MESSAGE);
+    }
+
 
     private void reorderItems(String orderID) {
         Payment payment = OrderHandling.getPaymentByID(orderID);
@@ -366,16 +242,45 @@ public class OrderHistory extends javax.swing.JFrame {
             JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE
         );
     
-        // if (confirm == JOptionPane.YES_OPTION) {
-        //     ArrayList<CusOrder> cartItems = OrderHandling.getCart();
-        //     for (CusOrder item : payment.getOrderItems()) {
-        //         cartItems.add(new CusOrder(endUser, item.getMenuID(), item.getQuantity(), item.getPrice(), item.getName()));
-        //     }
+        if (confirm == JOptionPane.YES_OPTION) {
+            // ✅ Step 1: Get current cart
+            ArrayList<CusOrder> cartItems = OrderHandling.getCart();
     
-        //     OrderHandling.saveCart(cartItems);
-        //     JOptionPane.showMessageDialog(null, "Items added to cart successfully!", "Reorder Success", JOptionPane.INFORMATION_MESSAGE);
-        // }
+            // ✅ Step 2: Loop through ordered items and update quantity if exists
+            for (CusOrder newItem : payment.getOrderItems()) {
+                boolean itemExists = false;
+    
+                for (CusOrder cartItem : cartItems) {
+                    if (cartItem.getMenuID().equals(newItem.getMenuID())) {
+                        // ✅ Update quantity instead of adding a new row
+                        cartItem.setQuantity(cartItem.getQuantity() + newItem.getQuantity());
+                        itemExists = true;
+                        break;
+                    }
+                }
+    
+                // ✅ Step 3: If item doesn't exist, add it
+                if (!itemExists) {
+                    cartItems.add(new CusOrder(
+                        newItem.getMenuID(), newItem.getQuantity(), newItem.getPrice(), newItem.getName(), newItem.getCustomer()
+                    ));
+                }
+            }
+    
+            // ✅ Step 4: Save updated cart
+            OrderHandling.saveCart(cartItems);
+    
+            // ✅ Step 5: Show success message
+            JOptionPane.showMessageDialog(null, "Items added to cart successfully!", "Reorder Success", JOptionPane.INFORMATION_MESSAGE);
+    
+            // ✅ Step 6: Refresh Cart Page (if needed)
+            // goToCartPage();
+        }
     }
+
+
+    
+    
     
     private void showReceipt(String orderID) {
         Payment payment = OrderHandling.getPaymentByID(orderID);
@@ -384,23 +289,11 @@ public class OrderHistory extends javax.swing.JFrame {
             return;
         }
     
-        StringBuilder receipt = new StringBuilder();
-        receipt.append("Order ID: ").append(payment.getOrderID()).append("\n");
-        receipt.append("Service Type: ").append(payment.getServiceType()).append("\n");
-        receipt.append("Delivery Address: ").append(payment.getAddress()).append("\n");
-        receipt.append("Date: ").append(payment.getDate()).append("\n");
-        receipt.append("Order Status: ").append(payment.getOrderStatus()).append("\n");
-        receipt.append("Payment Status: ").append(payment.getPaymentStatus()).append("\n\n");
-    
-        receipt.append("Items:\n");
-        // for (CusOrder item : payment.getOrderItems()) {
-        //     receipt.append(" - ").append(item.getName()).append(" (x").append(item.getQuantity()).append(") - RM").append(item.getPrice()).append("\n");
-        // }
-    
-        receipt.append("\nTotal Amount: RM").append(payment.getTotalAmount());
-    
-        JOptionPane.showMessageDialog(null, receipt.toString(), "Receipt", JOptionPane.INFORMATION_MESSAGE);
+        // Open a new receipt window
+        CusReceipt receiptWindow = new CusReceipt(orderID);
+        receiptWindow.setVisible(true);
     }
+    
     
     
 
@@ -430,9 +323,76 @@ public class OrderHistory extends javax.swing.JFrame {
     //     }
     // }
 
+    // private void showRatingDialog(String orderID) {
+    //     String[] ratings = {"1", "2", "3", "4", "5"};
+
+    //     // Step 1: Get the Food Rating
+    //     String foodRatingStr = (String) JOptionPane.showInputDialog(
+    //             null,
+    //             "Rate the FOOD for Order ID: " + orderID,
+    //             "Food Rating",
+    //             JOptionPane.QUESTION_MESSAGE,
+    //             null,
+    //             ratings,
+    //             ratings[4] // Default rating is 5
+    //     );
+
+    //     // Step 2: Get the Vendor Rating
+    //     String vendorRatingStr = (String) JOptionPane.showInputDialog(
+    //             null,
+    //             "Rate the VENDOR service for Order ID: " + orderID,
+    //             "Vendor Rating",
+    //             JOptionPane.QUESTION_MESSAGE,
+    //             null,
+    //             ratings,
+    //             ratings[4]
+    //     );
+
+    //     // Step 3: Get the Runner Rating
+    //     String runnerRatingStr = (String) JOptionPane.showInputDialog(
+    //             null,
+    //             "Rate the DELIVERY RUNNER for Order ID: " + orderID,
+    //             "Runner Rating",
+    //             JOptionPane.QUESTION_MESSAGE,
+    //             null,
+    //             ratings,
+    //             ratings[4]
+    //     );
+
+    //     if (foodRatingStr != null && vendorRatingStr != null && runnerRatingStr != null) {
+    //         int foodRating = Integer.parseInt(foodRatingStr);
+    //         int vendorRating = Integer.parseInt(vendorRatingStr);
+    //         int runnerRating = Integer.parseInt(runnerRatingStr);
+
+    //         JOptionPane.showMessageDialog(null,
+    //                 "Your Ratings for Order " + orderID + ":\n"
+    //                         + "Food: " + foodRating + " stars\n"
+    //                         + "Vendor: " + vendorRating + " stars\n"
+    //                         + "Runner: " + runnerRating + " stars");
+
+    //         Payment payment = OrderHandling.getPaymentByID(orderID);
+    //         Customer customer = UserHandling.getCustomerByID(endUser.getID());
+
+    //         // Step 4: Save each rating separately
+
+    //         OrderHandling.saveRating(payment, customer, foodRating, Rating.RatingType.FOOD);
+    //         OrderHandling.saveRating(payment, customer, vendorRating, Rating.RatingType.VENDOR);
+    //         OrderHandling.saveRating(payment, customer, runnerRating, Rating.RatingType.RUNNER);
+
+    //     }
+    // }
+
     private void showRatingDialog(String orderID) {
         String[] ratings = {"1", "2", "3", "4", "5"};
-
+    
+        Payment payment = OrderHandling.getPaymentByID(orderID);
+        if (payment == null) {
+            JOptionPane.showMessageDialog(null, "Order not found!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+    
+        String serviceType = payment.getServiceType();
+    
         // Step 1: Get the Food Rating
         String foodRatingStr = (String) JOptionPane.showInputDialog(
                 null,
@@ -443,7 +403,7 @@ public class OrderHistory extends javax.swing.JFrame {
                 ratings,
                 ratings[4] // Default rating is 5
         );
-
+    
         // Step 2: Get the Vendor Rating
         String vendorRatingStr = (String) JOptionPane.showInputDialog(
                 null,
@@ -454,38 +414,45 @@ public class OrderHistory extends javax.swing.JFrame {
                 ratings,
                 ratings[4]
         );
-
-        // Step 3: Get the Runner Rating
-        String runnerRatingStr = (String) JOptionPane.showInputDialog(
-                null,
-                "Rate the DELIVERY RUNNER for Order ID: " + orderID,
-                "Runner Rating",
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                ratings,
-                ratings[4]
-        );
-
-        if (foodRatingStr != null && vendorRatingStr != null && runnerRatingStr != null) {
+    
+        // Step 3: Get the Runner Rating if serviceType is "Request for delivery"
+        String runnerRatingStr = null;
+        if ("Request for delivery".equals(serviceType)) {
+            runnerRatingStr = (String) JOptionPane.showInputDialog(
+                    null,
+                    "Rate the DELIVERY RUNNER for Order ID: " + orderID,
+                    "Runner Rating",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    ratings,
+                    ratings[4]
+            );
+        }
+    
+        if (foodRatingStr != null && vendorRatingStr != null && (runnerRatingStr != null || !"Request for delivery".equals(serviceType))) {
             int foodRating = Integer.parseInt(foodRatingStr);
             int vendorRating = Integer.parseInt(vendorRatingStr);
-            int runnerRating = Integer.parseInt(runnerRatingStr);
-
-            JOptionPane.showMessageDialog(null,
-                    "Your Ratings for Order " + orderID + ":\n"
-                            + "Food: " + foodRating + " stars\n"
-                            + "Vendor: " + vendorRating + " stars\n"
-                            + "Runner: " + runnerRating + " stars");
-
-            Payment payment = OrderHandling.getPaymentByID(orderID);
+            Integer runnerRating = runnerRatingStr != null ? Integer.parseInt(runnerRatingStr) : null;
+    
+            StringBuilder ratingMessage = new StringBuilder();
+            ratingMessage.append("Your Ratings for Order ").append(orderID).append(":\n")
+                    .append("Food: ").append(foodRating).append(" stars\n")
+                    .append("Vendor: ").append(vendorRating).append(" stars\n");
+    
+            if (runnerRating != null) {
+                ratingMessage.append("Runner: ").append(runnerRating).append(" stars\n");
+            }
+    
+            JOptionPane.showMessageDialog(null, ratingMessage.toString());
+    
             Customer customer = UserHandling.getCustomerByID(endUser.getID());
-
+    
             // Step 4: Save each rating separately
-
             OrderHandling.saveRating(payment, customer, foodRating, Rating.RatingType.FOOD);
             OrderHandling.saveRating(payment, customer, vendorRating, Rating.RatingType.VENDOR);
-            OrderHandling.saveRating(payment, customer, runnerRating, Rating.RatingType.RUNNER);
-
+            if (runnerRating != null) {
+                OrderHandling.saveRating(payment, customer, runnerRating, Rating.RatingType.RUNNER);
+            }
         }
     }
 

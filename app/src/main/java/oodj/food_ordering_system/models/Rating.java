@@ -1,8 +1,8 @@
 package oodj.food_ordering_system.models;
 
 public class Rating {
-    private Payment orderID;
-    private Customer customerID;
+    private String orderID;
+    private String customerID;
     private int rating;
     private Boolean status;
     private RatingType ratingType; // New field to categorize ratings
@@ -12,7 +12,7 @@ public class Rating {
         FOOD, VENDOR, RUNNER
     }
 
-    public Rating(Payment orderID, Customer customerID, int rating, Boolean status, RatingType ratingType) {
+    public Rating(String orderID, String customerID, int rating, RatingType ratingType, boolean status) {
         this.orderID = orderID;
         this.customerID = customerID;
         this.rating = rating;
@@ -22,19 +22,19 @@ public class Rating {
 
     // Getter and Setter methods
 
-    public Payment getOrderID() {
+    public String getOrderID() {
         return orderID;
     }
 
-    public void setOrderID(Payment orderID) {
+    public void setOrderID(String orderID) {
         this.orderID = orderID;
     }
 
-    public Customer getCustomerID() {
+    public String getCustomerID() {
         return customerID;
     }
 
-    public void setCustomerID(Customer customerID) {
+    public void setCustomerID(String customerID) {
         this.customerID = customerID;
     }
 

@@ -6,16 +6,34 @@ import oodj.food_ordering_system.models.Notification;
 // import oodj.food_ordering_system.models.Notification;
 import oodj.food_ordering_system.utils.DialogBox;
 import oodj.food_ordering_system.utils.NotificationUtils;
+import oodj.food_ordering_system.utils.TransactionHandling;
 // import oodj.food_ordering_system.utils.NotificationUtils;
 import raven.glasspanepopup.*;
 
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 
 // import java.util.List;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
@@ -27,6 +45,7 @@ public class CusWallet extends javax.swing.JFrame {
     private Customer endUser;
     private List<Notification> notifications;
 
+
 // add run method
     // public static void run() {
     //     java.awt.EventQueue.invokeLater(() -> {
@@ -37,8 +56,10 @@ public class CusWallet extends javax.swing.JFrame {
 // TODO check again customerID
     public CusWallet(Customer endUser) {
         this.endUser = endUser;
+
         initComponents();
         // GlassPanePopup.install(this);
+        loadTransactionHistory();
 
     }
 
@@ -73,9 +94,26 @@ public class CusWallet extends javax.swing.JFrame {
         m7 = new javax.swing.JPanel();
         btn_Noti = new oodj.food_ordering_system.designUI.Button();
         wallet = new javax.swing.JPanel();
+        amount = new javax.swing.JLabel();
+        btn_plus = new javax.swing.JButton();
+        balanceLabel = new javax.swing.JLabel();
+        transactionTable = new javax.swing.JTable();
+        tableModel = new DefaultTableModel();
+        refresh = new javax.swing.JPanel();
+        searchField = new JTextField();
+        searchPanel = new javax.swing.JPanel();
+        rowSorter = new TableRowSorter<>(tableModel);
+
+
+
+
+        setTitle("Customer Wallet - Transaction Log");
+        setSize(1300, 700);
+        // setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(null);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Customer Cart");
+        // setTitle("Customer Cart");
         setBackground(new java.awt.Color(25, 25, 25));
         setMinimumSize(new java.awt.Dimension(1300, 700));
         setSize(new java.awt.Dimension(1300, 700));
@@ -383,12 +421,103 @@ public class CusWallet extends javax.swing.JFrame {
         title_container1.setPreferredSize(new java.awt.Dimension(1000, 670));
         // title_container1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 0));
 
+        refresh.setBackground(new java.awt.Color(31, 31, 31));
+        refresh.setMaximumSize(new java.awt.Dimension(1000, 60));
+        refresh.setMinimumSize(new java.awt.Dimension(1000, 60));
+        refresh.setPreferredSize(new java.awt.Dimension(1000, 60));
+
+        // Balance Label (Positioned on top of the table)
+        balanceLabel = new JLabel("Balance: RM " + endUser.getBalance());
+        balanceLabel.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 20));
+        balanceLabel.setForeground(new java.awt.Color(255, 169, 140)); // Make text visible
+        refresh.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 125, 0));
+        refresh.add(balanceLabel); // Add to wallet panel
+
+        // // Refresh Button (Aligned with Balance Label)
+        // JButton refreshButton = new JButton("Refresh");
+        // refreshButton.setBounds(850, 40, 100, 30); // Move closer to the balance label
+        // refreshButton.addActionListener(e -> loadTransactionHistory());
+        // refresh.add(refreshButton); // Add to wallet panel
+
 
         wallet.setBackground(new java.awt.Color(31, 31, 31));
         wallet.setMaximumSize(new java.awt.Dimension(1000, 670));
         wallet.setMinimumSize(new java.awt.Dimension(1000, 670));
         wallet.setPreferredSize(new java.awt.Dimension(1000, 670));
-        wallet.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 0));
+        // // wallet.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 125, 0));
+        // // wallet.setBounds(125, 0, 1000, 670);
+
+        // // Transaction Log Table (Top-ups + Orders)
+        // String[] columnNames = {"Date", "Type", "Amount (RM)", "Status", "Transaction ID", "Order ID"};
+
+        // tableModel = new DefaultTableModel(columnNames, 0);
+        // transactionTable = new JTable(tableModel);
+        // transactionTable.setPreferredScrollableViewportSize(new Dimension(900, 400)); // Wider table
+
+        
+        // // Ensure the table has a scroll pane
+        // JScrollPane scrollPane = new JScrollPane(transactionTable);
+        // scrollPane.setBounds(50, 80, 900, 400); // Move table down to make space for Balance
+        // wallet.add(scrollPane); // Add to wallet panel
+
+        // **Search Bar Panel**
+        searchPanel.setBackground(new Color(31, 31, 31));
+        searchPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+        searchField.setPreferredSize(new Dimension(200, 35)); // 200 width, 35 height
+        JButton searchButton = new JButton("Search");
+
+        searchPanel.add(searchField);
+        searchPanel.add(searchButton);
+
+        wallet.add(searchPanel, BorderLayout.NORTH);
+
+        // **Transaction Table**
+        String[] columnNames = {"Date", "Type", "Amount (RM)", "Status", "Transaction ID", "Order ID"};
+        tableModel = new DefaultTableModel(columnNames, 0);
+        transactionTable = new JTable(tableModel);
+        TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(tableModel);
+
+        transactionTable.setPreferredScrollableViewportSize(new Dimension(900, 400));
+        
+        transactionTable.setRowSorter(rowSorter);
+
+        JScrollPane scrollPane = new JScrollPane(transactionTable);
+        wallet.add(scrollPane, BorderLayout.CENTER);
+
+        
+
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String searchTerm = searchField.getText().trim();
+                if (searchTerm.isEmpty()) {
+                    rowSorter.setRowFilter(null); // Show all rows if search is empty
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm)); // Case-insensitive search
+                }
+            }
+        });
+
+        searchField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                String searchTerm = searchField.getText().trim();
+        
+                if (searchTerm.isEmpty()) {
+                    rowSorter.setRowFilter(null); // ✅ Show all rows when search is cleared
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm)); // Case-insensitive search
+                }
+            }
+        });
+
+
+        
+
+        
+        title_container1.add(refresh);
+    
         
 
         title_container1.add(wallet);
@@ -555,7 +684,28 @@ public class CusWallet extends javax.swing.JFrame {
         // dispose();
         // new TopUp(endUser).setVisible(true);
         // System.out.println("Page 4");
-    }                                       
+    }   
+    
+    private void loadTransactionHistory() {
+        tableModel.setRowCount(0); // Clear old data
+        balanceLabel.setText("Balance: RM " + endUser.getBalance()); // Update balance
+
+        List<Object[]> transactions = TransactionHandling.getTransactionLog(endUser.getID());
+
+        for (Object[] transaction : transactions) {
+            tableModel.addRow(transaction);
+        }
+
+    }
+
+    // private void filterTransactions() {
+    //     String searchText = searchField.getText().trim();
+    //     if (searchText.isEmpty()) {
+    //         rowSorter.setRowFilter(null);
+    //     } else {
+    //         rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText));
+    //     }
+    // }
 
 
     // Variables declaration - do not modify                     
@@ -589,7 +739,13 @@ public class CusWallet extends javax.swing.JFrame {
     private javax.swing.JLabel amount;
     private javax.swing.JButton btn_plus;
     private javax.swing.JPanel wallet;
+    private javax.swing.JLabel balanceLabel;
+    private javax.swing.JTable transactionTable;
+    private DefaultTableModel tableModel;
+    private javax.swing.JPanel refresh;
+    private JTextField searchField;
+    private JPanel searchPanel;
+    private TableRowSorter<DefaultTableModel> rowSorter;
+    
     // End of variables declaration                   
 }
-
-

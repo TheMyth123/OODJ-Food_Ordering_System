@@ -9,6 +9,7 @@ import oodj.food_ordering_system.models.Payment;
 import oodj.food_ordering_system.models.Rating;
 import oodj.food_ordering_system.models.Rating.RatingType;
 
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -136,6 +137,29 @@ public class OrderHandling {
 
         return menuItems;
     }
+
+    public static String getFoodNameByMenuID(String menuID) {
+        try {
+            // Read the JSON file containing menu items
+            String jsonData = new String(Files.readAllBytes(Paths.get(MENU))); // Ensure the correct file path
+            JSONArray menuArray = new JSONArray(jsonData);
+    
+            // Iterate through the menu data to find the matching menuID
+            for (int i = 0; i < menuArray.length(); i++) {
+                JSONObject menuItem = menuArray.getJSONObject(i);
+    
+                // Check if menuID matches
+                if (menuItem.getString("id").equals(menuID)) {
+                    return menuItem.getString("name"); // ✅ Return the food name
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error reading or parsing menu JSON file: " + e.getMessage());
+        }
+    
+        return "Unknown Item"; // If not found, return a default name
+    }
+    
 
 
    
@@ -277,11 +301,6 @@ public class OrderHandling {
     
         FileHandling.saveToFile(cartArray, CART); // Update the cart file
     }
-    
-    
-    
-    
-    
     
     
 
@@ -447,11 +466,12 @@ public class OrderHandling {
                 String address = orderObject.getString("DeliveryAddress");
                 String dateString = orderObject.getString("Date");
                 String orderStatus = orderObject.getString("OrderStatus");
+
     
                 // Extract order items array
     
                 // Create Payment object and add to list
-                Payment payment = new Payment(orderID, customerID, serviceType, totalAmount, paymentStatus, address, dateString, orderStatus);
+                Payment payment = new Payment(orderID, customerID, serviceType, totalAmount, paymentStatus, address, dateString, orderStatus, null);
                 paymentList.add(payment);
             }
         } catch (Exception e) {
@@ -498,6 +518,38 @@ public class OrderHandling {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static ArrayList<Rating> getRatings() {
+        ArrayList<String> lines = FileHandling.readLines(RATING);
+        StringBuilder jsonData = new StringBuilder();
+
+        for (String line : lines) {
+            jsonData.append(line);
+        }
+
+        ArrayList<Rating> ratingList = new ArrayList<>();
+
+        try {
+            JSONArray ratingsArray = new JSONArray(jsonData.toString());
+
+            for (int i = 0; i < ratingsArray.length(); i++) {
+                JSONObject ratingObject = ratingsArray.getJSONObject(i);
+
+                String orderID = ratingObject.getString("OrderID");
+                String customerID = ratingObject.getString("CustomerID");
+                int rating = ratingObject.getInt("Rating");
+                RatingType ratingType = RatingType.valueOf(ratingObject.getString("RatingType"));
+                boolean status = ratingObject.getBoolean("Status");
+
+                Rating ratingItem = new Rating(orderID, customerID, rating, ratingType, status);
+                ratingList.add(ratingItem);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ratingList;
     }
 //  this function will be added to vendor
     private void AcceptOrderStatus(String orderID) {
@@ -593,42 +645,89 @@ public class OrderHandling {
 
     public static Payment getPaymentByID(String orderID) {
         try {
-            // Read the JSON file
-            String jsonData = new String(Files.readAllBytes(Paths.get(PAYMENT)));
-            JSONArray customersArray = new JSONArray(jsonData);
+            // ✅ Read JSON file (ensure UTF-8 encoding)
+            String jsonData = new String(Files.readAllBytes(Paths.get(PAYMENT)), StandardCharsets.UTF_8);
+            System.out.println("DEBUG: JSON Data Read Successfully");
     
-            // Iterate through the customer data to find the matching ID
-            for (int i = 0; i < customersArray.length(); i++) {
-                JSONObject customerData = customersArray.getJSONObject(i);
+            // ✅ Parse JSON array
+            JSONArray paymentArray = new JSONArray(jsonData);
     
-                // Check if the CustomerID matches
-                if (customerData.getString("OrderID").equals(orderID)) {
-                    String customerID = customerData.getString("CustomerID");
-                    String serviceType = customerData.getString("ServiceType");
-                    double totalAmount = customerData.getDouble("TotalAmount");
-                    String paymentStatus = customerData.getString("PaymentStatus");
-                    String address = customerData.getString("DeliveryAddress");
-                    String dateString = customerData.getString("Date");
-                    String orderStatus = customerData.getString("OrderStatus");
-
+            // ✅ Loop through payment records to find matching OrderID
+            for (int i = 0; i < paymentArray.length(); i++) {
+                JSONObject paymentData = paymentArray.getJSONObject(i);
     
-                    // Extract order items array
+                if (paymentData.getString("OrderID").equals(orderID)) {
+                    System.out.println("DEBUG: Found matching Order ID: " + orderID);
     
-                    // Create Payment object and return
-                    return new Payment(orderID, customerID, serviceType, totalAmount, paymentStatus, address, dateString, orderStatus);
+                    // ✅ Extract payment details
+                    String customerID = paymentData.getString("CustomerID");
+                    String serviceType = paymentData.getString("ServiceType");
+                    double totalAmount = paymentData.getDouble("TotalAmount");
+                    String paymentStatus = paymentData.getString("PaymentStatus");
+                    String address = paymentData.getString("DeliveryAddress");
+                    String dateString = paymentData.getString("Date");
+                    String orderStatus = paymentData.getString("OrderStatus");
+    
+                    // ✅ Extract ordered items
+                    ArrayList<CusOrder> orderItems = new ArrayList<>();
+                    JSONArray orderItemsArray = paymentData.optJSONArray("OrderItems");
+    
+                    if (orderItemsArray == null) {
+                        System.err.println("ERROR: No 'OrderItems' found for order: " + orderID);
+                        return null;
+                    }
+    
+                    for (int j = 0; j < orderItemsArray.length(); j++) {
+                        JSONObject jsonItem = orderItemsArray.getJSONObject(j);
+    
+                        // ✅ Print full JSON item to debug
+                        System.out.println("DEBUG: Full JSON Object -> " + jsonItem.toString());
+                        System.out.println("DEBUG: Order Item Keys -> " + jsonItem.keySet());
+    
+                        // ✅ Ensure 'menuID' exists
+                        if (!jsonItem.has("menuID")) {
+                            System.err.println("ERROR: 'menuID' missing for an item in order: " + orderID);
+                            continue;
+                        }
+    
+                        String menuID = jsonItem.optString("menuID", "").trim();
+                        System.out.println("DEBUG: Extracted menuID -> [" + menuID + "] Length: " + menuID.length());
+                        int quantity = jsonItem.getInt("quantity");
+                        double price = jsonItem.getDouble("price");
+    
+                        // ✅ Fetch item name using menuID
+                        String itemName = getFoodNameByMenuID(menuID);
+                        // if (itemName == null || itemName.isEmpty()) {
+                        //     itemName = "Unknown Item"; // Default name if not found
+                        //     System.err.println("WARNING: Menu item not found for menuID: " + menuID);
+                        // }
+    
+                        // ✅ Retrieve Customer object using customerID
+                        Customer customer = UserHandling.getCustomerByID(customerID);
+    
+                        // ✅ Create CusOrder object and add to list
+                        CusOrder item = new CusOrder(menuID, quantity, price, itemName, customer);
+                        orderItems.add(item);
+                    }
+    
+                    // ✅ Create and return the Payment object
+                    return new Payment(orderID, customerID, serviceType, totalAmount, paymentStatus, address, dateString, orderStatus, orderItems);
                 }
             }
     
-            // If no matching customer is found
-            // DialogBox.errorMessage("Customer with ID " + customerID + " not found.", "Error");
+            // ❌ If no matching order is found
+            System.err.println("ERROR: Order with ID " + orderID + " not found.");
             return null;
     
         } catch (Exception e) {
-            // Handle any errors (e.g., file reading or JSON parsing)
-            DialogBox.errorMessage("Error reading or parsing customer JSON file: " + e.getMessage(), "Error");
+            // ❌ Handle any file reading or JSON parsing errors
+            System.err.println("ERROR: Failed to read/parse payment JSON file: " + e.getMessage());
             return null;
         }
-    } 
+    }
+    
+    
+    
 
     // dine in status: Order placed > Kitchen is preparing > Order is being served > Payment completed
     // takeaway status: Order placed > Kitchen is preparing > Order is ready for pickup > Order picked up > Order completed
