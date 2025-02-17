@@ -126,7 +126,7 @@ public class CustomerProfile extends javax.swing.JFrame {
         btn_home1 = new javax.swing.JButton();
         btn_booking1 = new javax.swing.JButton();
         btn_history1 = new javax.swing.JButton();
-        btn_idk1 = new javax.swing.JButton();
+        btn_profile = new javax.swing.JButton();
         margin6 = new javax.swing.JPanel();
         btn_container4 = new javax.swing.JPanel();
         btn_logout1 = new javax.swing.JButton();
@@ -218,7 +218,7 @@ public class CustomerProfile extends javax.swing.JFrame {
         systemName.setFont(new java.awt.Font("Segoe Print", 1, 36)); // NOI18N
         systemName.setForeground(new java.awt.Color(255, 169, 140));
         systemName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        systemName.setText("Car Connect");
+        systemName.setText("Food Connect");
         systemName.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         systemName.setAlignmentX(0.5F);
         systemName.setMaximumSize(new java.awt.Dimension(300, 50));
@@ -229,14 +229,14 @@ public class CustomerProfile extends javax.swing.JFrame {
         Sidebar.add(Logo_container);
 
         margin2.setBackground(new java.awt.Color(31, 31, 31));
-        margin2.setMaximumSize(new java.awt.Dimension(300, 50));
-        margin2.setMinimumSize(new java.awt.Dimension(300, 50));
+        margin2.setMaximumSize(new java.awt.Dimension(300, 10));
+        margin2.setMinimumSize(new java.awt.Dimension(300, 10));
 
         javax.swing.GroupLayout margin2Layout = new javax.swing.GroupLayout(margin2);
         margin2.setLayout(margin2Layout);
         margin2Layout.setHorizontalGroup(
             margin2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         margin2Layout.setVerticalGroup(
             margin2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -246,9 +246,9 @@ public class CustomerProfile extends javax.swing.JFrame {
         Sidebar.add(margin2);
 
         btn_container1.setBackground(new java.awt.Color(31, 31, 31));
-        btn_container1.setMaximumSize(new java.awt.Dimension(300, 320));
-        btn_container1.setMinimumSize(new java.awt.Dimension(300, 320));
-        btn_container1.setPreferredSize(new java.awt.Dimension(300, 320));
+        btn_container1.setMaximumSize(new java.awt.Dimension(300, 420));
+        btn_container1.setMinimumSize(new java.awt.Dimension(300, 420));
+        btn_container1.setPreferredSize(new java.awt.Dimension(300, 420));
         btn_container1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 30));
 
         btn_home.setBackground(new java.awt.Color(31, 31, 31));
@@ -343,12 +343,28 @@ public class CustomerProfile extends javax.swing.JFrame {
         });
         btn_container1.add(btn_complaint);
 
+
+        btn_profile.setBackground(new java.awt.Color(43, 43, 43));
+        btn_profile.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btn_profile.setForeground(new java.awt.Color(255, 169, 140));
+        btn_profile.setText("Profile");
+        btn_profile.setBorder(null);
+        btn_profile.setBorderPainted(false);
+        btn_profile.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_profile.setFocusable(false);
+        btn_profile.setMargin(new java.awt.Insets(15, 50, 15, 50));
+        btn_profile.setMaximumSize(new java.awt.Dimension(250, 40));
+        btn_profile.setMinimumSize(new java.awt.Dimension(250, 40));
+        btn_profile.setPreferredSize(new java.awt.Dimension(250, 40));
+        
+        btn_container1.add(btn_profile);
+
         Sidebar.add(btn_container1);
 
         margin3.setBackground(new java.awt.Color(31, 31, 31));
-        margin3.setMaximumSize(new java.awt.Dimension(300, 100));
-        margin3.setMinimumSize(new java.awt.Dimension(300, 100));
-        margin3.setPreferredSize(new java.awt.Dimension(300, 80));
+        margin3.setMaximumSize(new java.awt.Dimension(300, 40));
+        margin3.setMinimumSize(new java.awt.Dimension(300, 40));
+        margin3.setPreferredSize(new java.awt.Dimension(300, 40));
 
         javax.swing.GroupLayout margin3Layout = new javax.swing.GroupLayout(margin3);
         margin3.setLayout(margin3Layout);
@@ -390,13 +406,8 @@ public class CustomerProfile extends javax.swing.JFrame {
 
         Sidebar.add(btn_container2);
 
-        Sidebar1.setBackground(new java.awt.Color(31, 31, 31));
-        Sidebar1.setAlignmentX(0.0F);
-        Sidebar1.setAlignmentY(0.0F);
-        Sidebar1.setMaximumSize(new java.awt.Dimension(300, 670));
-        Sidebar1.setMinimumSize(new java.awt.Dimension(300, 670));
-        Sidebar1.setPreferredSize(new java.awt.Dimension(300, 670));
-        Sidebar1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
+        getContentPane().add(Sidebar);
+        Sidebar.setBounds(0, 0, 300, 670);
 
         margin4.setBackground(new java.awt.Color(31, 31, 31));
 
@@ -413,126 +424,6 @@ public class CustomerProfile extends javax.swing.JFrame {
 
         Sidebar1.add(margin4);
 
-        Logo_container1.setBackground(new java.awt.Color(31, 31, 31));
-        Logo_container1.setMaximumSize(new java.awt.Dimension(300, 100));
-        Logo_container1.setMinimumSize(new java.awt.Dimension(300, 100));
-        Logo_container1.setPreferredSize(new java.awt.Dimension(300, 100));
-        Logo_container1.setLayout(new javax.swing.BoxLayout(Logo_container1, javax.swing.BoxLayout.LINE_AXIS));
-
-        systemName1.setBackground(new java.awt.Color(31, 31, 31));
-        systemName1.setFont(new java.awt.Font("Segoe Print", 1, 36)); // NOI18N
-        systemName1.setForeground(new java.awt.Color(255, 169, 140));
-        systemName1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        systemName1.setText("Car Connect");
-        systemName1.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        systemName1.setAlignmentX(0.5F);
-        systemName1.setMaximumSize(new java.awt.Dimension(300, 50));
-        systemName1.setMinimumSize(new java.awt.Dimension(300, 50));
-        systemName1.setPreferredSize(new java.awt.Dimension(300, 50));
-        Logo_container1.add(systemName1);
-
-        Sidebar1.add(Logo_container1);
-
-        margin5.setBackground(new java.awt.Color(31, 31, 31));
-        margin5.setMaximumSize(new java.awt.Dimension(300, 50));
-        margin5.setMinimumSize(new java.awt.Dimension(300, 50));
-
-        javax.swing.GroupLayout margin5Layout = new javax.swing.GroupLayout(margin5);
-        margin5.setLayout(margin5Layout);
-        margin5Layout.setHorizontalGroup(
-            margin5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
-        margin5Layout.setVerticalGroup(
-            margin5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 50, Short.MAX_VALUE)
-        );
-
-        Sidebar1.add(margin5);
-
-        btn_container3.setBackground(new java.awt.Color(31, 31, 31));
-        btn_container3.setMaximumSize(new java.awt.Dimension(300, 320));
-        btn_container3.setMinimumSize(new java.awt.Dimension(300, 320));
-        btn_container3.setPreferredSize(new java.awt.Dimension(300, 320));
-        btn_container3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 30));
-
-        btn_home1.setBackground(new java.awt.Color(31, 31, 31));
-        btn_home1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_home1.setForeground(new java.awt.Color(245, 251, 254));
-        btn_home1.setText("Home");
-        btn_home1.setBorder(null);
-        btn_home1.setBorderPainted(false);
-        btn_home1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_home1.setFocusable(false);
-        btn_home1.setMargin(new java.awt.Insets(15, 50, 15, 50));
-        btn_home1.setMaximumSize(new java.awt.Dimension(250, 40));
-        btn_home1.setMinimumSize(new java.awt.Dimension(250, 40));
-        btn_home1.setPreferredSize(new java.awt.Dimension(250, 40));
-        btn_home1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_home1ActionPerformed(evt);
-            }
-        });
-        btn_container3.add(btn_home1);
-
-        btn_booking1.setBackground(new java.awt.Color(31, 31, 31));
-        btn_booking1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_booking1.setForeground(new java.awt.Color(245, 251, 254));
-        btn_booking1.setText("Make Booking");
-        btn_booking1.setBorder(null);
-        btn_booking1.setBorderPainted(false);
-        btn_booking1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_booking1.setFocusable(false);
-        btn_booking1.setMargin(new java.awt.Insets(15, 50, 15, 50));
-        btn_booking1.setMaximumSize(new java.awt.Dimension(250, 40));
-        btn_booking1.setMinimumSize(new java.awt.Dimension(250, 40));
-        btn_booking1.setPreferredSize(new java.awt.Dimension(250, 40));
-        btn_booking1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_booking1ActionPerformed(evt);
-            }
-        });
-        btn_container3.add(btn_booking1);
-
-        btn_history1.setBackground(new java.awt.Color(31, 31, 31));
-        btn_history1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_history1.setForeground(new java.awt.Color(245, 251, 254));
-        btn_history1.setText("History");
-        btn_history1.setBorder(null);
-        btn_history1.setBorderPainted(false);
-        btn_history1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_history1.setFocusable(false);
-        btn_history1.setMargin(new java.awt.Insets(15, 50, 15, 50));
-        btn_history1.setMaximumSize(new java.awt.Dimension(250, 40));
-        btn_history1.setMinimumSize(new java.awt.Dimension(250, 40));
-        btn_history1.setPreferredSize(new java.awt.Dimension(250, 40));
-        btn_history1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_history1ActionPerformed(evt);
-            }
-        });
-        btn_container3.add(btn_history1);
-
-        btn_idk1.setBackground(new java.awt.Color(43, 43, 43));
-        btn_idk1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btn_idk1.setForeground(new java.awt.Color(255, 169, 140));
-        btn_idk1.setText("Profile");
-        btn_idk1.setBorder(null);
-        btn_idk1.setBorderPainted(false);
-        btn_idk1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_idk1.setFocusable(false);
-        btn_idk1.setMargin(new java.awt.Insets(15, 50, 15, 50));
-        btn_idk1.setMaximumSize(new java.awt.Dimension(250, 40));
-        btn_idk1.setMinimumSize(new java.awt.Dimension(250, 40));
-        btn_idk1.setPreferredSize(new java.awt.Dimension(250, 40));
-        btn_idk1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_idk1ActionPerformed(evt);
-            }
-        });
-        btn_container3.add(btn_idk1);
-
-        Sidebar1.add(btn_container3);
 
         margin6.setBackground(new java.awt.Color(31, 31, 31));
         margin6.setMaximumSize(new java.awt.Dimension(300, 100));
@@ -552,34 +443,6 @@ public class CustomerProfile extends javax.swing.JFrame {
 
         Sidebar1.add(margin6);
 
-        btn_container4.setBackground(new java.awt.Color(31, 31, 31));
-        btn_container4.setMaximumSize(new java.awt.Dimension(300, 50));
-        btn_container4.setMinimumSize(new java.awt.Dimension(300, 50));
-        btn_container4.setPreferredSize(new java.awt.Dimension(300, 50));
-        btn_container4.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
-
-        btn_logout1.setBackground(new java.awt.Color(31, 31, 31));
-        btn_logout1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_logout1.setForeground(new java.awt.Color(245, 251, 254));
-        btn_logout1.setText("Logout");
-        btn_logout1.setBorder(null);
-        btn_logout1.setBorderPainted(false);
-        btn_logout1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_logout1.setFocusable(false);
-        btn_logout1.setMargin(new java.awt.Insets(15, 50, 15, 50));
-        btn_logout1.setMaximumSize(new java.awt.Dimension(250, 40));
-        btn_logout1.setMinimumSize(new java.awt.Dimension(250, 40));
-        btn_logout1.setPreferredSize(new java.awt.Dimension(250, 40));
-        btn_logout1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_logout1ActionPerformed(evt);
-            }
-        });
-        btn_container4.add(btn_logout1);
-
-        Sidebar1.add(btn_container4);
-
-        Sidebar.add(Sidebar1);
 
         getContentPane().add(Sidebar);
         Sidebar.setBounds(0, 0, 300, 670);
@@ -769,11 +632,7 @@ public class CustomerProfile extends javax.swing.JFrame {
         contactNumberTextField.setMaximumSize(new java.awt.Dimension(280, 40));
         contactNumberTextField.setMinimumSize(new java.awt.Dimension(280, 40));
         contactNumberTextField.setPreferredSize(new java.awt.Dimension(280, 40));
-        contactNumberTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                contactNumberTextFieldActionPerformed(evt);
-            }
-        });
+        
         txtbox3.add(contactNumberTextField);
         contactNumberTextField.setBounds(0, 0, 280, 40);
 
@@ -811,11 +670,7 @@ public class CustomerProfile extends javax.swing.JFrame {
         PasswordField.setMaximumSize(new java.awt.Dimension(280, 40));
         PasswordField.setMinimumSize(new java.awt.Dimension(280, 40));
         PasswordField.setPreferredSize(new java.awt.Dimension(280, 40));
-        PasswordField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                PasswordFieldActionPerformed(evt);
-            }
-        });
+        
         txtbox4.add(PasswordField);
         PasswordField.setBounds(0, 0, 280, 40);
 
@@ -870,11 +725,7 @@ public class CustomerProfile extends javax.swing.JFrame {
         emailTextField1.setMaximumSize(new java.awt.Dimension(280, 40));
         emailTextField1.setMinimumSize(new java.awt.Dimension(280, 40));
         emailTextField1.setPreferredSize(new java.awt.Dimension(280, 40));
-        emailTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                emailTextField1ActionPerformed(evt);
-            }
-        });
+        
         txtbox7.add(emailTextField1);
         emailTextField1.setBounds(0, 0, 280, 40);
 
@@ -915,11 +766,7 @@ public class CustomerProfile extends javax.swing.JFrame {
         addressTextField2.setMaximumSize(new java.awt.Dimension(280, 40));
         addressTextField2.setMinimumSize(new java.awt.Dimension(280, 40));
         addressTextField2.setPreferredSize(new java.awt.Dimension(280, 40));
-        addressTextField2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addressTextField2ActionPerformed(evt);
-            }
-        });
+       
         txtbox8.add(addressTextField2);
         addressTextField2.setBounds(0, 0, 280, 40);
 
@@ -1076,22 +923,9 @@ public class CustomerProfile extends javax.swing.JFrame {
 
     private void btn_homeActionPerformed(java.awt.event.ActionEvent evt) {                                         
         dispose();
-        // new CarRS().setVisible(true);
+        new CusDash().setVisible(true);
     }                                        
-
-    private void btn_bookingActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        dispose();
-        // new BookingCU().setVisible(true);
-    }                                           
-
-    private void btn_historyActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        dispose();
-        // new BookingDetailCU().setVisible(true);
-    }                                           
-
-    private void btn_idkActionPerformed(java.awt.event.ActionEvent evt) {                                        
-        // TODO add your handling code here:
-    }                                       
+                                                                                                                       
 
     private void btn_logoutActionPerformed(java.awt.event.ActionEvent evt) {                                           
         boolean confirm = DialogBox.confirmMessage("Are you sure you want to logout?", "Logout");
@@ -1099,43 +933,67 @@ public class CustomerProfile extends javax.swing.JFrame {
             dispose();
             new LoginPage().setVisible(true);
         }
-    }                                          
+    }  
+    
+    private void btn_cartActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        dispose();
+        new Cart(endUser).setVisible(true);
+    } 
 
-    private void contactNumberTextFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                       
-        // TODO add your handling code here:
-    }                                                      
+    private void btn_historyActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        dispose();
+        new OrderHistory(endUser).setVisible(true);
+        //TODO CALL PAGE 2
+    } 
+                                              
+                                              
+    private void btn_walletActionPerformed(java.awt.event.ActionEvent evt) {                                        
+        dispose();
+        new CusWallet(endUser).setVisible(true);
+    }
 
-    private void PasswordFieldActionPerformed(java.awt.event.ActionEvent evt) {                                              
-        // TODO add your handling code here:
-    }                                             
+    private void btn_complaintActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        dispose();
+        new CustomerComplaint(endUser).setVisible(true);
+    }
 
-    private void btn_home1ActionPerformed(java.awt.event.ActionEvent evt) {                                          
-        // TODO add your handling code here:
-    }                                         
+                                                                             
 
-    private void btn_booking1ActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        // TODO add your handling code here:
-    }                                            
+    // private void contactNumberTextFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                       
+    //     // TODO add your handling code here:
+    // }                                                      
 
-    private void btn_history1ActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        // TODO add your handling code here:
-    }                                            
+    // private void PasswordFieldActionPerformed(java.awt.event.ActionEvent evt) {                                              
+    //     // TODO add your handling code here:
+    // }                                             
 
-    private void btn_idk1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        // TODO add your handling code here:
-    }                                        
+    // private void btn_home1ActionPerformed(java.awt.event.ActionEvent evt) {                                          
+    //     // TODO add your handling code here:
+    // }                                         
 
-    private void btn_logout1ActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        // TODO add your handling code here:
-    }                                           
+    // private void btn_booking1ActionPerformed(java.awt.event.ActionEvent evt) {                                             
+    //     // TODO add your handling code here:
+    // }                                            
 
-    private void emailTextField1ActionPerformed(java.awt.event.ActionEvent evt) {                                                
-        // TODO add your handling code here:
-    }                                               
+    // private void btn_history1ActionPerformed(java.awt.event.ActionEvent evt) {                                             
+    //     // TODO add your handling code here:
+    // }                                            
 
-    private void addressTextField2ActionPerformed(java.awt.event.ActionEvent evt) {                                                  
-        // TODO add your handling code here:
-    }                                                 
+    // private void btn_profileActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    //     // TODO add your handling code here:
+    // }                                        
+
+    // private void btn_logout1ActionPerformed(java.awt.event.ActionEvent evt) {                                            
+    //     // TODO add your handling code here:
+    // }                                           
+
+    // private void emailTextField1ActionPerformed(java.awt.event.ActionEvent evt) {                                                
+    //     // TODO add your handling code here:
+    // }                                               
+
+    // private void addressTextField2ActionPerformed(java.awt.event.ActionEvent evt) {                                                  
+    //     // TODO add your handling code here:
+    // }                                                 
 
 
     // Variables declaration - do not modify                     
@@ -1161,7 +1019,7 @@ public class CustomerProfile extends javax.swing.JFrame {
     private javax.swing.JButton btn_home;
     private javax.swing.JButton btn_home1;
     private javax.swing.JButton btn_idk;
-    private javax.swing.JButton btn_idk1;
+    private javax.swing.JButton btn_profile;
     private javax.swing.JButton btn_logout;
     private javax.swing.JButton btn_logout1;
     private javax.swing.JTextField contactNumberTextField;
@@ -1210,6 +1068,6 @@ public class CustomerProfile extends javax.swing.JFrame {
     private javax.swing.JLabel usernameOutput;
     private javax.swing.JButton btn_complaint;
     private javax.swing.JButton btn_wallet;
-    private javax.swing.JButton btn_profile;
+    private javax.swing.JButton btn_cart;
     // End of variables declaration                   
 }

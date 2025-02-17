@@ -554,12 +554,12 @@ public class OrderHandling {
 //  this function will be added to vendor
     private void AcceptOrderStatus(String orderID) {
         try {
-            String filePath = ORDER;
+            String filePath = PAYMENT;
             FileHandling.checkFile(filePath);
-    
+
             JSONArray orderArray;
             File file = new File(filePath);
-    
+
             if (file.length() > 0) {
                 try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
                     StringBuilder content = new StringBuilder();
@@ -573,201 +573,232 @@ public class OrderHandling {
                 DialogBox.errorMessage("No order data found to edit.", "Error");
                 return;
             }
-    
+
             boolean orderFound = false;
+            JSONObject updatedOrder = null;
             for (int i = 0; i < orderArray.length(); i++) {
                 JSONObject order = orderArray.getJSONObject(i);
                 if (order.getString("OrderID").equals(orderID)) {
                     order.put("Status", "Accepted");
+                    updatedOrder = order;
                     orderFound = true;
                     break;
                 }
             }
-    
+
             if (!orderFound) {
                 DialogBox.errorMessage("Order with ID " + orderID + " not found.", "Error");
                 return;
             }
-    
+
             FileHandling.saveToFile(orderArray, filePath);
-    
+
+            // Send notification to the customer
+            if (updatedOrder != null) {
+                String customerID = updatedOrder.getString("CustomerID");
+                String type = "Order Accepted";
+                String content = "Your order has been accepted. You can track the status in your order history.";
+                String title = "Order Approved";
+                String actionlink = orderID;
+                
+                NotificationUtils.NotificationCreator(customerID, type, content, title, actionlink);
+            }
+
             DialogBox.successMessage("Order " + orderID + " status updated to: Accepted", "Success");
         } catch (IOException e) {
             DialogBox.errorMessage("Something went wrong, please try again...", "IO Error");
         }
     }
-
+    
+        
+    
+    
     private void CancelOrderStatus(String orderID) {
-        try {
-            String filePath = ORDER;
-            FileHandling.checkFile(filePath);
-
-            JSONArray orderArray;
-            File file = new File(filePath);
-
-            if (file.length() > 0) {
-                try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-                    StringBuilder content = new StringBuilder();
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        content.append(line);
-                    }
-                    orderArray = new JSONArray(content.toString());
-                }
-            } else {
-                DialogBox.errorMessage("No order data found to edit.", "Error");
-                return;
-            }
-
-            boolean orderFound = false;
-            for (int i = 0; i < orderArray.length(); i++) {
-                JSONObject order = orderArray.getJSONObject(i);
-                if (order.getString("OrderID").equals(orderID)) {
-                    order.put("Status", "Cancelled");
-                    orderFound = true;
-                    break;
-                }
-            }
-
-            if (!orderFound) {
-                DialogBox.errorMessage("Order with ID " + orderID + " not found.", "Error");
-                return;
-            }
-
-            FileHandling.saveToFile(orderArray, filePath);
-
-            DialogBox.successMessage("Order " + orderID + " status updated to: Cancelled", "Success");
-        } catch (IOException e) {
-            DialogBox.errorMessage("Something went wrong, please try again...", "IO Error");
-        }
-    }
-
-
-    public static Payment getPaymentByID(String orderID) {
-        try {
-            // ✅ Read JSON file (ensure UTF-8 encoding)
-            String jsonData = new String(Files.readAllBytes(Paths.get(PAYMENT)), StandardCharsets.UTF_8);
-            System.out.println("DEBUG: JSON Data Read Successfully");
-    
-            // ✅ Parse JSON array
-            JSONArray paymentArray = new JSONArray(jsonData);
-    
-            // ✅ Loop through payment records to find matching OrderID
-            for (int i = 0; i < paymentArray.length(); i++) {
-                JSONObject paymentData = paymentArray.getJSONObject(i);
-    
-                if (paymentData.getString("OrderID").equals(orderID)) {
-                    System.out.println("DEBUG: Found matching Order ID: " + orderID);
-    
-                    // ✅ Extract payment details
-                    String customerID = paymentData.getString("CustomerID");
-                    String serviceType = paymentData.getString("ServiceType");
-                    double totalAmount = paymentData.getDouble("TotalAmount");
-                    String paymentStatus = paymentData.getString("PaymentStatus");
-                    String address = paymentData.getString("DeliveryAddress");
-                    String dateString = paymentData.getString("Date");
-                    String orderStatus = paymentData.getString("OrderStatus");
-    
-                    // ✅ Extract ordered items
-                    ArrayList<CusOrder> orderItems = new ArrayList<>();
-                    JSONArray orderItemsArray = paymentData.optJSONArray("OrderItems");
-    
-                    if (orderItemsArray == null) {
-                        System.err.println("ERROR: No 'OrderItems' found for order: " + orderID);
-                        return null;
-                    }
-    
-                    for (int j = 0; j < orderItemsArray.length(); j++) {
-                        JSONObject jsonItem = orderItemsArray.getJSONObject(j);
-    
-                        // ✅ Print full JSON item to debug
-                        System.out.println("DEBUG: Full JSON Object -> " + jsonItem.toString());
-                        System.out.println("DEBUG: Order Item Keys -> " + jsonItem.keySet());
-    
-                        // ✅ Ensure 'menuID' exists
-                        if (!jsonItem.has("menuID")) {
-                            System.err.println("ERROR: 'menuID' missing for an item in order: " + orderID);
-                            continue;
+            try {
+                String filePath = PAYMENT;
+                FileHandling.checkFile(filePath);
+        
+                JSONArray orderArray;
+                File file = new File(filePath);
+        
+                if (file.length() > 0) {
+                    try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+                        StringBuilder content = new StringBuilder();
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            content.append(line);
                         }
-    
-                        String menuID = jsonItem.optString("menuID", "").trim();
-                        System.out.println("DEBUG: Extracted menuID -> [" + menuID + "] Length: " + menuID.length());
-                        int quantity = jsonItem.getInt("quantity");
-                        double price = jsonItem.getDouble("price");
-    
-                        // ✅ Fetch item name using menuID
-                        String itemName = getFoodNameByMenuID(menuID);
-                        // if (itemName == null || itemName.isEmpty()) {
-                        //     itemName = "Unknown Item"; // Default name if not found
-                        //     System.err.println("WARNING: Menu item not found for menuID: " + menuID);
-                        // }
-    
-                        // ✅ Retrieve Customer object using customerID
-                        Customer customer = UserHandling.getCustomerByID(customerID);
-    
-                        // ✅ Create CusOrder object and add to list
-                        CusOrder item = new CusOrder(menuID, quantity, price, itemName, customer);
-                        orderItems.add(item);
+                        orderArray = new JSONArray(content.toString());
                     }
-    
-                    // ✅ Create and return the Payment object
-                    return new Payment(orderID, customerID, serviceType, totalAmount, paymentStatus, address, dateString, orderStatus, orderItems);
+                } else {
+                    DialogBox.errorMessage("No order data found to edit.", "Error");
+                    return;
                 }
-            }
-    
-            // ❌ If no matching order is found
-            System.err.println("ERROR: Order with ID " + orderID + " not found.");
-            return null;
-    
-        } catch (Exception e) {
-            // ❌ Handle any file reading or JSON parsing errors
-            System.err.println("ERROR: Failed to read/parse payment JSON file: " + e.getMessage());
-            return null;
-        }
-    }
-    
-    
-    
-
-    // dine in status: Order placed > Kitchen is preparing > Order is being served > Payment completed
-    // takeaway status: Order placed > Kitchen is preparing > Order is ready for pickup > Order picked up > Order completed
-    // delivery status: Order received > Kitchen is preparing > Order is ready for pickup > Rider has picked up the order > Order delivered > Order completed
-
-    // Update order status manually
-    public static void updateOrderStatus(String orderID, String newStatus) {
-        try {
-            String jsonData = new String(Files.readAllBytes(Paths.get(ORDER)));
-            JSONArray ordersArray = jsonData.trim().isEmpty() ? new JSONArray() : new JSONArray(jsonData);
-
-            boolean orderUpdated = false;
-
-            for (int i = 0; i < ordersArray.length(); i++) {
-                JSONObject orderData = ordersArray.getJSONObject(i);
-
-                if (orderData.getString("OrderID").equals(orderID)) {
-                    orderData.put("Status", newStatus);
-                    orderUpdated = true;
-                    break;
+        
+                boolean orderFound = false;
+                JSONObject updatedOrder = null;
+                for (int i = 0; i < orderArray.length(); i++) {
+                    JSONObject order = orderArray.getJSONObject(i);
+                    if (order.getString("OrderID").equals(orderID)) {
+                        order.put("Status", "Cancelled");
+                        updatedOrder = order;
+                        orderFound = true;
+                        break;
+                    }
                 }
+        
+                if (!orderFound) {
+                    DialogBox.errorMessage("Order with ID " + orderID + " not found.", "Error");
+                    return;
+                }
+        
+                FileHandling.saveToFile(orderArray, filePath);
+        
+                // Send notification to the customer
+                if (updatedOrder != null) {
+                    String customerID = updatedOrder.getString("CustomerID");
+                    String type = "Order Cancelled";
+                    String content = "Your order has been cancelled. If you have any concerns, please contact support.";
+                    String title = "Order Cancelled";
+                    String actionlink = orderID;
+                    
+                    NotificationUtils.NotificationCreator(customerID, type, content, title, actionlink);
+                }
+        
+                DialogBox.successMessage("Order " + orderID + " status updated to: Cancelled", "Success");
+            } catch (IOException e) {
+                DialogBox.errorMessage("Something went wrong, please try again...", "IO Error");
             }
-
-            if (orderUpdated) {
-                FileHandling.writeToFile(ORDER, ordersArray, false);
-                DialogBox.successMessage("Order " + orderID + " status updated to: " + newStatus, "Success");
-            } else {
-                DialogBox.errorMessage("Order with ID " + orderID + " not found!", "Error");
-            }
-
-        } catch (Exception e) {
-            DialogBox.errorMessage("Error updating order status: " + e.getMessage(), "Error");
         }
-    }
+    
+    
+        public static Payment getPaymentByID(String orderID) {
+            try {
+                // ✅ Read JSON file (ensure UTF-8 encoding)
+                String jsonData = new String(Files.readAllBytes(Paths.get(PAYMENT)), StandardCharsets.UTF_8);
+                System.out.println("DEBUG: JSON Data Read Successfully");
+        
+                // ✅ Parse JSON array
+                JSONArray paymentArray = new JSONArray(jsonData);
+        
+                // ✅ Loop through payment records to find matching OrderID
+                for (int i = 0; i < paymentArray.length(); i++) {
+                    JSONObject paymentData = paymentArray.getJSONObject(i);
+        
+                    if (paymentData.getString("OrderID").equals(orderID)) {
+                        System.out.println("DEBUG: Found matching Order ID: " + orderID);
+        
+                        // ✅ Extract payment details
+                        String customerID = paymentData.getString("CustomerID");
+                        String serviceType = paymentData.getString("ServiceType");
+                        double totalAmount = paymentData.getDouble("TotalAmount");
+                        String paymentStatus = paymentData.getString("PaymentStatus");
+                        String address = paymentData.getString("DeliveryAddress");
+                        String dateString = paymentData.getString("Date");
+                        String orderStatus = paymentData.getString("OrderStatus");
+        
+                        // ✅ Extract ordered items
+                        ArrayList<CusOrder> orderItems = new ArrayList<>();
+                        JSONArray orderItemsArray = paymentData.optJSONArray("OrderItems");
+        
+                        if (orderItemsArray == null) {
+                            System.err.println("ERROR: No 'OrderItems' found for order: " + orderID);
+                            return null;
+                        }
+        
+                        for (int j = 0; j < orderItemsArray.length(); j++) {
+                            JSONObject jsonItem = orderItemsArray.getJSONObject(j);
+        
+                            // ✅ Print full JSON item to debug
+                            System.out.println("DEBUG: Full JSON Object -> " + jsonItem.toString());
+                            System.out.println("DEBUG: Order Item Keys -> " + jsonItem.keySet());
+        
+                            // ✅ Ensure 'menuID' exists
+                            if (!jsonItem.has("menuID")) {
+                                System.err.println("ERROR: 'menuID' missing for an item in order: " + orderID);
+                                continue;
+                            }
+        
+                            String menuID = jsonItem.optString("menuID", "").trim();
+                            System.out.println("DEBUG: Extracted menuID -> [" + menuID + "] Length: " + menuID.length());
+                            int quantity = jsonItem.getInt("quantity");
+                            double price = jsonItem.getDouble("price");
+        
+                            // ✅ Fetch item name using menuID
+                            String itemName = getFoodNameByMenuID(menuID);
+                            // if (itemName == null || itemName.isEmpty()) {
+                            //     itemName = "Unknown Item"; // Default name if not found
+                            //     System.err.println("WARNING: Menu item not found for menuID: " + menuID);
+                            // }
+        
+                            // ✅ Retrieve Customer object using customerID
+                            Customer customer = UserHandling.getCustomerByID(customerID);
+        
+                            // ✅ Create CusOrder object and add to list
+                            CusOrder item = new CusOrder(menuID, quantity, price, itemName, customer);
+                            orderItems.add(item);
+                        }
+        
+                        // ✅ Create and return the Payment object
+                        return new Payment(orderID, customerID, serviceType, totalAmount, paymentStatus, address, dateString, orderStatus, orderItems);
+                    }
+                }
+        
+                // ❌ If no matching order is found
+                System.err.println("ERROR: Order with ID " + orderID + " not found.");
+                return null;
+        
+            } catch (Exception e) {
+                // ❌ Handle any file reading or JSON parsing errors
+                System.err.println("ERROR: Failed to read/parse payment JSON file: " + e.getMessage());
+                return null;
+            }
+        }
+        
+        
+        
+    
+        // dine in status: Order placed > Kitchen is preparing > Order is being served > Payment completed
+        // takeaway status: Order placed > Kitchen is preparing > Order is ready for pickup > Order picked up > Order completed
+        // delivery status: Order received > Kitchen is preparing > Order is ready for pickup > Rider has picked up the order > Order delivered > Order completed
+    
+        // Update order status manually
+        public static void updateOrderStatus(String orderID, String newStatus) {
+            try {
+                String jsonData = new String(Files.readAllBytes(Paths.get(ORDER)));
+                JSONArray ordersArray = jsonData.trim().isEmpty() ? new JSONArray() : new JSONArray(jsonData);
+    
+                boolean orderUpdated = false;
+    
+                for (int i = 0; i < ordersArray.length(); i++) {
+                    JSONObject orderData = ordersArray.getJSONObject(i);
+    
+                    if (orderData.getString("OrderID").equals(orderID)) {
+                        orderData.put("Status", newStatus);
+                        orderUpdated = true;
+                        break;
+                    }
+                }
+    
+                if (orderUpdated) {
+                    FileHandling.writeToFile(ORDER, ordersArray, false);
+                    DialogBox.successMessage("Order " + orderID + " status updated to: " + newStatus, "Success");
+                } else {
+                    DialogBox.errorMessage("Order with ID " + orderID + " not found!", "Error");
+                }
+    
+            } catch (Exception e) {
+                DialogBox.errorMessage("Error updating order status: " + e.getMessage(), "Error");
+            }
+        }
+    
+    
+        // test the code
+        public static void main(String[] args) {
+            // updateOrderStatus("ORD001", "Kitchen is preparing");
+        }
+    
 
-
-    // test the code
-    public static void main(String[] args) {
-        // updateOrderStatus("ORD001", "Kitchen is preparing");
-    }
     
     
 }

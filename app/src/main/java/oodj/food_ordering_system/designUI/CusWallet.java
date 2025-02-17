@@ -103,6 +103,8 @@ public class CusWallet extends javax.swing.JFrame {
         searchField = new JTextField();
         searchPanel = new javax.swing.JPanel();
         rowSorter = new TableRowSorter<>(tableModel);
+        btn_complaint = new javax.swing.JButton();
+
 
 
 
@@ -183,9 +185,9 @@ public class CusWallet extends javax.swing.JFrame {
         Sidebar.add(Logo_container);
 
         margin2.setBackground(new java.awt.Color(31, 31, 31));
-        margin2.setMaximumSize(new java.awt.Dimension(300, 50));
-        margin2.setMinimumSize(new java.awt.Dimension(300, 50));
-        margin2.setPreferredSize(new java.awt.Dimension(300, 50));
+        margin2.setMaximumSize(new java.awt.Dimension(300, 10));
+        margin2.setMinimumSize(new java.awt.Dimension(300, 10));
+        margin2.setPreferredSize(new java.awt.Dimension(300, 10));
 
         javax.swing.GroupLayout margin2Layout = new javax.swing.GroupLayout(margin2);
         margin2.setLayout(margin2Layout);
@@ -201,9 +203,9 @@ public class CusWallet extends javax.swing.JFrame {
         Sidebar.add(margin2);
 
         btn_container1.setBackground(new java.awt.Color(31, 31, 31));
-        btn_container1.setMaximumSize(new java.awt.Dimension(300, 350));
-        btn_container1.setMinimumSize(new java.awt.Dimension(300, 350));
-        btn_container1.setPreferredSize(new java.awt.Dimension(300, 350));
+        btn_container1.setMaximumSize(new java.awt.Dimension(300, 420));
+        btn_container1.setMinimumSize(new java.awt.Dimension(300, 420));
+        btn_container1.setPreferredSize(new java.awt.Dimension(300, 420));
         btn_container1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 30));
 
         btn_home.setBackground(new java.awt.Color(31, 31, 31));
@@ -279,6 +281,25 @@ public class CusWallet extends javax.swing.JFrame {
         
         btn_container1.add(btn_history);
 
+        btn_complaint.setBackground(new java.awt.Color(31, 31, 31));
+        btn_complaint.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btn_complaint.setForeground(new java.awt.Color(245, 251, 254));
+        btn_complaint.setText("Complaint");
+        btn_complaint.setBorder(null);
+        btn_complaint.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_complaint.setDoubleBuffered(true);
+        btn_complaint.setFocusable(false);
+        btn_complaint.setMargin(new java.awt.Insets(15, 50, 15, 50));
+        btn_complaint.setMaximumSize(new java.awt.Dimension(250, 40));
+        btn_complaint.setMinimumSize(new java.awt.Dimension(250, 40));
+        btn_complaint.setPreferredSize(new java.awt.Dimension(250, 40));
+        btn_complaint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_complaintActionPerformed(evt);
+            }
+        });
+        btn_container1.add(btn_complaint);
+
         btn_profile.setBackground(new java.awt.Color(31, 31, 31));
         btn_profile.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btn_profile.setForeground(new java.awt.Color(245, 251, 254));
@@ -301,9 +322,9 @@ public class CusWallet extends javax.swing.JFrame {
         Sidebar.add(btn_container1);
 
         margin3.setBackground(new java.awt.Color(31, 31, 31));
-        margin3.setMaximumSize(new java.awt.Dimension(300, 60));
-        margin3.setMinimumSize(new java.awt.Dimension(300, 60));
-        margin3.setPreferredSize(new java.awt.Dimension(300, 60));
+        margin3.setMaximumSize(new java.awt.Dimension(300, 40));
+        margin3.setMinimumSize(new java.awt.Dimension(300, 40));
+        margin3.setPreferredSize(new java.awt.Dimension(300, 40));
 
         javax.swing.GroupLayout margin3Layout = new javax.swing.GroupLayout(margin3);
         margin3.setLayout(margin3Layout);
@@ -676,14 +697,16 @@ public class CusWallet extends javax.swing.JFrame {
         new OrderHistory(endUser).setVisible(true);
         //TODO CALL PAGE 2
     } 
-                                              
-                                            
-                                                                             
+
+    private void btn_complaintActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        dispose();
+        new CustomerComplaint(endUser).setVisible(true);
+    }
+                                                                                                                      
 
     private void btn_profileActionPerformed(java.awt.event.ActionEvent evt) {                                        
-        // dispose();
-        // new TopUp(endUser).setVisible(true);
-        // System.out.println("Page 4");
+        dispose();
+        new CustomerProfile(endUser).setVisible(true);
     }   
     
     private void loadTransactionHistory() {
@@ -746,6 +769,7 @@ public class CusWallet extends javax.swing.JFrame {
     private JTextField searchField;
     private JPanel searchPanel;
     private TableRowSorter<DefaultTableModel> rowSorter;
+    private JButton btn_complaint;
     
     // End of variables declaration                   
 }

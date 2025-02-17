@@ -579,9 +579,9 @@ public class Cart extends javax.swing.JFrame {
         Sidebar.add(Logo_container);
 
         margin2.setBackground(new java.awt.Color(31, 31, 31));
-        margin2.setMaximumSize(new java.awt.Dimension(300, 50));
-        margin2.setMinimumSize(new java.awt.Dimension(300, 50));
-        margin2.setPreferredSize(new java.awt.Dimension(300, 50));
+        margin2.setMaximumSize(new java.awt.Dimension(300, 10));
+        margin2.setMinimumSize(new java.awt.Dimension(300, 10));
+        margin2.setPreferredSize(new java.awt.Dimension(300, 10));
 
         javax.swing.GroupLayout margin2Layout = new javax.swing.GroupLayout(margin2);
         margin2.setLayout(margin2Layout);
@@ -597,9 +597,9 @@ public class Cart extends javax.swing.JFrame {
         Sidebar.add(margin2);
 
         btn_container1.setBackground(new java.awt.Color(31, 31, 31));
-        btn_container1.setMaximumSize(new java.awt.Dimension(300, 350));
-        btn_container1.setMinimumSize(new java.awt.Dimension(300, 350));
-        btn_container1.setPreferredSize(new java.awt.Dimension(300, 350));
+        btn_container1.setMaximumSize(new java.awt.Dimension(300, 420));
+        btn_container1.setMinimumSize(new java.awt.Dimension(300, 420));
+        btn_container1.setPreferredSize(new java.awt.Dimension(300, 420));
         btn_container1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 30));
 
         btn_home.setBackground(new java.awt.Color(31, 31, 31));
@@ -711,9 +711,9 @@ public class Cart extends javax.swing.JFrame {
         Sidebar.add(btn_container1);
 
         margin3.setBackground(new java.awt.Color(31, 31, 31));
-        margin3.setMaximumSize(new java.awt.Dimension(300, 60));
-        margin3.setMinimumSize(new java.awt.Dimension(300, 60));
-        margin3.setPreferredSize(new java.awt.Dimension(300, 60));
+        margin3.setMaximumSize(new java.awt.Dimension(300, 40));
+        margin3.setMinimumSize(new java.awt.Dimension(300, 40));
+        margin3.setPreferredSize(new java.awt.Dimension(300, 40));
 
         javax.swing.GroupLayout margin3Layout = new javax.swing.GroupLayout(margin3);
         margin3.setLayout(margin3Layout);
@@ -958,14 +958,11 @@ public class Cart extends javax.swing.JFrame {
     private void btn_historyActionPerformed(java.awt.event.ActionEvent evt) {                                            
         dispose();
         new OrderHistory(endUser).setVisible(true);
-        //TODO CALL PAGE 3
-        System.out.println("Page 3");
     }                                                                          
 
     private void btn_profileActionPerformed(java.awt.event.ActionEvent evt) {                                        
-        //dispose();
-        //TODO CALL PAGE 4
-        System.out.println("Page 4");
+        dispose();
+        new CustomerProfile(endUser).setVisible(true);
     }      
     
     private void btn_walletActionPerformed(java.awt.event.ActionEvent evt) {                                        
@@ -975,7 +972,7 @@ public class Cart extends javax.swing.JFrame {
 
     private void btn_complaintActionPerformed(java.awt.event.ActionEvent evt) {                                            
         dispose();
-        // new Complaint(endUser).setVisible(true);
+        new CustomerComplaint(endUser).setVisible(true);
     }
 
 
