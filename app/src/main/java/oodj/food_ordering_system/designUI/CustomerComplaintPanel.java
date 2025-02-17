@@ -17,19 +17,19 @@ import oodj.food_ordering_system.utils.UserHandling;
 
 
 
-public class ComplaintSystem extends JFrame {
-    private JTable complaintTable;
-    private DefaultTableModel tableModel;
-    static Map<String, Complaint> complaintMap = new HashMap<>();
-    private JTextArea chatArea;
-    private JTextField inputField;
-    private JButton sendButton, resolveButton;
-    private Complaint selectedComplaint;
-    private static ComplaintSystem instance;
-    private static CustomerComplaint customerInterface;
+// public class ComplaintSystem extends JFrame {
+//     private JTable complaintTable;
+//     private DefaultTableModel tableModel;
+//     static Map<String, Complaint> complaintMap = new HashMap<>();
+//     private JTextArea chatArea;
+//     private JTextField inputField;
+//     private JButton sendButton, resolveButton;
+//     private Complaint selectedComplaint;
+//     private static ComplaintSystem instance;
+//     private static CustomerComplaint customerInterface;
 
 
-    private static Customer endUser;
+//     private static Customer endUser;
     
     // public static ComplaintSystem getInstance() {
     //     if (instance == null) {
@@ -191,14 +191,14 @@ public class ComplaintSystem extends JFrame {
     //         managerInterface.setVisible(true);
     //     });
     // }
-}
+// }
 
-class CustomerComplaint extends JFrame {
-    private JTable complaintTable;
-    private DefaultTableModel tableModel;
-    private JTextArea chatArea;
-    private JTextField inputField;
-    private JButton sendButton;
+// class CustomerComplaint extends JFrame {
+//     private JTable complaintTable;
+//     private DefaultTableModel tableModel;
+//     private JTextArea chatArea;
+//     private JTextField inputField;
+//     private JButton sendButton;
 
 
     // public CustomerComplaint() {
@@ -486,10 +486,70 @@ class CustomerComplaint extends JFrame {
     //     });
     // }
 
-    public CustomerComplaint(Customer endUser) {
-        setTitle("Customer Complaint Interface");
-        setSize(500, 350);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+    // public CustomerComplaint(Customer endUser) {
+    //     setTitle("Customer Complaint Interface");
+    //     setSize(500, 350);
+    //     setDefaultCloseOperation(EXIT_ON_CLOSE);
+    //     setLayout(new BorderLayout());
+
+    //     tableModel = new DefaultTableModel(new Object[]{"Complaint ID", "Status"}, 0);
+    //     complaintTable = new JTable(tableModel);
+    //     JScrollPane tableScrollPane = new JScrollPane(complaintTable);
+    //     add(tableScrollPane, BorderLayout.WEST);
+
+    //     complaintTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    //     complaintTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+    //         @Override
+    //         public void valueChanged(ListSelectionEvent e) {
+    //             if (!e.getValueIsAdjusting()) {
+    //                 int selectedRow = complaintTable.getSelectedRow();
+    //                 if (selectedRow != -1) {
+    //                     String complaintId = (String) tableModel.getValueAt(selectedRow, 0);
+    //                     updateChat(complaintId);
+    //                     sendButton.setText("Send Message");
+    //                     inputField.setVisible(true);
+    //                     chatArea.setVisible(true);
+    //                 } else {
+    //                     chatArea.setVisible(false); // Make chat area invisible when unselected
+    //                     sendButton.setText("Create Complaint");
+    //                     inputField.setVisible(false);
+    //                 }
+    //             }
+    //         }
+    //     });
+
+    //     chatArea = new JTextArea();
+    //     chatArea.setVisible(false); // Make chat area invisible when unselected                
+    //     JScrollPane chatScrollPane = new JScrollPane(chatArea);
+    //     add(chatScrollPane, BorderLayout.CENTER);
+
+    //     // Add chat input field & send button
+    //     JPanel inputPanel = new JPanel(new BorderLayout());
+    //     inputField = new JTextField();
+    //     inputField.setVisible(false);
+    //     sendButton = new JButton("Create Complaint");
+
+
+    //     sendButton.addActionListener(e -> handleSendButton());
+
+    //     inputPanel.add(inputField, BorderLayout.CENTER);
+    //     inputPanel.add(sendButton, BorderLayout.EAST);
+    //     add(inputPanel, BorderLayout.SOUTH);
+
+    //     // Load existing complaints
+    //     loadComplaints();
+    // }
+
+    
+
+public class CustomerComplaintPanel extends JPanel {
+    private JTable complaintTable;
+    private DefaultTableModel tableModel;
+    private JTextArea chatArea;
+    private JTextField inputField;
+    private JButton sendButton;
+
+    public CustomerComplaintPanel(Customer endUser) {
         setLayout(new BorderLayout());
 
         tableModel = new DefaultTableModel(new Object[]{"Complaint ID", "Status"}, 0);
@@ -510,7 +570,7 @@ class CustomerComplaint extends JFrame {
                         inputField.setVisible(true);
                         chatArea.setVisible(true);
                     } else {
-                        chatArea.setVisible(false); // Make chat area invisible when unselected
+                        chatArea.setVisible(false);
                         sendButton.setText("Create Complaint");
                         inputField.setVisible(false);
                     }
@@ -519,24 +579,20 @@ class CustomerComplaint extends JFrame {
         });
 
         chatArea = new JTextArea();
-        chatArea.setVisible(false); // Make chat area invisible when unselected                
+        chatArea.setVisible(false);
         JScrollPane chatScrollPane = new JScrollPane(chatArea);
         add(chatScrollPane, BorderLayout.CENTER);
 
-        // Add chat input field & send button
         JPanel inputPanel = new JPanel(new BorderLayout());
         inputField = new JTextField();
         inputField.setVisible(false);
         sendButton = new JButton("Create Complaint");
-
-
         sendButton.addActionListener(e -> handleSendButton());
 
         inputPanel.add(inputField, BorderLayout.CENTER);
         inputPanel.add(sendButton, BorderLayout.EAST);
         add(inputPanel, BorderLayout.SOUTH);
 
-        // Load existing complaints
         loadComplaints();
     }
 
@@ -618,6 +674,10 @@ class CustomerComplaint extends JFrame {
                 }
             }
         }
+    }
+
+    public JPanel getPanel() {
+        return this;
     }
 
     // public static void main(String[] args) {
