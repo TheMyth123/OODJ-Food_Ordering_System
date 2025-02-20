@@ -349,8 +349,9 @@ public class UserHandling {
                     String vehicle = deliveryData.getString("VehicleType");
                     String license = deliveryData.getString("LicensePlate");
                     Boolean status = deliveryData.getBoolean("Status");
+                    Double balance = deliveryData.getDouble("Balance");
     
-                    DeliveryRunner delivery = new DeliveryRunner(runnerID, username, name, phone, password, gender, dob, email, vehicle, license, status);
+                    DeliveryRunner delivery = new DeliveryRunner(runnerID, username, name, phone, password, gender, dob, email, vehicle, license, status, balance);
                     buffer.add(delivery);
                 } else {
                     System.out.println("Invalid DeliveryID: " + runnerID);
@@ -691,9 +692,10 @@ public class UserHandling {
                     String vehicle = runnerData.getString("VehicleType");
                     String license = runnerData.getString("LicensePlate");
                     Boolean status = runnerData.getBoolean("Status");
+                    Double balance = runnerData.getDouble("Balance");
     
                     // Create and return the runner object
-                    return new DeliveryRunner(runnerID, username, name, phone, password, gender, dob, email, vehicle, license, status);
+                    return new DeliveryRunner(runnerID, username, name, phone, password, gender, dob, email, vehicle, license, status, balance);
                 }
             }
     

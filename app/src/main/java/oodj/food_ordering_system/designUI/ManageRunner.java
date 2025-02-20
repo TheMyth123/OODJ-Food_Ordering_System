@@ -117,7 +117,7 @@ public class ManageRunner extends javax.swing.JFrame {
                     String vehicle = DeliveryRunnerData.getString("VehicleType");
                     String license = DeliveryRunnerData.getString("LicensePlate");
     
-                    DeliveryRunner deliveryrunner = new DeliveryRunner(DeliveryRunnerID, username, deliveryrunnername, phone, password, gender, dob, email, vehicle, license, true);
+                    DeliveryRunner deliveryrunner = new DeliveryRunner(DeliveryRunnerID, username, deliveryrunnername, phone, password, gender, dob, email, vehicle, license, true, 0.0);
                     DeliveryRunners.add(deliveryrunner);
                 }
             }
@@ -855,7 +855,7 @@ public class ManageRunner extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>     
     
-    List<Notification> notifications = NotificationUtils.getUnreadNotifications(NotificationUtils.getAllNotifications());
+    List<Notification> notifications = NotificationUtils.getUnreadNotifications(NotificationUtils.getAllNotifications(), "Admin", true);
     
     private void btn_NotiActionPerformed(java.awt.event.ActionEvent evt) {                                  
         GlassPanePopup.showPopup(new NotificationPanel(notifications), new DefaultOption(){
@@ -952,6 +952,7 @@ public class ManageRunner extends javax.swing.JFrame {
         String dob = DeliveryRunner.getDOB();
         String password = DeliveryRunner.getPassword();
         Boolean status = DeliveryRunner.getStatus();
+        Double balance = DeliveryRunner.getBalance();
 
 
         dispose();
@@ -959,7 +960,7 @@ public class ManageRunner extends javax.swing.JFrame {
         ManageRunner.setVisible(true);
         ManageRunner.setEnabled(false);
 
-        EditRunner editRunner = new EditRunner(ManageRunner, DeliveryRunnerID, name, username, email, phone, gender, vehicle, license, dob, password, status);
+        EditRunner editRunner = new EditRunner(ManageRunner, DeliveryRunnerID, name, username, email, phone, gender, vehicle, license, dob, password, status, balance);
 
         editRunner.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override

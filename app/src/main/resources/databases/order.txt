@@ -1,4 +1,0 @@
-[
-    {"OrderID": "ORD001", "CustomerID": "CS001", "VendorID": "1", "Items": ["Spicy Chicken Rice", "Vegetable Soup"], "TotalPrice": 13.50, "OrderType": "Dine-in", "Status": "Order placed"},
-    {"OrderID": "ORD002", "CustomerID": "CS002", "VendorID": "2", "Items": ["Cheese Burger", "Fries"], "TotalPrice": 10.99, "OrderType": "Delivery", "Status": "Order received"}
-]

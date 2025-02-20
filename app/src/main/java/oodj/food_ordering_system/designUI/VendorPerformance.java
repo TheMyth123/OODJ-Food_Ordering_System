@@ -3,103 +3,28 @@ package oodj.food_ordering_system.designUI;
 import oodj.food_ordering_system.models.Notification;
 import oodj.food_ordering_system.utils.DialogBox;
 import oodj.food_ordering_system.utils.NotificationUtils;
-import oodj.food_ordering_system.models.Menu;
 import raven.glasspanepopup.*;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.border.Border;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
+import java.awt.BorderLayout;
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
 
-public class ModerateVendorItems extends javax.swing.JFrame {
+public class VendorPerformance extends javax.swing.JFrame {
 
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(() -> {
-            new ModerateVendorItems().setVisible(true);
+            new VendorPerformance().setVisible(true);
         });
     }
 
-    public ModerateVendorItems() {
+    public VendorPerformance() {
         initComponents();
         GlassPanePopup.install(this);
-        loadItems();
     }
 
-    private void loadItems() {
-        String jsonText = getAllVendorItems();
-        List<Menu> validItems = getValidVendorItems(jsonText);
-        
-        for (Menu menu : validItems) {
-            contentPanel.add(new ManagerMenuItems(
-                menu.getId(),
-                menu.getName(),
-                menu.getDescription(),
-                Double.parseDouble(menu.getPrice().substring(2)), // Ignore the first character and parse to double
-                menu.getImagePath(),
-                menu.getStatus(),
-                menu.getVendorID()
-            ));
-        }
-    }
-    
-    public static String getAllVendorItems() {
-        try {
-            String path = "app\\src\\main\\resources\\databases\\menu.txt";
-            File file = new File(path);
-
-            if (file.exists()) {
-                // Read all lines from the file into a single string
-                return new String(Files.readAllBytes(Paths.get(path)));
-            } else {
-                System.out.println("File not found: " + path);
-                return "";
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
-
-    public static List<Menu> getValidVendorItems(String jsonText){
-        List<Menu> items = new ArrayList<>();
-        
-        JSONArray itemsArray = new JSONArray(jsonText);
-
-        for (int i = 0; i < itemsArray.length(); i++) {
-            JSONObject menuObject = itemsArray.getJSONObject(i);
-
-            String status = menuObject.getString("Status");
-
-            if ("True".equals(status)) {
-                String itemID = menuObject.getString("id");
-                String vendorID = menuObject.getString("VendorID");
-                String name = menuObject.getString("name");
-                String description = menuObject.getString("description");
-                String price = menuObject.getString("price");
-                String imagePath = menuObject.getString("imagePath");
-
-                Menu menu = new Menu(status, itemID, vendorID, name, description, price, imagePath);
-                items.add(menu);
-            }
-        }
-        return items;
-    }
-
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
 
         Line = new javax.swing.JPanel();
@@ -121,8 +46,8 @@ public class ModerateVendorItems extends javax.swing.JFrame {
         Main = new javax.swing.JPanel();
         title_container = new javax.swing.JPanel();
         title = new javax.swing.JLabel();
-        scrollPane = new javax.swing.JScrollPane();
-        contentPanel = new javax.swing.JPanel();
+        // Instead of contentPanel and scrollPane, we add a JTabbedPane
+        tabbedPane = new javax.swing.JTabbedPane();
         btn_Noti = new oodj.food_ordering_system.designUI.Button();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -132,6 +57,7 @@ public class ModerateVendorItems extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(1300, 700));
         getContentPane().setLayout(null);
 
+        // ---------- Sidebar ----------
         Sidebar.setBackground(new java.awt.Color(31, 31, 31));
         Sidebar.setAlignmentX(0.0F);
         Sidebar.setAlignmentY(0.0F);
@@ -141,7 +67,6 @@ public class ModerateVendorItems extends javax.swing.JFrame {
         Sidebar.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
 
         margin1.setBackground(new java.awt.Color(31, 31, 31));
-
         javax.swing.GroupLayout margin1Layout = new javax.swing.GroupLayout(margin1);
         margin1.setLayout(margin1Layout);
         margin1Layout.setHorizontalGroup(
@@ -152,7 +77,6 @@ public class ModerateVendorItems extends javax.swing.JFrame {
             margin1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 50, Short.MAX_VALUE)
         );
-
         Sidebar.add(margin1);
 
         Logo_container.setBackground(new java.awt.Color(31, 31, 31));
@@ -172,14 +96,12 @@ public class ModerateVendorItems extends javax.swing.JFrame {
         systemName.setMinimumSize(new java.awt.Dimension(300, 50));
         systemName.setPreferredSize(new java.awt.Dimension(300, 50));
         Logo_container.add(systemName);
-
         Sidebar.add(Logo_container);
 
         margin2.setBackground(new java.awt.Color(31, 31, 31));
         margin2.setMaximumSize(new java.awt.Dimension(300, 50));
         margin2.setMinimumSize(new java.awt.Dimension(300, 50));
         margin2.setPreferredSize(new java.awt.Dimension(300, 50));
-
         javax.swing.GroupLayout margin2Layout = new javax.swing.GroupLayout(margin2);
         margin2.setLayout(margin2Layout);
         margin2Layout.setHorizontalGroup(
@@ -190,7 +112,6 @@ public class ModerateVendorItems extends javax.swing.JFrame {
             margin2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 50, Short.MAX_VALUE)
         );
-
         Sidebar.add(margin2);
 
         btn_container1.setBackground(new java.awt.Color(31, 31, 31));
@@ -199,9 +120,9 @@ public class ModerateVendorItems extends javax.swing.JFrame {
         btn_container1.setPreferredSize(new java.awt.Dimension(300, 320));
         btn_container1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 30));
 
-        btn_VendorPerformance.setBackground(new java.awt.Color(31, 31, 31));
-        btn_VendorPerformance.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_VendorPerformance.setForeground(new java.awt.Color(245, 251, 254));
+        btn_VendorPerformance.setBackground(new java.awt.Color(43, 43, 43));
+        btn_VendorPerformance.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btn_VendorPerformance.setForeground(new java.awt.Color(225, 169, 140));
         btn_VendorPerformance.setText("Vendor Performance");
         btn_VendorPerformance.setBorder(null);
         btn_VendorPerformance.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -253,9 +174,9 @@ public class ModerateVendorItems extends javax.swing.JFrame {
         });
         btn_container1.add(btn_ManageComplaints);
 
-        btn_ModerateVItems.setBackground(new java.awt.Color(43, 43, 43));
-        btn_ModerateVItems.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btn_ModerateVItems.setForeground(new java.awt.Color(255, 169, 140));
+        btn_ModerateVItems.setBackground(new java.awt.Color(31, 31, 31));
+        btn_ModerateVItems.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btn_ModerateVItems.setForeground(new java.awt.Color(245, 254, 254));
         btn_ModerateVItems.setText("Moderate Vendor Items");
         btn_ModerateVItems.setBorder(null);
         btn_ModerateVItems.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -270,14 +191,12 @@ public class ModerateVendorItems extends javax.swing.JFrame {
             }
         });
         btn_container1.add(btn_ModerateVItems);
-
         Sidebar.add(btn_container1);
 
         margin3.setBackground(new java.awt.Color(31, 31, 31));
         margin3.setMaximumSize(new java.awt.Dimension(300, 100));
         margin3.setMinimumSize(new java.awt.Dimension(300, 100));
         margin3.setPreferredSize(new java.awt.Dimension(300, 80));
-
         javax.swing.GroupLayout margin3Layout = new javax.swing.GroupLayout(margin3);
         margin3.setLayout(margin3Layout);
         margin3Layout.setHorizontalGroup(
@@ -288,7 +207,6 @@ public class ModerateVendorItems extends javax.swing.JFrame {
             margin3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 100, Short.MAX_VALUE)
         );
-
         Sidebar.add(margin3);
 
         btn_container2.setBackground(new java.awt.Color(31, 31, 31));
@@ -314,16 +232,15 @@ public class ModerateVendorItems extends javax.swing.JFrame {
             }
         });
         btn_container2.add(btn_logout);
-
         Sidebar.add(btn_container2);
 
         getContentPane().add(Sidebar);
         Sidebar.setBounds(0, 0, 300, 670);
 
+        // ---------- Line Separator ----------
         Line.setBackground(new java.awt.Color(50, 50, 50));
         Line.setMaximumSize(new java.awt.Dimension(300, 700));
         Line.setMinimumSize(new java.awt.Dimension(300, 700));
-
         javax.swing.GroupLayout LineLayout = new javax.swing.GroupLayout(Line);
         Line.setLayout(LineLayout);
         LineLayout.setHorizontalGroup(
@@ -334,10 +251,10 @@ public class ModerateVendorItems extends javax.swing.JFrame {
             LineLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 700, Short.MAX_VALUE)
         );
-
         getContentPane().add(Line);
         Line.setBounds(300, 0, 2, 700);
 
+        // ---------- Main Content Area ----------
         Main.setBackground(new java.awt.Color(31, 31, 31));
         Main.setAlignmentX(0.0F);
         Main.setAlignmentY(0.0F);
@@ -349,7 +266,6 @@ public class ModerateVendorItems extends javax.swing.JFrame {
         m1.setBackground(new java.awt.Color(31, 31, 31));
         m1.setMaximumSize(new java.awt.Dimension(1000, 30));
         m1.setMinimumSize(new java.awt.Dimension(1000, 30));
-
         javax.swing.GroupLayout m1Layout = new javax.swing.GroupLayout(m1);
         m1.setLayout(m1Layout);
         m1Layout.setHorizontalGroup(
@@ -360,7 +276,6 @@ public class ModerateVendorItems extends javax.swing.JFrame {
             m1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 30, Short.MAX_VALUE)
         );
-
         Main.add(m1);
 
         title_container.setBackground(new java.awt.Color(31, 31, 31));
@@ -373,7 +288,7 @@ public class ModerateVendorItems extends javax.swing.JFrame {
         title.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         title.setForeground(new java.awt.Color(255, 169, 140));
         title.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        title.setText("Moderate Vendor Items");
+        title.setText("View Vendor Performance");
         title.setAlignmentX(0.5F);
         title.setMaximumSize(new java.awt.Dimension(130, 50));
         title.setMinimumSize(new java.awt.Dimension(130, 50));
@@ -388,14 +303,12 @@ public class ModerateVendorItems extends javax.swing.JFrame {
             }
         });
         title_container.add(btn_Noti);
-
         Main.add(title_container);
 
         m2.setBackground(new java.awt.Color(31, 31, 31));
         m2.setMaximumSize(new java.awt.Dimension(1000, 50));
         m2.setMinimumSize(new java.awt.Dimension(1000, 50));
         m2.setPreferredSize(new java.awt.Dimension(1000, 50));
-
         javax.swing.GroupLayout m2Layout = new javax.swing.GroupLayout(m2);
         m2.setLayout(m2Layout);
         m2Layout.setHorizontalGroup(
@@ -406,36 +319,46 @@ public class ModerateVendorItems extends javax.swing.JFrame {
             m2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 30, Short.MAX_VALUE)
         );
-
         Main.add(m2);
 
-        contentPanel = new JPanel();
-        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
-        contentPanel.setBackground(new java.awt.Color(31, 31, 31));
+        // ---------- Setting Up the Tabbed Pane ----------
+        tabbedPane.setPreferredSize(new java.awt.Dimension(880, 480));
+
+        // Create tab panels with BorderLayout
+        JPanel vendorRevenuePanel = new JPanel(new BorderLayout());
+        vendorRevenuePanel.add(new VendorAnalysisPanel("Vendor Revenue"), BorderLayout.CENTER);
+
+        JPanel bestSellingPanel = new JPanel(new BorderLayout());
+        bestSellingPanel.add(new VendorAnalysisPanel("Best Selling Items"), BorderLayout.CENTER);
+
+        JPanel orderTypesPanel = new JPanel(new BorderLayout());
+        orderTypesPanel.add(new VendorAnalysisPanel("Order Types Breakdown"), BorderLayout.CENTER);
+
+        JPanel customerFrequencyPanel = new JPanel(new BorderLayout());
+        customerFrequencyPanel.add(new VendorAnalysisPanel("Customer Order Frequency"), BorderLayout.CENTER);
+
+        JPanel vendorRevenueDashboard = new JPanel(new BorderLayout());
+        vendorRevenueDashboard.add(new VendorAnalysisPanel("Vendor Revenue Dashboard"), BorderLayout.CENTER);
+
+
+        tabbedPane.addTab("Vendor Revenue", vendorRevenuePanel);
+        tabbedPane.addTab("Best Selling Items", bestSellingPanel);
+        tabbedPane.addTab("Order Types Breakdown", orderTypesPanel);
+        tabbedPane.addTab("Customer Order Frequency", customerFrequencyPanel);
+        tabbedPane.addTab("Vendor Revenue Dashboard", vendorRevenueDashboard);
+
         
-        Border roundedBorder = BorderFactory.createLineBorder(new java.awt.Color(80, 80, 80), 3, true);
-        contentPanel.setBorder(roundedBorder);
-
-        scrollPane = new JScrollPane(contentPanel);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setBorder(null);
-        scrollPane.setPreferredSize(new java.awt.Dimension(880, 480));
-        scrollPane.getVerticalScrollBar().setUnitIncrement(10); // Adjust for smoothness
-
-
-        Main.add(scrollPane);
-
+        Main.add(tabbedPane);
         getContentPane().add(Main);
         Main.setBounds(300, 0, 1000, 670);
 
         pack();
         setLocationRelativeTo(null);
-    }// </editor-fold>    
+    }// </editor-fold>
 
     List<Notification> notifications = NotificationUtils.getUnreadNotifications(NotificationUtils.getAllNotifications(), "Manager", false);
-    
-    private void btn_NotiActionPerformed(java.awt.event.ActionEvent evt) {                                  
+
+    private void btn_NotiActionPerformed(java.awt.event.ActionEvent evt) {
         GlassPanePopup.showPopup(new NotificationPanel(notifications), new DefaultOption(){
             @Override
             public float opacity() {
@@ -459,35 +382,34 @@ public class ModerateVendorItems extends javax.swing.JFrame {
                     }
                 };
             }
-
         });
-    }   
+    }
 
-    private void btn_VendorPerformanceActionPerformed(java.awt.event.ActionEvent evt) {   
-        dispose();
-        new VendorPerformance().setVisible(true);                                 
-    }   
-    
+    private void btn_VendorPerformanceActionPerformed(java.awt.event.ActionEvent evt) {
+    }
+
     private void btn_RunnerPerformanceActionPerformed(java.awt.event.ActionEvent evt) {
         dispose();
-        new RunnerPerformance().setVisible(true);     
-    }                                           
+        new RunnerPerformance().setVisible(true);
+    }
 
-    private void btn_ManageComplaintsActionPerformed(java.awt.event.ActionEvent evt) {  
-    }     
+    private void btn_ManageComplaintsActionPerformed(java.awt.event.ActionEvent evt) {
+    }
 
-    private void btn_ModerateVItemsActionPerformed(java.awt.event.ActionEvent evt) {       
-    }                                                                        
+    private void btn_ModerateVItemsActionPerformed(java.awt.event.ActionEvent evt) {
+        dispose();
+        new ModerateVendorItems().setVisible(true);
+    }
 
-    private void btn_logoutActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    private void btn_logoutActionPerformed(java.awt.event.ActionEvent evt) {
         boolean confirm = DialogBox.confirmMessage("Are you sure you want to logout?", "Logout");
         if (confirm) {
             dispose();
             new LoginPage().setVisible(true);
         }
-    }                                                                             
+    }
 
-    // Variables declaration - do not modify                     
+    // Variables declaration - do not modify
     private javax.swing.JPanel Line;
     private javax.swing.JPanel Logo_container;
     private javax.swing.JPanel Main;
@@ -507,10 +429,7 @@ public class ModerateVendorItems extends javax.swing.JFrame {
     private javax.swing.JLabel systemName;
     private javax.swing.JPanel title_container;
     private javax.swing.JLabel title;
-    private javax.swing.JScrollPane scrollPane;
-    private javax.swing.JPanel contentPanel;
-    private javax.swing.JButton btn_Noti;
-    // End of variables declaration                   
+    private javax.swing.JTabbedPane tabbedPane;
+    private oodj.food_ordering_system.designUI.Button btn_Noti;
+    // End of variables declaration
 }
-
-

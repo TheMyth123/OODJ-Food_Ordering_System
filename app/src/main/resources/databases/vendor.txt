@@ -64,5 +64,82 @@
     "VendorID": "VD00006",
     "ContactNumber": "0182233445",
     "Password": "pass1617"
+  },
+  {
+    "FoodCourtName": "Food Court 7",
+    "Status": true,
+    "VendorName": "Stall G",
+    "Email": "stallG@example.com",
+    "Username": "stallG",
+    "DateRegistered": "2023-07-30",
+    "VendorID": "VD00007",
+    "ContactNumber": "0193344556",
+    "Password": "pass1819"
+  },
+  {
+    "FoodCourtName": "Food Court 8",
+    "Status": false,
+    "VendorName": "Stall H",
+    "Email": "stallH@example.com",
+    "Username": "stallH",
+    "DateRegistered": "2023-08-15",
+    "VendorID": "VD00008",
+    "ContactNumber": "0114455667",
+    "Password": "pass2021"
+  },
+  {
+    "FoodCourtName": "Food Court 9",
+    "Status": true,
+    "VendorName": "Stall I",
+    "Email": "stallI@example.com",
+    "Username": "stallI",
+    "DateRegistered": "2023-09-10",
+    "VendorID": "VD00009",
+    "ContactNumber": "0125566778",
+    "Password": "pass2223"
+  },
+  {
+    "FoodCourtName": "Food Court 10",
+    "Status": false,
+    "VendorName": "Stall J",
+    "Email": "stallJ@example.com",
+    "Username": "stallJ",
+    "DateRegistered": "2023-10-05",
+    "VendorID": "VD00010",
+    "ContactNumber": "0136677889",
+    "Password": "pass2425"
+  },
+  {
+    "FoodCourtName": "Food Court 11",
+    "Status": true,
+    "VendorName": "Stall K",
+    "Email": "stallK@example.com",
+    "Username": "stallK",
+    "DateRegistered": "2023-11-20",
+    "VendorID": "VD00011",
+    "ContactNumber": "0147788990",
+    "Password": "pass2627"
+  },
+  {
+    "FoodCourtName": "Food Court 12",
+    "Status": false,
+    "VendorName": "Stall L",
+    "Email": "stallL@example.com",
+    "Username": "stallL",
+    "DateRegistered": "2023-12-15",
+    "VendorID": "VD00012",
+    "ContactNumber": "0158899001",
+    "Password": "pass2829"
+  },
+  {
+    "FoodCourtName": "Food Court 13",
+    "Status": true,
+    "VendorName": "Stall M",
+    "Email": "stallM@example.com",
+    "Username": "stallM",
+    "DateRegistered": "2024-01-10",
+    "VendorID": "VD00013",
+    "ContactNumber": "0169900112",
+    "Password": "pass3031"
   }
 ]

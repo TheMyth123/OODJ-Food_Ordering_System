@@ -10,7 +10,8 @@
     "LicensePlate": "WXY1234",
     "Gender": "Male",
     "Name": "Alex Tan",
-    "Password": "r12345"
+    "Password": "r12345",
+    "Balance": 50
   },
   {
     "Status": "True",
@@ -23,7 +24,8 @@
     "LicensePlate": "ABC5678",
     "Gender": "Female",
     "Name": "Siti Aminah",
-    "Password": "r67890"
+    "Password": "r67890",
+    "Balance": 75.5
   },
   {
     "Status": "True",
@@ -36,7 +38,8 @@
     "LicensePlate": "JKL4567",
     "Gender": "Male",
     "Name": "John Lee",
-    "Password": "r99999"
+    "Password": "r99999",
+    "Balance": 60
   },
   {
     "Status": "True",
@@ -49,7 +52,8 @@
     "LicensePlate": "JKL3333",
     "Gender": "Female",
     "Name": "Alicia Wong",
-    "Password": "r54321"
+    "Password": "r54321",
+    "Balance": 80.25
   },
   {
     "Status": "False",
@@ -62,7 +66,8 @@
     "LicensePlate": "XYZ9999",
     "Gender": "Male",
     "Name": "Hassan Ali",
-    "Password": "r11111"
+    "Password": "r11111",
+    "Balance": 0
   },
   {
     "Status": "True",
@@ -75,7 +80,8 @@
     "LicensePlate": "MNB5678",
     "Gender": "Male",
     "Name": "Ahmad Bakar",
-    "Password": "r22222"
+    "Password": "r22222",
+    "Balance": 120.75
   },
   {
     "Status": "True",
@@ -89,6 +95,7 @@
     "LicensePlate": "WBX6666",
     "Gender": "Male",
     "Name": "run namee",
-    "Password": "fsdadsddsaf3e"
+    "Password": "fsdadsddsaf3e",
+    "Balance": 90.00
   }
 ]

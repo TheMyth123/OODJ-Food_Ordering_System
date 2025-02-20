@@ -9,8 +9,8 @@
     "DOB": "1/January/1910",
     "CustomerID": "CS00001",
     "Gender": "Male",
-    "Balance": 844,
-    "Name": "c",
+    "Balance": 714,
+    "Name": "c1",
     "Password": "a55555"
   },
   {
@@ -23,7 +23,7 @@
     "CustomerID": "CS00002",
     "Gender": "Male",
     "Balance": 100,
-    "Name": "c",
+    "Name": "c2",
     "Password": "a99991"
   },
   {

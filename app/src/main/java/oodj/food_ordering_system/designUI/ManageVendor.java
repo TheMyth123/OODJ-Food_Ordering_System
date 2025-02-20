@@ -852,7 +852,7 @@ public class ManageVendor extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>     
     
-    List<Notification> notifications = NotificationUtils.getUnreadNotifications(NotificationUtils.getAllNotifications());
+    List<Notification> notifications = NotificationUtils.getUnreadNotifications(NotificationUtils.getAllNotifications(), "Admin", true);
     
     private void btn_NotiActionPerformed(java.awt.event.ActionEvent evt) {                                  
         GlassPanePopup.showPopup(new NotificationPanel(notifications), new DefaultOption(){
