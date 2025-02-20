@@ -1,28 +1,17 @@
 package oodj.food_ordering_system.designUI;
 
-
-import oodj.food_ordering_system.models.Credit;
-import oodj.food_ordering_system.models.CusOrder;
 import oodj.food_ordering_system.models.Customer;
 import oodj.food_ordering_system.models.Notification;
-import oodj.food_ordering_system.models.Payment;
-import oodj.food_ordering_system.models.Rating;
+import oodj.food_ordering_system.models.Vendor;
+// import oodj.food_ordering_system.models.Notification;
 import oodj.food_ordering_system.utils.DialogBox;
 import oodj.food_ordering_system.utils.NotificationUtils;
-import oodj.food_ordering_system.utils.OrderHandling;
 import oodj.food_ordering_system.utils.UserHandling;
+// import oodj.food_ordering_system.utils.NotificationUtils;
 import raven.glasspanepopup.*;
 
-import static oodj.food_ordering_system.designUI.LoginPage.loginID;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,441 +19,41 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+
+// import java.util.List;
+
 import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
-import javax.swing.ListSelectionModel;
-import javax.swing.RowFilter;
-import javax.swing.DefaultListSelectionModel;
-import javax.swing.JScrollPane;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
-// TODO make the table refresh
-// TODO design have done yet, discard items will affect the cart.txt json format
-public class OrderHistory extends javax.swing.JFrame {
+
+//  dine in, take-away or request for delivery service from the vendor.
+
+public class CustomerComplaint extends javax.swing.JFrame {
+
 
     private Customer endUser;
-    private JTable historyTable;
+    private List<Notification> notifications;
+    
 
 
+// TODO check again customerID
+    public CustomerComplaint(Customer endUser) {
 
-    public OrderHistory(Customer endUser) {
-        this.endUser = endUser;            
+        this.endUser = endUser;      
+        
         System.out.println("CusDash initialized with customerID: " + endUser.getID()); // Debugging statement
+
         initComponents();
-        ArrayList<Payment> payment = OrderHandling.getOrderHistory(); // Fetch cart items
-        displayHistory(payment, endUser.getID()); // Display cart items
-        // addWindowFocusListener(new java.awt.event.WindowFocusListener() {
-        //     @Override
-        //     public void windowGainedFocus(java.awt.event.WindowEvent evt) {
-        //         // refreshCart();
-        //     }
-        //     @Override
-        //     public void windowLostFocus(java.awt.event.WindowEvent evt) {
-        //         // Do nothing
-        //     }
-        // });
         
     }
 
-
-    private void displayHistory(ArrayList<Payment> paymentList, String endUserID) {
-        if (historyTable == null) {
-            historyTable = new JTable(new DefaultTableModel(
-                new Object[][]{},
-                new String[]{"Order ID", "Service Type", "Delivery Address", "Total Amount", "Date", "Order Status", "Payment Status"}
-            ));
-        }
     
-        DefaultTableModel model = (DefaultTableModel) historyTable.getModel();
-        model.setRowCount(0); // Clear table before populating
-    
-        for (Payment payment : paymentList) {
-            if (payment.getCustomerID().equals(endUserID)) {
-                model.addRow(new Object[]{
-                    payment.getOrderID(),
-                    payment.getServiceType(),
-                    payment.getAddress(),
-                    payment.getTotalAmount(),
-                    payment.getDate(),
-                    payment.getOrderStatus(),
-                    payment.getPaymentStatus()
-                });
-            }
-        }
-
-        JTextField searchField = new JTextField();
-        searchField.setPreferredSize(new Dimension(200, 30));
-
-        JButton searchButton = new JButton("Search");
-
-        // **Set TableRowSorter for Filtering**
-        TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
-        historyTable.setRowSorter(rowSorter);
-
-        // **Search Button Click Event**
-        searchButton.addActionListener(e -> {
-            String searchTerm = searchField.getText().trim();
-            if (searchTerm.isEmpty()) {
-                rowSorter.setRowFilter(null); // ✅ Show all rows when search is empty
-            } else {
-                rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm)); // Case-insensitive search
-            }
-        });
-
-        // **Real-Time Search (While Typing)**
-        searchField.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                String searchTerm = searchField.getText().trim();
-                if (searchTerm.isEmpty()) {
-                    rowSorter.setRowFilter(null); // ✅ Show all rows when search is cleared
-                } else {
-                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm)); // Case-insensitive search
-                }
-            }
-        });
-
-        // **Create Search Panel**
-        JPanel searchPanel = new JPanel();
-        searchPanel.add(new JLabel("Search:"));
-        searchPanel.add(searchField);
-        searchPanel.add(searchButton);
-
-    
-        // **Scroll Pane for Order History Table**
-        JScrollPane scrollPane = new JScrollPane(historyTable);
-        scrollPane.setPreferredSize(new Dimension(500, 200));
-
-        JButton rateButton = new JButton("Rate");
-        rateButton.addActionListener(e -> {
-            int selectedRow = historyTable.getSelectedRow();
-            if (selectedRow != -1) {
-                String selectedOrderID = model.getValueAt(selectedRow, 0).toString();
-                showRatingDialog(selectedOrderID);
-            } else {
-                JOptionPane.showMessageDialog(null, "Please select an order to rate.");
-            }
-        });
-    
-        // **Reorder Button**
-        JButton reorderButton = new JButton("Reorder");
-        reorderButton.addActionListener(e -> {
-            int selectedRow = historyTable.getSelectedRow();
-            if (selectedRow != -1) {
-                String selectedOrderID = model.getValueAt(selectedRow, 0).toString();
-                reorderItems(selectedOrderID);
-            } else {
-                JOptionPane.showMessageDialog(null, "Please select an order to reorder.");
-            }
-        });
-    
-        // **View Receipt Button**
-        JButton viewReceiptButton = new JButton("View Receipt");
-        viewReceiptButton.addActionListener(e -> {
-            int selectedRow = historyTable.getSelectedRow();
-            if (selectedRow != -1) {
-                String selectedOrderID = model.getValueAt(selectedRow, 0).toString();
-                showReceipt(selectedOrderID);
-            } else {
-                JOptionPane.showMessageDialog(null, "Please select an order to view the receipt.");
-            }
-        });
-
-        JButton viewFeedbackButton = new JButton("View Feedback");
-        viewFeedbackButton.addActionListener(e -> {
-            int selectedRow = historyTable.getSelectedRow();
-            if (selectedRow != -1) {
-                String selectedOrderID = model.getValueAt(selectedRow, 0).toString();
-                showFeedback(selectedOrderID);
-            } else {
-                JOptionPane.showMessageDialog(null, "Please select an order to view feedback.");
-            }
-        });
-    
-        // **Button Panel**
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(rateButton);
-        buttonPanel.add(reorderButton);
-        buttonPanel.add(viewFeedbackButton);
-        buttonPanel.add(viewReceiptButton);
-    
-        // **Update UI**
-        title_container1.removeAll();
-        title_container1.setLayout(new BorderLayout());
-        title_container1.add(searchPanel, BorderLayout.NORTH); 
-        title_container1.add(scrollPane, BorderLayout.CENTER);
-        title_container1.add(buttonPanel, BorderLayout.SOUTH);
-        title_container1.revalidate();
-        title_container1.repaint();
-    }
-
-    private void showFeedback(String orderID) {
-        // Fetch ratings for the selected orderID
-        ArrayList<Rating> ratings = OrderHandling.getRatings();
-        StringBuilder feedback = new StringBuilder();
-    
-        for (Rating rating : ratings) {
-            if (rating.getOrderID().equals(orderID)) {
-                feedback.append("Customer ID: ").append(rating.getCustomerID()).append("\n");
-                feedback.append("Rating: ").append(rating.getRating()).append("\n");
-                feedback.append("Rating Type: ").append(rating.getRatingType()).append("\n");
-            }
-        }
-    
-        if (feedback.length() == 0) {
-            feedback.append("No feedback available for this order.");
-        }
-    
-        JOptionPane.showMessageDialog(null, feedback.toString(), "Feedback for Order " + orderID, JOptionPane.INFORMATION_MESSAGE);
-    }
-
-
-    private void reorderItems(String orderID) {
-        Payment payment = OrderHandling.getPaymentByID(orderID);
-        if (payment == null) {
-            JOptionPane.showMessageDialog(null, "Order not found!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-    
-        int confirm = JOptionPane.showConfirmDialog(
-            null, "Do you want to reorder this order?", "Reorder Confirmation",
-            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE
-        );
-    
-        if (confirm == JOptionPane.YES_OPTION) {
-            // ✅ Step 1: Get current cart
-            ArrayList<CusOrder> cartItems = OrderHandling.getCart();
-    
-            // ✅ Step 2: Loop through ordered items and update quantity if exists
-            for (CusOrder newItem : payment.getOrderItems()) {
-                boolean itemExists = false;
-    
-                for (CusOrder cartItem : cartItems) {
-                    if (cartItem.getMenuID().equals(newItem.getMenuID())) {
-                        // ✅ Update quantity instead of adding a new row
-                        cartItem.setQuantity(cartItem.getQuantity() + newItem.getQuantity());
-                        itemExists = true;
-                        break;
-                    }
-                }
-    
-                // ✅ Step 3: If item doesn't exist, add it
-                if (!itemExists) {
-                    cartItems.add(new CusOrder(
-                        newItem.getMenuID(), newItem.getQuantity(), newItem.getPrice(), newItem.getName(), newItem.getCustomer()
-                    ));
-                }
-            }
-    
-            // ✅ Step 4: Save updated cart
-            OrderHandling.saveCart(cartItems);
-    
-            // ✅ Step 5: Show success message
-            JOptionPane.showMessageDialog(null, "Items added to cart successfully!", "Reorder Success", JOptionPane.INFORMATION_MESSAGE);
-    
-            // ✅ Step 6: Refresh Cart Page (if needed)
-            // goToCartPage();
-        }
-    }
-
-
-    
-    
-    
-    private void showReceipt(String orderID) {
-        Payment payment = OrderHandling.getPaymentByID(orderID);
-        if (payment == null) {
-            JOptionPane.showMessageDialog(null, "Order not found!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-    
-        // Open a new receipt window
-        CusReceipt receiptWindow = new CusReceipt(orderID);
-        receiptWindow.setVisible(true);
-    }
-    
-    
-    
-
-
-    // private void showRatingDialog(String orderID) {
-    //     String[] ratings = {"1", "2", "3", "4", "5"};
-    //     String ratingStr = (String) JOptionPane.showInputDialog(
-    //             null,
-    //             "Rate Order ID: " + orderID,
-    //             "Order Rating",
-    //             JOptionPane.QUESTION_MESSAGE,
-    //             null,
-    //             ratings,
-    //             ratings[4] // Default rating is 5
-    //     );
-    
-    //     if (ratingStr != null) {
-    //         int rating = Integer.parseInt(ratingStr); // Convert String to int
-    
-    //         JOptionPane.showMessageDialog(null, "You rated Order " + orderID + " with " + rating + " stars.");
-            
-    //         Payment payment = OrderHandling.getPaymentByID(orderID); 
-    //         Customer customer = UserHandling.getCustomerByID(endUser.getID()); 
-    
-    //         OrderHandling.saveRating(payment, customer, rating); 
-    //         // Store the rating in the database or update the order history
-    //     }
-    // }
-
-    // private void showRatingDialog(String orderID) {
-    //     String[] ratings = {"1", "2", "3", "4", "5"};
-
-    //     // Step 1: Get the Food Rating
-    //     String foodRatingStr = (String) JOptionPane.showInputDialog(
-    //             null,
-    //             "Rate the FOOD for Order ID: " + orderID,
-    //             "Food Rating",
-    //             JOptionPane.QUESTION_MESSAGE,
-    //             null,
-    //             ratings,
-    //             ratings[4] // Default rating is 5
-    //     );
-
-    //     // Step 2: Get the Vendor Rating
-    //     String vendorRatingStr = (String) JOptionPane.showInputDialog(
-    //             null,
-    //             "Rate the VENDOR service for Order ID: " + orderID,
-    //             "Vendor Rating",
-    //             JOptionPane.QUESTION_MESSAGE,
-    //             null,
-    //             ratings,
-    //             ratings[4]
-    //     );
-
-    //     // Step 3: Get the Runner Rating
-    //     String runnerRatingStr = (String) JOptionPane.showInputDialog(
-    //             null,
-    //             "Rate the DELIVERY RUNNER for Order ID: " + orderID,
-    //             "Runner Rating",
-    //             JOptionPane.QUESTION_MESSAGE,
-    //             null,
-    //             ratings,
-    //             ratings[4]
-    //     );
-
-    //     if (foodRatingStr != null && vendorRatingStr != null && runnerRatingStr != null) {
-    //         int foodRating = Integer.parseInt(foodRatingStr);
-    //         int vendorRating = Integer.parseInt(vendorRatingStr);
-    //         int runnerRating = Integer.parseInt(runnerRatingStr);
-
-    //         JOptionPane.showMessageDialog(null,
-    //                 "Your Ratings for Order " + orderID + ":\n"
-    //                         + "Food: " + foodRating + " stars\n"
-    //                         + "Vendor: " + vendorRating + " stars\n"
-    //                         + "Runner: " + runnerRating + " stars");
-
-    //         Payment payment = OrderHandling.getPaymentByID(orderID);
-    //         Customer customer = UserHandling.getCustomerByID(endUser.getID());
-
-    //         // Step 4: Save each rating separately
-
-    //         OrderHandling.saveRating(payment, customer, foodRating, Rating.RatingType.FOOD);
-    //         OrderHandling.saveRating(payment, customer, vendorRating, Rating.RatingType.VENDOR);
-    //         OrderHandling.saveRating(payment, customer, runnerRating, Rating.RatingType.RUNNER);
-
-    //     }
-    // }
-
-    private void showRatingDialog(String orderID) {
-        String[] ratings = {"1", "2", "3", "4", "5"};
-    
-        Payment payment = OrderHandling.getPaymentByID(orderID);
-        if (payment == null) {
-            JOptionPane.showMessageDialog(null, "Order not found!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-    
-        String serviceType = payment.getServiceType();
-    
-        // Step 1: Get the Food Rating
-        String foodRatingStr = (String) JOptionPane.showInputDialog(
-                null,
-                "Rate the FOOD for Order ID: " + orderID,
-                "Food Rating",
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                ratings,
-                ratings[4] // Default rating is 5
-        );
-    
-        // Step 2: Get the Vendor Rating
-        String vendorRatingStr = (String) JOptionPane.showInputDialog(
-                null,
-                "Rate the VENDOR service for Order ID: " + orderID,
-                "Vendor Rating",
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                ratings,
-                ratings[4]
-        );
-    
-        // Step 3: Get the Runner Rating if serviceType is "Request for delivery"
-        String runnerRatingStr = null;
-        if ("Request for delivery".equals(serviceType)) {
-            runnerRatingStr = (String) JOptionPane.showInputDialog(
-                    null,
-                    "Rate the DELIVERY RUNNER for Order ID: " + orderID,
-                    "Runner Rating",
-                    JOptionPane.QUESTION_MESSAGE,
-                    null,
-                    ratings,
-                    ratings[4]
-            );
-        }
-    
-        if (foodRatingStr != null && vendorRatingStr != null && (runnerRatingStr != null || !"Request for delivery".equals(serviceType))) {
-            int foodRating = Integer.parseInt(foodRatingStr);
-            int vendorRating = Integer.parseInt(vendorRatingStr);
-            Integer runnerRating = runnerRatingStr != null ? Integer.parseInt(runnerRatingStr) : null;
-    
-            StringBuilder ratingMessage = new StringBuilder();
-            ratingMessage.append("Your Ratings for Order ").append(orderID).append(":\n")
-                    .append("Food: ").append(foodRating).append(" stars\n")
-                    .append("Vendor: ").append(vendorRating).append(" stars\n");
-    
-            if (runnerRating != null) {
-                ratingMessage.append("Runner: ").append(runnerRating).append(" stars\n");
-            }
-    
-            JOptionPane.showMessageDialog(null, ratingMessage.toString());
-    
-            Customer customer = UserHandling.getCustomerByID(endUser.getID());
-    
-            // Step 4: Save each rating separately
-            OrderHandling.saveRating(payment, customer, foodRating, Rating.RatingType.FOOD);
-            OrderHandling.saveRating(payment, customer, vendorRating, Rating.RatingType.VENDOR);
-            if (runnerRating != null) {
-                OrderHandling.saveRating(payment, customer, runnerRating, Rating.RatingType.RUNNER);
-            }
-        }
-    }
-
-    
-    
-
-
-
-    
-
-// TODO add at title_container1
-
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
@@ -476,9 +65,11 @@ public class OrderHistory extends javax.swing.JFrame {
         margin2 = new javax.swing.JPanel();
         btn_container1 = new javax.swing.JPanel();
         btn_home = new javax.swing.JButton();
-        btn_cart = new javax.swing.JButton();
         btn_wallet = new javax.swing.JButton();
+        btn_complaint = new javax.swing.JButton();
+
         btn_history = new javax.swing.JButton();
+        btn_cart = new javax.swing.JButton();
         btn_profile = new javax.swing.JButton();
         margin3 = new javax.swing.JPanel();
         btn_container2 = new javax.swing.JPanel();
@@ -487,17 +78,18 @@ public class OrderHistory extends javax.swing.JFrame {
         margin4 = new javax.swing.JPanel();
         title_container = new javax.swing.JPanel();
         m5 = new javax.swing.JPanel();
-        welcome = new javax.swing.JLabel();
+        customer_username = new javax.swing.JLabel();
         title_container1 = new javax.swing.JPanel();
         m8 = new javax.swing.JPanel();
         m6 = new javax.swing.JPanel();
         margin5 = new javax.swing.JPanel();
         m7 = new javax.swing.JPanel();
-        btn_Noti = new javax.swing.JButton();
-        btn_complaint = new javax.swing.JButton();
+        title = new javax.swing.JLabel();
 
+        // TODO double confirm resize
+        setResizable(false);
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Customer Cart");
+        setTitle("Customer Complaint");
         setBackground(new java.awt.Color(25, 25, 25));
         setMinimumSize(new java.awt.Dimension(1300, 700));
         setSize(new java.awt.Dimension(1300, 700));
@@ -555,7 +147,7 @@ public class OrderHistory extends javax.swing.JFrame {
         systemName.setFont(new java.awt.Font("Segoe Print", 1, 36)); // NOI18N
         systemName.setForeground(new java.awt.Color(255, 169, 140));
         systemName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        systemName.setText("Food Connect");
+        systemName.setText("Car Connect");
         //TODO CHANGE SYSTEM NAME
         systemName.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         systemName.setAlignmentX(0.5F);
@@ -590,9 +182,9 @@ public class OrderHistory extends javax.swing.JFrame {
         btn_container1.setPreferredSize(new java.awt.Dimension(300, 420));
         btn_container1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 30));
 
-        btn_home.setBackground(new java.awt.Color(31, 31, 31));
-        btn_home.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_home.setForeground(new java.awt.Color(245, 251, 254));
+        btn_home.setBackground(new java.awt.Color(43, 43, 43));
+        btn_home.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btn_home.setForeground(new java.awt.Color(255, 169, 140));
         btn_home.setText("Home");
         btn_home.setBorder(null);
         btn_home.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -606,6 +198,7 @@ public class OrderHistory extends javax.swing.JFrame {
                 btn_homeActionPerformed(evt);
             }
         });
+        
         btn_container1.add(btn_home);
 
         btn_wallet.setBackground(new java.awt.Color(31, 31, 31));
@@ -644,9 +237,9 @@ public class OrderHistory extends javax.swing.JFrame {
         });
         btn_container1.add(btn_cart);
 
-        btn_history.setBackground(new java.awt.Color(43, 43, 43));
-        btn_history.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btn_history.setForeground(new java.awt.Color(255, 169, 140));
+        btn_history.setBackground(new java.awt.Color(31, 31, 31));
+        btn_history.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btn_history.setForeground(new java.awt.Color(245, 251, 254));
         btn_history.setText("Order History");
         btn_history.setBorder(null);
         btn_history.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -655,7 +248,11 @@ public class OrderHistory extends javax.swing.JFrame {
         btn_history.setMaximumSize(new java.awt.Dimension(250, 40));
         btn_history.setMinimumSize(new java.awt.Dimension(250, 40));
         btn_history.setPreferredSize(new java.awt.Dimension(250, 40));
-        
+        btn_history.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_historyActionPerformed(evt);
+            }
+        });
         btn_container1.add(btn_history);
 
         btn_complaint.setBackground(new java.awt.Color(31, 31, 31));
@@ -670,12 +267,10 @@ public class OrderHistory extends javax.swing.JFrame {
         btn_complaint.setMaximumSize(new java.awt.Dimension(250, 40));
         btn_complaint.setMinimumSize(new java.awt.Dimension(250, 40));
         btn_complaint.setPreferredSize(new java.awt.Dimension(250, 40));
-        btn_complaint.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_complaintActionPerformed(evt);
-            }
-        });
+        
         btn_container1.add(btn_complaint);
+
+        
 
         btn_profile.setBackground(new java.awt.Color(31, 31, 31));
         btn_profile.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -695,6 +290,8 @@ public class OrderHistory extends javax.swing.JFrame {
             }
         });
         btn_container1.add(btn_profile);
+
+
 
         Sidebar.add(btn_container1);
 
@@ -774,9 +371,21 @@ public class OrderHistory extends javax.swing.JFrame {
         title_container.setMaximumSize(new java.awt.Dimension(1000, 50));
         title_container.setMinimumSize(new java.awt.Dimension(1000, 50));
         title_container.setPreferredSize(new java.awt.Dimension(1000, 50));
-        title_container.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 0));
+        title_container.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
 
-        
+        title.setBackground(new java.awt.Color(31, 31, 31));
+        title.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        title.setForeground(new java.awt.Color(255, 169, 140));
+        title.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        title.setText("Complaint");
+        title.setAlignmentX(0.5F);
+        title.setMaximumSize(new java.awt.Dimension(200, 50));
+        title.setMinimumSize(new java.awt.Dimension(200, 50));
+        title.setPreferredSize(new java.awt.Dimension(200, 50));
+        title_container.add(title);
+
+        Main.add(title_container);
+
 
         m5.setBackground(new java.awt.Color(31, 31, 31));
         m5.setMaximumSize(new java.awt.Dimension(60, 50));
@@ -796,28 +405,40 @@ public class OrderHistory extends javax.swing.JFrame {
 
         title_container.add(m5);
 
-        // TODO title container add credit
-
-        welcome.setBackground(new java.awt.Color(31, 31, 31));
-        welcome.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        welcome.setForeground(new java.awt.Color(255, 169, 140));
-        welcome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        welcome.setText("Order History");
-        welcome.setAlignmentX(0.5F);
-        welcome.setMaximumSize(new java.awt.Dimension(200, 50));
-        welcome.setMinimumSize(new java.awt.Dimension(200, 50));
-        welcome.setPreferredSize(new java.awt.Dimension(200, 50));
-        title_container.add(welcome);
-
         
+
+
+
+        // btn_Noti.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/noti.png"))); // NOI18N
+        // btn_Noti.setPreferredSize(new java.awt.Dimension(50, 50));
+        // // TODO check again
+
+        // btn_Noti.setFocusPainted(false);
+
+
+        // btn_Noti.addActionListener(new java.awt.event.ActionListener() {
+        //     public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+        //         btn_NotiActionPerformed(evt);
+        //     }
+        // });
+
+
+
+        // title_container.add(btn_Noti);
 
         Main.add(title_container);
 
         title_container1.setBackground(new java.awt.Color(31, 31, 31));
-        title_container1.setMaximumSize(new java.awt.Dimension(1000, 400));
-        title_container1.setMinimumSize(new java.awt.Dimension(1000, 400));
-        title_container1.setPreferredSize(new java.awt.Dimension(1000, 400));
-        // title_container1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 0));
+        title_container1.setMaximumSize(new java.awt.Dimension(1000, 700));
+        title_container1.setMinimumSize(new java.awt.Dimension(1000, 700));
+        title_container1.setPreferredSize(new java.awt.Dimension(1000, 700));
+        title_container1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 0));
+
+        CustomerComplaintPanel complaintPanel = new CustomerComplaintPanel(endUser);
+        add(complaintPanel, BorderLayout.CENTER);
+
+        title_container1.add(complaintPanel);
 
         m8.setBackground(new java.awt.Color(31, 31, 31));
         m8.setMaximumSize(new java.awt.Dimension(60, 60));
@@ -839,6 +460,10 @@ public class OrderHistory extends javax.swing.JFrame {
 
 
         Main.add(title_container1);
+
+        // add the restaurant here
+
+        
 
         m6.setBackground(new java.awt.Color(31, 31, 31));
         m6.setMaximumSize(new java.awt.Dimension(60, 50));
@@ -889,11 +514,20 @@ public class OrderHistory extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>    
 
-    // //TODO I USED ADMIN DATA TO GET NOTIFICATIONS. CHANGE TO OWN DATA
-    // List<Notification> notifications = NotificationUtils.getUnreadNotifications(NotificationUtils.getAllNotifications());
+    //TODO I USED ADMIN DATA TO GET NOTIFICATIONS. CHANGE TO OWN DATA
+    // List<Notification> notifications = NotificationUtils.getUnreadNotifications(NotificationUtils.getAllNotifications(), customerID);
     
+    private List<Notification> getNotifications() {
+        if (notifications == null) {
+            notifications = NotificationUtils.getUnreadNotifications(NotificationUtils.getAllNotifications(), endUser.getID(), false);
+        }
+        return notifications;
+    }
+
+
+
     // private void btn_NotiActionPerformed(java.awt.event.ActionEvent evt) {                                  
-    //     GlassPanePopup.showPopup(new NotificationPanel(notifications), new DefaultOption(){
+    //     GlassPanePopup.showPopup(new NotificationPanel(getNotifications()), new DefaultOption(){
     //         @Override
     //         public float opacity() {
     //             return 0;
@@ -918,20 +552,27 @@ public class OrderHistory extends javax.swing.JFrame {
     //         }
 
     //     });
-    // }   
+    // }  
 
 
-    private void discardItem(String item) {
-        // Read the current cart items from the file
-        // ArrayList<String> cartItems = OrderHandling.getCart();
-        // // Remove the selected item from the list
-        // cartItems.remove(item);
-        // // Write the updated list back to the file
-        // OrderHandling.saveCart(cartItems);
-        // System.out.println("Discard item: " + item);
-    }
-
+    // private void btn_plusActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    //     // Disable the current CusDash window
+    //     this.setEnabled(false);
     
+    //     // Create and show the TopUp window
+    //     TopUp topup = new TopUp(endUser);
+    
+    //     // Add a window listener to re-enable CusDash when TopUp is closed
+    //     topup.addWindowListener(new java.awt.event.WindowAdapter() {
+    //         @Override
+    //         public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+    //             CusDash.this.setEnabled(true);
+    //             CusDash.this.toFront();
+    //         }
+    //     });
+    
+    //     topup.setVisible(true);
+    // }
 
     private void btn_logoutActionPerformed(java.awt.event.ActionEvent evt) {                                           
         boolean confirm = DialogBox.confirmMessage("Are you sure you want to logout?", "Logout");
@@ -941,31 +582,40 @@ public class OrderHistory extends javax.swing.JFrame {
         }
     }                                          
 
-    private void btn_homeActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        dispose();
-        new CusDash().setVisible(true);
-    }                                        
-
+    
     private void btn_cartActionPerformed(java.awt.event.ActionEvent evt) {                                            
         dispose();
         new Cart(endUser).setVisible(true);
-    }     
-    
+    } 
+
+    private void btn_historyActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        dispose();
+        new OrderHistory(endUser).setVisible(true);
+        //TODO CALL PAGE 2
+    } 
+                                              
+                                              
     private void btn_walletActionPerformed(java.awt.event.ActionEvent evt) {                                        
         dispose();
         new CusWallet(endUser).setVisible(true);
     }
-                                                                        
+
+    // private void btn_complaintActionPerformed(java.awt.event.ActionEvent evt) {                                            
+    //     dispose();
+    //     new CustomerComplaint(endUser).setVisible(true);
+    // }
+
+    private void btn_homeActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        dispose();
+        new CusDash().setVisible(true);
+    }
+
+                                                                             
 
     private void btn_profileActionPerformed(java.awt.event.ActionEvent evt) {                                        
         dispose();
         new CustomerProfile(endUser).setVisible(true);
-    }       
-    
-    private void btn_complaintActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        dispose();
-        new CustomerComplaint(endUser).setVisible(true);
-    }
+    }                                       
 
 
     // Variables declaration - do not modify                     
@@ -973,13 +623,15 @@ public class OrderHistory extends javax.swing.JFrame {
     private javax.swing.JPanel Logo_container;
     private javax.swing.JPanel Main;
     private javax.swing.JPanel Sidebar;
-    private javax.swing.JButton btn_cart;
+    private javax.swing.JButton btn_history;
     private javax.swing.JPanel btn_container1;
     private javax.swing.JPanel btn_container2;
-    private javax.swing.JButton btn_history;
+    private javax.swing.JButton btn_cart;
     private javax.swing.JButton btn_home;
+    private javax.swing.JButton btn_wallet;
     private javax.swing.JButton btn_profile;
     private javax.swing.JButton btn_logout;
+    private javax.swing.JLabel customer_username;
     private javax.swing.JPanel m5;
     private javax.swing.JPanel m6;
     private javax.swing.JPanel m7;
@@ -992,11 +644,7 @@ public class OrderHistory extends javax.swing.JFrame {
     private javax.swing.JLabel systemName;
     private javax.swing.JPanel title_container;
     private javax.swing.JPanel title_container1;
-    private javax.swing.JLabel welcome;
-    private javax.swing.JButton btn_Noti;
-    private javax.swing.JButton btn_wallet;
+    private javax.swing.JLabel title;
     private javax.swing.JButton btn_complaint;
     // End of variables declaration                   
 }
-
-

@@ -12,18 +12,18 @@ public class CusOrder {
 
 
     // Constructor
-    public CusOrder(String menuID, int quantity, double price, String imagePath, 
-                    String name, String description, Customer customer, String orderType) {
-        this.menuID = menuID;
-        this.quantity = quantity;
-        this.price = price;
-        this.imagePath = imagePath;
-        this.name = name;
-        this.description = description;
-        this.customer = customer;
-        this.orderType = orderType;
+    // public CusOrder(String menuID, int quantity, double price, String imagePath, 
+    //                 String name, String description, Customer customer, String orderType) {
+    //     this.menuID = menuID;
+    //     this.quantity = quantity;
+    //     this.price = price;
+    //     this.imagePath = imagePath;
+    //     this.name = name;
+    //     this.description = description;
+    //     this.customer = customer;
+    //     this.orderType = orderType;
 
-    }
+    // }
 
     public CusOrder(String menuID, int quantity, double price,
                     String name, Customer customer) {
@@ -35,9 +35,13 @@ public class CusOrder {
 
     }
 
-    public CusOrder(String menuID2, int quantity2, double price2, double totalPrice) {
-        //TODO Auto-generated constructor stub
-    }
+    
+
+    // public CusOrder(String string, int int1, String string2, double double1, Customer customer2) {
+    //     //TODO Auto-generated constructor stub
+    // }
+
+
 
     // Getters and Setters
     public String getMenuID() { 

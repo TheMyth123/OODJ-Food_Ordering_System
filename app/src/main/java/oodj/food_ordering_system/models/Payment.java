@@ -12,20 +12,30 @@ public class Payment {
     private String paymentStatus;
     private String address;
     private String date;
+    private String orderStatus;
+    private ArrayList<CusOrder> orderItems; // ✅ Added to store order items
 
-    public Payment(String orderID, String customerID, String serviceType, double totalAmount, String paymentStatus, String address, String dateString) {
+    // ✅ Updated constructor to include order items
+    public Payment(String orderID, String customerID, String serviceType, double totalAmount,
+                   String paymentStatus, String address, String date, String orderStatus,
+                   ArrayList<CusOrder> orderItems) {
         this.orderID = orderID;
         this.customerID = customerID;
         this.serviceType = serviceType;
         this.totalAmount = totalAmount;
-        this.paymentStatus = paymentStatus; 
-        this.address = address;       
-        this.date = dateString;
-
-
-        // Convert JSONArray to ArrayList<OrderItem>
-        
+        this.paymentStatus = paymentStatus;
+        this.address = address;
+        this.date = date;
+        this.orderStatus = orderStatus;
+        this.orderItems = orderItems; // ✅ Assign order items
     }
+
+    // ✅ Getter method for order items
+    public ArrayList<CusOrder> getOrderItems() {
+        return orderItems;
+    }
+
+
 
     // Getter and Setter methods
 
@@ -89,5 +99,18 @@ public class Payment {
         this.date = date;
     }
 
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    // public JSONArray getOrderItems() {
+    //     return this.orderItems; // Ensure 'orderItems' is a valid field in Payment
+    // }
+
+    
 
 }

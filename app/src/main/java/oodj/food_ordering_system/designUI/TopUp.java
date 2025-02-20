@@ -277,35 +277,77 @@ public class TopUp extends javax.swing.JFrame {
         }
     }
 
+    // private void submitTopUpRequest() {
+    //     // Implement submit top-up request functionality
+    //     String amount = amountField.getText();
+    //     if (amount.isEmpty()) {
+    //         JOptionPane.showMessageDialog(this, "Please enter the top-up amount.", "Error", JOptionPane.ERROR_MESSAGE);
+    //     } else if (receiptImagePath == null || receiptImagePath.isEmpty()) {
+    //         JOptionPane.showMessageDialog(this, "Please upload the receipt.", "Error", JOptionPane.ERROR_MESSAGE);
+    //     } else {
+    //         // Create a new Credit object
+    //         String creditID = "CR" + String.format("%05d", OrderHandling.getCRid() + 1);
+
+    //         // String creditID = "CR" + System.currentTimeMillis(); // Generate a unique ID based on the current time
+    //         double creditAmount = Double.parseDouble(amount);
+    //         LocalDate lastUpdated = LocalDate.now();
+    //         String status = "Pending";
+    //         String receiptPath = OrderHandling.RECEIPT_FOLDER + creditID + ".jpg";
+
+    //         Credit newCredit = new Credit(creditID, endUser.getID(), creditAmount, lastUpdated, status, receiptPath);
+
+    //         // Get existing credits and add the new credit
+    //         ArrayList<Credit> credits = OrderHandling.getCredits();
+    //         credits.add(newCredit);
+
+    //         // Save the updated credits
+    //         OrderHandling.saveCredits(newCredit, receiptImagePath);
+
+    //         JOptionPane.showMessageDialog(this, "Request has successfully been sent to admin.", "Success", JOptionPane.INFORMATION_MESSAGE);
+    //     }
+    // }
+
     private void submitTopUpRequest() {
         // Implement submit top-up request functionality
         String amount = amountField.getText();
+        
         if (amount.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please enter the top-up amount.", "Error", JOptionPane.ERROR_MESSAGE);
-        } else if (receiptImagePath == null || receiptImagePath.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please upload the receipt.", "Error", JOptionPane.ERROR_MESSAGE);
-        } else {
-            // Create a new Credit object
-            String creditID = "CR" + String.format("%05d", OrderHandling.getCRid() + 1);
-
-            // String creditID = "CR" + System.currentTimeMillis(); // Generate a unique ID based on the current time
-            double creditAmount = Double.parseDouble(amount);
-            LocalDate lastUpdated = LocalDate.now();
-            String status = "Pending";
-            String receiptPath = OrderHandling.RECEIPT_FOLDER + creditID + ".jpg";
-
-            Credit newCredit = new Credit(creditID, endUser.getID(), creditAmount, lastUpdated, status, receiptPath);
-
-            // Get existing credits and add the new credit
-            ArrayList<Credit> credits = OrderHandling.getCredits();
-            credits.add(newCredit);
-
-            // Save the updated credits
-            OrderHandling.saveCredits(newCredit, receiptImagePath);
-
-            JOptionPane.showMessageDialog(this, "Request has successfully been sent to admin.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            return;
         }
+        
+        if (receiptImagePath == null || receiptImagePath.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please upload the receipt.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        // Validate file type
+        if (!receiptImagePath.toLowerCase().endsWith(".pdf")) {
+            JOptionPane.showMessageDialog(this, "Only PDF files are accepted for the receipt.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+    
+        // Create a new Credit object
+        String creditID = "CR" + String.format("%05d", OrderHandling.getCRid() + 1);
+    
+        double creditAmount = Double.parseDouble(amount);
+        LocalDate lastUpdated = LocalDate.now();
+        String status = "Pending";
+        String receiptPath = OrderHandling.RECEIPT_FOLDER + creditID + ".pdf"; // Save as PDF
+    
+        Credit newCredit = new Credit(creditID, endUser.getID(), creditAmount, lastUpdated, status, receiptPath);
+    
+        // Get existing credits and add the new credit
+        ArrayList<Credit> credits = OrderHandling.getCredits();
+        credits.add(newCredit);
+    
+        // Save the updated credits
+        OrderHandling.saveCredits(newCredit, receiptImagePath);
+    
+        JOptionPane.showMessageDialog(this, "Request has successfully been sent to admin.", "Success", JOptionPane.INFORMATION_MESSAGE);
+        dispose();
     }
+    
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {                                        
         dispose();
@@ -331,10 +373,6 @@ public class TopUp extends javax.swing.JFrame {
     // End of variables declaration  
     
     
-    // public static void main(String[] args) {
-    //     java.awt.EventQueue.invokeLater(() -> {
-    //         new TopUp().setVisible(true);
-    //     });
-    // }
+    
 }
 

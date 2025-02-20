@@ -25,10 +25,6 @@ public class LoginPage extends javax.swing.JFrame {
 
     public static String loginID = "";
 
-    public static String getLoginID() {
-        return loginID;
-    }
-
     
     public static void setLoginID(String loginID) {
         LoginPage.loginID = loginID;
@@ -465,4 +461,8 @@ public class LoginPage extends javax.swing.JFrame {
     private javax.swing.JLabel usernameLabel;
     private javax.swing.JTextField usernameTextField;
     // End of variables declaration                   
+
+    
+
+	
 }

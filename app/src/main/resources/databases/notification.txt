@@ -46,12 +46,23 @@
   {
     "Status": "True",
     "ReadStatus": "False",
-    "Type": "Top Up Request Accepted",
+    "Type": "Order Accepted",
     "NotificationID": "NT00005",
     "UserID": "CS00001",
-    "Content": "Your top-up request has been confirmed. Please check the transaction details below.",
-    "Title": "Top Up Approved",
-    "Timestamp": "2025-02-18T04:46:04.296125300",
-    "ActionLink": "CR00008"
+    "Content": "Your order has been accepted. You can track the status in your order history.",
+    "Title": "Order Approved",
+    "Timestamp": "2025-02-16T05:27:15.396718300",
+    "ActionLink": "OR00001"
+  },
+  {
+    "Status": "True",
+    "ReadStatus": "False",
+    "Type": "Order Cancelled",
+    "NotificationID": "NT00006",
+    "UserID": "CS00001",
+    "Content": "Your order has been cancelled. If you have any concerns, please contact support.",
+    "Title": "Order Cancelled",
+    "Timestamp": "2025-02-16T05:31:51.299736",
+    "ActionLink": "OR00001"
   }
 ]

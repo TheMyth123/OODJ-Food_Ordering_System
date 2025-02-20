@@ -2,19 +2,32 @@ package oodj.food_ordering_system.designUI;
 
 import oodj.food_ordering_system.models.Customer;
 import oodj.food_ordering_system.models.Notification;
+import oodj.food_ordering_system.models.Vendor;
 // import oodj.food_ordering_system.models.Notification;
 import oodj.food_ordering_system.utils.DialogBox;
 import oodj.food_ordering_system.utils.NotificationUtils;
+import oodj.food_ordering_system.utils.UserHandling;
 // import oodj.food_ordering_system.utils.NotificationUtils;
 import raven.glasspanepopup.*;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 
 // import java.util.List;
 
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
@@ -26,6 +39,9 @@ public class CusDash extends javax.swing.JFrame {
 
     private Customer endUser;
     private List<Notification> notifications;
+    private JTextField searchField;
+    private JButton searchButton;
+    private ArrayList<Vendor> vendors;
 
 // add run method
     // public static void run() {
@@ -36,7 +52,12 @@ public class CusDash extends javax.swing.JFrame {
 
 // TODO check again customerID
     public CusDash() {
-        this.endUser = LoginPage.getEndUser();        
+
+        this.endUser = LoginPage.getEndUser();      
+        vendors = UserHandling.getVendors(); // ✅ Initialize vendors list here
+        if (vendors == null) {
+            vendors = new ArrayList<>(); // ✅ Prevent NullPointerException
+        }  
         System.out.println("CusDash initialized with customerID: " + endUser.getID()); // Debugging statement
 
         initComponents();
@@ -51,12 +72,47 @@ public class CusDash extends javax.swing.JFrame {
         customer_username.setText(endUser.getUsername());
     }
 
+    private void searchFCourt() {
+        String name = searchField.getText().trim().toLowerCase(); // Convert to lowercase for case-insensitive search
+        List<Vendor> filteredVendors = new ArrayList<>();
+    
+        for (Vendor vendor : vendors) {
+            if (name.isEmpty() || vendor.getFoodCourtName().toLowerCase().contains(name)) { // Partial search
+                filteredVendors.add(vendor);
+            }
+        }
+    
+        if (filteredVendors.isEmpty()) {
+            DialogBox.errorMessage("No matches found.", "Error");
+            CusFCourt.displayVendors(vendors); // Reset to all vendors if no match
+        } else {
+            CusFCourt.displayVendors(filteredVendors);
+        }
+    }
+    
+
     private void addRestaurantPanel() {
+        searchField = new JTextField();
+        searchField.setPreferredSize(new java.awt.Dimension(200, 30));
+
+        searchButton = new JButton("Search");
+        searchButton.addActionListener(evt -> searchFCourt());
+
+        JPanel searchPanel = new JPanel(new BorderLayout());
+        searchPanel.add(searchField, BorderLayout.CENTER);
+        searchPanel.add(searchButton, BorderLayout.EAST);
+    
+        title_container1.add(searchPanel, BorderLayout.NORTH);
+
+
         CusFCourt cusRestaurant = new CusFCourt();
         JPanel mainPanel = cusRestaurant.getMainPanel();
         title_container1.add(mainPanel);
-    }
 
+        title_container1.revalidate();
+        title_container1.repaint();
+    }
+    
 
 
 
@@ -200,11 +256,7 @@ public class CusDash extends javax.swing.JFrame {
         btn_home.setMaximumSize(new java.awt.Dimension(250, 40));
         btn_home.setMinimumSize(new java.awt.Dimension(250, 40));
         btn_home.setPreferredSize(new java.awt.Dimension(250, 40));
-        // btn_home.addActionListener(new java.awt.event.ActionListener() {
-        //     public void actionPerformed(java.awt.event.ActionEvent evt) {
-        //         btn_homeActionPerformed(evt);
-        //     }
-        // });
+        
         btn_container1.add(btn_home);
 
         btn_wallet.setBackground(new java.awt.Color(31, 31, 31));
@@ -620,15 +672,14 @@ public class CusDash extends javax.swing.JFrame {
 
     private void btn_complaintActionPerformed(java.awt.event.ActionEvent evt) {                                            
         dispose();
-        new ComplaintSystem(endUser).setVisible(true);
+        new CustomerComplaint(endUser).setVisible(true);
     }
 
                                                                              
 
     private void btn_profileActionPerformed(java.awt.event.ActionEvent evt) {                                        
-        // dispose();
-        // new TopUp(endUser).setVisible(true);
-        // System.out.println("Page 4");
+        dispose();
+        new CustomerProfile(endUser).setVisible(true);
     }                                       
 
 
@@ -664,4 +715,3 @@ public class CusDash extends javax.swing.JFrame {
     private javax.swing.JButton btn_complaint;
     // End of variables declaration                   
 }
-

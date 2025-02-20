@@ -1,6 +1,25 @@
 package oodj.food_ordering_system.utils;
 
+import oodj.food_ordering_system.models.Admin;
+import oodj.food_ordering_system.models.Credit;
+import oodj.food_ordering_system.models.CusOrder;
+import oodj.food_ordering_system.models.Customer;
+import oodj.food_ordering_system.models.Menu;
+import oodj.food_ordering_system.models.Payment;
+import oodj.food_ordering_system.models.Rating;
+import oodj.food_ordering_system.models.Rating.RatingType;
+
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -18,6 +37,8 @@ import oodj.food_ordering_system.models.Customer;
 import oodj.food_ordering_system.models.Menu;
 import oodj.food_ordering_system.models.Payment;
 import oodj.food_ordering_system.models.Vendor;
+import java.util.Date;
+import java.util.List;
 
 // change to OOP
 public class OrderHandling {
@@ -96,27 +117,7 @@ public class OrderHandling {
         }
         return null; // Return null if not found
     }
-//  need OOP
-    // public static ArrayList<Menu> readMenuFile(String vendorID) throws IOException {
-    //     ArrayList<Menu> lines = new ArrayList<>();
 
-    //     try{
-    //         String jsonData  = new String(Files.readAllBytes(Paths.get(MENU)));
-    //         JSONArray menuArray = new JSONArray(jsonData);
-            
-    //     for (String line : lines) {
-    //         jsonData.append(line);
-    //     }
-    //     JSONArray menuArray = new JSONArray(jsonData.toString());
-    //     ArrayList<JSONObject> menuItems = new ArrayList<>();
-    //     for (int i = 0; i < menuArray.length(); i++) {
-    //         menuItems.add(menuArray.getJSONObject(i));
-    //     }
-    //     return filterMenuByVendor(menuItems, vendorID);
-
-    //     }
-        
-    // }
 
     public static ArrayList<Menu> readMenuFile(String vendorID) throws IOException {
         ArrayList<Menu> menuItems = new ArrayList<>();
@@ -147,18 +148,30 @@ public class OrderHandling {
         return menuItems;
     }
 
+    public static String getFoodNameByMenuID(String menuID) {
+        try {
+            // Read the JSON file containing menu items
+            String jsonData = new String(Files.readAllBytes(Paths.get(MENU))); // Ensure the correct file path
+            JSONArray menuArray = new JSONArray(jsonData);
+    
+            // Iterate through the menu data to find the matching menuID
+            for (int i = 0; i < menuArray.length(); i++) {
+                JSONObject menuItem = menuArray.getJSONObject(i);
+    
+                // Check if menuID matches
+                if (menuItem.getString("id").equals(menuID)) {
+                    return menuItem.getString("name"); // ✅ Return the food name
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error reading or parsing menu JSON file: " + e.getMessage());
+        }
+    
+        return "Unknown Item"; // If not found, return a default name
+    }
+    
 
-//  need OOP
-    // public static ArrayList<JSONObject> filterMenuByVendor(ArrayList<JSONObject> menuItems, String vendorID) {
-    //     ArrayList<JSONObject> filteredMenu = new ArrayList<>();
-    //     // Convert vendorID to string for comparison
-    //     for (JSONObject item : menuItems) {
-    //         if (item.getString("VendorID").equals(vendorID)) {
-    //             filteredMenu.add(item);
-    //         }
-    //     }
-    //     return filteredMenu;
-    // }
+
    
 
     public static ArrayList<CusOrder> getCart() {
@@ -200,20 +213,106 @@ public class OrderHandling {
         return cartItems;
     }
 
-//  need OOP
-    public static void saveCart(ArrayList<String> cartItems) {
-        JSONArray cartArray = new JSONArray();
-        for (String item : cartItems) {
-            String[] itemParts = item.split(", ");
-            JSONObject jsonObject = new JSONObject();
-            for (String part : itemParts) {
-                String[] keyValue = part.split(": ");
-                jsonObject.put(keyValue[0], keyValue[1]);
+    public static CusOrder getFoodByID(String menuID) {
+        ArrayList<CusOrder> cartItems = getCart(); // Get the full cart list
+    
+        for (CusOrder item : cartItems) {
+            if (item.getMenuID().equals(menuID)) {
+                return item; // Return the matching food item
             }
-            cartArray.put(jsonObject);
         }
-        FileHandling.saveToFile(cartArray, CART);
+    
+        return null; // Return null if no matching item is found
     }
+    
+
+//  need OOP
+    public static void saveCart(ArrayList<CusOrder> cartItems) {
+        JSONArray cartArray = new JSONArray();
+
+        for (CusOrder order : cartItems) {
+            JSONObject obj = new JSONObject();
+            obj.put("MenuID", order.getMenuID());
+            obj.put("quantity", order.getQuantity());
+            obj.put("price", order.getPrice());
+            obj.put("name", order.getName());
+            obj.put("CustomerID", order.getCustomer().getID()); // Save only the ID, not the object reference
+
+            cartArray.put(obj);
+        }
+
+        FileHandling.saveToFile(cartArray, CART); // Write updated cart list
+    }
+
+    // public static void updateCart(ArrayList<CusOrder> cartItems, String customerID, ArrayList<CusOrder> cartItems2) {
+    //     JSONArray cartArray = new JSONArray();
+    
+    //     ArrayList<CusOrder> allCartItems = getCart(); // Get all items from the cart file
+    
+    //     for (CusOrder order : allCartItems) {
+    //         // Only modify items belonging to the logged-in customer
+    //         if (order.getCustomer().getID().equals(customerID)) {
+    //             if (cartItems2.contains(order.getMenuID())) {
+    //                 continue; // Skip items that were removed
+    //             }
+    //         }
+    
+    //         // Keep other customers' items intact
+    //         JSONObject obj = new JSONObject();
+    //         obj.put("MenuID", order.getMenuID());
+    //         obj.put("quantity", order.getQuantity());
+    //         obj.put("price", order.getPrice());
+    //         obj.put("name", order.getName());
+    //         obj.put("CustomerID", order.getCustomer().getID());
+    
+    //         cartArray.put(obj);
+    //     }
+    
+    //     FileHandling.saveToFile(cartArray, CART); // Write the updated cart list
+    // }
+
+    public static void updateCart(ArrayList<CusOrder> allCartItems, String customerID, ArrayList<String> itemsToRemove) {
+        System.out.println("Updating cart for customer: " + customerID);
+        System.out.println("Selected MenuIDs to remove: " + itemsToRemove);
+    
+        if (itemsToRemove.isEmpty()) {
+            System.out.println("WARNING: No items were selected for removal.");
+            return; // 🚨 Exit early to prevent overwriting the cart with the same data
+        }
+    
+        JSONArray cartArray = new JSONArray();
+    
+        for (CusOrder order : allCartItems) {
+            // ✅ Compare order's customer ID with the given `customerID`
+            if (!customerID.equals(order.getCustomer().getID())) {
+                System.out.println("Keeping item for another customer: " + order.getMenuID());
+            } else if (itemsToRemove.contains(order.getMenuID())) {
+                System.out.println("Removing item: " + order.getMenuID());
+                continue; // Skip adding this item
+            } else {
+                System.out.println("Keeping item for current customer: " + order.getMenuID());
+            }
+    
+            JSONObject obj = new JSONObject();
+            obj.put("MenuID", order.getMenuID());
+            obj.put("quantity", order.getQuantity());
+            obj.put("price", order.getPrice());
+            obj.put("name", order.getName());
+            obj.put("CustomerID", order.getCustomer().getID());
+    
+            cartArray.put(obj);
+        }
+    
+        System.out.println("Final Cart Data to be saved: " + cartArray.toString(2));
+    
+        if (cartArray.length() == 0) {
+            System.out.println("WARNING: The cart is empty after update. Check logic.");
+        }
+    
+        FileHandling.saveToFile(cartArray, CART); // Update the cart file
+    }
+    
+    
 
     public static ArrayList<Credit> getCredits() {
         ArrayList<Credit> buffer = new ArrayList<>();
@@ -247,23 +346,6 @@ public class OrderHandling {
         return buffer;
     }
 
-    // public static void saveCredits(ArrayList<Credit> credits) {
-    //     JSONArray creditsArray = new JSONArray();
-
-    //     for (Credit credit : credits) {
-    //         JSONObject creditData = new JSONObject();
-    //         creditData.put("CreditID", credit.getCreditID());
-    //         creditData.put("CustomerID", credit.getCustomerID());
-    //         creditData.put("CreditAmount", credit.getAmount());
-    //         creditData.put("LastUpdated", credit.getDate().toString());
-    //         creditData.put("Status", credit.getStatus());
-    //         creditData.put("ReceiptImagePath", RECEIPT_FOLDER + credit.getCreditID());
-
-    //         creditsArray.put(creditData);
-    //     }
-
-    //     FileHandling.saveToFile(creditsArray, CREDIT);
-    // }
 
     public static void saveCredits(Credit credit, String receiptImagePath) {
         // Get existing credits
@@ -282,7 +364,7 @@ public class OrderHandling {
             creditData.put("CreditAmount", c.getAmount());
             creditData.put("LastUpdated", c.getDate().toString());
             creditData.put("Status", c.getStatus());
-            creditData.put("ReceiptImagePath", RECEIPT_FOLDER + c.getCreditID() + ".jpg");
+            creditData.put("ReceiptImagePath", RECEIPT_FOLDER + c.getCreditID() + ".pdf");
 
             creditsArray.put(creditData);
         }
@@ -302,7 +384,7 @@ public class OrderHandling {
             if (!sourceFile.exists()) {
                 throw new IOException("Source file does not exist: " + receiptImagePath);
             }
-            File destFile = new File(RECEIPT_FOLDER + credit.getCreditID() + ".jpg");
+            File destFile = new File(RECEIPT_FOLDER + credit.getCreditID() + ".pdf");
             Files.copy(sourceFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
             System.out.println("Receipt image copied to: " + destFile.getPath());
         } catch (IOException e) {
@@ -310,89 +392,44 @@ public class OrderHandling {
         }
     }
 
-    // public static ArrayList<Payment> getPayments() {
-    //     ArrayList<Payment> buffer = new ArrayList<>();
-    
-    //     // try {
-                    
-    
-    //     //     for (int i = 0; i < paymentsArray.length(); i++) {
-    //     //         JSONObject paymentData = paymentsArray.getJSONObject(i);
-    
-    //     //         String customerID = paymentData.getString("CustomerID");
-    //     //         String serviceType = paymentData.getString("ServiceType");
-    //     //         double totalAmount = paymentData.getDouble("TotalAmount");
-    //     //         String paymentStatus = paymentData.getString("PaymentStatus");
-    //     //         JSONArray orderItemsArray = paymentData.getJSONArray("OrderItems");
-    //     //         String deliveryAddress = paymentData.getString("DeliveryAddress");
-    
-    //     //         // Convert orderItemsArray to a suitable data structure if needed
-    //     //         // JSONArray orderItemsArray = new JSONArray(jsonData); // Removed duplicate declaration
-    //     //         ArrayList<CusOrder> orderItems = new ArrayList<>();
+//  need OOP
 
-                
-
-    //     //         for (int j = 0; j < orderItemsArray.length(); j++) {
-    //     //             JSONObject item = orderItemsArray.getJSONObject(j);
-    //     //             String customerIDStr = item.getString("CustomerID");
-    //     //             Customer customer = UserHandling.getCustomerByID(customerIDStr);
-
-    //     //             CusOrder orderItem = new CusOrder(
-    //     //                 item.getString("MenuID"),   // Correct syntax
-    //     //                 item.getInt("quantity"),    // Correct syntax
-    //     //                 Double.parseDouble(item.getString("price").replace("$", "")), // Correct syntax for replacing $
-    //     //                 item.getString("imagePath"),
-    //     //                 item.getString("name"),
-    //     //                 item.getString("description"),
-    //     //                 customer                    
-    //     //             );
-
-    //     //             orderItems.add(orderItem);
-    //     //         }
-    
-    //     //         // Payment payment = new Payment(customerID, serviceType, totalAmount, paymentStatus, orderItems, deliveryAddress);
-    //     //         // buffer.add(payment);
-    //     //     }
-    
-    //     // } catch (Exception e) {
-    //     //     DialogBox.errorMessage("Error reading or parsing payment JSON file: " + e.getMessage(), "Error");
-    //     // }
-    
-    //     // return buffer;
-    // }
-
-    public static void savePayment(String orderID, String customerID, JSONArray orderItems, double totalAmount, String paymentStatus, String serviceType, String deliveryAddress) {
+    public static void savePayment(String orderID, String customerID, JSONArray orderItems, 
+        double totalAmount, String paymentStatus, String serviceType, 
+        String deliveryAddress, String orderStatus) {
         JSONArray paymentsArray = new JSONArray();
-    
+
         try {
-            // Load existing payments from the file
+        // Load existing payments from the file
             if (Files.exists(Paths.get(PAYMENT))) {
                 String jsonData = new String(Files.readAllBytes(Paths.get(PAYMENT)));
-                if (!jsonData.trim().isEmpty()) {
-                    paymentsArray = new JSONArray(jsonData); // Parse existing payments
-                }
+            if (!jsonData.trim().isEmpty()) {
+            paymentsArray = new JSONArray(jsonData); // Parse existing payments
             }
-    
-            // Create new payment record
-            JSONObject paymentData = new JSONObject();
-            paymentData.put("OrderID", orderID);
-            paymentData.put("CustomerID", customerID);
-            paymentData.put("OrderItems", orderItems); // Add order items
-            paymentData.put("TotalAmount", totalAmount);
-            paymentData.put("PaymentStatus", paymentStatus);
-            paymentData.put("ServiceType", serviceType);
-            paymentData.put("DeliveryAddress", deliveryAddress);
-            paymentData.put("Date", LocalDate.now().toString());
-    
-            // Add the new payment to the array
-            paymentsArray.put(paymentData);
-    
-            // Save updated payments array back to the file
-            Files.write(Paths.get(PAYMENT), paymentsArray.toString(2).getBytes());
+        }
+
+        // Create new payment record
+        JSONObject paymentData = new JSONObject();
+        paymentData.put("OrderID", orderID);
+        paymentData.put("CustomerID", customerID);
+        paymentData.put("ServiceType", serviceType); // Corrected order
+        paymentData.put("TotalAmount", totalAmount);
+        paymentData.put("PaymentStatus", paymentStatus);
+        paymentData.put("DeliveryAddress", deliveryAddress);
+        paymentData.put("Date", LocalDate.now().toString()); // Ensures date is passed
+        paymentData.put("OrderStatus", orderStatus);
+        paymentData.put("OrderItems", orderItems); // Add order items last
+
+        // Add the new payment to the array
+        paymentsArray.put(paymentData);
+
+        // Save updated payments array back to the file
+        Files.write(Paths.get(PAYMENT), paymentsArray.toString(2).getBytes());
         } catch (Exception e) {
-            DialogBox.errorMessage("Error saving payment: " + e.getMessage(), "Error");
+        DialogBox.errorMessage("Error saving payment: " + e.getMessage(), "Error");
         }
     }
+
 
 
     public static void updateCustomerBalance(String customerID, double newBalance) {
@@ -438,11 +475,13 @@ public class OrderHandling {
                 String serviceType = orderObject.getString("ServiceType");
                 String address = orderObject.getString("DeliveryAddress");
                 String dateString = orderObject.getString("Date");
+                String orderStatus = orderObject.getString("OrderStatus");
+
     
                 // Extract order items array
     
                 // Create Payment object and add to list
-                Payment payment = new Payment(orderID, customerID, serviceType, totalAmount, paymentStatus, address, dateString);
+                Payment payment = new Payment(orderID, customerID, serviceType, totalAmount, paymentStatus, address, dateString, orderStatus, null);
                 paymentList.add(payment);
             }
         } catch (Exception e) {
@@ -452,80 +491,405 @@ public class OrderHandling {
         return paymentList;
     }
 
-    public static void saveRating(Payment orderID, Customer customerID, int rating) {
+     
+// need OOP
+    public static void saveRating(Payment orderID, Customer customerID, int rating, RatingType ratingType) {
         ArrayList<String> lines = FileHandling.readLines(RATING);
         StringBuilder jsonData = new StringBuilder();
-    
+
         for (String line : lines) {
             jsonData.append(line);
         }
-    
+
         try {
             JSONArray ratingsArray;
-    
+
             // If the file is empty, create a new JSON array
             if (jsonData.length() == 0) {
                 ratingsArray = new JSONArray();
             } else {
                 ratingsArray = new JSONArray(jsonData.toString());
             }
-    
+
             // Create a new rating JSON object
             JSONObject ratingObject = new JSONObject();
             ratingObject.put("OrderID", orderID.getOrderID());
             ratingObject.put("CustomerID", customerID.getID());
             ratingObject.put("Rating", rating);
+            ratingObject.put("RatingType", ratingType.toString()); // Store the rating category
             ratingObject.put("Status", true);
-    
+
             // Add the new rating to the array
             ratingsArray.put(ratingObject);
-    
+
             // Write updated JSON array back to the file
-            FileHandling.saveToFile(ratingsArray, RATING); // Pretty-print JSON
-    
+            FileHandling.saveToFile(ratingsArray, RATING);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public static ArrayList<Rating> getRatings() {
+        ArrayList<String> lines = FileHandling.readLines(RATING);
+        StringBuilder jsonData = new StringBuilder();
+
+        for (String line : lines) {
+            jsonData.append(line);
+        }
+
+        ArrayList<Rating> ratingList = new ArrayList<>();
+
+        try {
+            JSONArray ratingsArray = new JSONArray(jsonData.toString());
+
+            for (int i = 0; i < ratingsArray.length(); i++) {
+                JSONObject ratingObject = ratingsArray.getJSONObject(i);
+
+                String orderID = ratingObject.getString("OrderID");
+                String customerID = ratingObject.getString("CustomerID");
+                int rating = ratingObject.getInt("Rating");
+                RatingType ratingType = RatingType.valueOf(ratingObject.getString("RatingType"));
+                boolean status = ratingObject.getBoolean("Status");
+
+                Rating ratingItem = new Rating(orderID, customerID, rating, ratingType, status);
+                ratingList.add(ratingItem);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ratingList;
+    }
+
+    public static String getMenuIDFromOrder(String orderID) {
+        try {
+            String jsonData = new String(Files.readAllBytes(Paths.get(PAYMENT)));
+            JSONArray payments = new JSONArray(jsonData);
+    
+            for (Object obj : payments) {
+                JSONObject payment = (JSONObject) obj;
+    
+                if (payment.getString("OrderID").equals(orderID)) {
+                    // ✅ Check if "OrderItems" array exists
+                    if (!payment.has("OrderItems")) {
+                        System.out.println("⚠️ Warning: No 'OrderItems' found for Order ID: " + orderID);
+                        return null;
+                    }
+    
+                    JSONArray orderItems = payment.getJSONArray("OrderItems");
+    
+                    // ✅ Extract menuID from the first order item (assuming at least one exists)
+                    if (orderItems.length() > 0) {
+                        JSONObject firstItem = orderItems.getJSONObject(0);
+    
+                        if (!firstItem.has("menuID")) {
+                            System.out.println("⚠️ Warning: No 'menuID' found in OrderItems for Order ID: " + orderID);
+                            return null;
+                        }
+    
+                        return firstItem.getString("menuID"); // ✅ Extract and return menuID
+                    } else {
+                        System.out.println("⚠️ Warning: 'OrderItems' is empty for Order ID: " + orderID);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     
 
-    public static Payment getPaymentByID(String orderID) {
+    
+
+    public static String getVendorIDFromMenu(String menuID) {
         try {
-            // Read the JSON file
-            String jsonData = new String(Files.readAllBytes(Paths.get(PAYMENT)));
-            JSONArray customersArray = new JSONArray(jsonData);
+            String jsonData = new String(Files.readAllBytes(Paths.get(MENU)));
+            JSONArray menuItems = new JSONArray(jsonData);
     
-            // Iterate through the customer data to find the matching ID
-            for (int i = 0; i < customersArray.length(); i++) {
-                JSONObject customerData = customersArray.getJSONObject(i);
+            for (Object obj : menuItems) {
+                // ✅ Cast the object correctly instead of creating a new JSONObject
+                JSONObject menuItem = (JSONObject) obj;
     
-                // Check if the CustomerID matches
-                if (customerData.getString("OrderID").equals(orderID)) {
-                    String customerID = customerData.getString("CustomerID");
-                    String serviceType = customerData.getString("ServiceType");
-                    double totalAmount = customerData.getDouble("TotalAmount");
-                    String paymentStatus = customerData.getString("PaymentStatus");
-                    String address = customerData.getString("DeliveryAddress");
-                    String dateString = customerData.getString("Date");
+                // ✅ Debugging statement to check what is inside menuItem
+                System.out.println("Checking menu item: " + menuItem.toString());
     
-                    // Extract order items array
+                if (menuItem.has("id") && menuItem.getString("id").equals(menuID)) {
+                    System.out.println("✅ Found Vendor ID: " + menuItem.getString("VendorID"));
+                    return menuItem.getString("VendorID");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     
-                    // Create Payment object and return
-                    return new Payment(orderID, customerID, serviceType, totalAmount, paymentStatus, address, dateString);
+    
+
+    public static List<Rating> getVendorRatings(String vendorID) {
+        ArrayList<Rating> ratings = getRatings(); // Get all ratings
+        List<Rating> vendorRatings = new ArrayList<>();
+    
+        System.out.println("Vendor ID to search: " + vendorID);
+        System.out.println("Total ratings found: " + ratings.size());
+    
+        try {
+            for (Rating rating : ratings) {
+                System.out.println("\nProcessing Rating:");
+                System.out.println("  - Order ID: " + rating.getOrderID());
+                System.out.println("  - Customer ID: " + rating.getCustomerID());
+                System.out.println("  - Rating Value: " + rating.getRating());
+                System.out.println("  - Rating Type: " + rating.getRatingType());
+    
+                // Ensure only vendor ratings are considered
+                if (rating.getRatingType() == Rating.RatingType.VENDOR) {
+                    String orderID = rating.getOrderID();
+                    String menuID = getMenuIDFromOrder(orderID);
+                    System.out.println("  - Retrieved Menu ID: " + menuID);
+    
+                    if (menuID == null) {
+                        System.out.println("  ⚠️ Skipping: No menu ID found for Order ID: " + orderID);
+                        continue;
+                    }
+    
+                    String extractedVendorID = getVendorIDFromMenu(menuID);
+                    System.out.println("  - Extracted Vendor ID: " + extractedVendorID);
+    
+                    if (extractedVendorID != null && extractedVendorID.equals(vendorID)) {
+                        System.out.println("  ✅ Match Found! Adding to vendor ratings.");
+                        vendorRatings.add(new Rating(
+                            orderID,
+                            rating.getCustomerID(),
+                            rating.getRating(),
+                            rating.getRatingType(),
+                            rating.getStatus()
+                        ));
+                    } else {
+                        System.out.println("  ❌ No Match: Extracted Vendor ID does not match.");
+                    }
+                } else {
+                    System.out.println("  🔹 Skipping: Not a Vendor Rating.");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    
+        System.out.println("\nTotal vendor ratings found: " + vendorRatings.size());
+        return vendorRatings;
+    }
+    
+    
+    
+
+//  this function will be added to vendor
+    private void AcceptOrderStatus(String orderID) {
+        try {
+            String filePath = PAYMENT;
+            FileHandling.checkFile(filePath);
+
+            JSONArray orderArray;
+            File file = new File(filePath);
+
+            if (file.length() > 0) {
+                try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+                    StringBuilder content = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        content.append(line);
+                    }
+                    orderArray = new JSONArray(content.toString());
+                }
+            } else {
+                DialogBox.errorMessage("No order data found to edit.", "Error");
+                return;
+            }
+
+            boolean orderFound = false;
+            JSONObject updatedOrder = null;
+            for (int i = 0; i < orderArray.length(); i++) {
+                JSONObject order = orderArray.getJSONObject(i);
+                if (order.getString("OrderID").equals(orderID)) {
+                    order.put("Status", "Accepted");
+                    updatedOrder = order;
+                    orderFound = true;
+                    break;
+                }
+            }
+
+            if (!orderFound) {
+                DialogBox.errorMessage("Order with ID " + orderID + " not found.", "Error");
+                return;
+            }
+
+            FileHandling.saveToFile(orderArray, filePath);
+
+            // Send notification to the customer
+            if (updatedOrder != null) {
+                String customerID = updatedOrder.getString("CustomerID");
+                String type = "Order Accepted";
+                String content = "Your order has been accepted. You can track the status in your order history.";
+                String title = "Order Approved";
+                String actionlink = orderID;
+                
+                NotificationUtils.NotificationCreator(customerID, type, content, title, actionlink);
+            }
+
+            DialogBox.successMessage("Order " + orderID + " status updated to: Accepted", "Success");
+        } catch (IOException e) {
+            DialogBox.errorMessage("Something went wrong, please try again...", "IO Error");
+        }
+    }
+    
+        
+    
+    
+    private void CancelOrderStatus(String orderID) {
+        try {
+            String filePath = PAYMENT;
+            FileHandling.checkFile(filePath);
+    
+            JSONArray orderArray;
+            File file = new File(filePath);
+    
+            if (file.length() > 0) {
+                try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+                    StringBuilder content = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        content.append(line);
+                    }
+                    orderArray = new JSONArray(content.toString());
+                }
+            } else {
+                DialogBox.errorMessage("No order data found to edit.", "Error");
+                return;
+            }
+    
+            boolean orderFound = false;
+            JSONObject updatedOrder = null;
+            for (int i = 0; i < orderArray.length(); i++) {
+                JSONObject order = orderArray.getJSONObject(i);
+                if (order.getString("OrderID").equals(orderID)) {
+                    order.put("Status", "Cancelled");
+                    updatedOrder = order;
+                    orderFound = true;
+                    break;
                 }
             }
     
-            // If no matching customer is found
-            // DialogBox.errorMessage("Customer with ID " + customerID + " not found.", "Error");
+            if (!orderFound) {
+                DialogBox.errorMessage("Order with ID " + orderID + " not found.", "Error");
+                return;
+            }
+    
+            FileHandling.saveToFile(orderArray, filePath);
+    
+            // Send notification to the customer
+            if (updatedOrder != null) {
+                String customerID = updatedOrder.getString("CustomerID");
+                String type = "Order Cancelled";
+                String content = "Your order has been cancelled. If you have any concerns, please contact support.";
+                String title = "Order Cancelled";
+                String actionlink = orderID;
+                
+                NotificationUtils.NotificationCreator(customerID, type, content, title, actionlink);
+            }
+    
+            DialogBox.successMessage("Order " + orderID + " status updated to: Cancelled", "Success");
+        } catch (IOException e) {
+            DialogBox.errorMessage("Something went wrong, please try again...", "IO Error");
+        }
+    }
+
+
+    public static Payment getPaymentByID(String orderID) {
+        try {
+            // ✅ Read JSON file (ensure UTF-8 encoding)
+            String jsonData = new String(Files.readAllBytes(Paths.get(PAYMENT)), StandardCharsets.UTF_8);
+            System.out.println("DEBUG: JSON Data Read Successfully");
+    
+            // ✅ Parse JSON array
+            JSONArray paymentArray = new JSONArray(jsonData);
+    
+            // ✅ Loop through payment records to find matching OrderID
+            for (int i = 0; i < paymentArray.length(); i++) {
+                JSONObject paymentData = paymentArray.getJSONObject(i);
+    
+                if (paymentData.getString("OrderID").equals(orderID)) {
+                    System.out.println("DEBUG: Found matching Order ID: " + orderID);
+    
+                    // ✅ Extract payment details
+                    String customerID = paymentData.getString("CustomerID");
+                    String serviceType = paymentData.getString("ServiceType");
+                    double totalAmount = paymentData.getDouble("TotalAmount");
+                    String paymentStatus = paymentData.getString("PaymentStatus");
+                    String address = paymentData.getString("DeliveryAddress");
+                    String dateString = paymentData.getString("Date");
+                    String orderStatus = paymentData.getString("OrderStatus");
+    
+                    // ✅ Extract ordered items
+                    ArrayList<CusOrder> orderItems = new ArrayList<>();
+                    JSONArray orderItemsArray = paymentData.optJSONArray("OrderItems");
+    
+                    if (orderItemsArray == null) {
+                        System.err.println("ERROR: No 'OrderItems' found for order: " + orderID);
+                        return null;
+                    }
+    
+                    for (int j = 0; j < orderItemsArray.length(); j++) {
+                        JSONObject jsonItem = orderItemsArray.getJSONObject(j);
+    
+                        // ✅ Print full JSON item to debug
+                        System.out.println("DEBUG: Full JSON Object -> " + jsonItem.toString());
+                        System.out.println("DEBUG: Order Item Keys -> " + jsonItem.keySet());
+    
+                        // ✅ Ensure 'menuID' exists
+                        if (!jsonItem.has("menuID")) {
+                            System.err.println("ERROR: 'menuID' missing for an item in order: " + orderID);
+                            continue;
+                        }
+    
+                        String menuID = jsonItem.optString("menuID", "").trim();
+                        System.out.println("DEBUG: Extracted menuID -> [" + menuID + "] Length: " + menuID.length());
+                        int quantity = jsonItem.getInt("quantity");
+                        double price = jsonItem.getDouble("price");
+    
+                        // ✅ Fetch item name using menuID
+                        String itemName = getFoodNameByMenuID(menuID);
+                        // if (itemName == null || itemName.isEmpty()) {
+                        //     itemName = "Unknown Item"; // Default name if not found
+                        //     System.err.println("WARNING: Menu item not found for menuID: " + menuID);
+                        // }
+    
+                        // ✅ Retrieve Customer object using customerID
+                        Customer customer = UserHandling.getCustomerByID(customerID);
+    
+                        // ✅ Create CusOrder object and add to list
+                        CusOrder item = new CusOrder(menuID, quantity, price, itemName, customer);
+                        orderItems.add(item);
+                    }
+    
+                    // ✅ Create and return the Payment object
+                    return new Payment(orderID, customerID, serviceType, totalAmount, paymentStatus, address, dateString, orderStatus, orderItems);
+                }
+            }
+    
+            // ❌ If no matching order is found
+            System.err.println("ERROR: Order with ID " + orderID + " not found.");
             return null;
     
         } catch (Exception e) {
-            // Handle any errors (e.g., file reading or JSON parsing)
-            DialogBox.errorMessage("Error reading or parsing customer JSON file: " + e.getMessage(), "Error");
+            // ❌ Handle any file reading or JSON parsing errors
+            System.err.println("ERROR: Failed to read/parse payment JSON file: " + e.getMessage());
             return null;
         }
-    } 
+    }
+    
+    
+    
 
     // dine in status: Order placed > Order preparing > Order is being served > Payment completed
     // takeaway status: Order placed > Order preparing > Order is ready for pickup > Order picked up > Order completed
@@ -777,6 +1141,8 @@ public class OrderHandling {
     }
 
     
+    
+
     
     
 }

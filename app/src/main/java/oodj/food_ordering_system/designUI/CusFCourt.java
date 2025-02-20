@@ -5,11 +5,16 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import oodj.food_ordering_system.models.Vendor;
 import oodj.food_ordering_system.utils.UserHandling;
@@ -17,9 +22,10 @@ import oodj.food_ordering_system.utils.UserHandling;
 public class CusFCourt extends javax.swing.JFrame {
 
     private JPanel mainPanel;
-    private JPanel restaurantListPanel;
+    private static JPanel restaurantListPanel;
+        
+        
     
-
     public CusFCourt() {
         initComponents();
     }
@@ -29,8 +35,9 @@ public class CusFCourt extends javax.swing.JFrame {
         restaurantListPanel = new JPanel();
         restaurantListPanel.setLayout(new GridLayout(0, 3, 50, 50)); // 2 columns, dynamic rows, 50px horizontal and vertical gaps
         restaurantListPanel.setBackground(new Color(31, 31, 31));
-        restaurantListPanel.setBorder(BorderFactory.createEmptyBorder(50, 0, 0, 0)); // 50px top gap, 0px left, bottom, and right gaps
+        restaurantListPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 0, 0)); // 50px top gap, 0px left, bottom, and right gaps
 
+        
         // TODO check again what error
         List<Vendor> vendors = UserHandling.getVendors();
         for (Vendor vendor : vendors) {
@@ -49,6 +56,8 @@ public class CusFCourt extends javax.swing.JFrame {
                 new CusMenu(vendorID).setVisible(true);
             });
 
+            
+
             restaurantListPanel.add(restaurantButton);
         }
 
@@ -56,7 +65,34 @@ public class CusFCourt extends javax.swing.JFrame {
         add(mainPanel);
     }
 
+        
+    
+    
     public JPanel getMainPanel() {
         return mainPanel;
     }
+
+    public static void displayVendors(List<Vendor> filteredVendors) {
+        restaurantListPanel.removeAll(); // Clear previous results
+
+    for (Vendor vendor : filteredVendors) {
+        JButton vendorButton = new JButton("<html><b>" + vendor.getFoodCourtName() + "</b></html>");
+        vendorButton.setPreferredSize(new Dimension(250, 100));
+        vendorButton.setBackground(new Color(43, 43, 43));
+        vendorButton.setForeground(new Color(255, 169, 140));
+        vendorButton.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        vendorButton.setFocusPainted(false);
+        vendorButton.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+
+        // Button action to open the selected food court menu
+        vendorButton.addActionListener(evt -> new CusMenu(vendor.getID()).setVisible(true));
+
+        restaurantListPanel.add(vendorButton);
+    }
+
+    restaurantListPanel.revalidate(); // Ensure UI updates
+    restaurantListPanel.repaint();
+    }
+    
 }
+
