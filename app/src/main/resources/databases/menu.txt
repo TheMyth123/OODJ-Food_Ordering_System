@@ -36,10 +36,10 @@
         "id": "MN00004"
     },
     {
-        "Status": "false",
+        "Status": "True",
         "price": "RM6",
         "imagePath": "nasi_lemak.jpg",
-        "VendorID": "VN001",
+        "VendorID": "VD00001",
         "name": "Nasi Lemak",
         "description": "Coconut rice with sambal, fried anchovies, peanuts, and cucumber",
         "id": "MN00005"

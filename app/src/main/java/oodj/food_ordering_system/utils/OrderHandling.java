@@ -599,6 +599,41 @@ public class OrderHandling {
     
         return "MN" + String.format("%05d", highestID + 1);
     }
+
+    public static Menu getMenuByID(String menuID) {
+        try {
+            // Read the JSON file
+            String jsonData = new String(Files.readAllBytes(Paths.get(MENU)));
+            JSONArray menusArray = new JSONArray(jsonData);
+    
+            // Iterate through the menu data to find the matching ID
+            for (int i = 0; i < menusArray.length(); i++) {
+                JSONObject menuData = menusArray.getJSONObject(i);
+    
+                // Check if the MenuID matches
+                if (menuData.getString("id").equals(menuID)) {
+                    String status = menuData.getString("Status");
+                    String vendorID = menuData.getString("VendorID");
+                    String name = menuData.getString("name");
+                    String desc = menuData.getString("description");
+                    String price = menuData.getString("price");
+                    String image = menuData.getString("imagePath");
+    
+                    // Create and return the Menu object
+                    return new Menu(status, menuID, vendorID, name, desc, price, image);
+                }
+            }
+    
+            // If no matching menu is found
+            DialogBox.errorMessage("Menu with ID " + menuID + " not found.", "Error");
+            return null;
+    
+        } catch (Exception e) {
+            // Handle any errors (e.g., file reading or JSON parsing)
+            DialogBox.errorMessage("Error reading or parsing menu JSON file: " + e.getMessage(), "Error");
+            return null;
+        }
+    }    
     
 
     public static void createMenu(Vendor vendor, String name, String description, String price, String imagePath, boolean status) {

@@ -547,7 +547,7 @@ public class MenuTemplate extends javax.swing.JFrame {
                     
     private javax.swing.JPanel Line;
     private javax.swing.JPanel Logo_container;
-    private javax.swing.JPanel Main;
+    protected javax.swing.JPanel Main;
     private javax.swing.JPanel Sidebar;
     private javax.swing.JButton btn_Page2;
     private javax.swing.JPanel btn_container1;

@@ -56,7 +56,7 @@
     "LastUpdated": "2025-01-07"
   },
   {
-    "Status": "Pending",
+    "Status": "Accepted",
     "ReceiptImagePath": "app/src/main/resources/receipts/CR00008.jpg",
     "CreditID": "CR00008",
     "CreditAmount": 100,

@@ -9,159 +9,162 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.table.DefaultTableModel;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
-import oodj.food_ordering_system.models.Customer;
+import oodj.food_ordering_system.models.Menu;
 import oodj.food_ordering_system.models.Notification;
 import oodj.food_ordering_system.utils.DialogBox;
 import oodj.food_ordering_system.utils.FileHandling;
 import oodj.food_ordering_system.utils.NotificationUtils;
+import oodj.food_ordering_system.utils.OrderHandling;
 import oodj.food_ordering_system.utils.UserHandling;
 import oodj.food_ordering_system.utils.validation;
 import raven.glasspanepopup.DefaultLayoutCallBack;
 import raven.glasspanepopup.DefaultOption;
 import raven.glasspanepopup.GlassPanePopup;
 
-public class ManageCustomer extends javax.swing.JFrame {
+public class ManageMenu extends javax.swing.JFrame {
 
-    // TODO FOR DEVELOPMENT PURPOSES ONLY, REMOVE THIS LATER
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(() -> {
-            new ManageCustomer().setVisible(true);
+            new ManageMenu().setVisible(true);
         });
     }
 
-    public static ArrayList<Customer> allCustomers = readCustomerDetails();
+    public static ArrayList<Menu> allMenus = readMenuDetails();
 
-    public ManageCustomer() {
+
+    public ManageMenu() {
         GlassPanePopup.install(this);
         initComponents();
 
-        CustomerInfo.getTableHeader().setReorderingAllowed(false);
-        DefaultTableModel model = validation.nonEditTable(new Object[]{"CustomerID", "Name", "Username", "Email", "Phone", "Gender", "Address"}, 0);
+        MenuInfo.getTableHeader().setReorderingAllowed(false);
+        DefaultTableModel model = validation.nonEditTable(new Object[]{"MenuID", "Name", "Description", "Price"}, 0);
 
-        CustomerInfo.setModel(model);
+        MenuInfo.setModel(model);
 
-        refreshCustomerInfo();
-        displayCustomers(allCustomers);
-
+        refreshMenuInfo();
+        displayMenus(allMenus);
     }
 
-    private void displayCustomers(ArrayList<Customer> customers) {
+    private void displayMenus(ArrayList<Menu> menus) {
+        if (menus == null || menus.isEmpty()) {
+            System.out.println("No menus available.");
+            return;
+        }
 
-        DefaultTableModel model = (DefaultTableModel) CustomerInfo.getModel();
+        DefaultTableModel model = (DefaultTableModel) MenuInfo.getModel();
         model.setRowCount(0);
 
-        for (Customer customer : customers) {
+        for (Menu menu : menus) {
             model.addRow(new Object[]{
-                customer.getID(),
-                customer.getName(),
-                customer.getUsername(),
-                customer.getEmail(),
-                customer.getContactnumber(),
-                customer.getGender(),
-                customer.getAddress()
+                menu.getId(),
+                menu.getName(),
+                menu.getDescription(),
+                menu.getPrice()
+                // menu.getStatus()
+                // menu.getVendorID()
             });
         }
-        
+
         int rowCount = model.getRowCount();
-        int rowHeight = CustomerInfo.getRowHeight();
+        int rowHeight = MenuInfo.getRowHeight();
         int preferredHeight = rowCount * rowHeight;
         if (preferredHeight < 377){
             preferredHeight = 377;
         }
 
-        CustomerInfo.setPreferredSize(new java.awt.Dimension(
+        MenuInfo.setPreferredSize(new java.awt.Dimension(
             jScrollPane1.getWidth(), Math.min(preferredHeight, 8000) // Max height is 400
         ));
 
-        CustomerInfo.getColumnModel().getColumn(0).setPreferredWidth(25);
-        CustomerInfo.getColumnModel().getColumn(3).setPreferredWidth(100);
+        MenuInfo.getColumnModel().getColumn(0).setPreferredWidth(25);
+        MenuInfo.getColumnModel().getColumn(3).setPreferredWidth(100);
 
         javax.swing.table.DefaultTableCellRenderer centerRenderer = new javax.swing.table.DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        CustomerInfo.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-        CustomerInfo.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
+        MenuInfo.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        MenuInfo.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
 
-        CustomerInfo.revalidate();
+        MenuInfo.revalidate();
         jScrollPane1.revalidate();
         jScrollPane1.repaint();
     }
 
-    private static ArrayList<Customer> readCustomerDetails() {
-        String CUSTOMER = FileHandling.filePath.CUSTOMER_PATH.getValue();
-        ArrayList<Customer> Customers = new ArrayList<>();
-    
+    private static ArrayList<Menu> readMenuDetails() {
+        String MENU = FileHandling.filePath.MENU_PATH.getValue();
+        ArrayList<Menu> Menus = new ArrayList<>();
+
         try {
-            String jsonData = new String(Files.readAllBytes(Paths.get(CUSTOMER)));
-            JSONArray customersArray = new JSONArray(jsonData);
-            for (int i = 0; i < customersArray.length(); i++) {
-                JSONObject customerData = customersArray.getJSONObject(i);
-    
-                // Check if Status is true before adding to the list
-                if (customerData.getBoolean("Status")) {
-                    String customerID = customerData.getString("CustomerID");
-                    String name = customerData.getString("Name");
-                    String username = customerData.getString("Username");
-                    String password = customerData.getString("Password");
-                    String email = customerData.getString("Email");
-                    String phone = customerData.getString("Phone");
-                    String gender = customerData.getString("Gender");
-                    String address = customerData.getString("Address");
-                    String dob = customerData.getString("DOB");
-    
-                    Customer customer = new Customer(customerID, username, name, phone, password, gender, dob, email, address, true, 0);
-                    Customers.add(customer);
+            String jsonData = new String(Files.readAllBytes(Paths.get(MENU)));
+            JSONArray menuArray = new JSONArray(jsonData);
+
+            for (int i = 0; i < menuArray.length(); i++) {
+                JSONObject menuData = menuArray.getJSONObject(i);
+
+                if (menuData.getString("Status").equalsIgnoreCase("True")) {
+                        String status = menuData.getString("Status");
+                        String menuID = menuData.getString("id");
+                        String vendorID = menuData.getString("VendorID");
+                        String name = menuData.getString("name");
+                        String decription = menuData.getString("description");
+                        String price = menuData.getString("price");
+                        String image = menuData.getString("imagePath");
+
+                        Menu menu = new Menu(status, menuID, vendorID, name, decription, price, image);
+                        Menus.add(menu);
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return Customers;
+        return Menus;
     }
-    
 
     private void performSearch() {
         String name = nameTextField.getText().trim();
-        String email = emailTextField.getText().trim();
-        ArrayList<Customer> filteredCustomers = new ArrayList<>();
+        ArrayList<Menu> filteredMenus = new ArrayList<>();
 
-        for (Customer customer : allCustomers) {
-            if ((name.isEmpty() || customer.getName().equalsIgnoreCase(name))
-                    && (email.isEmpty() || customer.getEmail().equalsIgnoreCase(email))) {
-                filteredCustomers.add(customer);
+        for (Menu menu : allMenus) {
+            if ((name.isEmpty() || menu.getName().equalsIgnoreCase(name))) {
+                filteredMenus.add(menu);
             }
         }
 
-        if (filteredCustomers.isEmpty()) {
+        if (filteredMenus.isEmpty()) {
             DialogBox.errorMessage("No matches found.", "Error");
-            displayCustomers(allCustomers);
+            displayMenus(allMenus);
         } else {
-            displayCustomers(filteredCustomers);
+            displayMenus(filteredMenus);
         }
     }
 
-    public void refreshCustomerInfo() {
-        allCustomers = readCustomerDetails();
-        displayCustomers(allCustomers);
+    public void refreshMenuInfo() {
+        allMenus = readMenuDetails();
+        displayMenus(allMenus);
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
-
         Sidebar = new javax.swing.JPanel();
         margin1 = new javax.swing.JPanel();
         Logo_container = new javax.swing.JPanel();
         systemName = new javax.swing.JLabel();
         btn_container1 = new javax.swing.JPanel();
-        btn_ManageCus = new javax.swing.JButton();
-        btn_ManageVen = new javax.swing.JButton();
-        btn_ManageRun = new javax.swing.JButton();
-        btn_topup = new javax.swing.JButton();
+        btn_ManageOrder = new javax.swing.JButton();
+        btn_ManageMenu = new javax.swing.JButton();
+        btn_OrderHis = new javax.swing.JButton();
+        btn_CusReview = new javax.swing.JButton();
+        btn_Revenue = new javax.swing.JButton();
+        // btn_ManageVen = new javax.swing.JButton();
+        // btn_ManageRun = new javax.swing.JButton();
+        // btn_topup = new javax.swing.JButton();
         btn_container2 = new javax.swing.JPanel();
         btn_logout = new javax.swing.JButton();
         Line = new javax.swing.JPanel();
@@ -176,17 +179,17 @@ public class ManageCustomer extends javax.swing.JFrame {
         m4 = new javax.swing.JPanel();
         searchBar = new javax.swing.JPanel();
         margin5 = new javax.swing.JPanel();
-        brandLabel = new javax.swing.JLabel();
+        nameLabel = new javax.swing.JLabel();
         nameTextField = new javax.swing.JTextField();
-        margin6 = new javax.swing.JPanel();
-        modelLabel = new javax.swing.JLabel();
-        emailTextField = new javax.swing.JTextField();
+        // margin6 = new javax.swing.JPanel();
+        // modelLabel = new javax.swing.JLabel();
+        // emailTextField = new javax.swing.JTextField();
         margin7 = new javax.swing.JPanel();
         searchButton = new javax.swing.JButton();
         m3 = new javax.swing.JPanel();
         m6 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        CustomerInfo = new javax.swing.JTable();
+        MenuInfo = new javax.swing.JTable();
         m7 = new javax.swing.JPanel();
         btn_container = new javax.swing.JPanel();
         addButton = new javax.swing.JButton();
@@ -197,7 +200,7 @@ public class ManageCustomer extends javax.swing.JFrame {
         btn_Noti = new oodj.food_ordering_system.designUI.Button();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Admin Menu");
+        setTitle("Vendor Menu");
         setBackground(new java.awt.Color(25, 25, 25));
         setMinimumSize(new java.awt.Dimension(1300, 700));
         setResizable(false);
@@ -265,89 +268,108 @@ public class ManageCustomer extends javax.swing.JFrame {
         Sidebar.add(margin2);
 
         btn_container1.setBackground(new java.awt.Color(31, 31, 31));
-        btn_container1.setMaximumSize(new java.awt.Dimension(300, 320));
-        btn_container1.setMinimumSize(new java.awt.Dimension(300, 320));
-        btn_container1.setPreferredSize(new java.awt.Dimension(300, 320));
+        btn_container1.setMaximumSize(new java.awt.Dimension(300, 360));
+        btn_container1.setMinimumSize(new java.awt.Dimension(300, 360));
+        btn_container1.setPreferredSize(new java.awt.Dimension(300, 360));
         btn_container1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 30));
 
-        btn_ManageCus.setBackground(new java.awt.Color(43, 43, 43));
-        btn_ManageCus.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btn_ManageCus.setForeground(new java.awt.Color(255, 169, 140));
-        btn_ManageCus.setText("Manage Customer");
-        btn_ManageCus.setBorder(null);
-        btn_ManageCus.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_ManageCus.setFocusable(false);
-        btn_ManageCus.setMargin(new java.awt.Insets(15, 50, 15, 50));
-        btn_ManageCus.setMaximumSize(new java.awt.Dimension(250, 40));
-        btn_ManageCus.setMinimumSize(new java.awt.Dimension(250, 40));
-        btn_ManageCus.setPreferredSize(new java.awt.Dimension(250, 40));
-        btn_ManageCus.addActionListener(new java.awt.event.ActionListener() {
+        btn_ManageOrder.setBackground(new java.awt.Color(31, 31, 31));
+        btn_ManageOrder.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btn_ManageOrder.setForeground(new java.awt.Color(245, 251, 254));
+        btn_ManageOrder.setText("Manage Order");
+        btn_ManageOrder.setBorder(null);
+        btn_ManageOrder.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_ManageOrder.setFocusable(false);
+        btn_ManageOrder.setMargin(new java.awt.Insets(15, 50, 15, 50));
+        btn_ManageOrder.setMaximumSize(new java.awt.Dimension(250, 40));
+        btn_ManageOrder.setMinimumSize(new java.awt.Dimension(250, 40));
+        btn_ManageOrder.setPreferredSize(new java.awt.Dimension(250, 40));
+        btn_ManageOrder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_ManageCusActionPerformed(evt);
+                btn_ManageOrderActionPerformed(evt);
             }
         });
-        btn_container1.add(btn_ManageCus);
+        btn_container1.add(btn_ManageOrder);
 
-        btn_ManageVen.setBackground(new java.awt.Color(31, 31, 31));
-        btn_ManageVen.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_ManageVen.setForeground(new java.awt.Color(245, 251, 254));
-        btn_ManageVen.setText("Manage Vendor");
-        btn_ManageVen.setBorder(null);
-        btn_ManageVen.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_ManageVen.setFocusable(false);
-        btn_ManageVen.setMargin(new java.awt.Insets(15, 50, 15, 50));
-        btn_ManageVen.setMaximumSize(new java.awt.Dimension(250, 40));
-        btn_ManageVen.setMinimumSize(new java.awt.Dimension(250, 40));
-        btn_ManageVen.setPreferredSize(new java.awt.Dimension(250, 40));
-        btn_ManageVen.addActionListener(new java.awt.event.ActionListener() {
+        btn_ManageMenu.setBackground(new java.awt.Color(43, 43, 43));
+        btn_ManageMenu.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btn_ManageMenu.setForeground(new java.awt.Color(255, 169, 140));
+        btn_ManageMenu.setText("Manage Menu");
+        btn_ManageMenu.setBorder(null);
+        btn_ManageMenu.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_ManageMenu.setFocusable(false);
+        btn_ManageMenu.setMargin(new java.awt.Insets(15, 50, 15, 50));
+        btn_ManageMenu.setMaximumSize(new java.awt.Dimension(250, 40));
+        btn_ManageMenu.setMinimumSize(new java.awt.Dimension(250, 40));
+        btn_ManageMenu.setPreferredSize(new java.awt.Dimension(250, 40));
+        btn_ManageMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_ManageVenActionPerformed(evt);
+                btn_ManageMenuActionPerformed(evt);
             }
         });
-        btn_container1.add(btn_ManageVen);
 
-        btn_ManageRun.setBackground(new java.awt.Color(31, 31, 31));
-        btn_ManageRun.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_ManageRun.setForeground(new java.awt.Color(245, 251, 254));
-        btn_ManageRun.setText("Manage Runner");
-        btn_ManageRun.setBorder(null);
-        btn_ManageRun.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_ManageRun.setFocusable(false);
-        btn_ManageRun.setMargin(new java.awt.Insets(15, 50, 15, 50));
-        btn_ManageRun.setMaximumSize(new java.awt.Dimension(250, 40));
-        btn_ManageRun.setMinimumSize(new java.awt.Dimension(250, 40));
-        btn_ManageRun.setPreferredSize(new java.awt.Dimension(250, 40));
-        btn_ManageRun.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_ManageRunActionPerformed(evt);
-            }
-        });
-        btn_container1.add(btn_ManageRun);
+        btn_container1.add(btn_ManageMenu);
 
-        btn_topup.setBackground(new java.awt.Color(31, 31, 31));
-        btn_topup.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_topup.setForeground(new java.awt.Color(245, 251, 254));
-        btn_topup.setText("Manage Top-Up Requests");
-        btn_topup.setBorder(null);
-        btn_topup.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_topup.setFocusable(false);
-        btn_topup.setMargin(new java.awt.Insets(15, 50, 15, 50));
-        btn_topup.setMaximumSize(new java.awt.Dimension(250, 40));
-        btn_topup.setMinimumSize(new java.awt.Dimension(250, 40));
-        btn_topup.setPreferredSize(new java.awt.Dimension(250, 40));
-        btn_topup.addActionListener(new java.awt.event.ActionListener() {
+        btn_OrderHis.setBackground(new java.awt.Color(31, 31, 31));
+        btn_OrderHis.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btn_OrderHis.setForeground(new java.awt.Color(245, 251, 254));
+        btn_OrderHis.setText("Order History");
+        btn_OrderHis.setBorder(null);
+        btn_OrderHis.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_OrderHis.setFocusable(false);
+        btn_OrderHis.setMargin(new java.awt.Insets(15, 50, 15, 50));
+        btn_OrderHis.setMaximumSize(new java.awt.Dimension(250, 40));
+        btn_OrderHis.setMinimumSize(new java.awt.Dimension(250, 40));
+        btn_OrderHis.setPreferredSize(new java.awt.Dimension(250, 40));
+        btn_OrderHis.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_topupActionPerformed(evt);
+                btn_OrderHisActionPerformed(evt);
             }
         });
-        btn_container1.add(btn_topup);
+        btn_container1.add(btn_OrderHis);
+
+        btn_CusReview.setBackground(new java.awt.Color(31, 31, 31));
+        btn_CusReview.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btn_CusReview.setForeground(new java.awt.Color(245, 251, 254));
+        btn_CusReview.setText("Customer Review");
+        btn_CusReview.setBorder(null);
+        btn_CusReview.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_CusReview.setFocusable(false);
+        btn_CusReview.setMargin(new java.awt.Insets(15, 50, 15, 50));
+        btn_CusReview.setMaximumSize(new java.awt.Dimension(250, 40));
+        btn_CusReview.setMinimumSize(new java.awt.Dimension(250, 40));
+        btn_CusReview.setPreferredSize(new java.awt.Dimension(250, 40));
+        btn_CusReview.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_CusReviewActionPerformed(evt);
+            }
+        });
+        btn_container1.add(btn_CusReview);
+        
+        btn_Revenue.setBackground(new java.awt.Color(31, 31, 31));
+        btn_Revenue.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btn_Revenue.setForeground(new java.awt.Color(245, 251, 254));
+        btn_Revenue.setText("Revenue");
+        btn_Revenue.setBorder(null);
+        btn_Revenue.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_Revenue.setFocusable(false);
+        btn_Revenue.setMargin(new java.awt.Insets(15, 50, 15, 50));
+        btn_Revenue.setMaximumSize(new java.awt.Dimension(250, 40));
+        btn_Revenue.setMinimumSize(new java.awt.Dimension(250, 40));
+        btn_Revenue.setPreferredSize(new java.awt.Dimension(250, 40));
+        btn_Revenue.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_RevenueActionPerformed(evt);
+            }
+        });
+        btn_container1.add(btn_Revenue);
 
         Sidebar.add(btn_container1);
 
         margin3.setBackground(new java.awt.Color(31, 31, 31));
-        margin3.setMaximumSize(new java.awt.Dimension(300, 100));
-        margin3.setMinimumSize(new java.awt.Dimension(300, 100));
-        margin3.setPreferredSize(new java.awt.Dimension(300, 80));
+        margin3.setMaximumSize(new java.awt.Dimension(300, 40));
+        margin3.setMinimumSize(new java.awt.Dimension(300, 40));
+        margin3.setPreferredSize(new java.awt.Dimension(300, 40));
 
         javax.swing.GroupLayout margin3Layout = new javax.swing.GroupLayout(margin3);
         margin3.setLayout(margin3Layout);
@@ -444,7 +466,7 @@ public class ManageCustomer extends javax.swing.JFrame {
         title.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         title.setForeground(new java.awt.Color(255, 169, 140));
         title.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        title.setText("Manage Customer");
+        title.setText("Manage Menu");
         title.setAlignmentX(0.5F);
         title.setMaximumSize(new java.awt.Dimension(130, 50));
         title.setMinimumSize(new java.awt.Dimension(130, 50));
@@ -546,17 +568,17 @@ public class ManageCustomer extends javax.swing.JFrame {
         );
 
         searchBar.add(margin5);
-
-        brandLabel.setBackground(new java.awt.Color(31, 31, 31));
-        brandLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        brandLabel.setForeground(new java.awt.Color(255, 169, 140));
-        brandLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        brandLabel.setText("Search by Name: ");
-        brandLabel.setAlignmentX(0.5F);
-        brandLabel.setMaximumSize(new java.awt.Dimension(173, 50));
-        brandLabel.setMinimumSize(new java.awt.Dimension(173, 50));
-        brandLabel.setPreferredSize(new java.awt.Dimension(173, 50));
-        searchBar.add(brandLabel);
+        
+        nameLabel.setBackground(new java.awt.Color(31, 31, 31));
+        nameLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        nameLabel.setForeground(new java.awt.Color(255, 169, 140));
+        nameLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        nameLabel.setText("Search by Name: ");
+        nameLabel.setAlignmentX(0.5F);
+        nameLabel.setMaximumSize(new java.awt.Dimension(173, 50));
+        nameLabel.setMinimumSize(new java.awt.Dimension(173, 50));
+        nameLabel.setPreferredSize(new java.awt.Dimension(173, 50));
+        searchBar.add(nameLabel);
 
         nameTextField.setBackground(new java.awt.Color(43, 43, 43));
         nameTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -573,50 +595,6 @@ public class ManageCustomer extends javax.swing.JFrame {
             }
         });
         searchBar.add(nameTextField);
-
-        margin6.setBackground(new java.awt.Color(31, 31, 31));
-        margin6.setMaximumSize(new java.awt.Dimension(20, 50));
-        margin6.setMinimumSize(new java.awt.Dimension(20, 50));
-
-        javax.swing.GroupLayout margin6Layout = new javax.swing.GroupLayout(margin6);
-        margin6.setLayout(margin6Layout);
-        margin6Layout.setHorizontalGroup(
-            margin6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-        margin6Layout.setVerticalGroup(
-            margin6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 50, Short.MAX_VALUE)
-        );
-
-        searchBar.add(margin6);
-
-        modelLabel.setBackground(new java.awt.Color(31, 31, 31));
-        modelLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        modelLabel.setForeground(new java.awt.Color(255, 169, 140));
-        modelLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        modelLabel.setText("Search by Email: ");
-        modelLabel.setAlignmentX(0.5F);
-        modelLabel.setMaximumSize(new java.awt.Dimension(173, 50));
-        modelLabel.setMinimumSize(new java.awt.Dimension(173, 50));
-        modelLabel.setPreferredSize(new java.awt.Dimension(173, 50));
-        searchBar.add(modelLabel);
-
-        emailTextField.setBackground(new java.awt.Color(43, 43, 43));
-        emailTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        emailTextField.setForeground(new java.awt.Color(245, 251, 254));
-        emailTextField.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        emailTextField.setCaretColor(new java.awt.Color(245, 251, 254));
-        emailTextField.setMargin(new java.awt.Insets(4, 10, 4, 6));
-        emailTextField.setMaximumSize(new java.awt.Dimension(180, 40));
-        emailTextField.setMinimumSize(new java.awt.Dimension(180, 40));
-        emailTextField.setPreferredSize(new java.awt.Dimension(180, 40));
-        emailTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                emailTextFieldActionPerformed(evt);
-            }
-        });
-        searchBar.add(emailTextField);
 
         margin7.setBackground(new java.awt.Color(31, 31, 31));
         margin7.setMaximumSize(new java.awt.Dimension(50, 50));
@@ -694,12 +672,11 @@ public class ManageCustomer extends javax.swing.JFrame {
         jScrollPane1.setMaximumSize(new java.awt.Dimension(880, 400));
         jScrollPane1.setMinimumSize(new java.awt.Dimension(880, 400));
         jScrollPane1.setPreferredSize(new java.awt.Dimension(880, 400));
-        
 
-        CustomerInfo.setBackground(new java.awt.Color(43, 43, 43));
-        CustomerInfo.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        CustomerInfo.setForeground(new java.awt.Color(245, 251, 254));
-        CustomerInfo.setModel(new javax.swing.table.DefaultTableModel(
+        MenuInfo.setBackground(new java.awt.Color(43, 43, 43));
+        MenuInfo.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        MenuInfo.setForeground(new java.awt.Color(245, 251, 254));
+        MenuInfo.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
                 {},
@@ -707,20 +684,23 @@ public class ManageCustomer extends javax.swing.JFrame {
                 {}
             },
             new String [] {
-
+                "Menu ID", 
+                "Name", 
+                "Description", 
+                "Price"
             }
         ));
-        CustomerInfo.setFocusable(false);
-        CustomerInfo.setGridColor(new java.awt.Color(31, 31, 31));
-        CustomerInfo.setMaximumSize(new java.awt.Dimension(880, 2000));
-        CustomerInfo.setMinimumSize(new java.awt.Dimension(880, 2000));
-        CustomerInfo.setPreferredSize(new java.awt.Dimension(880, 2000));
-        CustomerInfo.setRowHeight(35);
-        CustomerInfo.setSelectionBackground(new java.awt.Color(255, 169, 140));
-        CustomerInfo.setSelectionForeground(new java.awt.Color(31, 31, 31));
-        CustomerInfo.setShowGrid(true);
-        CustomerInfo.setShowVerticalLines(false);
-        jScrollPane1.setViewportView(CustomerInfo);
+        MenuInfo.setFocusable(false);
+        MenuInfo.setGridColor(new java.awt.Color(31, 31, 31));
+        MenuInfo.setMaximumSize(new java.awt.Dimension(880, 2000));
+        MenuInfo.setMinimumSize(new java.awt.Dimension(880, 2000));
+        MenuInfo.setPreferredSize(new java.awt.Dimension(880, 2000));
+        MenuInfo.setRowHeight(35);
+        MenuInfo.setSelectionBackground(new java.awt.Color(255, 169, 140));
+        MenuInfo.setSelectionForeground(new java.awt.Color(31, 31, 31));
+        MenuInfo.setShowGrid(true);
+        MenuInfo.setShowVerticalLines(false);
+        jScrollPane1.setViewportView(MenuInfo);
 
         Main.add(jScrollPane1);
 
@@ -750,7 +730,7 @@ public class ManageCustomer extends javax.swing.JFrame {
         addButton.setBackground(new java.awt.Color(255, 169, 140));
         addButton.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         addButton.setForeground(new java.awt.Color(31, 31, 31));
-        addButton.setText("New Customer");
+        addButton.setText("New Menu");
         addButton.setBorder(null);
         addButton.setBorderPainted(false);
         addButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -850,10 +830,11 @@ public class ManageCustomer extends javax.swing.JFrame {
 
         pack();
         setLocationRelativeTo(null);
-    }// </editor-fold>     
-    
+
+    }// </editor-fold>  
+
     List<Notification> notifications = NotificationUtils.getUnreadNotifications(NotificationUtils.getAllNotifications());
-    
+
     private void btn_NotiActionPerformed(java.awt.event.ActionEvent evt) {                                  
         GlassPanePopup.showPopup(new NotificationPanel(notifications), new DefaultOption(){
             @Override
@@ -880,109 +861,120 @@ public class ManageCustomer extends javax.swing.JFrame {
             }
 
         });
-    }   
+    } 
 
-    private void btn_ManageCusActionPerformed(java.awt.event.ActionEvent evt) {                                         
-    }   
+    private void btn_ManageOrderActionPerformed(java.awt.event.ActionEvent evt) {
+        dispose();
+        new ManageOrder().setVisible(true);                                         
+    } 
+
+    private void btn_ManageMenuActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    } 
+
+    private void btn_OrderHisActionPerformed(java.awt.event.ActionEvent evt) {
+        dispose();
+        // new OrderHistory().setVisible(true);                                         
+    } 
     
-    private void btn_ManageVenActionPerformed(java.awt.event.ActionEvent evt) {     
+    private void btn_CusReviewActionPerformed(java.awt.event.ActionEvent evt) {
         dispose();
-        new ManageVendor().setVisible(true);
-    }                                           
-
-    private void btn_ManageRunActionPerformed(java.awt.event.ActionEvent evt) {  
+        // new CustomerReview().setVisible(true);                                         
+    } 
+    
+    private void btn_RevenueActionPerformed(java.awt.event.ActionEvent evt) {
         dispose();
-        new ManageRunner().setVisible(true);
-    }     
-
-    private void btn_topupActionPerformed(java.awt.event.ActionEvent evt) {       
-        dispose();
-        new ManageTopUp().setVisible(true);
-    }                                                                                            
-
-    private void btn_logoutActionPerformed(java.awt.event.ActionEvent evt) {                                           
+        // new Revenue().setVisible(true);                                         
+    } 
+    
+    private void btn_logoutActionPerformed(java.awt.event.ActionEvent evt) {
         boolean confirm = DialogBox.confirmMessage("Are you sure you want to logout?", "Logout");
         if (confirm) {
             UserHandling.logout();
             dispose();
             new LoginPage().setVisible(true);
-        }
-    }                                          
-
-    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {                                          
-        dispose();
-        ManageCustomer managecustomer = new ManageCustomer();
-        managecustomer.setVisible(true);
-        managecustomer.setEnabled(false);
-
-        AddCustomer addcustomer = new AddCustomer(managecustomer);
-
-        addcustomer.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                managecustomer.setEnabled(true);
-                managecustomer.toFront();
-                managecustomer.refreshCustomerInfo();
-            }
-        });
-
-        addcustomer.setVisible(true);
-    }                                         
-
-    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
-        int selectedRow = CustomerInfo.getSelectedRow();
-        if (selectedRow == -1) {
-            DialogBox.reminderMessage("Please select a customer to edit!", "Error");
-            return;
-        }
-
-        DefaultTableModel model = (DefaultTableModel) CustomerInfo.getModel();
-        String customerID = model.getValueAt(selectedRow, 0).toString();
-        Customer customer = UserHandling.getCustomerByID(customerID);
-        String name = customer.getName();
-        String username = customer.getUsername();
-        String email = customer.getEmail();
-        String phone = customer.getContactnumber();
-        String gender = customer.getGender();
-        String address = customer.getAddress();
-        String dob = customer.getDOB();
-        String password = customer.getPassword();
-        Boolean status = customer.getStatus();
-        Double balance = customer.getBalance();
-
-        dispose();
-        ManageCustomer manageCustomer = new ManageCustomer();
-        manageCustomer.setVisible(true);
-        manageCustomer.setEnabled(false);
-
-        EditCustomer editCustomer = new EditCustomer(manageCustomer, customerID, name, username, email, phone, gender, address, dob, password, status, balance);
-
-        editCustomer.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                manageCustomer.setEnabled(true);
-                manageCustomer.toFront();
-                manageCustomer.refreshCustomerInfo();
-
-            }
-        });
-
-        editCustomer.setVisible(true);
-    }               
+        }                                   
+    } 
     
-    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        int selectedRow = CustomerInfo.getSelectedRow();
+    private void nameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {
+        performSearch();                                         
+    } 
+    
+    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        performSearch();                                         
+    } 
+    
+    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {  
+        dispose();
+        ManageMenu managemenu = new ManageMenu();
+        managemenu.setVisible(true);
+        managemenu.setEnabled(false);
+
+        AddMenu addmenu = new AddMenu(managemenu);
+
+        addmenu.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                managemenu.setEnabled(true);
+                managemenu.toFront();
+                managemenu.refreshMenuInfo();
+            }
+        });
+
+        addmenu.setVisible(true);                 
+    } 
+    
+    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {  
+        int selectedRow = MenuInfo.getSelectedRow();
+
         if (selectedRow == -1) {
-            DialogBox.reminderMessage("Please select a customer to delete!", "Error");
+            DialogBox.reminderMessage("Please select a menu to edit!", "Error");
             return;
         }
-        DefaultTableModel model = (DefaultTableModel) CustomerInfo.getModel();
-        String customerID = model.getValueAt(selectedRow, 0).toString();
-        boolean confirm = DialogBox.confirmMessage("Are you sure you want to delete this customer?", "Delete Customer");
-        if (confirm) {
-            String filePath = "app\\\\src\\\\main\\\\resources\\\\databases\\\\customer.txt";
 
-            JSONArray customerArray;
+        DefaultTableModel model = (DefaultTableModel) MenuInfo.getModel();
+        String menuID = model.getValueAt(selectedRow, 0).toString();
+        Menu menu = OrderHandling.getMenuByID(menuID);
+        String status = menu.getStatus();
+        String vendorID = menu.getVendorID();
+        String name = menu.getName();
+        String desc = menu.getDescription();
+        String price = menu.getPrice();
+        String image = menu.getImagePath();
+
+        dispose();
+        ManageMenu manageMenu = new ManageMenu();
+        manageMenu.setVisible(true);
+        manageMenu.setEnabled(false);
+
+        EditMenu editMenu = new EditMenu(manageMenu, menuID, status, vendorID, name, desc, price, image);
+
+        editMenu.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                manageMenu.setEnabled(true);
+                manageMenu.toFront();
+                manageMenu.refreshMenuInfo();
+
+            }
+        });
+
+        editMenu.setVisible(true);                                       
+    } 
+    
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {      
+        int selectedRow = MenuInfo.getSelectedRow();
+
+        if (selectedRow == -1) {
+            DialogBox.reminderMessage("Please select a menu to delete!", "Error");
+            return;
+        }
+        DefaultTableModel model = (DefaultTableModel) MenuInfo.getModel();
+        String menuID = model.getValueAt(selectedRow, 0).toString();
+        boolean confirm = DialogBox.confirmMessage("Are you sure you want to delete this menu?", "Delete Menu");
+        if (confirm) {
+            String filePath = "app\\\\src\\\\main\\\\resources\\\\databases\\\\menu.txt";
+
+            JSONArray menuArray;
             File file = new File(filePath);
 
             if (file.length() > 0) {
@@ -992,77 +984,69 @@ public class ManageCustomer extends javax.swing.JFrame {
                     while ((line = reader.readLine()) != null) {
                         content.append(line);
                     }
-                    customerArray = new JSONArray(content.toString());
+                    menuArray = new JSONArray(content.toString());
                 } catch (IOException e) {
-                    DialogBox.errorMessage("Error reading customer data file.", "Error");
+                    DialogBox.errorMessage("Error reading menu data file.", "Error");
                     e.printStackTrace();
                     return;
                 }
             } else {
-                DialogBox.errorMessage("No customer data found.", "Error");
+                DialogBox.errorMessage("No menu data found.", "Error");
                 return;
             }
 
-            boolean customerFound = false;
-            for (int i = 0; i < customerArray.length(); i++) {
-                JSONObject customer = customerArray.getJSONObject(i);
-                if (customer.getString("CustomerID").equals(customerID)) {
-                    // Set the Status to false to "delete" the customer
-                    customer.put("Status", "False");
-                    customerFound = true;   
+            boolean menuFound = false;
+            for (int i = 0; i < menuArray.length(); i++) {
+                JSONObject menu = menuArray.getJSONObject(i);
+                if (menu.getString("id").equals(menuID)) {
+                    // Set the Status to false to "delete" the menu
+                    menu.put("Status", "False");
+                    menuFound = true;
                     break;
                 }
             }
 
-            if (!customerFound) {
-                DialogBox.errorMessage("Customer with ID " + customerID + " not found.", "Error");
+            if (!menuFound) {
+                DialogBox.errorMessage("Menu with ID " + menuID + " not found.", "Error");
                 return;
             }
 
             try (FileWriter fileWriter = new FileWriter(filePath)) {
-                fileWriter.write(customerArray.toString(2)); // Pretty print with indentation
+                fileWriter.write(menuArray.toString(2)); // Pretty print with indentation
                 fileWriter.flush();
             } catch (IOException e) {
-                DialogBox.errorMessage("Error updating customer data file.", "Error");
+                DialogBox.errorMessage("Error updating menu data file.", "Error");
                 e.printStackTrace();
                 return;
             }
 
-            DialogBox.successMessage("Customer deleted successfully.", "Success");
-            refreshCustomerInfo();
-        }
-    }
-  
-
-    private void nameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {                                               
-        performSearch();
-    }                                              
-
-    private void emailTextFieldActionPerformed(java.awt.event.ActionEvent evt) {                                               
-        performSearch();
-    }                                              
-
-    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        performSearch();
-    }                                                                                    
+            DialogBox.successMessage("Menu deleted successfully.", "Success");
+            refreshMenuInfo();
+        }                                   
+    } 
+    
 
     // Variables declaration - do not modify                     
-    private javax.swing.JTable CustomerInfo;
+    private javax.swing.JTable MenuInfo;
     private javax.swing.JPanel Line;
     private javax.swing.JPanel Line1;
     private javax.swing.JPanel Logo_container;
     private javax.swing.JPanel Main;
     private javax.swing.JPanel Sidebar;
     private javax.swing.JButton addButton;
-    private javax.swing.JLabel brandLabel;
+    private javax.swing.JLabel nameLabel;
     private javax.swing.JTextField nameTextField;
-    private javax.swing.JButton btn_ManageVen;
+    // private javax.swing.JButton btn_ManageVen;
     private javax.swing.JPanel btn_container;
     private javax.swing.JPanel btn_container1;
     private javax.swing.JPanel btn_container2;
-    private javax.swing.JButton btn_topup;
-    private javax.swing.JButton btn_ManageCus;
-    private javax.swing.JButton btn_ManageRun;
+    // private javax.swing.JButton btn_topup;
+    private javax.swing.JButton btn_ManageOrder;
+    private javax.swing.JButton btn_ManageMenu;
+    private javax.swing.JButton btn_OrderHis;
+    private javax.swing.JButton btn_CusReview;
+    private javax.swing.JButton btn_Revenue;
+    // private javax.swing.JButton btn_ManageRun;
     private javax.swing.JButton btn_logout;
     private javax.swing.JButton editButton;
     private javax.swing.JButton deleteButton;
@@ -1079,15 +1063,15 @@ public class ManageCustomer extends javax.swing.JFrame {
     private javax.swing.JPanel margin2;
     private javax.swing.JPanel margin3;
     private javax.swing.JPanel margin5;
-    private javax.swing.JPanel margin6;
+    // private javax.swing.JPanel margin6;
     private javax.swing.JPanel margin7;
-    private javax.swing.JLabel modelLabel;
-    private javax.swing.JTextField emailTextField;
+    // private javax.swing.JLabel modelLabel;
+    // private javax.swing.JTextField emailTextField;
     private javax.swing.JPanel searchBar;
     private javax.swing.JButton searchButton;
     private javax.swing.JLabel systemName;
     private javax.swing.JLabel title;
     private javax.swing.JPanel title_container;
     private javax.swing.JButton btn_Noti;
-    // End of variables declaration                   
+    // End of variables declaration       
 }

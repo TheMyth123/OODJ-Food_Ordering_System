@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.swing.table.DefaultTableModel;
 
 public class validation {
@@ -153,4 +154,13 @@ public class validation {
         return matcher.matches();
     }
 
+    public static boolean descriptionFormat(String desc) {
+        return desc.matches("^[a-zA-Z0-9\\s-.,]+$");
+    }
+
+    public static boolean imageFormat(String image) {
+        return image.matches("^[a-zA-Z0-9\\s-.,]+$");
+    }
+
+    
 }
