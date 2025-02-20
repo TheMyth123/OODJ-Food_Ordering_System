@@ -18,7 +18,7 @@ public class Menu {
         this.price = price;
         this.imagePath = imagePath;
     }
-
+ 
 
     public String getStatus() {
         return status;
@@ -75,4 +75,15 @@ public class Menu {
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
     }
+
+    public String displayMenuInfo() {
+        return "Menu ID: " + id +
+               "\nVendor ID: " + vendorID +
+               "\nName: " + name +
+               "\nDescription: " + description +
+               "\nPrice: " + price +
+               "\nImage Path: " + imagePath +
+               "\nAvailability: " + (status.equalsIgnoreCase("True") ? "Available" : "Unavailable");
+    }
+    
 }

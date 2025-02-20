@@ -1,38 +1,47 @@
 [
     {
         "Status": "True",
-        "id": "MN00001",
+        "price": "RM25",
+        "imagePath": "seared_salmon.jpg",
         "VendorID": "VD00001",
         "name": "Seared Salmon",
         "description": "Pan-seared salmon with lemon butter sauce",
-        "price": "RM25",
-        "imagePath": "seared_salmon.jpg"
+        "id": "MN00001"
     },
     {
         "Status": "True",
-        "id": "MN00002",
+        "price": "RM35",
+        "imagePath": "filet_mignon.jpg",
         "VendorID": "VD00001",
         "name": "Filet Mignon",
         "description": "Tender beef filet with red wine reduction",
-        "price": "RM35",
-        "imagePath": "filet_mignon.jpg"
+        "id": "MN00002"
     },
     {
         "Status": "True",
-        "id": "MN00003",
+        "price": "RM20",
+        "imagePath": "truffle_risotto.jpg",
         "VendorID": "VD00001",
         "name": "Truffle Risotto",
         "description": "Creamy risotto with truffle essence",
-        "price": "RM20",
-        "imagePath": "truffle_risotto.jpg"
+        "id": "MN00003"
     },
     {
         "Status": "True",
-        "id": "MN00004",
+        "price": "RM18",
+        "imagePath": "spaghetti_carbonara.jpg",
         "VendorID": "VD00001",
         "name": "Spaghetti Carbonara",
         "description": "Classic Italian pasta with pancetta",
-        "price": "RM18",
-        "imagePath": "spaghetti_carbonara.jpg"
+        "id": "MN00004"
+    },
+    {
+        "Status": "True",
+        "price": "RM6",
+        "imagePath": "nasi_lemak.jpg",
+        "VendorID": "VD00001",
+        "name": "Nasi Lemak",
+        "description": "Coconut rice with sambal, fried anchovies, peanuts, and cucumber",
+        "id": "MN00005"
     }
 ]

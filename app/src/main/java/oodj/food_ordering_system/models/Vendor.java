@@ -1,10 +1,12 @@
 package oodj.food_ordering_system.models;
 
-public class Vendor extends User{
-    private String ID, name, foodcourtname, DOB, contactnumber, email, username, password;    
+public class Vendor extends User {
+    private String ID, name, foodcourtname, DOB, contactnumber, email;    
     private Boolean status;
-    public Vendor(String ID, String name, String foodcourtname, String contactnumber, String username, String password, Boolean status, String DOB, String email){
-        super(username, password);
+    private double rating; // Added missing rating variable
+
+    public Vendor(String ID, String name, String foodcourtname, String contactnumber, String username, String password, Boolean status, String DOB, String email) {
+        super(username, password); // Use the superclass User constructor
         this.ID = ID;
         this.name = name;
         this.DOB = DOB;
@@ -12,14 +14,7 @@ public class Vendor extends User{
         this.foodcourtname = foodcourtname;
         this.status = status;
         this.email = email;
-        this.username = username;
-        this.password = password;
-    }
-    
-    public Vendor(String ID, String foodCourtName) {
-        super("", "");
-        this.ID = ID;
-        this.foodcourtname = foodCourtName;
+        this.rating = 0.0; // Initialize rating
     }
 
     public String getID() {
@@ -46,52 +41,44 @@ public class Vendor extends User{
         this.DOB = DOB;
     }
     
-    public String getContactnumber() {
+    public String getContactnumber() { // Renamed method to follow Java naming conventions
         return contactnumber;
     }
     
-    public void setContactnumber(String contactnumber) {
+    public void setContactnumber(String contactnumber) { // Renamed method
         this.contactnumber = contactnumber;
     }  
 
-    public String getFoodCourtName(){
+    public String getFoodCourtName() {
         return foodcourtname;
     }
     
-    public void setFoodCourtName(String foodcourtname){
+    public void setFoodCourtName(String foodcourtname) {
         this.foodcourtname = foodcourtname;
     }
 
-    public String getEmail(){
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email){
+    public void setEmail(String email) {
         this.email = email;
     }
     
-    public Boolean getStatus(){
+    public Boolean getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status){
+    public void setStatus(Boolean status) {
         this.status = status;
     }
 
-    public String getUsername() {
-        return username;
+    public double getRating() { // Added missing rating getter
+        return rating;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setRating(double rating) { // Added missing rating setter
+        this.rating = rating;
     }
 
     // Methods
