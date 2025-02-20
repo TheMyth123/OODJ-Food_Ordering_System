@@ -121,7 +121,7 @@ public class NotificationUtils{
             String status = notificationObject.getString("Status");
 
             // Check if the notification meets the specified conditions
-            if ((isAdmin && "Admin".equals(userId)) || (!isAdmin && loginID.equals(userId)) && "False".equals(readStatus) && "True".equals(status)) {
+            if ((isAdmin && "Admin".equals(userId) && "False".equals(readStatus) && "True".equals(status)) || (isAdmin && "Manager".equals(userId) && "False".equals(readStatus) && "True".equals(status)) || (!isAdmin && loginID.equals(userId)) && "False".equals(readStatus) && "True".equals(status)) {
                 // Store the relevant information in a Notification object
                 String timestamp = notificationObject.getString("Timestamp");
                 String title = notificationObject.getString("Title");

@@ -37,9 +37,9 @@ public class EditRunner extends javax.swing.JFrame {
         setUpDateChooser();
     }
 
-    public EditRunner(ManageRunner parent, String runnerID, String name, String username, String email, String phone, String gender, String vehicle, String license, String dob, String password, Boolean status) {
+    public EditRunner(ManageRunner parent, String runnerID, String name, String username, String email, String phone, String gender, String vehicle, String license, String dob, String password, Boolean status, Double balance) {
         this.parent = parent;
-        this.runner = new DeliveryRunner(runnerID, username, name, phone, password, gender, dob, email, vehicle, license, status);
+        this.runner = new DeliveryRunner(runnerID, username, name, phone, password, gender, dob, email, vehicle, license, status, balance);
         initComponents();
         displayRunnerDetails();
         setUpDateChooser();

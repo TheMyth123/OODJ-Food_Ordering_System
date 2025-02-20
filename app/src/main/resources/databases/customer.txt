@@ -22,7 +22,7 @@
     "CustomerID": "CS00002",
     "Gender": "Male",
     "Balance": 100,
-    "Name": "c",
+    "Name": "c2",
     "Password": "a99991"
   },
   {
