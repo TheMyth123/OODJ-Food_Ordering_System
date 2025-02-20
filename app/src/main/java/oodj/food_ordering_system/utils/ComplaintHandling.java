@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import oodj.food_ordering_system.designUI.LoginPage;
 import oodj.food_ordering_system.models.Complaint;
 
 public class ComplaintHandling {
@@ -83,8 +84,8 @@ public class ComplaintHandling {
             System.out.println("Messages: " + complaint.getMessages());
     
             JSONObject complaintData = new JSONObject();
-            complaintData.put("ComplaintID", "CM" + getCMid());
-            complaintData.put("CustomerID", complaint.getUser());
+            complaintData.put("ComplaintID", "CM" + String.format("%05d", getCMid() + 1));
+            complaintData.put("CustomerID", complaint.getId());
             complaintData.put("Messages", complaint.getMessages());
             complaintData.put("Resolved", complaint.isResolved());
     

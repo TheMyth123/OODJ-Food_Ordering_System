@@ -41,12 +41,6 @@ public class CustomerComplaint extends javax.swing.JFrame {
     private List<Notification> notifications;
     
 
-// add run method
-    // public static void run() {
-    //     java.awt.EventQueue.invokeLater(() -> {
-    //         new CusDash().setVisible(true);
-    //     });
-    // }
 
 // TODO check again customerID
     public CustomerComplaint(Customer endUser) {
@@ -84,14 +78,13 @@ public class CustomerComplaint extends javax.swing.JFrame {
         margin4 = new javax.swing.JPanel();
         title_container = new javax.swing.JPanel();
         m5 = new javax.swing.JPanel();
-        welcome = new javax.swing.JLabel();
         customer_username = new javax.swing.JLabel();
         title_container1 = new javax.swing.JPanel();
         m8 = new javax.swing.JPanel();
         m6 = new javax.swing.JPanel();
         margin5 = new javax.swing.JPanel();
         m7 = new javax.swing.JPanel();
-        btn_Noti = new oodj.food_ordering_system.designUI.Button();
+        title = new javax.swing.JLabel();
 
         // TODO double confirm resize
         setResizable(false);
@@ -154,7 +147,7 @@ public class CustomerComplaint extends javax.swing.JFrame {
         systemName.setFont(new java.awt.Font("Segoe Print", 1, 36)); // NOI18N
         systemName.setForeground(new java.awt.Color(255, 169, 140));
         systemName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        systemName.setText("Food Connect");
+        systemName.setText("Car Connect");
         //TODO CHANGE SYSTEM NAME
         systemName.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         systemName.setAlignmentX(0.5F);
@@ -378,7 +371,21 @@ public class CustomerComplaint extends javax.swing.JFrame {
         title_container.setMaximumSize(new java.awt.Dimension(1000, 50));
         title_container.setMinimumSize(new java.awt.Dimension(1000, 50));
         title_container.setPreferredSize(new java.awt.Dimension(1000, 50));
-        title_container.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 0));
+        title_container.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
+
+        title.setBackground(new java.awt.Color(31, 31, 31));
+        title.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        title.setForeground(new java.awt.Color(255, 169, 140));
+        title.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        title.setText("Complaint");
+        title.setAlignmentX(0.5F);
+        title.setMaximumSize(new java.awt.Dimension(200, 50));
+        title.setMinimumSize(new java.awt.Dimension(200, 50));
+        title.setPreferredSize(new java.awt.Dimension(200, 50));
+        title_container.add(title);
+
+        Main.add(title_container);
+
 
         m5.setBackground(new java.awt.Color(31, 31, 31));
         m5.setMaximumSize(new java.awt.Dimension(60, 50));
@@ -637,9 +644,7 @@ public class CustomerComplaint extends javax.swing.JFrame {
     private javax.swing.JLabel systemName;
     private javax.swing.JPanel title_container;
     private javax.swing.JPanel title_container1;
-    private javax.swing.JLabel welcome;
-    private javax.swing.JButton btn_Noti;
-    private javax.swing.JLabel amount;
+    private javax.swing.JLabel title;
     private javax.swing.JButton btn_complaint;
     // End of variables declaration                   
 }

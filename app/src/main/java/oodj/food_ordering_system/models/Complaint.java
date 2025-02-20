@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import oodj.food_ordering_system.designUI.LoginPage;
+
 public class Complaint {
     private String id;
     private String user;
@@ -20,7 +22,7 @@ public class Complaint {
 
     // ✅ Constructor with a single message
     public Complaint(String user, String message) {
-        this.id = UUID.randomUUID().toString(); // Generate a unique ID
+        this.id = LoginPage.getLoginID(); // Generate a unique ID
         this.user = user;
         this.messages = new ArrayList<>(); // ✅ Initialize messages before using add()
         this.messages.add("User: " + message);

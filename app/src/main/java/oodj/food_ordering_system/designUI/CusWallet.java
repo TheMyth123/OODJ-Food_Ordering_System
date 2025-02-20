@@ -3,7 +3,6 @@ package oodj.food_ordering_system.designUI;
 
 import oodj.food_ordering_system.models.Customer;
 import oodj.food_ordering_system.models.Notification;
-// import oodj.food_ordering_system.models.Notification;
 import oodj.food_ordering_system.utils.DialogBox;
 import oodj.food_ordering_system.utils.NotificationUtils;
 import oodj.food_ordering_system.utils.TransactionHandling;
@@ -17,7 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 
 // import java.util.List;
-
+// TODO add top up button here 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -28,12 +27,19 @@ import javax.swing.table.TableRowSorter;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
@@ -104,10 +110,11 @@ public class CusWallet extends javax.swing.JFrame {
         searchPanel = new javax.swing.JPanel();
         rowSorter = new TableRowSorter<>(tableModel);
         btn_complaint = new javax.swing.JButton();
-
-
-
-
+        topUpTable = new javax.swing.JTable();
+        topUpModel = new DefaultTableModel();
+        transactionModel = new DefaultTableModel();
+       
+      
 
         setTitle("Customer Wallet - Transaction Log");
         setSize(1300, 700);
@@ -173,7 +180,7 @@ public class CusWallet extends javax.swing.JFrame {
         systemName.setFont(new java.awt.Font("Segoe Print", 1, 36)); // NOI18N
         systemName.setForeground(new java.awt.Color(255, 169, 140));
         systemName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        systemName.setText("Car Connect");
+        systemName.setText("Food Connect");
         //TODO CHANGE SYSTEM NAME
         systemName.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         systemName.setAlignmentX(0.5F);
@@ -237,11 +244,7 @@ public class CusWallet extends javax.swing.JFrame {
         btn_wallet.setMaximumSize(new java.awt.Dimension(250, 40));
         btn_wallet.setMinimumSize(new java.awt.Dimension(250, 40));
         btn_wallet.setPreferredSize(new java.awt.Dimension(250, 40));
-        // btn_wallet.addActionListener(new java.awt.event.ActionListener() {
-        //     public void actionPerformed(java.awt.event.ActionEvent evt) {
-        //         btn_walletActionPerformed(evt);
-        //     }
-        // });
+   
         btn_container1.add(btn_wallet);
 
         btn_cart.setBackground(new java.awt.Color(31, 31, 31));
@@ -451,84 +454,204 @@ public class CusWallet extends javax.swing.JFrame {
         balanceLabel = new JLabel("Balance: RM " + endUser.getBalance());
         balanceLabel.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 20));
         balanceLabel.setForeground(new java.awt.Color(255, 169, 140)); // Make text visible
+        JButton btnTopUp = new JButton("Top-Up");
+        btnTopUp.setPreferredSize(new Dimension(100, 35));
+        btnTopUp.addActionListener(e -> btn_plusActionPerformed(e));
+        
+            
         refresh.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 125, 0));
         refresh.add(balanceLabel); // Add to wallet panel
-
-        // // Refresh Button (Aligned with Balance Label)
-        // JButton refreshButton = new JButton("Refresh");
-        // refreshButton.setBounds(850, 40, 100, 30); // Move closer to the balance label
-        // refreshButton.addActionListener(e -> loadTransactionHistory());
-        // refresh.add(refreshButton); // Add to wallet panel
-
+        refresh.add(btnTopUp);
+        
 
         wallet.setBackground(new java.awt.Color(31, 31, 31));
         wallet.setMaximumSize(new java.awt.Dimension(1000, 670));
         wallet.setMinimumSize(new java.awt.Dimension(1000, 670));
         wallet.setPreferredSize(new java.awt.Dimension(1000, 670));
-        // // wallet.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 125, 0));
-        // // wallet.setBounds(125, 0, 1000, 670);
-
-        // // Transaction Log Table (Top-ups + Orders)
-        // String[] columnNames = {"Date", "Type", "Amount (RM)", "Status", "Transaction ID", "Order ID"};
-
-        // tableModel = new DefaultTableModel(columnNames, 0);
-        // transactionTable = new JTable(tableModel);
-        // transactionTable.setPreferredScrollableViewportSize(new Dimension(900, 400)); // Wider table
-
         
-        // // Ensure the table has a scroll pane
-        // JScrollPane scrollPane = new JScrollPane(transactionTable);
-        // scrollPane.setBounds(50, 80, 900, 400); // Move table down to make space for Balance
-        // wallet.add(scrollPane); // Add to wallet panel
 
-        // **Search Bar Panel**
-        searchPanel.setBackground(new Color(31, 31, 31));
-        searchPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        // // **Search Bar Panel**
+        // searchPanel.setBackground(new Color(31, 31, 31));
+        // searchPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-        searchField.setPreferredSize(new Dimension(200, 35)); // 200 width, 35 height
-        JButton searchButton = new JButton("Search");
+        // searchField.setPreferredSize(new Dimension(200, 35)); // 200 width, 35 height
+        // JButton searchButton = new JButton("Search");
 
-        searchPanel.add(searchField);
-        searchPanel.add(searchButton);
+        // searchPanel.add(searchField);
+        // searchPanel.add(searchButton);
 
-        wallet.add(searchPanel, BorderLayout.NORTH);
+        // wallet.add(searchPanel, BorderLayout.NORTH);
 
-        // **Transaction Table**
-        String[] columnNames = {"Date", "Type", "Amount (RM)", "Status", "Transaction ID", "Order ID"};
-        tableModel = new DefaultTableModel(columnNames, 0);
-        transactionTable = new JTable(tableModel);
-        TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(tableModel);
+        // **Tables Initialization**
+        String[] topUpColumns = {"Date", "Amount (RM)", "Status", "Transaction ID"};
+        topUpModel = new DefaultTableModel(topUpColumns, 0);
+        topUpTable = new JTable(topUpModel);
+        topUpTable.setPreferredScrollableViewportSize(new Dimension(900, 100));
 
-        transactionTable.setPreferredScrollableViewportSize(new Dimension(900, 400));
-        
-        transactionTable.setRowSorter(rowSorter);
+        String[] transactionColumns = {"Date", "Type", "Amount (RM)", "Status", "Order ID"};
+        transactionModel = new DefaultTableModel(transactionColumns, 0);
+        transactionTable = new JTable(transactionModel);
+        transactionTable.setPreferredScrollableViewportSize(new Dimension(900, 100));
 
-        JScrollPane scrollPane = new JScrollPane(transactionTable);
-        wallet.add(scrollPane, BorderLayout.CENTER);
+        // **Add ScrollPane**
+        JScrollPane topUpScrollPane = new JScrollPane(topUpTable);
+        JScrollPane transactionScrollPane = new JScrollPane(transactionTable);
 
         
 
-        searchButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String searchTerm = searchField.getText().trim();
-                if (searchTerm.isEmpty()) {
-                    rowSorter.setRowFilter(null); // Show all rows if search is empty
+        // **Panel for Top-ups**
+        // JPanel topUpPanel = new JPanel(new BorderLayout());
+        // topUpPanel.setBackground(new Color(31, 31, 31));
+        // JLabel topUpLabel = new JLabel("Top-Up History");
+        // Download Button
+        JButton btnDownload = new JButton("Download PDF");
+        btnDownload.setPreferredSize(new Dimension(150, 35));
+        btnDownload.setEnabled(false); // Initially disabled
+
+        // Add button to a panel below the Top-Up table
+        JPanel downloadPanel = new JPanel();
+        downloadPanel.setBackground(new Color(31, 31, 31));
+        downloadPanel.add(btnDownload);
+        // topUpPanel.add(downloadPanel, BorderLayout.SOUTH);
+
+        // Enable the button when a row is selected
+        topUpTable.getSelectionModel().addListSelectionListener(event -> {
+            if (!event.getValueIsAdjusting()) {
+                int selectedRow = topUpTable.getSelectedRow();
+                if (selectedRow != -1) {
+                    String status = (String) topUpModel.getValueAt(selectedRow, 2); // Status column
+                    btnDownload.setEnabled("Accepted".equalsIgnoreCase(status)); // Enable only for "Accepted" top-ups
                 } else {
-                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm)); // Case-insensitive search
+                    btnDownload.setEnabled(false);
                 }
             }
         });
 
-        searchField.addKeyListener(new KeyAdapter() {
+        // **Action Listener for Download Button**
+        btnDownload.addActionListener(e -> {
+            int selectedRow = topUpTable.getSelectedRow();
+            if (selectedRow != -1) {
+                String crId = (String) topUpModel.getValueAt(selectedRow, 3); // CR ID column
+                downloadFile(crId);
+            }
+        });
+
+
+        TableRowSorter<DefaultTableModel> topUpSorter = new TableRowSorter<>(topUpModel);
+        TableRowSorter<DefaultTableModel> transactionSorter = new TableRowSorter<>(transactionModel);
+        topUpTable.setRowSorter(topUpSorter);
+        transactionTable.setRowSorter(transactionSorter);
+
+        // **Panel for Top-ups**
+        JPanel topUpPanel = new JPanel(new BorderLayout());
+        topUpPanel.setBackground(new Color(31, 31, 31));
+
+        // **Top-Up Label Panel**
+        JPanel topUpLabelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        topUpLabelPanel.setBackground(new Color(31, 31, 31));
+        JLabel topUpLabel = new JLabel("Top-Up History");
+        topUpLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        topUpLabel.setForeground(new Color(255, 169, 140));
+        topUpLabelPanel.add(topUpLabel);
+
+        JPanel topUpSearchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        topUpSearchPanel.setBackground(new Color(31, 31, 31));
+        JTextField topUpSearchField = new JTextField();
+        topUpSearchField.setPreferredSize(new Dimension(200, 35));
+        JButton topUpSearchButton = new JButton("Search");
+        topUpSearchPanel.add(topUpSearchField);
+        topUpSearchPanel.add(topUpSearchButton);
+
+        // Add label and search to top
+        JPanel topUpHeaderPanel = new JPanel(new BorderLayout());
+        topUpHeaderPanel.setBackground(new Color(31, 31, 31));
+        topUpHeaderPanel.add(topUpLabelPanel, BorderLayout.NORTH);
+        topUpHeaderPanel.add(topUpSearchPanel, BorderLayout.SOUTH);
+
+        topUpPanel.add(topUpHeaderPanel, BorderLayout.NORTH);
+        topUpPanel.add(topUpScrollPane, BorderLayout.CENTER);
+
+        // **Panel for Transactions**
+        JPanel transactionPanel = new JPanel(new BorderLayout());
+        transactionPanel.setBackground(new Color(31, 31, 31));
+
+        // **Transaction Label Panel**
+        JPanel transactionLabelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        transactionLabelPanel.setBackground(new Color(31, 31, 31));
+        JLabel transactionLabel = new JLabel("Transaction History");
+        transactionLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        transactionLabel.setForeground(new Color(255, 169, 140));
+        transactionLabelPanel.add(transactionLabel);
+
+        JPanel transactionSearchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        transactionSearchPanel.setBackground(new Color(31, 31, 31));
+        JTextField transactionSearchField = new JTextField();
+        transactionSearchField.setPreferredSize(new Dimension(200, 35));
+        JButton transactionSearchButton = new JButton("Search");
+        transactionSearchPanel.add(transactionSearchField);
+        transactionSearchPanel.add(transactionSearchButton);
+
+        // Add label and search to top
+        JPanel transactionHeaderPanel = new JPanel(new BorderLayout());
+        transactionHeaderPanel.setBackground(new Color(31, 31, 31));
+        transactionHeaderPanel.add(transactionLabelPanel, BorderLayout.NORTH);
+        transactionHeaderPanel.add(transactionSearchPanel, BorderLayout.SOUTH);
+
+        transactionPanel.add(transactionHeaderPanel, BorderLayout.NORTH);
+        transactionPanel.add(transactionScrollPane, BorderLayout.CENTER);
+
+        // **Add Panels to Main Wallet Panel**
+        wallet.add(topUpPanel, BorderLayout.WEST);
+        wallet.add(transactionPanel, BorderLayout.EAST);
+
+
+
+        // **Search Functionality for Top-Up Table**
+        topUpSearchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String searchTerm = topUpSearchField.getText().trim();
+                if (searchTerm.isEmpty()) {
+                    topUpSorter.setRowFilter(null); // Show all rows if search is empty
+                } else {
+                    topUpSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm)); // Case-insensitive search
+                }
+            }
+        });
+
+        topUpSearchField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                String searchTerm = searchField.getText().trim();
-        
+                String searchTerm = topUpSearchField.getText().trim();
                 if (searchTerm.isEmpty()) {
-                    rowSorter.setRowFilter(null); // ✅ Show all rows when search is cleared
+                    topUpSorter.setRowFilter(null); // Show all rows if search is empty
                 } else {
-                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm)); // Case-insensitive search
+                    topUpSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm)); // Case-insensitive search
+                }
+            }
+        });
+
+        // **Search Functionality for Transaction Table**
+        transactionSearchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String searchTerm = transactionSearchField.getText().trim();
+                if (searchTerm.isEmpty()) {
+                    transactionSorter.setRowFilter(null); // Show all rows if search is empty
+                } else {
+                    transactionSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm)); // Case-insensitive search
+                }
+            }
+        });
+
+        transactionSearchField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                String searchTerm = transactionSearchField.getText().trim();
+                if (searchTerm.isEmpty()) {
+                    transactionSorter.setRowFilter(null); // Show all rows if search is empty
+                } else {
+                    transactionSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm)); // Case-insensitive search
                 }
             }
         });
@@ -625,33 +748,33 @@ public class CusWallet extends javax.swing.JFrame {
 
 
 
-    private void btn_NotiActionPerformed(java.awt.event.ActionEvent evt) {                                  
-        GlassPanePopup.showPopup(new NotificationPanel(getNotifications()), new DefaultOption(){
-            @Override
-            public float opacity() {
-                return 0;
-            }
+    // private void btn_NotiActionPerformed(java.awt.event.ActionEvent evt) {                                  
+    //     GlassPanePopup.showPopup(new NotificationPanel(getNotifications()), new DefaultOption(){
+    //         @Override
+    //         public float opacity() {
+    //             return 0;
+    //         }
 
-            @Override
-            public LayoutCallback getLayoutCallBack(java.awt.Component parent) {
-                return new DefaultLayoutCallBack(parent){
-                    @Override
-                    public void correctBounds(ComponentWrapper cw) {
-                        if (parent.isVisible()){
-                            java.awt.Point pl = parent.getLocationOnScreen();
-                            java.awt.Point bl = btn_Noti.getLocationOnScreen();
-                            int x = bl.x - pl.x;
-                            int y = bl.y - pl.y;
-                            cw.setBounds(x - cw.getWidth() + btn_Noti.getWidth(), y + btn_Noti.getHeight(), cw.getWidth(), cw.getHeight());
-                        } else {
-                            super.correctBounds(cw);
-                        }
-                    }
-                };
-            }
+    //         @Override
+    //         public LayoutCallback getLayoutCallBack(java.awt.Component parent) {
+    //             return new DefaultLayoutCallBack(parent){
+    //                 @Override
+    //                 public void correctBounds(ComponentWrapper cw) {
+    //                     if (parent.isVisible()){
+    //                         java.awt.Point pl = parent.getLocationOnScreen();
+    //                         java.awt.Point bl = btn_Noti.getLocationOnScreen();
+    //                         int x = bl.x - pl.x;
+    //                         int y = bl.y - pl.y;
+    //                         cw.setBounds(x - cw.getWidth() + btn_Noti.getWidth(), y + btn_Noti.getHeight(), cw.getWidth(), cw.getHeight());
+    //                     } else {
+    //                         super.correctBounds(cw);
+    //                     }
+    //                 }
+    //             };
+    //         }
 
-        });
-    }  
+    //     });
+    // }  
 
 
     private void btn_plusActionPerformed(java.awt.event.ActionEvent evt) {                                         
@@ -709,17 +832,79 @@ public class CusWallet extends javax.swing.JFrame {
         new CustomerProfile(endUser).setVisible(true);
     }   
     
+    // private void loadTransactionHistory() {
+    //     tableModel.setRowCount(0); // Clear old data
+    //     balanceLabel.setText("Balance: RM " + endUser.getBalance()); // Update balance
+
+    //     List<Object[]> transactions = TransactionHandling.getTransactionLog(endUser.getID());
+
+    //     for (Object[] transaction : transactions) {
+    //         tableModel.addRow(transaction);
+    //     }
+
+    // }
+
     private void loadTransactionHistory() {
-        tableModel.setRowCount(0); // Clear old data
-        balanceLabel.setText("Balance: RM " + endUser.getBalance()); // Update balance
-
+        topUpModel.setRowCount(0); // Clear existing data
+        transactionModel.setRowCount(0);
+        balanceLabel.setText("Balance: RM " + endUser.getBalance());
+    
         List<Object[]> transactions = TransactionHandling.getTransactionLog(endUser.getID());
-
+    
         for (Object[] transaction : transactions) {
-            tableModel.addRow(transaction);
+            String type = (String) transaction[1];
+            if ("Top-Up".equalsIgnoreCase(type)) {
+                topUpModel.addRow(new Object[]{transaction[0], transaction[2], transaction[3], transaction[4]});
+            } else {
+                transactionModel.addRow(new Object[]{transaction[0], transaction[1], transaction[2], transaction[3], transaction[5]});
+            }
         }
-
     }
+
+    // private void loadTransactionHistory() {
+    //     topUpModel.setRowCount(0); // Clear existing data
+    //     transactionModel.setRowCount(0);
+    //     balanceLabel.setText("Balance: RM " + endUser.getBalance());
+    
+    //     List<Object[]> transactions = TransactionHandling.getTransactionLog(endUser.getID());
+    
+    //     for (Object[] transaction : transactions) {
+    //         String type = (String) transaction[1];
+    //         String status = (String) transaction[3];
+    //         String crId = (String) transaction[4]; // CR ID for top-ups
+            
+    //         if ("Top-Up".equalsIgnoreCase(type)) {
+    //             topUpModel.addRow(new Object[]{transaction[0], transaction[2], status, crId});
+                
+    //             // **Download PDF if status is "Accepted"**
+    //             if ("Accepted".equalsIgnoreCase(status)) {
+    //                 downloadFile(crId);
+    //             }
+    //         } else {
+    //             transactionModel.addRow(new Object[]{transaction[0], transaction[1], transaction[2], status, transaction[5]});
+    //         }
+    //     }
+    // }
+
+    private void downloadFile(String crId) {
+        String resourcePath = "topupPDF/" + crId + ".pdf"; 
+        String outputPath = System.getProperty("user.home") + "/Downloads/" + crId + ".pdf";
+    
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(resourcePath)) {
+            if (inputStream == null) {
+                System.out.println("PDF not found in resources: " + resourcePath);
+                return;
+            }
+    
+            Files.copy(inputStream, Paths.get(outputPath), StandardCopyOption.REPLACE_EXISTING);
+            DialogBox.successMessage("PDF downloaded successfully", "Download Successful");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+
+    
 
     // private void filterTransactions() {
     //     String searchText = searchField.getText().trim();
@@ -770,6 +955,10 @@ public class CusWallet extends javax.swing.JFrame {
     private JPanel searchPanel;
     private TableRowSorter<DefaultTableModel> rowSorter;
     private JButton btn_complaint;
+    private JTable topUpTable;
+    private DefaultTableModel topUpModel;
+    private DefaultTableModel transactionModel;
+  
     
     // End of variables declaration                   
 }

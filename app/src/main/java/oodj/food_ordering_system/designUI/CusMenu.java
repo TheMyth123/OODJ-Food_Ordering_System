@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import oodj.food_ordering_system.models.Menu;
+import oodj.food_ordering_system.models.Rating;
 import oodj.food_ordering_system.utils.DialogBox;
 // TODO import dialog box after added cart
 // import oodj.food_ordering_system.utils.DialogBox;
@@ -297,46 +298,24 @@ public class CusMenu extends javax.swing.JFrame {
         title.setMinimumSize(new java.awt.Dimension(694, 50));
         title.setPreferredSize(new java.awt.Dimension(694, 50));
         
-        // Title Panel
+        JButton ratingsButton = new JButton("⭐ View Ratings");
+        ratingsButton.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        ratingsButton.setForeground(new Color(255, 169, 140));
+        ratingsButton.setBackground(new Color(43, 43, 43));
+        ratingsButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        ratingsButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
-
-        
-
-        // Search Panel (Right-Aligned)
-        // JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        // JTextField searchField = new JTextField();
-        // searchField.setPreferredSize(new Dimension(200, 30));
-
-        // JButton searchButton = new JButton("Search");
-        // searchButton.addActionListener(new ActionListener() {
-        //     @Override
-        //     public void actionPerformed(ActionEvent e) {
-        //         String searchTerm = searchField.getText().trim().toLowerCase();
-        //     List<Menu> filteredItems = new ArrayList<>();
-        
-        //     for (Menu item : menuItems) {
-        //         if (searchTerm.isEmpty() || item.getName().toLowerCase().contains(searchTerm)) {
-        //             filteredItems.add(item); // Add matching items
-        //         }
-        //     }
-        
-        //     // If no match, show all items
-        //     if (filteredItems.isEmpty()) {
-        //         DialogBox.errorMessage("No matches found.", "Error");
-        //         displayMenuItems(menuItems); // Reset to all items
-        //     } else {
-        //         displayMenuItems(filteredItems);
-        //     }
-        //     }
-        // });
-
-        // Add search components
-        // searchPanel.add(searchField);
-        // searchPanel.add(searchButton);
+        ratingsButton.addActionListener(e -> {
+            List<Rating> vendorRating = OrderHandling.getVendorRatings(vendorID); // Fetch rating
+            JOptionPane.showMessageDialog(null, 
+                "Vendor Rating: " + vendorRating + " ⭐",
+                "Ratings",
+                JOptionPane.INFORMATION_MESSAGE);
+        });
 
         // // Add title and search panel to titlePanel
         titlePanel.add(title, BorderLayout.CENTER);
-        // titlePanel.add(searchPanel, BorderLayout.EAST);
+        titlePanel.add(ratingsButton, BorderLayout.EAST);
         titlePanel.add(back_icon, BorderLayout.WEST);
 
         // Add titlePanel to wrapper

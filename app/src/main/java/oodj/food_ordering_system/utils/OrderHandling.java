@@ -29,6 +29,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 // change to OOP
 public class OrderHandling {
@@ -551,6 +552,21 @@ public class OrderHandling {
 
         return ratingList;
     }
+
+    public static List<Rating> getVendorRatings(String vendorID) {
+        ArrayList<Rating> ratings = getRatings(); // Fetch all ratings
+        List<Rating> vendorRatings = new ArrayList<>();
+    
+        for (Rating rating : ratings) {
+            if (rating.getRatingType() == RatingType.VENDOR && rating.getOrderID().equals(vendorID)) {
+                vendorRatings.add(rating); // Store all matching ratings
+            }
+        }
+    
+        return vendorRatings; // Return list of all ratings
+    }
+    
+
 //  this function will be added to vendor
     private void AcceptOrderStatus(String orderID) {
         try {

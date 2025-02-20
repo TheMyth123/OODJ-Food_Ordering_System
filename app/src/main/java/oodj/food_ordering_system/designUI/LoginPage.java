@@ -25,7 +25,8 @@ public class LoginPage extends javax.swing.JFrame {
 
     public static String loginID = "";
 
-    public static String getLoginID() {
+    public static String 
+    ID() {
         return loginID;
     }
 
@@ -465,4 +466,9 @@ public class LoginPage extends javax.swing.JFrame {
     private javax.swing.JLabel usernameLabel;
     private javax.swing.JTextField usernameTextField;
     // End of variables declaration                   
+
+	public static String getLoginID() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'getLoginID'");
+	}
 }

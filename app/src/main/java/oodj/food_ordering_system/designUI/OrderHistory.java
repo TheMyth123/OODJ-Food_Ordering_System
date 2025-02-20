@@ -555,7 +555,7 @@ public class OrderHistory extends javax.swing.JFrame {
         systemName.setFont(new java.awt.Font("Segoe Print", 1, 36)); // NOI18N
         systemName.setForeground(new java.awt.Color(255, 169, 140));
         systemName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        systemName.setText("Car Connect");
+        systemName.setText("Food Connect");
         //TODO CHANGE SYSTEM NAME
         systemName.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         systemName.setAlignmentX(0.5F);

@@ -557,7 +557,20 @@ public class CustomerComplaintPanel extends JPanel {
         JScrollPane tableScrollPane = new JScrollPane(complaintTable);
         add(tableScrollPane, BorderLayout.WEST);
 
+
         complaintTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        complaintTable.setSelectionModel(new DefaultListSelectionModel() {
+            @Override
+            public void setSelectionInterval(int index0, int index1) {
+                if (isSelectedIndex(index0)) {
+                    removeSelectionInterval(index0, index1);  // Deselect if already selected
+                } else {
+                    super.setSelectionInterval(index0, index1);  // Select if not selected
+                }
+            }
+        });
+
+        // Add ListSelectionListener
         complaintTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -578,6 +591,8 @@ public class CustomerComplaintPanel extends JPanel {
             }
         });
 
+
+
         chatArea = new JTextArea();
         chatArea.setVisible(false);
         JScrollPane chatScrollPane = new JScrollPane(chatArea);
@@ -593,14 +608,16 @@ public class CustomerComplaintPanel extends JPanel {
         inputPanel.add(sendButton, BorderLayout.EAST);
         add(inputPanel, BorderLayout.SOUTH);
 
-        loadComplaints();
+        loadComplaints(endUser);
     }
 
-    private void loadComplaints() {
+    private void loadComplaints(Customer endUser) {
         try {
             ArrayList<Complaint> complaints = ComplaintHandling.readComplaints();
             for (Complaint complaint : complaints) {
-                tableModel.addRow(new Object[]{complaint.getId(), complaint.isResolved() ? "Resolved" : "Ongoing"});
+                if (complaint.getUser().equals(endUser.getID())) {
+                    tableModel.addRow(new Object[]{complaint.getId(), complaint.isResolved() ? "Resolved" : "Ongoing"});
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -680,12 +697,7 @@ public class CustomerComplaintPanel extends JPanel {
         return this;
     }
 
-    // public static void main(String[] args) {
-    //     SwingUtilities.invokeLater(() -> {
-    //         CustomerComplaint customerComplaint = new CustomerComplaint(Customer endUser);
-    //         customerComplaint.setVisible(true);
-    //     });
-    // }   
+    
 }
 
 
