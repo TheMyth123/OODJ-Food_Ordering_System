@@ -22,9 +22,9 @@ public class Complaint {
 
     // ✅ Constructor with a single message
     public Complaint(String user, String message) {
-        this.id = LoginPage.getLoginID(); // Generate a unique ID
+        // this.id = id; 
         this.user = user;
-        this.messages = new ArrayList<>(); // ✅ Initialize messages before using add()
+        this.messages = new ArrayList<>();
         this.messages.add("User: " + message);
         this.resolved = false;
     }

@@ -56,7 +56,7 @@ public class ComplaintHandling {
     //     }
     // }
 
-    public static void addNewComplaint(Complaint complaint) {
+    public static void addNewComplaint(Complaint complaint, String customerID) {
         System.out.println("DEBUG: addComplaint() was called");
     
         try {
@@ -85,7 +85,7 @@ public class ComplaintHandling {
     
             JSONObject complaintData = new JSONObject();
             complaintData.put("ComplaintID", "CM" + String.format("%05d", getCMid() + 1));
-            complaintData.put("CustomerID", complaint.getId());
+            complaintData.put("CustomerID", customerID);
             complaintData.put("Messages", complaint.getMessages());
             complaintData.put("Resolved", complaint.isResolved());
     

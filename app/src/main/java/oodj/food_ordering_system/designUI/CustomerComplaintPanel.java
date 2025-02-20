@@ -548,6 +548,7 @@ public class CustomerComplaintPanel extends JPanel {
     private JTextArea chatArea;
     private JTextField inputField;
     private JButton sendButton;
+    private Customer endUser;
 
     public CustomerComplaintPanel(Customer endUser) {
         setLayout(new BorderLayout());
@@ -656,9 +657,11 @@ public class CustomerComplaintPanel extends JPanel {
     
             // Create a new Complaint object
             Complaint newComplaint = new Complaint("Customer" + UserHandling.getCUid(), message);
-    
+            String customerID = LoginPage.getEndUser().getID();; // Get the ID of the current
+            
+            
             // Call addNewComplaint() with a Complaint object
-            ComplaintHandling.addNewComplaint(newComplaint);
+            ComplaintHandling.addNewComplaint(newComplaint, customerID);
     
             System.out.println("Complaint passed to ComplaintHandling.addComplaint()");
             updateTable();

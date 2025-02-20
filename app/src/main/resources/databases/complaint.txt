@@ -10,5 +10,11 @@
     "ComplaintID": "CM00002",
     "Resolved": false,
     "CustomerID": "CS00001"
+  },
+  {
+    "Messages": ["User: 111"],
+    "ComplaintID": "CM00003",
+    "Resolved": false,
+    "CustomerID": "CS00001"
   }
 ]
