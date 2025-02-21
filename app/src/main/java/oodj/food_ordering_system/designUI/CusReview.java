@@ -44,28 +44,31 @@ public class CusReview extends JFrame {
     private void displayRatings(String vendorID) {
         List<Rating> vendorRatings = OrderHandling.getVendorRatings(vendorID);
     
-        String[] columnNames = {"Order ID", "Customer ID", "Rating", "Vendor ID"};
+        // Remove the 4th column: Vendor ID
+        String[] columnNames = {"Order ID", "Customer ID", "Rating"};
     
-        String[][] data = new String[vendorRatings.size()][4];
+        // Adjust data array to have 3 columns instead of 4
+        String[][] data = new String[vendorRatings.size()][3];
         for (int i = 0; i < vendorRatings.size(); i++) {
             Rating rating = vendorRatings.get(i);
             data[i][0] = rating.getOrderID();
             data[i][1] = rating.getCustomerID();
             data[i][2] = String.valueOf(rating.getRating());
-            data[i][3] = rating.getVendorID();
         }
     
         ratingTable.setModel(new DefaultTableModel(data, columnNames));
     
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+    
+        // Adjust rendering for 3 columns
         ratingTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         ratingTable.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
         ratingTable.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
-        ratingTable.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
     
         ratingTable.getTableHeader().setReorderingAllowed(false);
     }
+    
     
     
     
