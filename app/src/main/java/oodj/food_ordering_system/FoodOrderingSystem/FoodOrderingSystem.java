@@ -7,7 +7,7 @@ import javax.swing.SwingUtilities;
 import oodj.food_ordering_system.designUI.LoginPage;
 import oodj.food_ordering_system.utils.FileChecker;
 
-public class CarRentalSystem {
+public class FoodOrderingSystem {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {

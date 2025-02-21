@@ -135,6 +135,7 @@ public class AddCustomer extends javax.swing.JFrame {
                 newCustomer.put("Email", email);
                 newCustomer.put("Address", address);
                 newCustomer.put("Status", "True");
+                newCustomer.put("Balance", 0.0);
 
                 JSONArray customerArray;
                 File file = new File(filePath);

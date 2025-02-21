@@ -42,6 +42,7 @@ public class ManagerMenuItems extends JPanel {
         ImageLabel = new JLabel();
         ImageLabel.setPreferredSize(new Dimension(150, 150));
         // Load the image icon from the given path and scale it to fit the label
+        imagePath = "app/src/main/resources/images/" + imagePath;
         ImageIcon icon = new ImageIcon(imagePath);
         Image image = icon.getImage();
         Image scaledImage = image.getScaledInstance(150, 150, Image.SCALE_SMOOTH);

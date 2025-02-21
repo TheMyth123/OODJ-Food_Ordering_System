@@ -12,7 +12,7 @@
   },
   {
     "Status": "True",
-    "ReadStatus": "False",
+    "ReadStatus": "True",
     "Type": "New Top Up Request",
     "NotificationID": "NT00002",
     "UserID": "Admin",
