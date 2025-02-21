@@ -238,7 +238,7 @@ public class ModerateVendorItems extends javax.swing.JFrame {
         btn_ManageComplaints.setBackground(new java.awt.Color(31, 31, 31));
         btn_ManageComplaints.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btn_ManageComplaints.setForeground(new java.awt.Color(245, 251, 254));
-        btn_ManageComplaints.setText("Manage Customer Complaints");
+        btn_ManageComplaints.setText("Manage Complaints");
         btn_ManageComplaints.setBorder(null);
         btn_ManageComplaints.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btn_ManageComplaints.setFocusable(false);
@@ -473,7 +473,9 @@ public class ModerateVendorItems extends javax.swing.JFrame {
         new RunnerPerformance().setVisible(true);     
     }                                           
 
-    private void btn_ManageComplaintsActionPerformed(java.awt.event.ActionEvent evt) {  
+    private void btn_ManageComplaintsActionPerformed(java.awt.event.ActionEvent evt) { 
+        dispose();
+        new ManageComplaints().setVisible(true); 
     }     
 
     private void btn_ModerateVItemsActionPerformed(java.awt.event.ActionEvent evt) {       

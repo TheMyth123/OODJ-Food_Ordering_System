@@ -25,11 +25,8 @@ import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.general.DefaultPieDataset;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import oodj.food_ordering_system.models.Customer;
-import oodj.food_ordering_system.utils.UserHandling;
 
 public class RunnerAnalysisPanel extends JPanel {
 
@@ -41,10 +38,10 @@ public class RunnerAnalysisPanel extends JPanel {
         setBackground(darkBackground);
         switch (analysisType) {
             case "Total Deliveries":
-                //addChart(createTotalDeliveriesChart());
+                addChart(createTotalDeliveriesChart());
                 break;
-            case "Customer Ratings":
-                //addChart(createCustomerRatingsChart());
+            case "Runner Earnings":
+                addChart(createRunnerEarningsChart());
                 break;
             case "Runner Performance Dashboard":
                 addRunnerPerformanceDashboard();
@@ -165,69 +162,6 @@ public class RunnerAnalysisPanel extends JPanel {
         return label;
     }
 
-    private String readPaymentsFile() {
-        try {
-            return new String(Files.readAllBytes(Paths.get("app\\src\\main\\resources\\databases\\payment.txt")));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "[]";
-        }
-    }
-
-    private Map<String, String> buildMenuToVendorMap() {
-        Map<String, String> menuMap = new HashMap<>();
-        try {
-            String menuJson = new String(Files.readAllBytes(Paths.get("app\\src\\main\\resources\\databases\\menu.txt")));
-            JSONArray menuArray = new JSONArray(menuJson);
-            for (int i = 0; i < menuArray.length(); i++) {
-                JSONObject menuItem = menuArray.getJSONObject(i);
-                if ("True".equalsIgnoreCase(menuItem.getString("Status"))) {
-                    String menuID = menuItem.getString("id");
-                    String vendorID = menuItem.getString("VendorID");
-                    menuMap.put(menuID, vendorID);
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        return menuMap;
-    }
-
-    private Map<String, String> buildMenuToNameMap() {
-        Map<String, String> menuNameMap = new HashMap<>();
-        try {
-            String menuJson = new String(Files.readAllBytes(Paths.get("app\\src\\main\\resources\\databases\\menu.txt")));
-            JSONArray menuArray = new JSONArray(menuJson);
-            for (int i = 0; i < menuArray.length(); i++) {
-                JSONObject menuItem = menuArray.getJSONObject(i);
-                if ("True".equalsIgnoreCase(menuItem.getString("Status"))) {
-                    String menuID = menuItem.getString("id");
-                    String menuName = menuItem.getString("name");
-                    menuNameMap.put(menuID, menuName);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return menuNameMap;
-    }
-
-    private String readVendorFile() {
-        try {
-            String path = "app\\src\\main\\resources\\databases\\vendor.txt";
-            File file = new File(path);
-            if (file.exists()) {
-                return new String(Files.readAllBytes(Paths.get(path)));
-            } else {
-                System.out.println("Vendor file not found: " + path);
-                return "[]";
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "[]";
-        }
-    }
-
     private String readRunnerFile() {
         try {
             String path = "app\\src\\main\\resources\\databases\\delivery_runner.txt";
@@ -260,61 +194,89 @@ public class RunnerAnalysisPanel extends JPanel {
         }
     }
 
-    private Map<String, String> buildVendorToFoodCourtMap() {
-        Map<String, String> vendorMap = new HashMap<>();
-        try {
-            String vendorJson = readVendorFile();
-            JSONArray vendorArray = new JSONArray(vendorJson);
-            for (int i = 0; i < vendorArray.length(); i++) {
-                JSONObject vendorObj = vendorArray.getJSONObject(i);
-                String vendorID = vendorObj.getString("VendorID");
-                String foodCourtName = vendorObj.getString("FoodCourtName");
-                vendorMap.put(vendorID, foodCourtName);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    private Map<String, String> buildRunnerIDToNameMap() {
+        Map<String, String> runnerMap = new HashMap<>();
+        String jsonStr = readRunnerFile();
+        JSONArray runners = new JSONArray(jsonStr);
+        for (int i = 0; i < runners.length(); i++) {
+            JSONObject runner = runners.getJSONObject(i);
+            runnerMap.put(runner.getString("RunnerID"), runner.getString("Name"));
         }
-        return vendorMap;
+        return runnerMap;
     }
 
-    // private JFreeChart createTotalDeliveriesChart() {
-    //     DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-    //     try {
-    //         String jsonStr = readDeliveryRunnerTasksFile();
-    //         JSONArray tasks = new JSONArray(jsonStr);
-    //         Map<String, Integer> deliveriesCount = new HashMap<>();
-    //         for (int i = 0; i < tasks.length(); i++) {
-    //             JSONObject task = tasks.getJSONObject(i);
-    //             String runnerID = task.getString("RunnerID");
-    //             deliveriesCount.put(runnerID, deliveriesCount.getOrDefault(runnerID, 0) + 1);
-    //         }
-    //         for (Map.Entry<String, Integer> entry : deliveriesCount.entrySet()) {
-    //             dataset.addValue(entry.getValue(), "Total Deliveries", entry.getKey());
-    //         }
-    //     } catch (IOException e) {
-    //         e.printStackTrace();
-    //     }
-    //     JFreeChart chart = ChartFactory.createBarChart(
-    //         "Total Deliveries",
-    //         "Runner",
-    //         "Number of Deliveries",
-    //         dataset,
-    //         PlotOrientation.VERTICAL,
-    //         false,
-    //         true,
-    //         false
-    //     );
-    //     if (chart.getPlot() instanceof CategoryPlot) {
-    //         CategoryPlot plot = (CategoryPlot) chart.getPlot();
-    //         if (plot.getRangeAxis() instanceof NumberAxis) {
-    //             NumberAxis axis = (NumberAxis) plot.getRangeAxis();
-    //             axis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-    //         }
-    //     }
-    //     return chart;
-    // }
+    private JFreeChart createTotalDeliveriesChart() {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        String jsonStr = readDeliveryRunnerTasksFile();
+        JSONArray tasks = new JSONArray(jsonStr);
+        Map<String, Integer> deliveriesCount = new HashMap<>();
+        for (int i = 0; i < tasks.length(); i++) {
+            JSONObject task = tasks.getJSONObject(i);
+            if (!"completed".equalsIgnoreCase(task.getString("TaskStatus"))) continue;
+            String runnerID = task.getString("RunnerID");
+            deliveriesCount.put(runnerID, deliveriesCount.getOrDefault(runnerID, 0) + 1);
+        }
+        Map<String, String> runnerIDToNameMap = buildRunnerIDToNameMap();
+        for (Map.Entry<String, Integer> entry : deliveriesCount.entrySet()) {
+            String runnerName = runnerIDToNameMap.getOrDefault(entry.getKey(), entry.getKey());
+            dataset.addValue(entry.getValue(), "Total Deliveries", runnerName);
+        }
+        JFreeChart chart = ChartFactory.createBarChart(
+            "Total Deliveries",
+            "Runner",
+            "Number of Deliveries",
+            dataset,
+            PlotOrientation.VERTICAL,
+            false,
+            true,
+            false
+        );
+        if (chart.getPlot() instanceof CategoryPlot) {
+            CategoryPlot plot = (CategoryPlot) chart.getPlot();
+            if (plot.getRangeAxis() instanceof NumberAxis) {
+                NumberAxis axis = (NumberAxis) plot.getRangeAxis();
+                axis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+            }
+        }
+        return chart;
+    }
+    
 
-    // private JFreeChart createCustomerRatingsChart() {
-        
-    // }
+    private JFreeChart createRunnerEarningsChart() {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        String jsonStr = readDeliveryRunnerTasksFile();
+        JSONArray tasks = new JSONArray(jsonStr);
+        Map<String, Double> earningsMap = new HashMap<>();
+        for (int i = 0; i < tasks.length(); i++) {
+            JSONObject task = tasks.getJSONObject(i);
+            if (!"completed".equalsIgnoreCase(task.getString("TaskStatus"))) continue;
+            String runnerID = task.getString("RunnerID");
+            double fee = task.getDouble("DeliveryFee");
+            earningsMap.put(runnerID, earningsMap.getOrDefault(runnerID, 0.0) + fee);
+        }
+        Map<String, String> runnerIDToNameMap = buildRunnerIDToNameMap();
+        for (Map.Entry<String, Double> entry : earningsMap.entrySet()) {
+            String runnerName = runnerIDToNameMap.getOrDefault(entry.getKey(), entry.getKey());
+            dataset.addValue(entry.getValue(), "Earnings", runnerName);
+        }
+        JFreeChart chart = ChartFactory.createBarChart(
+            "Runner Earnings",
+            "Runner",
+            "Earnings",
+            dataset,
+            PlotOrientation.VERTICAL,
+            false,
+            true,
+            false
+        );
+        if (chart.getPlot() instanceof CategoryPlot) {
+            CategoryPlot plot = (CategoryPlot) chart.getPlot();
+            if (plot.getRangeAxis() instanceof NumberAxis) {
+                NumberAxis axis = (NumberAxis) plot.getRangeAxis();
+                axis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+            }
+        }
+        return chart;
+    }    
+    
 }

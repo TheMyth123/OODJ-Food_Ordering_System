@@ -21,7 +21,7 @@
       "price": 25,
       "menuID": "MN00001"
     }],
-    "ServiceType": "Request for Delivery",
+    "ServiceType": "Dine in",
     "DeliveryAddress": "fop4w",
     "CustomerID": "CS00001",
     "TotalAmount": 25,
@@ -46,7 +46,7 @@
     ],
     "ServiceType": "Request for Delivery",
     "DeliveryAddress": "sdfasd",
-    "CustomerID": "CS00001",
+    "CustomerID": "CS00006",
     "TotalAmount": 130,
     "OrderID": "OR00003",
     "PaymentStatus": "Completed",

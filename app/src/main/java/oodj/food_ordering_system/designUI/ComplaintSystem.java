@@ -651,6 +651,7 @@ class CustomerComplaint extends JFrame {
             customerComplaint.setVisible(true);
         });
     }   
+
 }
 
 

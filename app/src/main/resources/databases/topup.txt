@@ -24,8 +24,8 @@
     "LastUpdated": "2025-01-06"
   },
   {
-    "Status": "Pending",
-    "ReceiptImagePath": "app/src/main/resources/receipts/CR1736244343409.jpg",
+    "Status": "Accepted",
+    "ReceiptImagePath": "app/src/main/resources/receipts/CR1736245535859.jpg",
     "CreditID": "CR00004",
     "CreditAmount": 10,
     "CustomerID": "CS00001",
@@ -33,34 +33,10 @@
   },
   {
     "Status": "Pending",
-    "ReceiptImagePath": "app/src/main/resources/receipts/CR1736245014349.jpg",
-    "CreditID": "CR00005",
-    "CreditAmount": 10,
-    "CustomerID": "CS00001",
-    "LastUpdated": "2025-01-07"
-  },
-  {
-    "Status": "Pending",
-    "ReceiptImagePath": "app/src/main/resources/receipts/CR1736245281890.jpg",
-    "CreditID": "CR00006",
-    "CreditAmount": 10,
-    "CustomerID": "CS00001",
-    "LastUpdated": "2025-01-07"
-  },
-  {
-    "Status": "Pending",
     "ReceiptImagePath": "app/src/main/resources/receipts/CR1736245535859.jpg",
-    "CreditID": "CR00007",
-    "CreditAmount": 10,
+    "CreditID": "CR00005",
+    "CreditAmount": 50,
     "CustomerID": "CS00001",
     "LastUpdated": "2025-01-07"
-  },
-  {
-    "Status": "Pending",
-    "ReceiptImagePath": "app/src/main/resources/receipts/CR00008.jpg",
-    "CreditID": "CR00008",
-    "CreditAmount": 100,
-    "CustomerID": "CS00001",
-    "LastUpdated": "2025-01-08"
   }
 ]

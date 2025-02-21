@@ -574,7 +574,7 @@ public class EditCustomer extends javax.swing.JFrame {
         addButton.setBackground(new java.awt.Color(255, 169, 140));
         addButton.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         addButton.setForeground(new java.awt.Color(31, 31, 31));
-        addButton.setText("Add Customer");
+        addButton.setText("Update Customer");
         addButton.setBorder(null);
         addButton.setBorderPainted(false);
         addButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));

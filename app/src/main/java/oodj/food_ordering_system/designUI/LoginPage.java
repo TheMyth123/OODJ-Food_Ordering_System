@@ -111,10 +111,8 @@ public class LoginPage extends javax.swing.JFrame {
         } else {
             switch (defineUser(username, password)) {
                 case 1:
-                    //setVisible(false);
-                    // CarAD = new CarAD();
-                    // CarAD.setVisible(true);
-                    // TODO Develop Manager Main Menu
+                    setVisible(false);
+                    new VendorPerformance().setVisible(true);
                     System.out.println("Manager: "+username+" Logged In");
                     break;
                 case 2:

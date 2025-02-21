@@ -1,14 +1,19 @@
 [
-  {
-    "Messages": ["User: 1"],
-    "ComplaintID": "CM00001",
-    "Resolved": false,
-    "CustomerID": "CS00001"
-  },
-  {
-    "Messages": ["User: test"],
-    "ComplaintID": "CM00002",
-    "Resolved": false,
-    "CustomerID": "CS00001"
-  }
+    {
+        "Messages": [
+            "User: food cold",
+            "Manager: Sorry about that",
+            "Manager: Your next meal is free",
+            "Manager: tesete"
+        ],
+        "ComplaintID": "CM00001",
+        "Resolved": false,
+        "CustomerID": "CS00001"
+    },
+    {
+        "Messages": ["User: delivery too slow"],
+        "ComplaintID": "CM00002",
+        "Resolved": false,
+        "CustomerID": "CS00001"
+    }
 ]
