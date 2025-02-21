@@ -28,6 +28,12 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import net.miginfocom.layout.ComponentWrapper;
+import net.miginfocom.layout.LayoutCallback;
+import raven.glasspanepopup.DefaultLayoutCallBack;
+import raven.glasspanepopup.DefaultOption;
+import raven.glasspanepopup.GlassPanePopup;
+
 public class RunnerAnalysisPanel extends JPanel {
 
     private final Color accentColor = new Color(255, 169, 140);
@@ -129,16 +135,39 @@ public class RunnerAnalysisPanel extends JPanel {
         infoPanel.add(idLabel);
         infoPanel.add(nameLabel);
         infoPanel.add(licenseLabel);
+        
         JButton viewButton = new JButton("View Dashboard");
         viewButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
         viewButton.setBackground(accentColor);
         viewButton.setForeground(darkBackground);
         viewButton.setFocusPainted(false);
-        viewButton.addActionListener(e -> showMaintenanceMessage(runnerID));
+        viewButton.addActionListener(e -> {
+            // Create and show the performance dashboard popup for this runner
+            RunnerPerformanceDashboardPopup popupPanel = new RunnerPerformanceDashboardPopup(runnerID, Name);
+            GlassPanePopup.showPopup(popupPanel, new DefaultOption() {
+                @Override
+                public float opacity() {
+                    return 0;
+                }
+                @Override
+                public LayoutCallback getLayoutCallBack(java.awt.Component parent) {
+                    return new DefaultLayoutCallBack(parent) {
+                        @Override
+                        public void correctBounds(ComponentWrapper cw) {
+                            // Center the popup in the parent component
+                            int x = (parent.getWidth() - cw.getWidth()) / 2;
+                            int y = (parent.getHeight() - cw.getHeight()) / 2;
+                            cw.setBounds(x, y, cw.getWidth(), cw.getHeight());
+                        }
+                    };
+                }
+            });
+        });
         card.add(infoPanel, BorderLayout.CENTER);
         card.add(viewButton, BorderLayout.SOUTH);
         return card;
     }
+
 
     private JLabel createInfoLabel(String text, int size, int style) {
         JLabel label = new JLabel(text);
