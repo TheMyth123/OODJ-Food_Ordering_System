@@ -127,8 +127,8 @@ public class LoginPage extends javax.swing.JFrame {
                     System.out.println("Customer: "+username+" Logged In");
                     break;
                 case 4:
-                    //setVisible(false);
-                    //TODO Develop Delivery Runner Main Menu
+                    setVisible(false);
+                    new RunnerRevenueDashboard().setVisible(true);
                     System.out.println("Delivery Runner: "+username+" Logged In");
                     break;
                 case 5:
