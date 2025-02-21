@@ -58,9 +58,9 @@ public class AddMenu extends javax.swing.JFrame {
                 priceTextField.setText("");
                 DialogBox.errorMessage("Please re-enter your price!", "Invalid email format");
 
-            } else if (!validation.imageFormat(image)) {
-                imageTextField.setText("");
-                DialogBox.errorMessage("Please Change another image", "Image file size too big!");
+            // } else if (!validation.imageFormat(image)) {
+            //     imageTextField.setText("");
+            //     DialogBox.errorMessage("Please Change another image", "Image file size too big!");
 
             }  else {
                 String filePath = "app\\\\src\\\\main\\\\resources\\\\databases\\\\menu.txt";
@@ -77,7 +77,7 @@ public class AddMenu extends javax.swing.JFrame {
                 newMenu.put("Status", "True");
                 // newMenu.put("VendorID", UserHandling.getVId().get("VendorID"));
                 
-                JSONArray customerArray;
+                JSONArray menuArray;
                 File file = new File(filePath);
 
                 if (file.length() > 0) {
@@ -87,15 +87,15 @@ public class AddMenu extends javax.swing.JFrame {
                         while ((line = reader.readLine()) != null) {
                             content.append(line);
                         }
-                        customerArray = new JSONArray(content.toString());
+                        menuArray = new JSONArray(content.toString());
                     }
                 } else {
-                    customerArray = new JSONArray();
+                    menuArray = new JSONArray();
                 }
-                customerArray.put(newMenu);
+                menuArray.put(newMenu);
 
                 try (FileWriter fileWriter = new FileWriter(filePath)) {
-                    fileWriter.write(customerArray.toString(2)); // Pretty print with indentation
+                    fileWriter.write(menuArray.toString(2)); // Pretty print with indentation
                     fileWriter.flush();
                 }
 
@@ -420,7 +420,7 @@ public class AddMenu extends javax.swing.JFrame {
         addButton.setBackground(new java.awt.Color(255, 169, 140));
         addButton.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         addButton.setForeground(new java.awt.Color(31, 31, 31));
-        addButton.setText("Add Customer");
+        addButton.setText("Add Menu");
         addButton.setBorder(null);
         addButton.setBorderPainted(false);
         addButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));

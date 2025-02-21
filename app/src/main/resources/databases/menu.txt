@@ -39,9 +39,19 @@
         "Status": "True",
         "price": "RM6",
         "imagePath": "nasi_lemak.jpg",
-        "VendorID": "VD00001",
+        "VendorID": "VD00002",
         "name": "Nasi Lemak",
         "description": "Coconut rice with sambal, fried anchovies, peanuts, and cucumber",
         "id": "MN00005"
+    },
+    {
+        "Status": "True",
+        "price": "RM6",
+        "imagePath": "nasi_lemak.jpg",
+        "VendorID": "VD00008",
+        "name": "Nasi Lemak Extra Pedas",
+        "description": "Coconut rice with extra pedas sambal, fried anchovies, peanuts, and cucumber",
+        "id": "MN00006"
     }
+
 ]
