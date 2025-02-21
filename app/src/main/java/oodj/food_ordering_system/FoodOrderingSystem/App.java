@@ -10,6 +10,6 @@ package oodj.food_ordering_system.FoodOrderingSystem;
  */
 public class App {
     public static void main(String[] args) {
-        CarRentalSystem.main(args);
+        FoodOrderingSystem.main(args);
     }
 }
