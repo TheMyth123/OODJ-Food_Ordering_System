@@ -872,17 +872,17 @@ public class ManageMenu extends javax.swing.JFrame {
     } 
 
     private void btn_OrderHisActionPerformed(java.awt.event.ActionEvent evt) {
-        dispose();
+        // dispose();
         // new OrderHistory().setVisible(true);                                         
     } 
     
     private void btn_CusReviewActionPerformed(java.awt.event.ActionEvent evt) {
         dispose();
-        // new CustomerReview().setVisible(true);                                         
+        new CusReview().setVisible(true);                                         
     } 
     
     private void btn_RevenueActionPerformed(java.awt.event.ActionEvent evt) {
-        dispose();
+        // dispose();
         // new Revenue().setVisible(true);                                         
     } 
     
