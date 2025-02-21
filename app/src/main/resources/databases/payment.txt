@@ -1,7 +1,7 @@
 [
   {
     "Status": "Cancelled",
-    "OrderStatus": "Pending",
+    "OrderStatus": "Completed",
     "OrderItems": [{
       "quantity": 1,
       "totalPrice": 25,

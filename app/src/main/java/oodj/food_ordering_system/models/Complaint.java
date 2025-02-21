@@ -13,12 +13,13 @@ public class Complaint {
     private boolean resolved;
 
     // ✅ Constructor with an existing message list
-    public Complaint(String id, String user, List<String> messages) {
+    public Complaint(String id, String user, List<String> messages, boolean resolved) {
         this.id = id; 
         this.user = user;
-        this.messages = (messages != null) ? messages : new ArrayList<>(); // ✅ Prevents null
-        this.resolved = false;
+        this.messages = (messages != null) ? messages : new ArrayList<>();
+        this.resolved = resolved; // ✅ Correctly assign from JSON
     }
+    
 
     // ✅ Constructor with a single message
     public Complaint(String user, String message) {
@@ -51,8 +52,11 @@ public class Complaint {
     }
 
     public boolean isResolved() {
-        return resolved;
+        System.out.println("isResolved() called for complaint: " + this.id + " -> " + this.resolved); // Debugging
+        return this.resolved;
     }
+    
+    
 
     public void resolve() {
         resolved = true;

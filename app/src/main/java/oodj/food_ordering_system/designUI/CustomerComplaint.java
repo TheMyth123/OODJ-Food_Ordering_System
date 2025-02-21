@@ -461,7 +461,6 @@ public class CustomerComplaint extends javax.swing.JFrame {
 
         Main.add(title_container1);
 
-        // add the restaurant here
 
         
 

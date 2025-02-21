@@ -548,7 +548,7 @@ public class CustomerComplaintPanel extends JPanel {
     private JTextArea chatArea;
     private JTextField inputField;
     private JButton sendButton;
-    private Customer endUser;
+    // private Customer endUser;
 
     public CustomerComplaintPanel(Customer endUser) {
         setLayout(new BorderLayout());
@@ -556,6 +556,9 @@ public class CustomerComplaintPanel extends JPanel {
         tableModel = new DefaultTableModel(new Object[]{"Complaint ID", "Status"}, 0);
         complaintTable = new JTable(tableModel);
         JScrollPane tableScrollPane = new JScrollPane(complaintTable);
+        tableScrollPane.setPreferredSize(new Dimension(700, 300));
+
+        
         add(tableScrollPane, BorderLayout.WEST);
 
 
@@ -580,12 +583,21 @@ public class CustomerComplaintPanel extends JPanel {
                     if (selectedRow != -1) {
                         String complaintId = (String) tableModel.getValueAt(selectedRow, 0);
                         updateChat(complaintId);
-                        sendButton.setText("Send Message");
-                        inputField.setVisible(true);
+                        boolean isResolved = "Resolved".equals(tableModel.getValueAt(selectedRow, 1));
+                        if (isResolved) {
+                            sendButton.setText("Resolved");
+                            sendButton.setEnabled(false);
+                            inputField.setVisible(false);
+                        } else {
+                            sendButton.setText("Send Message");
+                            sendButton.setEnabled(true);
+                            inputField.setVisible(true);
+                        }
                         chatArea.setVisible(true);
                     } else {
                         chatArea.setVisible(false);
                         sendButton.setText("Create Complaint");
+                        sendButton.setEnabled(true);
                         inputField.setVisible(false);
                     }
                 }
@@ -595,8 +607,9 @@ public class CustomerComplaintPanel extends JPanel {
 
 
         chatArea = new JTextArea();
-        chatArea.setVisible(false);
+        // chatArea.setVisible(false);
         JScrollPane chatScrollPane = new JScrollPane(chatArea);
+        chatScrollPane.setPreferredSize(new Dimension(180, 400)); // Set preferred size for chat area
         add(chatScrollPane, BorderLayout.CENTER);
 
         JPanel inputPanel = new JPanel(new BorderLayout());
@@ -612,18 +625,20 @@ public class CustomerComplaintPanel extends JPanel {
         loadComplaints(endUser);
     }
 
-    private void loadComplaints(Customer endUser) {
-        try {
-            ArrayList<Complaint> complaints = ComplaintHandling.readComplaints();
-            for (Complaint complaint : complaints) {
-                if (complaint.getUser().equals(endUser.getID())) {
-                    tableModel.addRow(new Object[]{complaint.getId(), complaint.isResolved() ? "Resolved" : "Ongoing"});
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    // private void loadComplaints(Customer endUser) {
+    //     try {
+    //         ArrayList<Complaint> complaints = ComplaintHandling.readComplaints();
+    //         for (Complaint complaint : complaints) {
+    //             if (complaint.getUser().equals(endUser.getID())) {
+    //                 tableModel.addRow(new Object[]{complaint.getId(), complaint.isResolved() ? "Resolved" : "Ongoing"});
+    //             }
+    //         }
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
+
+    
 
     public void updateTable() {
         tableModel.setRowCount(0);
@@ -637,15 +652,88 @@ public class CustomerComplaintPanel extends JPanel {
         }
     }
 
+    private void loadComplaints(Customer endUser) {
+        try {
+            ArrayList<Complaint> complaints = ComplaintHandling.readComplaints();
+            tableModel.setRowCount(0); // ✅ Clear table before adding data
+    
+            System.out.println("Loading complaints for customer: " + endUser.getID());
+            for (Complaint complaint : complaints) {
+                System.out.println("Checking complaint: " + complaint.getId() + " - Resolved: " + complaint.isResolved());
+    
+                if (complaint.getUser().equals(endUser.getID())) { // ✅ Display all complaints
+                    String status = complaint.isResolved() ? "Resolved" : "Ongoing";
+                    System.out.println("Adding complaint to table: " + complaint.getId() + " - Status: " + status);
+                    tableModel.addRow(new Object[]{complaint.getId(), status});
+                }
+            }
+    
+            tableModel.fireTableDataChanged(); // ✅ Refresh table display
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    
+
+    
+
+    // public void updateChat(String complaintId) {
+    //     chatArea.setText("");
+    //     Complaint complaint = ComplaintHandling.getComplaintById(complaintId);
+    //     if (complaint != null) {
+    //         for (String message : complaint.getMessages()) {
+    //             chatArea.append(message + "\n");
+    //         }
+    //     }
+    // }
+
     public void updateChat(String complaintId) {
         chatArea.setText("");
         Complaint complaint = ComplaintHandling.getComplaintById(complaintId);
+        
         if (complaint != null) {
             for (String message : complaint.getMessages()) {
                 chatArea.append(message + "\n");
             }
+    
+            if (complaint.isResolved()) { // ✅ If complaint is resolved
+                chatArea.setEditable(false);
+                sendButton.setText("Resolved");
+                sendButton.setEnabled(false);
+                inputField.setVisible(false);
+            } else { // ✅ Allow chat if unresolved
+                chatArea.setEditable(true);
+                sendButton.setText("Send Message");
+                sendButton.setEnabled(true);
+                inputField.setVisible(true);
+            }
         }
     }
+    
+
+    // public void updateChat(String complaintId) {
+    //     chatArea.setText("");
+    //     Complaint complaint = ComplaintHandling.getComplaintById(complaintId);
+    //     if (complaint != null) {
+    //         for (String message : complaint.getMessages()) {
+    //             chatArea.append(message + "\n");
+    //         }
+    //         boolean isResolved = complaint.isResolved();
+    //         if (isResolved) {
+    //             chatArea.setEditable(false);
+    //             sendButton.setText("Resolved");
+    //             sendButton.setEnabled(false);
+    //             inputField.setVisible(false);
+    //         } else {
+    //             chatArea.setEditable(true);
+    //             sendButton.setText("Send Message");
+    //             sendButton.setEnabled(true);
+    //             inputField.setVisible(true);
+    //         }
+    //     }
+    // }
 
 
     private void sendComplaint() {
@@ -679,22 +767,44 @@ public class CustomerComplaintPanel extends JPanel {
         }
     }
 
+    // private void sendMessage() {
+    //     String message = inputField.getText().trim();
+    //     if (!message.isEmpty()) {
+    //         int selectedRow = complaintTable.getSelectedRow();
+    //         if (selectedRow != -1) {
+    //             String complaintId = (String) tableModel.getValueAt(selectedRow, 0);
+    //             Complaint complaint = ComplaintHandling.getComplaintById(complaintId);
+    //             if (complaint != null && !complaint.isResolved()) {
+    //                 complaint.addMessage("User", message);
+    //                 ComplaintHandling.updateComplaint(complaint);
+    //                 inputField.setText("");
+    //                 updateChat(complaintId);
+    //             }
+    //         }
+    //     }
+    // }
+
     private void sendMessage() {
-        String message = inputField.getText().trim();
-        if (!message.isEmpty()) {
-            int selectedRow = complaintTable.getSelectedRow();
-            if (selectedRow != -1) {
-                String complaintId = (String) tableModel.getValueAt(selectedRow, 0);
-                Complaint complaint = ComplaintHandling.getComplaintById(complaintId);
-                if (complaint != null && !complaint.isResolved()) {
-                    complaint.addMessage("User", message);
-                    ComplaintHandling.updateComplaint(complaint);
-                    inputField.setText("");
-                    updateChat(complaintId);
-                }
+        int selectedRow = complaintTable.getSelectedRow();
+        if (selectedRow != -1) {
+            String complaintId = (String) tableModel.getValueAt(selectedRow, 0);
+            Complaint complaint = ComplaintHandling.getComplaintById(complaintId);
+    
+            if (complaint != null && complaint.isResolved()) { // ✅ Prevent sending if resolved
+                JOptionPane.showMessageDialog(this, "This complaint is resolved. You cannot send messages.", "Warning", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+    
+            String message = inputField.getText().trim();
+            if (!message.isEmpty()) {
+                complaint.addMessage("User", message);
+                ComplaintHandling.updateComplaint(complaint);
+                inputField.setText("");
+                updateChat(complaintId);
             }
         }
     }
+    
 
     public JPanel getPanel() {
         return this;

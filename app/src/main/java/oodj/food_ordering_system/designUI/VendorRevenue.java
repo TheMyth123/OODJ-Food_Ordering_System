@@ -1,104 +1,82 @@
 package oodj.food_ordering_system.designUI;
 
-import java.util.List;
-
-import net.miginfocom.layout.ComponentWrapper;
-import net.miginfocom.layout.LayoutCallback;
 import oodj.food_ordering_system.models.Notification;
 import oodj.food_ordering_system.models.Vendor;
 import oodj.food_ordering_system.utils.DialogBox;
 import oodj.food_ordering_system.utils.NotificationUtils;
 import oodj.food_ordering_system.utils.UserHandling;
-import raven.glasspanepopup.DefaultLayoutCallBack;
-import raven.glasspanepopup.DefaultOption;
-import raven.glasspanepopup.GlassPanePopup;
+import oodj.food_ordering_system.utils.VendorHandling;
+import raven.glasspanepopup.*;
 
-public class ManageOrder extends javax.swing.JFrame {
+import java.util.List;
 
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
+import org.json.JSONArray;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import net.miginfocom.layout.ComponentWrapper;
+import net.miginfocom.layout.LayoutCallback;
+
+public class VendorRevenue extends javax.swing.JFrame {
+
+    // public static void main(String[] args) {
+    //     java.awt.EventQueue.invokeLater(() -> {
+    //         new VendorPerformance().setVisible(true);
+    //     });
+    // }
     private Vendor endUserVD;
+    
+    public VendorRevenue() {
+        this.endUserVD = LoginPage.getEndUserVD();      
+        initComponents();
+        GlassPanePopup.install(this);
+        placeComponents(title_container1);
+    }
+    
 
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> {
-            new ManageOrder().setVisible(true);
+
+    public void placeComponents(JPanel title_container1) {
+        title_container1.setLayout(null);
+    
+        JLabel periodLabel = new JLabel("Select Period:");
+        periodLabel.setBounds(10, 20, 150, 25);
+        periodLabel.setForeground(new Color(255, 165, 0)); // Orange
+        title_container1.add(periodLabel);
+    
+        String[] periods = {"Daily", "Monthly", "Quarterly"};
+        JComboBox<String> periodDropdown = new JComboBox<>(periods);
+        periodDropdown.setBounds(150, 20, 150, 25);
+        title_container1.add(periodDropdown);
+    
+        JButton checkButton = new JButton("Check History");
+        checkButton.setBounds(150, 60, 150, 25);
+        title_container1.add(checkButton);
+    
+        
+    
+        checkButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String selectedPeriod = (String) periodDropdown.getSelectedItem();
+                JSONArray history = VendorHandling.getVendorOrderHistory(endUserVD.getID(), selectedPeriod);
+                // resultArea.setText(selectedPeriod + " order history: " + history.toString());
+                VendorHandling.createRevenueChart(history);
+            }
         });
     }
-
-    // public static ArrayList<Order> allOrders = readOrderDetails();
-
-    public ManageOrder() {
-        GlassPanePopup.install(this);
-        initComponents();
-
-        // OrderInfo.getTableHeader().setReorderingAllowed(false);
-        // DefaultTableModel model = validation.nonEditTable(new Object[]{""}, 0);
-
-        // OrderInfo.setModel(model);
-
-        // refreshOrderInfo();
-        // displayOrders(allOrders);
-    }
-
-    // private void displayOrders(ArrayList<CusOrder> orders) {
-    //     if (orders == null || orders.isEmpty()) {
-    //         System.out.println("No orders available.");
-    //         return;
-    //     }
-
-    //     DefaultTableModel model = (DefaultTableModel) OrderInfo.getModel();
-    //     model.setRowCount(0);
-
-    //     for (CusOrder order : orders) {
-    //         model.addRow(new Object[]{
-    //             order.getId(),
-    //             order.getName(),
-    //             order.getDescription(),
-    //             order.getPrice()
-    //             // menu.getStatus()
-    //             // menu.getVendorID()
-    //         });
-    //     }
-
-    //     int rowCount = model.getRowCount();
-    //     int rowHeight = MenuInfo.getRowHeight();
-    //     int preferredHeight = rowCount * rowHeight;
-    //     if (preferredHeight < 377){
-    //         preferredHeight = 377;
-    //     }
-
-    //     MenuInfo.setPreferredSize(new java.awt.Dimension(
-    //         jScrollPane1.getWidth(), Math.min(preferredHeight, 8000) // Max height is 400
-    //     ));
-
-    //     MenuInfo.getColumnModel().getColumn(0).setPreferredWidth(25);
-    //     MenuInfo.getColumnModel().getColumn(3).setPreferredWidth(100);
-
-    //     javax.swing.table.DefaultTableCellRenderer centerRenderer = new javax.swing.table.DefaultTableCellRenderer();
-    //     centerRenderer.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-    //     MenuInfo.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-    //     MenuInfo.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
-
-    //     MenuInfo.revalidate();
-    //     jScrollPane1.revalidate();
-    //     jScrollPane1.repaint();
-    // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    
+        
+        
+        
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
         Sidebar = new javax.swing.JPanel();
         margin1 = new javax.swing.JPanel();
@@ -124,28 +102,12 @@ public class ManageOrder extends javax.swing.JFrame {
         m4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         OrderInfo = new javax.swing.JTable();
-        // searchBar = new javax.swing.JPanel();
-        // margin5 = new javax.swing.JPanel();
-        // nameLabel = new javax.swing.JLabel();
-        // nameTextField = new javax.swing.JTextField();
-        // margin6 = new javax.swing.JPanel();
-        // modelLabel = new javax.swing.JLabel();
-        // emailTextField = new javax.swing.JTextField();
-        // margin7 = new javax.swing.JPanel();
-        // searchButton = new javax.swing.JButton();
-        // m3 = new javax.swing.JPanel();
-        // m6 = new javax.swing.JPanel();
-        // m7 = new javax.swing.JPanel();
-        // btn_container = new javax.swing.JPanel();
-        // addButton = new javax.swing.JButton();
-        // m10 = new javax.swing.JPanel();
-        // editButton = new javax.swing.JButton();
-        // m11 = new javax.swing.JPanel();
-        // deleteButton = new javax.swing.JButton();
         btn_Noti = new oodj.food_ordering_system.designUI.Button();
+        title_container1 = new javax.swing.JPanel();
+
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Vendor Menu");
+        setTitle("Revenue");
         setBackground(new java.awt.Color(25, 25, 25));
         setMinimumSize(new java.awt.Dimension(1300, 700));
         setResizable(false);
@@ -218,9 +180,9 @@ public class ManageOrder extends javax.swing.JFrame {
         btn_container1.setPreferredSize(new java.awt.Dimension(300, 360));
         btn_container1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 30));
 
-        btn_ManageOrder.setBackground(new java.awt.Color(43, 43, 43));
-        btn_ManageOrder.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btn_ManageOrder.setForeground(new java.awt.Color(255, 169, 140));
+        btn_ManageOrder.setBackground(new java.awt.Color(31, 31, 31));
+        btn_ManageOrder.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btn_ManageOrder.setForeground(new java.awt.Color(245, 251, 254));
         btn_ManageOrder.setText("Manage Order");
         btn_ManageOrder.setBorder(null);
         btn_ManageOrder.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -290,9 +252,11 @@ public class ManageOrder extends javax.swing.JFrame {
         });
         btn_container1.add(btn_CusReview);
         
-        btn_Revenue.setBackground(new java.awt.Color(31, 31, 31));
-        btn_Revenue.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_Revenue.setForeground(new java.awt.Color(245, 251, 254));
+        
+
+        btn_Revenue.setBackground(new java.awt.Color(43, 43, 43));
+        btn_Revenue.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btn_Revenue.setForeground(new java.awt.Color(255, 169, 140));
         btn_Revenue.setText("Revenue");
         btn_Revenue.setBorder(null);
         btn_Revenue.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -301,11 +265,8 @@ public class ManageOrder extends javax.swing.JFrame {
         btn_Revenue.setMaximumSize(new java.awt.Dimension(250, 40));
         btn_Revenue.setMinimumSize(new java.awt.Dimension(250, 40));
         btn_Revenue.setPreferredSize(new java.awt.Dimension(250, 40));
-        btn_Revenue.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_RevenueActionPerformed(evt);
-            }
-        });
+        
+        
         btn_container1.add(btn_Revenue);
 
         Sidebar.add(btn_container1);
@@ -410,7 +371,7 @@ public class ManageOrder extends javax.swing.JFrame {
         title.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         title.setForeground(new java.awt.Color(255, 169, 140));
         title.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        title.setText("Manage Order");
+        title.setText("Revenue");
         title.setAlignmentX(0.5F);
         title.setMaximumSize(new java.awt.Dimension(130, 50));
         title.setMinimumSize(new java.awt.Dimension(130, 50));
@@ -427,6 +388,16 @@ public class ManageOrder extends javax.swing.JFrame {
         title_container.add(btn_Noti);
 
         Main.add(title_container);
+
+        title_container1.setBackground(new java.awt.Color(31, 31, 31));
+        title_container1.setMaximumSize(new java.awt.Dimension(1000, 700));
+        title_container1.setMinimumSize(new java.awt.Dimension(1000, 700));
+        title_container1.setPreferredSize(new java.awt.Dimension(1000, 700));
+        title_container1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 0));
+
+       
+        Main.add(title_container1);
+
 
         m2.setBackground(new java.awt.Color(31, 31, 31));
         m2.setMaximumSize(new java.awt.Dimension(1000, 5));
@@ -490,45 +461,6 @@ public class ManageOrder extends javax.swing.JFrame {
 
         Main.add(m4);
 
-        // jScrollPane1.setMaximumSize(new java.awt.Dimension(880, 400));
-        // jScrollPane1.setMinimumSize(new java.awt.Dimension(880, 400));
-        // jScrollPane1.setPreferredSize(new java.awt.Dimension(880, 400));
-
-        // MenuInfo.setBackground(new java.awt.Color(43, 43, 43));
-        // MenuInfo.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        // MenuInfo.setForeground(new java.awt.Color(245, 251, 254));
-        // MenuInfo.setModel(new javax.swing.table.DefaultTableModel(
-        //     new Object [][] {
-        //         {},
-        //         {},
-        //         {},
-        //         {}
-        //     },
-        //     new String [] {
-        //         "Menu ID", 
-        //         "Name", 
-        //         "Description", 
-        //         "Price"
-        //     }
-        // ));
-        // OrderInfo.setFocusable(false);
-        // OrderInfo.setGridColor(new java.awt.Color(31, 31, 31));
-        // OrderInfo.setMaximumSize(new java.awt.Dimension(880, 2000));
-        // OrderInfo.setMinimumSize(new java.awt.Dimension(880, 2000));
-        // OrderInfo.setPreferredSize(new java.awt.Dimension(880, 2000));
-        // OrderInfo.setRowHeight(35);
-        // OrderInfo.setSelectionBackground(new java.awt.Color(255, 169, 140));
-        // OrderInfo.setSelectionForeground(new java.awt.Color(31, 31, 31));
-        // OrderInfo.setShowGrid(true);
-        // OrderInfo.setShowVerticalLines(false);
-        // jScrollPane1.setViewportView(OrderInfo);
-
-        // Main.add(jScrollPane1);
-
-
-
-
-
 
 
 
@@ -587,8 +519,8 @@ public class ManageOrder extends javax.swing.JFrame {
     } 
 
     private void btn_OrderHisActionPerformed(java.awt.event.ActionEvent evt) {
-        dispose();
-        new VendorOrderHistoryPage().setVisible(true);    
+        // dispose();
+        // new OrderHistory().setVisible(true);                                         
     } 
     
     private void btn_CusReviewActionPerformed(java.awt.event.ActionEvent evt) {
@@ -596,10 +528,7 @@ public class ManageOrder extends javax.swing.JFrame {
         new CusReview().setVisible(true);                                        
     } 
     
-    private void btn_RevenueActionPerformed(java.awt.event.ActionEvent evt) {
-        dispose();
-        new VendorRevenue().setVisible(true);                                         
-    } 
+    
     
     private void btn_logoutActionPerformed(java.awt.event.ActionEvent evt) {
         boolean confirm = DialogBox.confirmMessage("Are you sure you want to logout?", "Logout");
@@ -661,6 +590,7 @@ public class ManageOrder extends javax.swing.JFrame {
     // private javax.swing.JTextField emailTextField;
     private javax.swing.JButton searchButton;
     private javax.swing.JButton btn_Noti;
-        // End of variables declaration       
+    private static javax.swing.JPanel title_container1;
+// End of variables declaration       
     
 }

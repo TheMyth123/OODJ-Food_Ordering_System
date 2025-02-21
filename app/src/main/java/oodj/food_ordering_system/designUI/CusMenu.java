@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 // quantity calculation error
 public class CusMenu extends javax.swing.JFrame {
@@ -490,7 +491,10 @@ private void initComponents(String vendorID) {
     itemsPanel.setBackground(new Color(31, 31, 31));
 
     try {
-        List<Menu> menuItems = OrderHandling.readMenuFile(vendorID);
+        List<Menu> menuItems = OrderHandling.readMenuFile(vendorID).stream()
+        .filter(item -> "True".equalsIgnoreCase(item.getStatus())) // ✅ Convert string to boolean properly
+        .collect(Collectors.toList());
+        
         for (Menu item : menuItems) {
             JPanel itemPanel = new JPanel();
             itemPanel.setLayout(new BorderLayout());

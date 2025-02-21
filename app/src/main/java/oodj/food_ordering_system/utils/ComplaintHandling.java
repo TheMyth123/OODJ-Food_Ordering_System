@@ -57,7 +57,6 @@ public class ComplaintHandling {
     // }
 
     public static void addNewComplaint(Complaint complaint, String customerID) {
-        System.out.println("DEBUG: addComplaint() was called");
     
         try {
             Path filePath = Paths.get(COMPLAINT);
@@ -87,7 +86,7 @@ public class ComplaintHandling {
             complaintData.put("ComplaintID", "CM" + String.format("%05d", getCMid() + 1));
             complaintData.put("CustomerID", customerID);
             complaintData.put("Messages", complaint.getMessages());
-            complaintData.put("Resolved", complaint.isResolved());
+            complaintData.put("Resolved", false); // ✅ Always set new complaints as unresolved
     
             complaintArray.put(complaintData);
             FileHandling.saveToFile(complaintArray, COMPLAINT);
@@ -156,11 +155,14 @@ public class ComplaintHandling {
                         }
                     }
                 }
+                boolean resolved = complaintData.optBoolean("Resolved", false); // ✅ Ensure boolean is read correctly
+                
     
                 Complaint complaint = new Complaint(
                     complaintData.getString("ComplaintID"),
                     complaintData.getString("CustomerID"),
-                    messages
+                    messages,
+                    resolved
                 );
                 complaints.add(complaint);
             }
@@ -188,10 +190,13 @@ public class ComplaintHandling {
                     for (int j = 0; j < messagesArray.length(); j++) {
                         messages.add(messagesArray.getString(j));
                     }
+                    boolean resolved = complaintData.getBoolean("Resolved");
+
                     return new Complaint(
                         complaintData.getString("ComplaintID"),
                         complaintData.getString("CustomerID"),
-                        messages
+                        messages,
+                        resolved
                     );
                 }
             }

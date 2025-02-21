@@ -106,7 +106,7 @@ public class ManageComplaints extends javax.swing.JFrame {
             for (int j = 0; j < messagesArray.length(); j++) {
                 messages.add(messagesArray.getString(j));
             }
-            Complaint complaint = new Complaint(complaintID, customerID, messages);
+            Complaint complaint = new Complaint(complaintID, customerID, messages, resolved);
             if (resolved) {
                 complaint.resolve();
             }

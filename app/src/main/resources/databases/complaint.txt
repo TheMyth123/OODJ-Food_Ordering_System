@@ -1,7 +1,16 @@
 [
   {
-    "Messages": ["User: 1"],
+    "Messages": [
+      "User: 1",
+      "System: This complaint has been resolved."
+    ],
     "ComplaintID": "CM00001",
+    "Resolved": true,
+    "CustomerID": "CS00001"
+  },
+  {
+    "Messages": ["User: 111"],
+    "ComplaintID": "CM00003",
     "Resolved": false,
     "CustomerID": "CS00001"
   },
@@ -13,7 +22,7 @@
   },
   {
     "Messages": ["User: 111"],
-    "ComplaintID": "CM00003",
+    "ComplaintID": "CM00004",
     "Resolved": false,
     "CustomerID": "CS00001"
   }
