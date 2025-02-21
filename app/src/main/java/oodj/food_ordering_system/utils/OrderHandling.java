@@ -1,6 +1,21 @@
 package oodj.food_ordering_system.utils;
 
-import oodj.food_ordering_system.models.Admin;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import oodj.food_ordering_system.models.Credit;
 import oodj.food_ordering_system.models.CusOrder;
 import oodj.food_ordering_system.models.Customer;
@@ -8,37 +23,7 @@ import oodj.food_ordering_system.models.Menu;
 import oodj.food_ordering_system.models.Payment;
 import oodj.food_ordering_system.models.Rating;
 import oodj.food_ordering_system.models.Rating.RatingType;
-
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import oodj.food_ordering_system.models.Credit;
-import oodj.food_ordering_system.models.CusOrder;
-import oodj.food_ordering_system.models.Customer;
-import oodj.food_ordering_system.models.Menu;
-import oodj.food_ordering_system.models.Payment;
 import oodj.food_ordering_system.models.Vendor;
-import java.util.Date;
-import java.util.List;
 
 // change to OOP
 public class OrderHandling {
@@ -533,34 +518,39 @@ public class OrderHandling {
     public static ArrayList<Rating> getRatings() {
         ArrayList<String> lines = FileHandling.readLines(RATING);
         StringBuilder jsonData = new StringBuilder();
-
+    
         for (String line : lines) {
             jsonData.append(line);
         }
-
+    
         ArrayList<Rating> ratingList = new ArrayList<>();
-
+    
         try {
             JSONArray ratingsArray = new JSONArray(jsonData.toString());
-
+    
             for (int i = 0; i < ratingsArray.length(); i++) {
                 JSONObject ratingObject = ratingsArray.getJSONObject(i);
-
+    
                 String orderID = ratingObject.getString("OrderID");
                 String customerID = ratingObject.getString("CustomerID");
+                String vendorID = ratingObject.optString("VendorID", "Unknown"); // Default value if VendorID is missing
                 int rating = ratingObject.getInt("Rating");
                 RatingType ratingType = RatingType.valueOf(ratingObject.getString("RatingType"));
                 boolean status = ratingObject.getBoolean("Status");
-
-                Rating ratingItem = new Rating(orderID, customerID, rating, ratingType, status);
+    
+                // Only add to list if VendorID is present or set to "Unknown"
+                Rating ratingItem = new Rating(orderID, customerID, vendorID, rating, ratingType, status);
                 ratingList.add(ratingItem);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+    
         return ratingList;
     }
+    
+    
+    
 
     public static String getMenuIDFromOrder(String orderID) {
         try {
@@ -643,34 +633,20 @@ public class OrderHandling {
                 System.out.println("  - Rating Value: " + rating.getRating());
                 System.out.println("  - Rating Type: " + rating.getRatingType());
     
-                // Ensure only vendor ratings are considered
-                if (rating.getRatingType() == Rating.RatingType.VENDOR) {
-                    String orderID = rating.getOrderID();
-                    String menuID = getMenuIDFromOrder(orderID);
-                    System.out.println("  - Retrieved Menu ID: " + menuID);
+                // Get MenuID from OrderID
+                String menuID = getMenuIDFromOrder(rating.getOrderID());
     
-                    if (menuID == null) {
-                        System.out.println("  ⚠️ Skipping: No menu ID found for Order ID: " + orderID);
-                        continue;
-                    }
+                // Get VendorID from MenuID
+                String linkedVendorID = getVendorIDFromMenu(menuID);
     
-                    String extractedVendorID = getVendorIDFromMenu(menuID);
-                    System.out.println("  - Extracted Vendor ID: " + extractedVendorID);
+                System.out.println("  - Linked Vendor ID: " + linkedVendorID);
     
-                    if (extractedVendorID != null && extractedVendorID.equals(vendorID)) {
-                        System.out.println("  ✅ Match Found! Adding to vendor ratings.");
-                        vendorRatings.add(new Rating(
-                            orderID,
-                            rating.getCustomerID(),
-                            rating.getRating(),
-                            rating.getRatingType(),
-                            rating.getStatus()
-                        ));
-                    } else {
-                        System.out.println("  ❌ No Match: Extracted Vendor ID does not match.");
-                    }
+                // Directly filter by Vendor ID and Active Status
+                if (linkedVendorID != null && linkedVendorID.equals(vendorID) && rating.getStatus()) {
+                    System.out.println("  ✅ Match Found! Adding to vendor ratings.");
+                    vendorRatings.add(rating);
                 } else {
-                    System.out.println("  🔹 Skipping: Not a Vendor Rating.");
+                    System.out.println("  ❌ No Match: Vendor ID does not match or rating is inactive.");
                 }
             }
         } catch (Exception e) {
@@ -680,6 +656,9 @@ public class OrderHandling {
         System.out.println("\nTotal vendor ratings found: " + vendorRatings.size());
         return vendorRatings;
     }
+    
+    
+    
     
     
     

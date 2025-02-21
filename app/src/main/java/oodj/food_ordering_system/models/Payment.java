@@ -1,8 +1,6 @@
 package oodj.food_ordering_system.models;
 
-import org.json.JSONArray;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Payment {
     private String orderID;

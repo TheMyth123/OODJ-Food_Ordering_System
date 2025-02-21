@@ -3,6 +3,7 @@ package oodj.food_ordering_system.designUI;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JFrame;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -21,46 +22,53 @@ import raven.glasspanepopup.GlassPanePopup;
 
 
 
-public class CusReview extends javax.swing.JFrame {
+public class CusReview extends JFrame {
 
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> {
-            new CusReview().setVisible(true);
-        });
-    }
+    private String vendorID; // Declare vendorID here
 
-    private String vendorID = "VD00001";
-    
     public CusReview() {
         GlassPanePopup.install(this);
         initComponents();
-
-        diaplayRatings(vendorID); 
+    
+        // Get the logged-in vendor's ID
+        vendorID = UserHandling.getLoggedInVendorID(); 
+    
+        // Check if vendorID is properly obtained
+        if (vendorID != null && !vendorID.isEmpty()) {
+            displayRatings(vendorID); 
+        } else {
+            DialogBox.errorMessage("Error: Unable to retrieve Vendor ID. Please log in again.", "Error");
+        }
     }
-
-    private void diaplayRatings(String vendorID) {
+    
+    private void displayRatings(String vendorID) {
         List<Rating> vendorRatings = OrderHandling.getVendorRatings(vendorID);
-
-        String[] columnNames = {"Order ID", "Customer ID", "Rating"};
-
+    
+        String[] columnNames = {"Order ID", "Customer ID", "Rating", "Vendor ID"};
+    
         String[][] data = new String[vendorRatings.size()][4];
         for (int i = 0; i < vendorRatings.size(); i++) {
             Rating rating = vendorRatings.get(i);
             data[i][0] = rating.getOrderID();
             data[i][1] = rating.getCustomerID();
             data[i][2] = String.valueOf(rating.getRating());
+            data[i][3] = rating.getVendorID();
         }
-
+    
         ratingTable.setModel(new DefaultTableModel(data, columnNames));
-
+    
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         ratingTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         ratingTable.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
         ratingTable.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
-
+        ratingTable.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+    
         ratingTable.getTableHeader().setReorderingAllowed(false);
-}
+    }
+    
+    
+    
 
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          

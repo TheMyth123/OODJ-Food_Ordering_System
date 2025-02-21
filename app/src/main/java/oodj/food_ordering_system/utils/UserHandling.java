@@ -1,9 +1,6 @@
 package oodj.food_ordering_system.utils;
 
 
-import static oodj.food_ordering_system.designUI.LoginPage.loginID;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.nio.file.Files;
@@ -14,15 +11,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.general.PieDataset;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import static oodj.food_ordering_system.designUI.LoginPage.loginID;
 import oodj.food_ordering_system.models.Admin;
 import oodj.food_ordering_system.models.Credit;
 import oodj.food_ordering_system.models.Customer;
-import oodj.food_ordering_system.models.Manager;
 import oodj.food_ordering_system.models.DeliveryRunner;
-import oodj.food_ordering_system.models.Vendor;
+import oodj.food_ordering_system.models.Manager;
 import oodj.food_ordering_system.models.Menu;
-import org.jfree.data.general.DefaultPieDataset;
-import org.jfree.data.general.PieDataset;
+import oodj.food_ordering_system.models.Vendor;
 
 public class UserHandling {
 
@@ -669,6 +671,15 @@ public class UserHandling {
             return null;
         }
     }
+
+    public static String getLoggedInVendorID() {
+        // Check if the user is logged in and is a vendor
+        if (loginID != null && loginID.startsWith("VD")) {
+            return loginID;
+        }
+        return null;
+    }
+    
 
     public static DeliveryRunner getDeliveryRunnerByID(String runnerID) {
         try {

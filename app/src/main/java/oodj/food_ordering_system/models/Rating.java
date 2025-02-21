@@ -3,6 +3,7 @@ package oodj.food_ordering_system.models;
 public class Rating {
     private String orderID;
     private String customerID;
+    private String vendorID; // NEW: Vendor ID for filtering
     private int rating;
     private Boolean status;
     private RatingType ratingType; // New field to categorize ratings
@@ -12,9 +13,10 @@ public class Rating {
         FOOD, VENDOR, RUNNER
     }
 
-    public Rating(String orderID, String customerID, int rating, RatingType ratingType, boolean status) {
+    public Rating(String orderID, String customerID, String vendorID, int rating, RatingType ratingType, boolean status) {
         this.orderID = orderID;
         this.customerID = customerID;
+        this.vendorID = vendorID;
         this.rating = rating;
         this.status = status;
         this.ratingType = ratingType;
@@ -36,6 +38,14 @@ public class Rating {
 
     public void setCustomerID(String customerID) {
         this.customerID = customerID;
+    }
+
+    public String getVendorID() {
+        return vendorID;
+    }
+
+    public void setVendorID(String vendorID) {
+        this.vendorID = vendorID;
     }
 
     public int getRating() {

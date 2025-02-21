@@ -100,25 +100,34 @@ public class ManageMenu extends javax.swing.JFrame {
     private static ArrayList<Menu> readMenuDetails() {
         String MENU = FileHandling.filePath.MENU_PATH.getValue();
         ArrayList<Menu> Menus = new ArrayList<>();
-
+    
+        // Get the logged-in vendor's ID
+        String loggedInVendorID = UserHandling.getLoggedInVendorID();
+    
         try {
             String jsonData = new String(Files.readAllBytes(Paths.get(MENU)));
             JSONArray menuArray = new JSONArray(jsonData);
-
+    
             for (int i = 0; i < menuArray.length(); i++) {
                 JSONObject menuData = menuArray.getJSONObject(i);
-
+    
+                // Only process menus with status "True"
                 if (menuData.getString("Status").equalsIgnoreCase("True")) {
-                        String status = menuData.getString("Status");
-                        String menuID = menuData.getString("id");
-                        String vendorID = menuData.getString("VendorID");
-                        String name = menuData.getString("name");
-                        String decription = menuData.getString("description");
-                        String price = menuData.getString("price");
-                        String image = menuData.getString("imagePath");
-
+                    String status = menuData.getString("Status");
+                    String menuID = menuData.getString("id");
+                    String vendorID = menuData.getString("VendorID");
+                    String name = menuData.getString("name");
+                    String decription = menuData.getString("description");
+                    String price = menuData.getString("price");
+                    String image = menuData.getString("imagePath");
+    
+                    // Filter by logged-in vendor's ID
+                    if (loggedInVendorID != null && vendorID.equalsIgnoreCase(loggedInVendorID.trim()) 
+                        && UserHandling.getVendorByID(vendorID) != null) {
+    
                         Menu menu = new Menu(status, menuID, vendorID, name, decription, price, image);
                         Menus.add(menu);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -126,6 +135,8 @@ public class ManageMenu extends javax.swing.JFrame {
         }
         return Menus;
     }
+    
+    
 
     private void performSearch() {
         String name = nameTextField.getText().trim();
