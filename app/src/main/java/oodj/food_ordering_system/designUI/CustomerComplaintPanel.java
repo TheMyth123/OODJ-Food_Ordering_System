@@ -121,13 +121,10 @@ public class CustomerComplaintPanel extends JPanel {
             ArrayList<Complaint> complaints = ComplaintHandling.readComplaints();
             tableModel.setRowCount(0); // Clear table before adding data
     
-            System.out.println("Loading complaints for customer: " + endUser.getID());
             for (Complaint complaint : complaints) {
-                System.out.println("Checking complaint: " + complaint.getId() + " - Resolved: " + complaint.isResolved());
     
                 if (complaint.getUser().equals(endUser.getID())) { // Display all complaints
                     String status = complaint.isResolved() ? "Resolved" : "Ongoing";
-                    System.out.println("Adding complaint to table: " + complaint.getId() + " - Status: " + status);
                     tableModel.addRow(new Object[]{complaint.getId(), status});
                 }
             }
@@ -201,7 +198,6 @@ public class CustomerComplaintPanel extends JPanel {
 
 
     private void sendComplaint() {
-        System.out.println("DEBUG: sendComplaint() was called");
     
         String message = JOptionPane.showInputDialog(this, "Enter your complaint:");
         if (message != null && !message.trim().isEmpty()) {

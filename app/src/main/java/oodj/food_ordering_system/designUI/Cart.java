@@ -103,11 +103,9 @@ public class Cart extends javax.swing.JFrame {
         model.setRowCount(0);
     
         for (CusOrder order : cart) {
-            System.out.println("DEBUG: Comparing Order CustomerID: " + order.getCustomer().getID() +
-                               " with Current User ID: " + endUser.getID());
+            
         
             if (order.getCustomer().getID().equals(endUser.getID())) {
-                System.out.println(" MATCH: Adding item to cart display: " + order.getMenuID());
                 model.addRow(new Object[]{
                     order.getMenuID(),
                     order.getQuantity(),
@@ -173,7 +171,6 @@ public class Cart extends javax.swing.JFrame {
                 JSONArray orderItems = new JSONArray();
                 selectedMenuIDs.clear(); // Clear selectedMenuIDs before adding new ones
 
-                System.out.println("DEBUG: Selected rows count: " + selectedRows.length);
         
                 for (int row : selectedRows) {
                     String menuID = tableModel.getValueAt(row, 0).toString();  // Get MenuID
@@ -192,11 +189,9 @@ public class Cart extends javax.swing.JFrame {
                     orderItems.put(orderItem);
                     selectedMenuIDs.add(menuID); // Store MenuID for reference
                     
-                    System.out.println("DEBUG: Selected MenuID: " + menuID + ", Quantity: " + quantity + ", Price: " + price);
                 }
         
-                System.out.println("DEBUG: Final Selected MenuIDs for Payment: " + selectedMenuIDs);
-                System.out.println("DEBUG: Total Amount to Pay: RM" + totalAmount);
+                
         
                 JOptionPane.showMessageDialog(null, "Total Amount: RM" + totalAmount);
         
@@ -220,18 +215,15 @@ public class Cart extends javax.swing.JFrame {
                 DefaultTableModel tableModel = (DefaultTableModel) cartTable.getModel();
                 selectedMenuIDs.clear();
 
-                System.out.println("DEBUG: Selected rows count: " + selectedRows.length);
 
                 for (int row : selectedRows) {
                     String menuID = tableModel.getValueAt(row, 0).toString();
                     selectedMenuIDs.add(menuID);
-                    System.out.println("DEBUG: Selected MenuID to remove: " + menuID);
                 }
 
                 boolean confirm = DialogBox.confirmMessage("Are you sure you want to discard item?", "Discard");
 
                 if (confirm) {
-                    System.out.println("DEBUG: Final Selected MenuIDs: " + selectedMenuIDs);
 
                     ArrayList<CusOrder> cartItems = OrderHandling.getCart();
                     System.out.println("Before update, cart has: " + cartItems.size() + " items.");
@@ -396,11 +388,9 @@ public class Cart extends javax.swing.JFrame {
                 selectedMenuIDs = new ArrayList<>(); 
             }
     
-            System.out.println("DEBUG: Final Selected MenuIDs for Removal: " + selectedMenuIDs); // Check before proceeding
     
             // ** Fix: Pass `itemsToRemove` correctly**
             ArrayList<CusOrder> cartItems = OrderHandling.getCart();      
-            System.out.println("Selected MenuIDs to remove: " + selectedMenuIDs);
 
     
             // Open payment window
@@ -417,11 +407,9 @@ public class Cart extends javax.swing.JFrame {
                 @Override
                 public void windowClosed(java.awt.event.WindowEvent e) {
                     String paymentStatus = paymentWindow.getPaymentStatus(); // Store status
-                    System.out.println("DEBUG: Payment window closed with status: " + paymentStatus);
             
                     // 🛠 Ensure only "Completed" payments clear the cart
                     if ("Completed".equals(paymentStatus) && endUser.getBalance() >= totalAmount) { 
-                        System.out.println("DEBUG: Removing selected items from cart after payment: " + selectedMenuIDs);
                         cartItems.removeIf(order -> 
                             order.getCustomer().getID().equals(endUser.getID()) && 
                             selectedMenuIDs.contains(order.getMenuID())
@@ -432,7 +420,7 @@ public class Cart extends javax.swing.JFrame {
                         // Refresh UI after payment
                         SwingUtilities.invokeLater(() -> refreshCart());
                     } else {
-                        System.out.println("DEBUG: Payment not completed or insufficient balance. No items removed from cart.");
+                        DialogBox.errorMessage("Payment not completed or insufficient balance. No items removed from cart.", "Error");
                     }
                 }
             });

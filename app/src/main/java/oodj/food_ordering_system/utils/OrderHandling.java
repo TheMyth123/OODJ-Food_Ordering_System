@@ -60,6 +60,8 @@ public class OrderHandling {
     
         return tempCount;
     }
+    
+    
 
     public static int getORid() {
         int tempCount = 0;
@@ -195,8 +197,6 @@ public class OrderHandling {
             jsonData.append(line);
         }
     
-        System.out.println(" DEBUG: Read cart file content:");
-        System.out.println(jsonData.toString()); //  Print full JSON before parsing
     
         ArrayList<CusOrder> cartItems = new ArrayList<>();
         try {
@@ -213,9 +213,7 @@ public class OrderHandling {
                 cartItems.add(new CusOrder(menuID, quantity, price, name, customer));
             }
     
-            System.out.println(" DEBUG: Parsed cart data successfully!");
         } catch (Exception e) {
-            System.err.println("❌ ERROR: Failed to parse cart JSON!");
             e.printStackTrace();
         }
     
@@ -616,20 +614,54 @@ public class OrderHandling {
     
     
 
+    // public static List<Rating> getVendorRatings(String vendorID) {
+    //     ArrayList<Rating> ratings = getRatings(); // Get all ratings
+    //     List<Rating> vendorRatings = new ArrayList<>();
+    
+    //     System.out.println("Vendor ID to search: " + vendorID);
+    //     System.out.println("Total ratings found: " + ratings.size());
+    
+    //     try {
+    //         for (Rating rating : ratings) {
+    //             System.out.println("\nProcessing Rating:");
+    //             System.out.println("  - Order ID: " + rating.getOrderID());
+    //             System.out.println("  - Customer ID: " + rating.getCustomerID());
+    //             System.out.println("  - Rating Value: " + rating.getRating());
+    //             System.out.println("  - Rating Type: " + rating.getRatingType());
+    
+    //             // Get MenuID from OrderID
+    //             String menuID = getMenuIDFromOrder(rating.getOrderID());
+    
+    //             // Get VendorID from MenuID
+    //             String linkedVendorID = getVendorIDFromMenu(menuID);
+    
+    //             System.out.println("  - Linked Vendor ID: " + linkedVendorID);
+    
+    //             // Directly filter by Vendor ID and Active Status
+    //             if (linkedVendorID != null && linkedVendorID.equals(vendorID) && rating.getStatus()) {
+    //                 vendorRatings.add(rating);
+    //             } else {
+    //                 DialogBox.reminderMessage("No ratings for this vendor", "Reminder");
+    //             }
+    //         }
+        
+    //      catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
+    
+    //     System.out.println("\nTotal vendor ratings found: " + vendorRatings.size());
+    //     return vendorRatings;
+    // }
+
     public static List<Rating> getVendorRatings(String vendorID) {
         ArrayList<Rating> ratings = getRatings(); // Get all ratings
         List<Rating> vendorRatings = new ArrayList<>();
     
-        System.out.println("Vendor ID to search: " + vendorID);
-        System.out.println("Total ratings found: " + ratings.size());
+        
     
         try {
             for (Rating rating : ratings) {
-                System.out.println("\nProcessing Rating:");
-                System.out.println("  - Order ID: " + rating.getOrderID());
-                System.out.println("  - Customer ID: " + rating.getCustomerID());
-                System.out.println("  - Rating Value: " + rating.getRating());
-                System.out.println("  - Rating Type: " + rating.getRatingType());
+                
     
                 // Get MenuID from OrderID
                 String menuID = getMenuIDFromOrder(rating.getOrderID());
@@ -639,21 +671,22 @@ public class OrderHandling {
     
                 System.out.println("  - Linked Vendor ID: " + linkedVendorID);
     
-                // Directly filter by Vendor ID and Active Status
-                if (linkedVendorID != null && linkedVendorID.equals(vendorID) && rating.getStatus()) {
-                    System.out.println("   Match Found! Adding to vendor ratings.");
+                if (linkedVendorID != null && linkedVendorID.equals(vendorID) && Boolean.TRUE.equals(rating.getStatus())) {
                     vendorRatings.add(rating);
-                } else {
-                    System.out.println("  ❌ No Match: Vendor ID does not match or rating is inactive.");
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     
-        System.out.println("\nTotal vendor ratings found: " + vendorRatings.size());
+        //  Show a message only if there are no ratings
+        if (vendorRatings.isEmpty()) {
+            DialogBox.reminderMessage("No ratings for this vendor", "Reminder");
+        }
+    
         return vendorRatings;
     }
+    
     
     
     
@@ -786,7 +819,6 @@ public class OrderHandling {
         try {
             //  Read JSON file (ensure UTF-8 encoding)
             String jsonData = new String(Files.readAllBytes(Paths.get(PAYMENT)), StandardCharsets.UTF_8);
-            System.out.println("DEBUG: JSON Data Read Successfully");
     
             //  Parse JSON array
             JSONArray paymentArray = new JSONArray(jsonData);
@@ -796,7 +828,6 @@ public class OrderHandling {
                 JSONObject paymentData = paymentArray.getJSONObject(i);
     
                 if (paymentData.getString("OrderID").equals(orderID)) {
-                    System.out.println("DEBUG: Found matching Order ID: " + orderID);
     
                     //  Extract payment details
                     String customerID = paymentData.getString("CustomerID");
@@ -819,13 +850,10 @@ public class OrderHandling {
                     for (int j = 0; j < orderItemsArray.length(); j++) {
                         JSONObject jsonItem = orderItemsArray.getJSONObject(j);
     
-                        //  Print full JSON item to debug
-                        System.out.println("DEBUG: Full JSON Object -> " + jsonItem.toString());
-                        System.out.println("DEBUG: Order Item Keys -> " + jsonItem.keySet());
+                        
     
                         //  Ensure 'menuID' exists
                         if (!jsonItem.has("menuID")) {
-                            System.err.println("ERROR: 'menuID' missing for an item in order: " + orderID);
                             continue;
                         }
     
@@ -836,11 +864,7 @@ public class OrderHandling {
     
                         //  Fetch item name using menuID
                         String itemName = getFoodNameByMenuID(menuID);
-                        // if (itemName == null || itemName.isEmpty()) {
-                        //     itemName = "Unknown Item"; // Default name if not found
-                        //     System.err.println("WARNING: Menu item not found for menuID: " + menuID);
-                        // }
-    
+                        
                         //  Retrieve Customer object using customerID
                         Customer customer = UserHandling.getCustomerByID(customerID);
     
@@ -854,12 +878,12 @@ public class OrderHandling {
                 }
             }
     
-            // ❌ If no matching order is found
+            //  If no matching order is found
             System.err.println("ERROR: Order with ID " + orderID + " not found.");
             return null;
     
         } catch (Exception e) {
-            // ❌ Handle any file reading or JSON parsing errors
+            //  Handle any file reading or JSON parsing errors
             System.err.println("ERROR: Failed to read/parse payment JSON file: " + e.getMessage());
             return null;
         }

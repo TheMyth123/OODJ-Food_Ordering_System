@@ -533,6 +533,7 @@ public class CusWallet extends javax.swing.JFrame {
 
         topUpPanel.add(topUpHeaderPanel, BorderLayout.NORTH);
         topUpPanel.add(topUpScrollPane, BorderLayout.CENTER);
+        topUpPanel.add(downloadPanel, BorderLayout.SOUTH);
 
         // **Panel for Transactions**
         JPanel transactionPanel = new JPanel(new BorderLayout());
@@ -566,6 +567,7 @@ public class CusWallet extends javax.swing.JFrame {
         // **Add Panels to Main Wallet Panel**
         wallet.add(topUpPanel, BorderLayout.WEST);
         wallet.add(transactionPanel, BorderLayout.EAST);
+        
 
 
 

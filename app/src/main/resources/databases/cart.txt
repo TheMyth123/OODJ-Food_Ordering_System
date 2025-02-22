@@ -1,7 +1,7 @@
 [
   {
     "MenuID": "MN00003",
-    "quantity": 4,
+    "quantity": 3,
     "price": 20,
     "name": "Truffle Risotto",
     "CustomerID": "CS00001"
@@ -15,7 +15,7 @@
   },
   {
     "MenuID": "MN00001",
-    "quantity": 7,
+    "quantity": 8,
     "price": 25,
     "name": "Seared Salmon",
     "CustomerID": "CS00001"

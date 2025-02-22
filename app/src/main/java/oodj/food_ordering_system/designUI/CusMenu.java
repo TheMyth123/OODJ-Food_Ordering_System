@@ -365,13 +365,10 @@ private void initComponents(String vendorID) {
 
 
             String imagePath = OrderHandling.getImagePathByMenuID(item.getId());
-            System.out.println("Full Image Path: " + imagePath);
 
             if (imagePath != null) {
                 URL imageUrl = getClass().getResource(imagePath);
-                if (imageUrl == null) {
-                    System.out.println("❌ Image not found in resources: " + imagePath);
-                } else {
+                if (imageUrl != null) {
                     ImageIcon originalIcon = new ImageIcon(imageUrl);
                     Image originalImage = originalIcon.getImage();
                     Image resizedImage = originalImage.getScaledInstance(120, 90, Image.SCALE_SMOOTH);

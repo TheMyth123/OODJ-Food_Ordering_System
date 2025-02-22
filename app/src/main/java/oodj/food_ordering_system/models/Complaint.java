@@ -49,7 +49,6 @@ public class Complaint {
     }
 
     public boolean isResolved() {
-        System.out.println("isResolved() called for complaint: " + this.id + " -> " + this.resolved); //Debugging
         return this.resolved;
     }
     
