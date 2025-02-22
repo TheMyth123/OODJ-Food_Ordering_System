@@ -27,12 +27,10 @@ import oodj.food_ordering_system.models.Rating;
 import oodj.food_ordering_system.models.Rating.RatingType;
 import oodj.food_ordering_system.models.Vendor;
 
-// change to OOP
 public class OrderHandling {
     
     private static final String MENU = FileHandling.filePath.MENU_PATH.getValue();
     private static final String CART = FileHandling.filePath.CART_PATH.getValue();
-    // private static final String CREDIT = FileHandling.filePath.CREDIT_PATH.getValue();
     private static final String PAYMENT = FileHandling.filePath.PAYMENT_PATH.getValue();
     public static final String RECEIPT_FOLDER = "app/src/main/resources/receipts/";
     private static final String TOPUP = FileHandling.filePath.TOPUP_PATH.getValue();
@@ -86,7 +84,6 @@ public class OrderHandling {
         return tempCount;
     }
 
-// USE OOP
     public static String getImagePathByMenuID(String menuID) {
         try {
             // Read JSON file content
@@ -236,7 +233,6 @@ public class OrderHandling {
     }
     
 
-//  need OOP
     public static void saveCart(ArrayList<CusOrder> cartItems) {
         JSONArray cartArray = new JSONArray();
 
@@ -266,15 +262,7 @@ public class OrderHandling {
     
         JSONArray cartArray = new JSONArray();
     
-        // for (CusOrder order : allCartItems) {
-            //  Compare order's customer ID with the given `customerID`
-            // if (!customerID.equals(order.getCustomer().getID())) {
-            //     continue;
-            // } else if (itemsToRemove.contains(order.getMenuID())) {
-            //     continue; // Skip adding this item
-            // } else {
-            //     System.out.println("Keeping item for current customer: " + order.getMenuID());
-            // }
+        
         for (CusOrder order : allCartItems) {
             // Compare order's customer ID with the given `customerID`
             if (!customerID.equals(order.getCustomer().getID())) {
@@ -606,11 +594,9 @@ public class OrderHandling {
                 //  Cast the object correctly instead of creating a new JSONObject
                 JSONObject menuItem = (JSONObject) obj;
     
-                //  Debugging statement to check what is inside menuItem
-                System.out.println("Checking menu item: " + menuItem.toString());
+                
     
                 if (menuItem.has("id") && menuItem.getString("id").equals(menuID)) {
-                    System.out.println(" Found Vendor ID: " + menuItem.getString("VendorID"));
                     return menuItem.getString("VendorID");
                 }
             }
@@ -621,45 +607,6 @@ public class OrderHandling {
     }
     
     
-
-    // public static List<Rating> getVendorRatings(String vendorID) {
-    //     ArrayList<Rating> ratings = getRatings(); // Get all ratings
-    //     List<Rating> vendorRatings = new ArrayList<>();
-    
-    //     System.out.println("Vendor ID to search: " + vendorID);
-    //     System.out.println("Total ratings found: " + ratings.size());
-    
-    //     try {
-    //         for (Rating rating : ratings) {
-    //             System.out.println("\nProcessing Rating:");
-    //             System.out.println("  - Order ID: " + rating.getOrderID());
-    //             System.out.println("  - Customer ID: " + rating.getCustomerID());
-    //             System.out.println("  - Rating Value: " + rating.getRating());
-    //             System.out.println("  - Rating Type: " + rating.getRatingType());
-    
-    //             // Get MenuID from OrderID
-    //             String menuID = getMenuIDFromOrder(rating.getOrderID());
-    
-    //             // Get VendorID from MenuID
-    //             String linkedVendorID = getVendorIDFromMenu(menuID);
-    
-    //             System.out.println("  - Linked Vendor ID: " + linkedVendorID);
-    
-    //             // Directly filter by Vendor ID and Active Status
-    //             if (linkedVendorID != null && linkedVendorID.equals(vendorID) && rating.getStatus()) {
-    //                 vendorRatings.add(rating);
-    //             } else {
-    //                 DialogBox.reminderMessage("No ratings for this vendor", "Reminder");
-    //             }
-    //         }
-        
-    //      catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-    
-    //     System.out.println("\nTotal vendor ratings found: " + vendorRatings.size());
-    //     return vendorRatings;
-    // }
 
     public static List<Rating> getVendorRatings(String vendorID) {
         ArrayList<Rating> ratings = getRatings(); // Get all ratings
@@ -677,7 +624,6 @@ public class OrderHandling {
                 // Get VendorID from MenuID
                 String linkedVendorID = getVendorIDFromMenu(menuID);
     
-                System.out.println("  - Linked Vendor ID: " + linkedVendorID);
     
                 if (linkedVendorID != null && linkedVendorID.equals(vendorID) && Boolean.TRUE.equals(rating.getStatus())) {
                     vendorRatings.add(rating);
@@ -687,10 +633,6 @@ public class OrderHandling {
             e.printStackTrace();
         }
     
-        //  Show a message only if there are no ratings
-        if (vendorRatings.isEmpty()) {
-            DialogBox.reminderMessage("No ratings for this vendor", "Reminder");
-        }
     
         return vendorRatings;
     }
@@ -1012,7 +954,6 @@ public static void AcceptOrderStatus(String orderID) {
                         }
     
                         String menuID = jsonItem.optString("menuID", "").trim();
-                        System.out.println("DEBUG: Extracted menuID -> [" + menuID + "] Length: " + menuID.length());
                         int quantity = jsonItem.getInt("quantity");
                         double price = jsonItem.getDouble("price");
     

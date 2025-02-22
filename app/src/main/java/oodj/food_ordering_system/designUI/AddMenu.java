@@ -23,11 +23,7 @@ import oodj.food_ordering_system.utils.validation;
 
 public class AddMenu extends javax.swing.JFrame {
 
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> {
-            new AddMenu(parent).setVisible(true);
-            });
-        }
+    
     
     private static ManageMenu parent;
 

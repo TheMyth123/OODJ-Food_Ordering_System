@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "MenuID": "MN00003",
+    "quantity": 1,
+    "price": 20,
+    "name": "Truffle Risotto",
+    "CustomerID": "CS00001"
+  },
+  {
+    "MenuID": "MN00001",
+    "quantity": 1,
+    "price": 25,
+    "name": "Seared Salmon",
+    "CustomerID": "CS00001"
+  }
+]

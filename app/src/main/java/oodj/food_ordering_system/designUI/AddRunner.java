@@ -25,11 +25,6 @@ import oodj.food_ordering_system.utils.validation;
 
 public class AddRunner extends javax.swing.JFrame {
     
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> {
-            new AddRunner().setVisible(true);
-        });
-    }
 
     private String formattedDate;
     private ManageRunner parent;

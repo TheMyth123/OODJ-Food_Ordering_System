@@ -29,11 +29,7 @@ public class ManageOrder extends javax.swing.JFrame {
 
     private Vendor endUserVD;
 
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> {
-            new ManageOrder().setVisible(true);
-        });
-    }
+    
 
     public static ArrayList<Order> allOrders = readOrderDetails();
 
