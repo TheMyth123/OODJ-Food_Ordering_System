@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import oodj.food_ordering_system.models.Credit;
@@ -191,6 +192,93 @@ public class OrderHandling {
 
    
 
+    // public static ArrayList<CusOrder> getCart() {
+    //     ArrayList<String> lines = FileHandling.readLines(CART);
+    //     StringBuilder jsonData = new StringBuilder();
+    
+    //     for (String line : lines) {
+    //         jsonData.append(line);
+    //     }
+    
+    //     ArrayList<CusOrder> cartItems = new ArrayList<>();
+    //     try {
+    //         JSONArray cartArray = new JSONArray(jsonData.toString());
+    //         for (int i = 0; i < cartArray.length(); i++) {
+    //             JSONObject item = cartArray.getJSONObject(i);
+    //             String menuID = item.getString("MenuID");
+    //             int quantity = item.getInt("quantity");
+    //             double price = 0.0;
+    //             if (item.get("price") instanceof String) {
+    //                 price = Double.parseDouble(item.getString("price").replace("RM", ""));
+    //             } else {
+    //                 price = item.getDouble("price");
+    //             }
+    //             String name = item.getString("name");
+
+    //             String customerID = item.getString("CustomerID"); // Retrieve CustomerID as a string
+
+    //         // Retrieve the Customer object using customerID
+    //             Customer customer = UserHandling.getCustomerByID(customerID);
+    //             // Retrieve the Customer object using the customerID string
+    
+    //             CusOrder order = new CusOrder(menuID, quantity, price, name, customer);
+    //             cartItems.add(order);
+    //         }
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
+    
+    //     return cartItems;
+    // }
+
+    // public static ArrayList<CusOrder> getCart() {
+    //     ArrayList<String> lines = FileHandling.readLines(CART);
+    //     StringBuilder jsonData = new StringBuilder();
+
+    //     for (String line : lines) {
+    //         jsonData.append(line);
+    //     }
+
+    //     ArrayList<CusOrder> cartItems = new ArrayList<>();
+    //     try {
+    //         JSONArray cartArray = new JSONArray(jsonData.toString());
+    //         for (int i = 0; i < cartArray.length(); i++) {
+    //             JSONObject item = cartArray.getJSONObject(i);
+
+    //             // ✅ Validate required fields before proceeding
+    //             if (!item.has("CustomerID") || !item.has("MenuID") || !item.has("quantity") || !item.has("price") || !item.has("name")) {
+    //                 throw new JSONException("Missing required field in cart item at index " + i);
+    //             }
+
+    //             String menuID = item.getString("MenuID");
+    //             int quantity = item.getInt("quantity");
+
+    //             double price = 0.0;
+    //             if (item.get("price") instanceof String) {
+    //                 price = Double.parseDouble(item.getString("price").replace("RM", ""));
+    //             } else {
+    //                 price = item.getDouble("price");
+    //             }
+
+    //             String name = item.getString("name");
+    //             String customerID = item.getString("CustomerID"); // ✅ Must exist
+
+    //             // ✅ Retrieve Customer object
+    //             Customer customer = UserHandling.getCustomerByID(customerID);
+
+    //             CusOrder order = new CusOrder(menuID, quantity, price, name, customer);
+    //             cartItems.add(order);
+    //         }
+    //     } catch (JSONException e) {
+    //         System.err.println("❌ ERROR: Invalid cart data - " + e.getMessage());
+    //         e.printStackTrace();
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
+
+    //     return cartItems;
+    // }
+
     public static ArrayList<CusOrder> getCart() {
         ArrayList<String> lines = FileHandling.readLines(CART);
         StringBuilder jsonData = new StringBuilder();
@@ -199,6 +287,9 @@ public class OrderHandling {
             jsonData.append(line);
         }
     
+        System.out.println("✅ DEBUG: Read cart file content:");
+        System.out.println(jsonData.toString()); // ✅ Print full JSON before parsing
+    
         ArrayList<CusOrder> cartItems = new ArrayList<>();
         try {
             JSONArray cartArray = new JSONArray(jsonData.toString());
@@ -206,29 +297,24 @@ public class OrderHandling {
                 JSONObject item = cartArray.getJSONObject(i);
                 String menuID = item.getString("MenuID");
                 int quantity = item.getInt("quantity");
-                double price = 0.0;
-                if (item.get("price") instanceof String) {
-                    price = Double.parseDouble(item.getString("price").replace("RM", ""));
-                } else {
-                    price = item.getDouble("price");
-                }
+                double price = item.optDouble("price", 0.0); // ✅ Use `optDouble` to avoid errors
                 String name = item.getString("name");
-
-                String customerID = item.getString("CustomerID"); // Retrieve CustomerID as a string
-
-            // Retrieve the Customer object using customerID
-                Customer customer = UserHandling.getCustomerByID(customerID);
-                // Retrieve the Customer object using the customerID string
+                String customerID = item.getString("CustomerID"); // ✅ Ensure this exists
     
-                CusOrder order = new CusOrder(menuID, quantity, price, name, customer);
-                cartItems.add(order);
+                Customer customer = UserHandling.getCustomerByID(customerID);
+                cartItems.add(new CusOrder(menuID, quantity, price, name, customer));
             }
+    
+            System.out.println("✅ DEBUG: Parsed cart data successfully!");
         } catch (Exception e) {
+            System.err.println("❌ ERROR: Failed to parse cart JSON!");
             e.printStackTrace();
         }
     
         return cartItems;
     }
+    
+
 
     public static CusOrder getFoodByID(String menuID) {
         ArrayList<CusOrder> cartItems = getCart(); // Get the full cart list

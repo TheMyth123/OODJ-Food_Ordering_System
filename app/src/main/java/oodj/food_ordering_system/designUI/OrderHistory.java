@@ -285,7 +285,7 @@ public class OrderHistory extends javax.swing.JFrame {
              int selectedRow = historyTable.getSelectedRow();
              if (selectedRow != -1) {
                  String selectedOrderID = model.getValueAt(selectedRow, 0).toString();
-                 reorderItems(selectedOrderID);
+                 reorderItems(selectedOrderID, endUser.getID());
              } else {
                  JOptionPane.showMessageDialog(null, "Please select an order to reorder.");
              }
@@ -353,7 +353,7 @@ public class OrderHistory extends javax.swing.JFrame {
     }
 
 
-    private void reorderItems(String orderID) {
+    private void reorderItems(String orderID, String endUser) {
         Payment payment = OrderHandling.getPaymentByID(orderID);
         if (payment == null) {
             JOptionPane.showMessageDialog(null, "Order not found!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -374,8 +374,8 @@ public class OrderHistory extends javax.swing.JFrame {
                 boolean itemExists = false;
     
                 for (CusOrder cartItem : cartItems) {
-                    if (cartItem.getMenuID().equals(newItem.getMenuID())) {
-                        // ✅ Update quantity instead of adding a new row
+                    if (cartItem.getMenuID().equals(newItem.getMenuID()) &&
+                        cartItem.getCustomer().getID().equals(endUser)) {  // ✅ Check Customer ID
                         cartItem.setQuantity(cartItem.getQuantity() + newItem.getQuantity());
                         itemExists = true;
                         break;
@@ -389,9 +389,12 @@ public class OrderHistory extends javax.swing.JFrame {
                     ));
                 }
             }
+
     
             // ✅ Step 4: Save updated cart
             OrderHandling.saveCart(cartItems);
+            System.out.println("✅ SUCCESS: Cart updated with Order ID: " + orderID + " and Customer ID: " + endUser);
+
     
             // ✅ Step 5: Show success message
             JOptionPane.showMessageDialog(null, "Items added to cart successfully!", "Reorder Success", JOptionPane.INFORMATION_MESSAGE);
@@ -399,6 +402,76 @@ public class OrderHistory extends javax.swing.JFrame {
             // ✅ Step 6: Refresh Cart Page (if needed)
             // goToCartPage();
         }
+
+    // private void reorderItems(String orderID, Customer endUser) {
+    //     if (endUser == null) {
+    //         JOptionPane.showMessageDialog(null, "Error: User not logged in!", "Error", JOptionPane.ERROR_MESSAGE);
+    //         return;
+    //     }
+    
+    //     Payment payment = OrderHandling.getPaymentByID(orderID);
+    //     if (payment == null) {
+    //         JOptionPane.showMessageDialog(null, "Order not found!", "Error", JOptionPane.ERROR_MESSAGE);
+    //         return;
+    //     }
+    
+    //     int confirm = JOptionPane.showConfirmDialog(
+    //         null, "Do you want to reorder this order?", "Reorder Confirmation",
+    //         JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE
+    //     );
+    
+    //     if (confirm == JOptionPane.YES_OPTION) {
+    //         // ✅ Get logged-in user's CustomerID
+    //         String loggedInCustomerID = endUser.getID();
+    
+    //         // ✅ Get current cart
+    //         ArrayList<CusOrder> cartItems = OrderHandling.getCart();
+    
+    //         // ✅ Process each order item
+    //         for (CusOrder newItem : payment.getOrderItems()) {
+    //             boolean itemExists = false;
+    
+    //             for (CusOrder cartItem : cartItems) {
+    //                 if (cartItem.getMenuID().equals(newItem.getMenuID()) &&
+    //                     cartItem.getCustomer().getID().equals(loggedInCustomerID)) {
+                        
+    //                     // ✅ Update quantity and ensure correct CustomerID & OrderID
+    //                     cartItem.setQuantity(cartItem.getQuantity() + newItem.getQuantity());
+    //                     cartItem.setCustomer(new Customer(loggedInCustomerID)); // ✅ Assign correct CustomerID
+    //                     cartItem.setOrderID(orderID); // ✅ Ensure correct OrderID
+    //                     itemExists = true;
+    //                     break;
+    //                 }
+    //             }
+    
+    //             // ✅ If item does not exist, add it with correct OrderID & CustomerID
+    //             if (!itemExists) {
+    //                 CusOrder newOrder = new CusOrder(
+    //                     newItem.getMenuID(),
+    //                     newItem.getQuantity(),
+    //                     newItem.getPrice(),
+    //                     newItem.getName(),
+    //                     new Customer(loggedInCustomerID) // ✅ Assign correct CustomerID
+    //                 );
+    //                 newOrder.setOrderID(orderID); // ✅ Assign correct OrderID
+    //                 cartItems.add(newOrder);
+    //             }
+    //         }
+    
+    //         // ✅ Save updated cart
+    //         OrderHandling.saveCart(cartItems);
+    
+    //         // ✅ Debugging Output
+    //         System.out.println("✅ SUCCESS: Cart updated with Order ID: " + orderID + " and Customer ID: " + loggedInCustomerID);
+    
+    //         // ✅ Show success message
+    //         JOptionPane.showMessageDialog(null, "Items added to cart successfully!", "Reorder Success", JOptionPane.INFORMATION_MESSAGE);
+    //     }
+    // }
+    
+    
+    
+    
     }
 
 

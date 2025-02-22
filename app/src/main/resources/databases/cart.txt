@@ -8,14 +8,14 @@
   },
   {
     "MenuID": "MN00001",
-    "quantity": 27,
+    "quantity": 35,
     "price": 25,
     "name": "Seared Salmon",
     "CustomerID": "CS00004"
   },
   {
     "MenuID": "MN00001",
-    "quantity": 3,
+    "quantity": 7,
     "price": 25,
     "name": "Seared Salmon",
     "CustomerID": "CS00001"
