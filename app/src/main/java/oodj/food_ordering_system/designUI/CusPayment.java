@@ -307,8 +307,7 @@ public class CusPayment extends javax.swing.JFrame {
         try {
             double customerBalance = endUser.getBalance();
     
-            System.out.println("Available credit: " + customerBalance);
-            System.out.println("Total amount: " + totalAmount);
+            
     
             // Check if the customer has enough balance
             if (customerBalance >= totalAmount) {
@@ -329,14 +328,15 @@ public class CusPayment extends javax.swing.JFrame {
     
                 // Generate OrderID
                 String orderID = "OR" + String.format("%05d", OrderHandling.getORid() + 1);
+                JOptionPane.showMessageDialog(this, "Payment successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                String status = "Pending";
     
                 // Call savePayment to save the payment details
-                OrderHandling.savePayment(orderID, endUser.getID(), orderItems, totalAmount, "Completed", serviceType, address, "Pending");
+                OrderHandling.savePayment(status, orderID, endUser.getID(), orderItems, totalAmount, "Completed", serviceType, address, "Pending");
     
                 paymentWindow.setPaymentStatus("Completed");
 
     
-                JOptionPane.showMessageDialog(this, "Payment successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
 
                 dispose(); // Close the payment page
     

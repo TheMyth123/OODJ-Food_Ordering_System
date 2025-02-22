@@ -78,7 +78,7 @@ public class CustomerProfile extends javax.swing.JFrame {
             customer.setPassword(updatedPassword);
             customer.setEmail(updatedEmail);
             customer.setAddress(updatedAddress);
-            // UserHandling.UpdateCustomer(customer.getID(), updatedContactNumber, updatedPassword, updatedEmail, updatedAddress);
+            UserHandling.UpdateCustomer(customer.getID(), updatedContactNumber, updatedPassword, updatedEmail, updatedAddress);
             
             PasswordField.setText(updatedPassword);
 
@@ -892,12 +892,23 @@ public class CustomerProfile extends javax.swing.JFrame {
             contactNumberTextField.setEnabled(true);
             contactNumberTextField.getCaret().setVisible(true);
             contactNumberTextField.setEditable(true);
+// I want email and address to be editable too
+            emailTextField1.setEnabled(true);
+            emailTextField1.getCaret().setVisible(true);
+            emailTextField1.setEditable(true);
+            addressTextField2.setEnabled(true);
+            addressTextField2.getCaret().setVisible(true);
+            addressTextField2.setEditable(true);
 
             jTextField1.setText(new String(PasswordField.getPassword()));
             jTextField1.setVisible(true);
             jTextField1.setEnabled(true);
             jTextField1.getCaret().setVisible(true);
             jTextField1.setEditable(true);
+            PasswordField.setEnabled(true);
+            PasswordField.getCaret().setVisible(true);
+            PasswordField.setEditable(true);
+            
 
             PasswordField.setVisible(false);
 

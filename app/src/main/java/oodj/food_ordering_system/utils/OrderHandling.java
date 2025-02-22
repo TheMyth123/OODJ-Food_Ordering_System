@@ -383,7 +383,7 @@ public class OrderHandling {
     }
 
 
-    public static void savePayment(String orderID, String customerID, JSONArray orderItems, 
+    public static void savePayment(String status, String orderID, String customerID, JSONArray orderItems, 
         double totalAmount, String paymentStatus, String serviceType, 
         String deliveryAddress, String orderStatus) {
         JSONArray paymentsArray = new JSONArray();
@@ -399,6 +399,7 @@ public class OrderHandling {
 
         // Create new payment record
         JSONObject paymentData = new JSONObject();
+        paymentData.put("Status", status); 
         paymentData.put("OrderID", orderID);
         paymentData.put("CustomerID", customerID);
         paymentData.put("ServiceType", serviceType); // Corrected order
@@ -566,7 +567,6 @@ public class OrderHandling {
                 if (payment.getString("OrderID").equals(orderID)) {
                     //  Check if "OrderItems" array exists
                     if (!payment.has("OrderItems")) {
-                        System.out.println("⚠️ Warning: No 'OrderItems' found for Order ID: " + orderID);
                         return null;
                     }
     
@@ -577,13 +577,13 @@ public class OrderHandling {
                         JSONObject firstItem = orderItems.getJSONObject(0);
     
                         if (!firstItem.has("menuID")) {
-                            System.out.println("⚠️ Warning: No 'menuID' found in OrderItems for Order ID: " + orderID);
+                            System.out.println(" Warning: No 'menuID' found in OrderItems for Order ID: " + orderID);
                             return null;
                         }
     
                         return firstItem.getString("menuID"); //  Extract and return menuID
                     } else {
-                        System.out.println("⚠️ Warning: 'OrderItems' is empty for Order ID: " + orderID);
+                        System.out.println(" Warning: 'OrderItems' is empty for Order ID: " + orderID);
                     }
                 }
             }

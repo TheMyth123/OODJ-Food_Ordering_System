@@ -316,7 +316,7 @@ public class Cart extends javax.swing.JFrame {
     
                     refreshCart();
                 } else {
-                    System.out.println("⚠️ Item not found in cart for update.");
+                    System.out.println(" Item not found in cart for update.");
                 }
     
             } catch (NumberFormatException e) {

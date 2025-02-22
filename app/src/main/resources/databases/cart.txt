@@ -1,7 +1,1 @@
-[{
-  "MenuID": "MN00002",
-  "quantity": 4,
-  "price": 35,
-  "name": "Filet Mignon",
-  "CustomerID": "CS00001"
-}]
+[]

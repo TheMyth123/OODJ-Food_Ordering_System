@@ -543,5 +543,38 @@
     "OrderID": "OR00033",
     "PaymentStatus": "Completed",
     "Date": "2025-02-15"
+  },
+  {
+    "OrderStatus": "Pending",
+    "OrderItems": [{
+      "quantity": 1,
+      "totalPrice": 35,
+      "price": 35,
+      "menuID": "MN00002"
+    }],
+    "ServiceType": "Dine In",
+    "DeliveryAddress": "1, Jalan 1",
+    "CustomerID": "CS00001",
+    "TotalAmount": 35,
+    "OrderID": "OR00035",
+    "PaymentStatus": "Completed",
+    "Date": "2025-02-22"
+  },
+  {
+    "Status": "Pending",
+    "OrderStatus": "Pending",
+    "OrderItems": [{
+      "quantity": 1,
+      "totalPrice": 25,
+      "price": 25,
+      "menuID": "MN00001"
+    }],
+    "ServiceType": "Dine In",
+    "DeliveryAddress": "1, Jalan 1",
+    "CustomerID": "CS00001",
+    "TotalAmount": 25,
+    "OrderID": "OR00035",
+    "PaymentStatus": "Completed",
+    "Date": "2025-02-22"
   }
 ]

@@ -122,7 +122,6 @@ public class ComplaintHandling {
     
         //  Check if file is empty and prevent JSON parsing errors
         if (jsonData.isEmpty() || jsonData.equals("[]")) {
-            System.out.println("Warning: Complaint JSON file is empty.");
             return complaints; // Return empty list instead of trying to parse
         }
     
