@@ -2,12 +2,6 @@ package oodj.food_ordering_system.designUI;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -20,11 +14,7 @@ import javax.swing.JComboBox;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import oodj.food_ordering_system.models.Credit;
-import oodj.food_ordering_system.models.CusOrder;
 import oodj.food_ordering_system.models.Customer;
-import oodj.food_ordering_system.utils.FileHandling;
 import oodj.food_ordering_system.utils.OrderHandling;
 import oodj.food_ordering_system.utils.UserHandling;
 
@@ -361,17 +351,7 @@ public class CusPayment extends javax.swing.JFrame {
 
     
 
-    // private void payButtonActionPerformed(java.awt.event.ActionEvent evt) {                                          
-    //     String selectedAddress = addressComboBox.getSelectedItem().toString();
-    //     if (selectedAddress.equals("Other")) {
-    //         selectedAddress = addressField.getText().trim();
-    //         if (selectedAddress.isEmpty()) {
-    //             JOptionPane.showMessageDialog(this, "Please enter a valid address.", "Invalid Address", JOptionPane.ERROR_MESSAGE);
-    //             return;
-    //         }
-    //     }
-    //     processPayment(selectedAddress, orderItems, serviceType, totalAmount);
-    // }
+    
 
     private void payButtonActionPerformed(java.awt.event.ActionEvent evt) {                                          
         String selectedAddress = addressComboBox.getSelectedItem().toString();
@@ -408,15 +388,7 @@ public class CusPayment extends javax.swing.JFrame {
     }
     
 
-    // private static String getFoodNameFromMenu(JSONArray menuItems, String menuID) {
-    //     for (int j = 0; j < menuItems.length(); j++) {
-    //         JSONObject menuItem = menuItems.getJSONObject(j);
-    //         if (menuItem.getString("menuID").equals(menuID)) {
-    //             return menuItem.getString("foodName");
-    //         }
-    //     }
-    //     return "Unknown Item";  // Default if menuID is not found
-    // }
+    
     
     private void handleAddressSelection() {
         if (addressComboBox.getSelectedItem().equals("Other")) {

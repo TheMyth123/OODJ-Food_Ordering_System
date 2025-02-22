@@ -4,7 +4,6 @@ import oodj.food_ordering_system.models.Notification;
 
 import javax.swing.*;
 
-import static oodj.food_ordering_system.designUI.LoginPage.loginID;
 
 import java.awt.*;
 import java.io.File;

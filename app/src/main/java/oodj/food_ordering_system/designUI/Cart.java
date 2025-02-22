@@ -4,39 +4,21 @@ package oodj.food_ordering_system.designUI;
 import oodj.food_ordering_system.models.Credit;
 import oodj.food_ordering_system.models.CusOrder;
 import oodj.food_ordering_system.models.Customer;
-import oodj.food_ordering_system.models.Notification;
 import oodj.food_ordering_system.utils.DialogBox;
-import oodj.food_ordering_system.utils.FileHandling;
-import oodj.food_ordering_system.utils.NotificationUtils;
 import oodj.food_ordering_system.utils.OrderHandling;
-import oodj.food_ordering_system.utils.UserHandling;
-import raven.glasspanepopup.*;
 
-// import static oodj.food_ordering_system.designUI.LoginPage.loginID;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
+
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.DefaultListSelectionModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -53,19 +35,13 @@ import javax.swing.table.TableRowSorter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import net.miginfocom.layout.ComponentWrapper;
-import net.miginfocom.layout.LayoutCallback;
-// TODO design have done yet, discard items will affect the cart.txt json format
-// set on more can choose which food to pay
-// TODO make the table refresh
-// need to add refresh page
+
 public class Cart extends javax.swing.JFrame {
 
     private Customer endUser;
     private JTable cartTable;
     private ArrayList<String> selectedMenuIDs = new ArrayList<>(); // Ensure it's always initialized
 
-// make the cart refresh after i finish payment
 
 
     public Cart(Customer endUser) {
@@ -73,7 +49,6 @@ public class Cart extends javax.swing.JFrame {
         
     
         
-        // System.out.println("CusDash initialized with customerID: " + endUser.getID()); // Debugging statement
         initComponents();
         ArrayList<CusOrder> cart = OrderHandling.getCart(); // Fetch cart items
         displayCart(cart, endUser); // Display cart items
@@ -328,7 +303,6 @@ public class Cart extends javax.swing.JFrame {
                     return;
                 }
     
-                // ✅ Debug: Checking if item is found
                 ArrayList<CusOrder> cartItems = OrderHandling.getCart();
                 boolean updated = false;
     
@@ -344,16 +318,12 @@ public class Cart extends javax.swing.JFrame {
                 }
     
                 if (updated) {
-                    // ✅ Debug: Ensure list is modified before saving
                     System.out.println("🔹 Updated Cart Items: " + cartItems);
     
-                    // ✅ Save updated cart
                     OrderHandling.saveCart(cartItems);
     
-                    // ✅ Debug: Check if file was updated
                     System.out.println("✅ Cart saved successfully!");
     
-                    // ✅ Refresh the UI
                     refreshCart();
                 } else {
                     System.out.println("⚠️ Item not found in cart for update.");
@@ -423,7 +393,7 @@ public class Cart extends javax.swing.JFrame {
         if (customerCredit != null) {
 
             if (selectedMenuIDs == null) {
-                selectedMenuIDs = new ArrayList<>(); // ✅ Fix potential null reference
+                selectedMenuIDs = new ArrayList<>(); 
             }
     
             System.out.println("DEBUG: Final Selected MenuIDs for Removal: " + selectedMenuIDs); // Check before proceeding
@@ -457,7 +427,7 @@ public class Cart extends javax.swing.JFrame {
                             selectedMenuIDs.contains(order.getMenuID())
                         );
             
-                        OrderHandling.updateCart(cartItems, endUser.getID(), selectedMenuIDs); // ✅ Ensure itemsToRemove is passed correctly
+                        OrderHandling.updateCart(cartItems, endUser.getID(), selectedMenuIDs); 
                         
                         // Refresh UI after payment
                         SwingUtilities.invokeLater(() -> refreshCart());
@@ -500,7 +470,6 @@ public class Cart extends javax.swing.JFrame {
         margin4 = new javax.swing.JPanel();
         title_container = new javax.swing.JPanel();
         m5 = new javax.swing.JPanel();
-        welcome = new javax.swing.JLabel();
         title_container1 = new javax.swing.JPanel();
         m8 = new javax.swing.JPanel();
         m6 = new javax.swing.JPanel();
@@ -906,41 +875,7 @@ public class Cart extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>    
 
-    // //TODO I USED ADMIN DATA TO GET NOTIFICATIONS. CHANGE TO OWN DATA
-    // List<Notification> notifications = NotificationUtils.getUnreadNotifications(NotificationUtils.getAllNotifications());
-    
-    // private void btn_NotiActionPerformed(java.awt.event.ActionEvent evt) {                                  
-    //     GlassPanePopup.showPopup(new NotificationPanel(notifications), new DefaultOption(){
-    //         @Override
-    //         public float opacity() {
-    //             return 0;
-    //         }
-
-    //         @Override
-    //         public LayoutCallback getLayoutCallBack(java.awt.Component parent) {
-    //             return new DefaultLayoutCallBack(parent){
-    //                 @Override
-    //                 public void correctBounds(ComponentWrapper cw) {
-    //                     if (parent.isVisible()){
-    //                         java.awt.Point pl = parent.getLocationOnScreen();
-    //                         java.awt.Point bl = btn_Noti.getLocationOnScreen();
-    //                         int x = bl.x - pl.x;
-    //                         int y = bl.y - pl.y;
-    //                         cw.setBounds(x - cw.getWidth() + btn_Noti.getWidth(), y + btn_Noti.getHeight(), cw.getWidth(), cw.getHeight());
-    //                     } else {
-    //                         super.correctBounds(cw);
-    //                     }
-    //                 }
-    //             };
-    //         }
-
-    //     });
-    // }   
-
-
-    
-
-    
+      
 
     private void btn_logoutActionPerformed(java.awt.event.ActionEvent evt) {                                           
         boolean confirm = DialogBox.confirmMessage("Are you sure you want to logout?", "Logout");
@@ -1000,7 +935,6 @@ public class Cart extends javax.swing.JFrame {
     private javax.swing.JLabel systemName;
     private javax.swing.JPanel title_container;
     private javax.swing.JPanel title_container1;
-    private javax.swing.JLabel welcome;
     private javax.swing.JButton btn_complaint;
     private javax.swing.JButton btn_wallet;
     // End of variables declaration  

@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -20,10 +19,8 @@ import javax.swing.JTextField;
 
 import oodj.food_ordering_system.models.Credit;
 import oodj.food_ordering_system.models.Customer;
-import oodj.food_ordering_system.models.Notification;
 import oodj.food_ordering_system.utils.OrderHandling;
-import oodj.food_ordering_system.utils.UserHandling;
-import raven.glasspanepopup.GlassPanePopup;
+
 
 
 
@@ -41,7 +38,6 @@ public class TopUp extends javax.swing.JFrame {
         initComponents();
     }
 
-// TODO check again customerID
    
 
 
@@ -277,35 +273,6 @@ public class TopUp extends javax.swing.JFrame {
         }
     }
 
-    // private void submitTopUpRequest() {
-    //     // Implement submit top-up request functionality
-    //     String amount = amountField.getText();
-    //     if (amount.isEmpty()) {
-    //         JOptionPane.showMessageDialog(this, "Please enter the top-up amount.", "Error", JOptionPane.ERROR_MESSAGE);
-    //     } else if (receiptImagePath == null || receiptImagePath.isEmpty()) {
-    //         JOptionPane.showMessageDialog(this, "Please upload the receipt.", "Error", JOptionPane.ERROR_MESSAGE);
-    //     } else {
-    //         // Create a new Credit object
-    //         String creditID = "CR" + String.format("%05d", OrderHandling.getCRid() + 1);
-
-    //         // String creditID = "CR" + System.currentTimeMillis(); // Generate a unique ID based on the current time
-    //         double creditAmount = Double.parseDouble(amount);
-    //         LocalDate lastUpdated = LocalDate.now();
-    //         String status = "Pending";
-    //         String receiptPath = OrderHandling.RECEIPT_FOLDER + creditID + ".jpg";
-
-    //         Credit newCredit = new Credit(creditID, endUser.getID(), creditAmount, lastUpdated, status, receiptPath);
-
-    //         // Get existing credits and add the new credit
-    //         ArrayList<Credit> credits = OrderHandling.getCredits();
-    //         credits.add(newCredit);
-
-    //         // Save the updated credits
-    //         OrderHandling.saveCredits(newCredit, receiptImagePath);
-
-    //         JOptionPane.showMessageDialog(this, "Request has successfully been sent to admin.", "Success", JOptionPane.INFORMATION_MESSAGE);
-    //     }
-    // }
 
     private void submitTopUpRequest() {
         // Implement submit top-up request functionality

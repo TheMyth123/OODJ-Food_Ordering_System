@@ -147,7 +147,7 @@ public class OrderHandling {
     
                 // Check if menuID matches
                 if (menuItem.getString("id").equals(menuID)) {
-                    return menuItem.getString("name"); // ✅ Return the food name
+                    return menuItem.getString("name"); // Return the food name
                 }
             }
         } catch (Exception e) {
@@ -159,7 +159,7 @@ public class OrderHandling {
 
     public static String[] getTaskDetailsByOrderID(String orderID) {
         try {
-            // ✅ Step 1: Read file content
+            // Step 1: Read file content
             String content = new String(Files.readAllBytes(Paths.get(TASK)));
 
             // ✅ Step 2: Parse JSON array
@@ -188,96 +188,6 @@ public class OrderHandling {
         return new String[]{"Unknown", "No Runner Assigned"}; // ✅ Return default if not found
     }
     
-
-
-   
-
-    // public static ArrayList<CusOrder> getCart() {
-    //     ArrayList<String> lines = FileHandling.readLines(CART);
-    //     StringBuilder jsonData = new StringBuilder();
-    
-    //     for (String line : lines) {
-    //         jsonData.append(line);
-    //     }
-    
-    //     ArrayList<CusOrder> cartItems = new ArrayList<>();
-    //     try {
-    //         JSONArray cartArray = new JSONArray(jsonData.toString());
-    //         for (int i = 0; i < cartArray.length(); i++) {
-    //             JSONObject item = cartArray.getJSONObject(i);
-    //             String menuID = item.getString("MenuID");
-    //             int quantity = item.getInt("quantity");
-    //             double price = 0.0;
-    //             if (item.get("price") instanceof String) {
-    //                 price = Double.parseDouble(item.getString("price").replace("RM", ""));
-    //             } else {
-    //                 price = item.getDouble("price");
-    //             }
-    //             String name = item.getString("name");
-
-    //             String customerID = item.getString("CustomerID"); // Retrieve CustomerID as a string
-
-    //         // Retrieve the Customer object using customerID
-    //             Customer customer = UserHandling.getCustomerByID(customerID);
-    //             // Retrieve the Customer object using the customerID string
-    
-    //             CusOrder order = new CusOrder(menuID, quantity, price, name, customer);
-    //             cartItems.add(order);
-    //         }
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-    
-    //     return cartItems;
-    // }
-
-    // public static ArrayList<CusOrder> getCart() {
-    //     ArrayList<String> lines = FileHandling.readLines(CART);
-    //     StringBuilder jsonData = new StringBuilder();
-
-    //     for (String line : lines) {
-    //         jsonData.append(line);
-    //     }
-
-    //     ArrayList<CusOrder> cartItems = new ArrayList<>();
-    //     try {
-    //         JSONArray cartArray = new JSONArray(jsonData.toString());
-    //         for (int i = 0; i < cartArray.length(); i++) {
-    //             JSONObject item = cartArray.getJSONObject(i);
-
-    //             // ✅ Validate required fields before proceeding
-    //             if (!item.has("CustomerID") || !item.has("MenuID") || !item.has("quantity") || !item.has("price") || !item.has("name")) {
-    //                 throw new JSONException("Missing required field in cart item at index " + i);
-    //             }
-
-    //             String menuID = item.getString("MenuID");
-    //             int quantity = item.getInt("quantity");
-
-    //             double price = 0.0;
-    //             if (item.get("price") instanceof String) {
-    //                 price = Double.parseDouble(item.getString("price").replace("RM", ""));
-    //             } else {
-    //                 price = item.getDouble("price");
-    //             }
-
-    //             String name = item.getString("name");
-    //             String customerID = item.getString("CustomerID"); // ✅ Must exist
-
-    //             // ✅ Retrieve Customer object
-    //             Customer customer = UserHandling.getCustomerByID(customerID);
-
-    //             CusOrder order = new CusOrder(menuID, quantity, price, name, customer);
-    //             cartItems.add(order);
-    //         }
-    //     } catch (JSONException e) {
-    //         System.err.println("❌ ERROR: Invalid cart data - " + e.getMessage());
-    //         e.printStackTrace();
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-
-    //     return cartItems;
-    // }
 
     public static ArrayList<CusOrder> getCart() {
         ArrayList<String> lines = FileHandling.readLines(CART);

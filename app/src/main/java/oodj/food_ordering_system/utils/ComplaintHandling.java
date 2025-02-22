@@ -40,21 +40,7 @@ public class ComplaintHandling {
         return tempCount;
     }
 
-    // public static void addComplaint(Complaint complaint) {
-    //     try {
-    //         String jsonData = new String(Files.readAllBytes(Paths.get(COMPLAINT)));
-    //         JSONArray complaintArray = new JSONArray(jsonData);
-    //         JSONObject complaintData = new JSONObject();
-    //         complaintData.put("ComplaintID", "CM" + getCMid());
-    //         complaintData.put("CustomerID", complaint.getUser());
-    //         complaintData.put("Messages", complaint.getMessages());
-    //         complaintData.put("Resolved", complaint.isResolved());
-    //         complaintArray.put(complaintData);
-    //         FileHandling.saveToFile(complaintArray, COMPLAINT);
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-    // }
+    
 
     public static void addNewComplaint(Complaint complaint, String customerID) {
     
@@ -86,7 +72,7 @@ public class ComplaintHandling {
             complaintData.put("ComplaintID", "CM" + String.format("%05d", getCMid() + 1));
             complaintData.put("CustomerID", customerID);
             complaintData.put("Messages", complaint.getMessages());
-            complaintData.put("Resolved", false); // ✅ Always set new complaints as unresolved
+            complaintData.put("Resolved", false); // Always set new complaints as unresolved
     
             complaintArray.put(complaintData);
             FileHandling.saveToFile(complaintArray, COMPLAINT);
@@ -155,7 +141,7 @@ public class ComplaintHandling {
                         }
                     }
                 }
-                boolean resolved = complaintData.optBoolean("Resolved", false); // ✅ Ensure boolean is read correctly
+                boolean resolved = complaintData.optBoolean("Resolved", false); // Ensure boolean is read correctly
                 
     
                 Complaint complaint = new Complaint(

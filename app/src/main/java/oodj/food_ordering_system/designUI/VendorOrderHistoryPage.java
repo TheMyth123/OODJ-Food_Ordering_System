@@ -5,9 +5,7 @@ import javax.swing.table.DefaultTableModel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import net.miginfocom.layout.ComponentWrapper;
-import net.miginfocom.layout.LayoutCallback;
-import oodj.food_ordering_system.models.Notification;
+
 import oodj.food_ordering_system.models.Vendor;
 import oodj.food_ordering_system.utils.DialogBox;
 import oodj.food_ordering_system.utils.NotificationUtils;
@@ -514,35 +512,7 @@ public class VendorOrderHistoryPage extends JFrame {
     }// </editor-fold>  
 
 
-    // List<Notification> notifications = NotificationUtils.getUnreadNotifications(NotificationUtils.getAllNotifications());
     
-    // private void btn_NotiActionPerformed(java.awt.event.ActionEvent evt) {                                  
-    //     GlassPanePopup.showPopup(new NotificationPanel(notifications), new DefaultOption(){
-    //         @Override
-    //         public float opacity() {
-    //             return 0;
-    //         }
-
-    //         @Override
-    //         public LayoutCallback getLayoutCallBack(java.awt.Component parent) {
-    //             return new DefaultLayoutCallBack(parent){
-    //                 @Override
-    //                 public void correctBounds(ComponentWrapper cw) {
-    //                     if (parent.isVisible()){
-    //                         java.awt.Point pl = parent.getLocationOnScreen();
-    //                         java.awt.Point bl = btn_Noti.getLocationOnScreen();
-    //                         int x = bl.x - pl.x;
-    //                         int y = bl.y - pl.y;
-    //                         cw.setBounds(x - cw.getWidth() + btn_Noti.getWidth(), y + btn_Noti.getHeight(), cw.getWidth(), cw.getHeight());
-    //                     } else {
-    //                         super.correctBounds(cw);
-    //                     }
-    //                 }
-    //             };
-    //         }
-
-    //     });
-    // }   
 
     private void btn_ManageOrderActionPerformed(java.awt.event.ActionEvent evt) {                                     
     } 

@@ -1,6 +1,5 @@
 package oodj.food_ordering_system.designUI;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -11,7 +10,6 @@ import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
 import oodj.food_ordering_system.models.Notification;
 import oodj.food_ordering_system.models.Rating;
-import oodj.food_ordering_system.models.Rating.RatingType;
 import oodj.food_ordering_system.utils.DialogBox;
 import oodj.food_ordering_system.utils.NotificationUtils;
 import oodj.food_ordering_system.utils.OrderHandling;
@@ -44,10 +42,8 @@ public class CusReview extends JFrame {
     private void displayRatings(String vendorID) {
         List<Rating> vendorRatings = OrderHandling.getVendorRatings(vendorID);
     
-        // Remove the 4th column: Vendor ID
         String[] columnNames = {"Order ID", "Customer ID", "Rating"};
     
-        // Adjust data array to have 3 columns instead of 4
         String[][] data = new String[vendorRatings.size()][3];
         for (int i = 0; i < vendorRatings.size(); i++) {
             Rating rating = vendorRatings.get(i);

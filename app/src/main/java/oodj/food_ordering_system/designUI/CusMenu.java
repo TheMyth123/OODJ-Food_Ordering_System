@@ -9,31 +9,24 @@ import oodj.food_ordering_system.models.Customer;
 import oodj.food_ordering_system.models.Menu;
 import oodj.food_ordering_system.models.Rating;
 import oodj.food_ordering_system.models.Rating.RatingType;
-import oodj.food_ordering_system.utils.DialogBox;
-// TODO import dialog box after added cart
-// import oodj.food_ordering_system.utils.DialogBox;
 import oodj.food_ordering_system.utils.FileHandling;
 import oodj.food_ordering_system.utils.OrderHandling;
 import javax.swing.table.DefaultTableModel;
 
 
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 import java.awt.event.MouseAdapter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-// quantity calculation error
 public class CusMenu extends javax.swing.JFrame {
 
     private JPanel menuPanel;
@@ -73,9 +66,9 @@ public class CusMenu extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error: User not logged in!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        String customerID = endUser.getID(); // ✅ Assign customer ID from logged-in user
+        String customerID = endUser.getID(); // Assign customer ID from logged-in user
     
-        // ✅ Read existing cart items from the file
+        // Read existing cart items from the file
         try {
             String content = new String(Files.readAllBytes(Paths.get(filePath)));
             if (!content.trim().isEmpty()) {
@@ -108,23 +101,23 @@ public class CusMenu extends javax.swing.JFrame {
                 }
             }
     
-            // ✅ If item does not exist, add a new JSON object
+            // If item does not exist, add a new JSON object
             if (!found) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("MenuID", menuID);
                 jsonObject.put("quantity", quantityToAdd);
-                double price = Double.parseDouble(item[4].replace("RM", "").trim()); // ✅ Remove "RM" prefix and parse
+                double price = Double.parseDouble(item[4].replace("RM", "").trim()); // Remove "RM" prefix and parse
                 jsonObject.put("price", price);
                 jsonObject.put("name", item[1]);
-                jsonObject.put("CustomerID", customerID); // ✅ Assign customer ID
+                jsonObject.put("CustomerID", customerID); // Assign customer ID
     
                 cartArray.put(jsonObject);
             }
         }
     
-        // ✅ Save updated JSON data back to the file
+        // Save updated JSON data back to the file
         try {
-            Files.write(Paths.get(filePath), cartArray.toString(4).getBytes()); // ✅ Pretty print with indentation
+            Files.write(Paths.get(filePath), cartArray.toString(4).getBytes()); 
         } catch (IOException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error writing to cart file.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -245,51 +238,7 @@ private void initComponents(String vendorID) {
     ratingsButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
     ratingsButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-    
 
-    // ratingsButton.addActionListener(e -> {
-    //     List<Rating> vendorRatings = OrderHandling.getVendorRatings(vendorID);
-    
-    //     if (vendorRatings.isEmpty()) {
-    //         JOptionPane.showMessageDialog(null, "No vendor ratings available for this vendor.", "Ratings", JOptionPane.INFORMATION_MESSAGE);
-    //         return;
-    //     }
-    
-    //     // Step 5: Create a new dialog to display ratings
-    //     JDialog ratingsDialog = new JDialog((Frame) null, "Customer Ratings", true);
-    //     ratingsDialog.setSize(500, 300);
-    //     ratingsDialog.setLayout(new BorderLayout());
-    
-    //     // Column names
-    //     String[] columns = {"Customer ID", "Rating", "Order ID"};
-    
-    //     // Table model
-    //     DefaultTableModel model = new DefaultTableModel(columns, 0); // ✅ Corrected!
-    
-    //     // Populate table with rating data
-    //     for (Rating rating : vendorRatings) {
-    //         model.addRow(new Object[]{rating.getCustomerID(), rating.getRating() + " ⭐", rating.getOrderID()});
-    //     }
-    
-    //     JTable ratingsTable = new JTable(model); // ✅ Set model properly!
-    //     ratingsTable.setEnabled(false); // Make table read-only
-    //     JScrollPane scrollPane = new JScrollPane(ratingsTable);
-    
-    //     // Add components to dialog
-    //     ratingsDialog.add(scrollPane, BorderLayout.CENTER);
-    
-    //     // Close button
-    //     JButton closeButton = new JButton("Close");
-    //     closeButton.addActionListener(ev -> ratingsDialog.dispose());
-    //     JPanel buttonPanel = new JPanel();
-    //     buttonPanel.add(closeButton);
-        
-    //     ratingsDialog.add(buttonPanel, BorderLayout.SOUTH);
-    
-    //     // Center the dialog on screen
-    //     ratingsDialog.setLocationRelativeTo(null);
-    //     ratingsDialog.setVisible(true);
-    // });
 
     ratingsButton.addActionListener(e -> {
         List<Rating> vendorRatings = OrderHandling.getVendorRatings(vendorID);
@@ -309,7 +258,6 @@ private void initComponents(String vendorID) {
         ratingsDialog.setSize(500, 300);
         ratingsDialog.setLayout(new BorderLayout());
 
-        // Column names
         String[] columns = {"Customer ID", "Rating", "Order ID"};
 
         // Table model
@@ -637,12 +585,6 @@ private void initComponents(String vendorID) {
     }
 
     
-        
-
-        
-        
-        
-
   
     private javax.swing.JButton backBtn;
     private javax.swing.JPanel back_icon;

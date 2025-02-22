@@ -2,9 +2,7 @@ package oodj.food_ordering_system.models;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-import oodj.food_ordering_system.designUI.LoginPage;
 
 public class Complaint {
     private String id;
@@ -12,16 +10,15 @@ public class Complaint {
     private List<String> messages;
     private boolean resolved;
 
-    // ✅ Constructor with an existing message list
     public Complaint(String id, String user, List<String> messages, boolean resolved) {
         this.id = id; 
         this.user = user;
         this.messages = (messages != null) ? messages : new ArrayList<>();
-        this.resolved = resolved; // ✅ Correctly assign from JSON
+        this.resolved = resolved; // Correctly assign from JSON
     }
     
 
-    // ✅ Constructor with a single message
+    // Constructor with a single message
     public Complaint(String user, String message) {
         // this.id = id; 
         this.user = user;
@@ -45,14 +42,14 @@ public class Complaint {
     }
 
     public List<String> getMessages() {
-        if (messages == null) {  // ✅ Ensure messages is never null
+        if (messages == null) {  // Ensure messages is never null
             messages = new ArrayList<>();
         }
         return messages;
     }
 
     public boolean isResolved() {
-        System.out.println("isResolved() called for complaint: " + this.id + " -> " + this.resolved); // Debugging
+        System.out.println("isResolved() called for complaint: " + this.id + " -> " + this.resolved); //Debugging
         return this.resolved;
     }
     
