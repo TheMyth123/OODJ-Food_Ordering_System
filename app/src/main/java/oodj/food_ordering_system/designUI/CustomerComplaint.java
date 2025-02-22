@@ -182,9 +182,9 @@ public class CustomerComplaint extends javax.swing.JFrame {
         btn_container1.setPreferredSize(new java.awt.Dimension(300, 420));
         btn_container1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 30));
 
-        btn_home.setBackground(new java.awt.Color(43, 43, 43));
-        btn_home.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btn_home.setForeground(new java.awt.Color(255, 169, 140));
+        btn_home.setBackground(new java.awt.Color(31, 31, 31));
+        btn_home.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btn_home.setForeground(new java.awt.Color(245, 254, 254));
         btn_home.setText("Home");
         btn_home.setBorder(null);
         btn_home.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -255,9 +255,9 @@ public class CustomerComplaint extends javax.swing.JFrame {
         });
         btn_container1.add(btn_history);
 
-        btn_complaint.setBackground(new java.awt.Color(31, 31, 31));
-        btn_complaint.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_complaint.setForeground(new java.awt.Color(245, 251, 254));
+        btn_complaint.setBackground(new java.awt.Color(43, 43, 43));
+        btn_complaint.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btn_complaint.setForeground(new java.awt.Color(255, 169, 140));
         btn_complaint.setText("Complaint");
         btn_complaint.setBorder(null);
         btn_complaint.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
