@@ -1,89 +1,82 @@
 package oodj.food_ordering_system.designUI;
 
-import java.util.ArrayList;
+import oodj.food_ordering_system.models.Notification;
+import oodj.food_ordering_system.models.Vendor;
+import oodj.food_ordering_system.utils.DialogBox;
+import oodj.food_ordering_system.utils.NotificationUtils;
+import oodj.food_ordering_system.utils.UserHandling;
+import oodj.food_ordering_system.utils.VendorHandling;
+import raven.glasspanepopup.*;
+
 import java.util.List;
 
-import javax.swing.JFrame;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
+import org.json.JSONArray;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
-import oodj.food_ordering_system.models.Notification;
-import oodj.food_ordering_system.models.Rating;
-import oodj.food_ordering_system.models.Rating.RatingType;
-import oodj.food_ordering_system.utils.DialogBox;
-import oodj.food_ordering_system.utils.NotificationUtils;
-import oodj.food_ordering_system.utils.OrderHandling;
-import oodj.food_ordering_system.utils.UserHandling;
-import raven.glasspanepopup.DefaultLayoutCallBack;
-import raven.glasspanepopup.DefaultOption;
-import raven.glasspanepopup.GlassPanePopup;
 
+public class VendorRevenue extends javax.swing.JFrame {
 
-
-public class CusReview extends javax.swing.JFrame {
-
-    private String vendorID; // Declare vendorID here
-
-    public CusReview() {
-        GlassPanePopup.install(this);
+    // public static void main(String[] args) {
+    //     java.awt.EventQueue.invokeLater(() -> {
+    //         new VendorPerformance().setVisible(true);
+    //     });
+    // }
+    private Vendor endUserVD;
+    
+    public VendorRevenue() {
+        this.endUserVD = LoginPage.getEndUserVD();      
         initComponents();
-    
-        // Get the logged-in vendor's ID
-        vendorID = UserHandling.getLoggedInVendorID(); 
-    
-        // Check if vendorID is properly obtained
-        if (vendorID != null && !vendorID.isEmpty()) {
-            displayRatings(vendorID); 
-        } else {
-            DialogBox.errorMessage("Error: Unable to retrieve Vendor ID. Please log in again.", "Error");
-        }
+        GlassPanePopup.install(this);
+        placeComponents(title_container1);
     }
     
-    private void displayRatings(String vendorID) {
-        List<Rating> vendorRatings = OrderHandling.getVendorRatings(vendorID);
+
+
+    public void placeComponents(JPanel title_container1) {
+        title_container1.setLayout(null);
     
-        // Filter to show only ratings of type VENDOR
-        List<Rating> vendorTypeRatings = new ArrayList<>();
-        for (Rating rating : vendorRatings) {
-            if (rating.getRatingType() == RatingType.VENDOR) {
-                vendorTypeRatings.add(rating);
+        JLabel periodLabel = new JLabel("Select Period:");
+        periodLabel.setBounds(10, 20, 150, 25);
+        periodLabel.setForeground(new Color(255, 165, 0)); // Orange
+        title_container1.add(periodLabel);
+    
+        String[] periods = {"Daily", "Monthly", "Quarterly"};
+        JComboBox<String> periodDropdown = new JComboBox<>(periods);
+        periodDropdown.setBounds(150, 20, 150, 25);
+        title_container1.add(periodDropdown);
+    
+        JButton checkButton = new JButton("Check History");
+        checkButton.setBounds(150, 60, 150, 25);
+        title_container1.add(checkButton);
+    
+        
+    
+        checkButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String selectedPeriod = (String) periodDropdown.getSelectedItem();
+                JSONArray history = VendorHandling.getVendorOrderHistory(endUserVD.getID(), selectedPeriod);
+                // resultArea.setText(selectedPeriod + " order history: " + history.toString());
+                VendorHandling.createRevenueChart(history);
             }
-        }
-    
-        // Update column names (No Vendor ID)
-        String[] columnNames = {"Order ID", "Customer ID", "Rating"};
-    
-        // Adjust data array for 3 columns
-        String[][] data = new String[vendorTypeRatings.size()][3];
-        for (int i = 0; i < vendorTypeRatings.size(); i++) {
-            Rating rating = vendorTypeRatings.get(i);
-            data[i][0] = rating.getOrderID();
-            data[i][1] = rating.getCustomerID();
-            data[i][2] = String.valueOf(rating.getRating());
-        }
-    
-        ratingTable.setModel(new DefaultTableModel(data, columnNames));
-    
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-    
-        // Adjust rendering for 3 columns
-        ratingTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-        ratingTable.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
-        ratingTable.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
-    
-        ratingTable.getTableHeader().setReorderingAllowed(false);
+        });
     }
     
-    
-    
-    
-    
-
-
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+        
+        
+        
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
         Sidebar = new javax.swing.JPanel();
         margin1 = new javax.swing.JPanel();
@@ -109,28 +102,12 @@ public class CusReview extends javax.swing.JFrame {
         m4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         OrderInfo = new javax.swing.JTable();
-        // searchBar = new javax.swing.JPanel();
-        // margin5 = new javax.swing.JPanel();
-        // nameLabel = new javax.swing.JLabel();
-        // nameTextField = new javax.swing.JTextField();
-        // margin6 = new javax.swing.JPanel();
-        // modelLabel = new javax.swing.JLabel();
-        // emailTextField = new javax.swing.JTextField();
-        // margin7 = new javax.swing.JPanel();
-        // searchButton = new javax.swing.JButton();
-        // m3 = new javax.swing.JPanel();
-        // m6 = new javax.swing.JPanel();
-        // m7 = new javax.swing.JPanel();
-        // btn_container = new javax.swing.JPanel();
-        // addButton = new javax.swing.JButton();
-        // m10 = new javax.swing.JPanel();
-        // editButton = new javax.swing.JButton();
-        // m11 = new javax.swing.JPanel();
-        // deleteButton = new javax.swing.JButton();
         btn_Noti = new oodj.food_ordering_system.designUI.Button();
+        title_container1 = new javax.swing.JPanel();
+
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Vendor Menu");
+        setTitle("Revenue");
         setBackground(new java.awt.Color(25, 25, 25));
         setMinimumSize(new java.awt.Dimension(1300, 700));
         setResizable(false);
@@ -220,7 +197,7 @@ public class CusReview extends javax.swing.JFrame {
             }
         });
         btn_container1.add(btn_ManageOrder);
-        
+
         btn_ManageMenu.setBackground(new java.awt.Color(31, 31, 31));
         btn_ManageMenu.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btn_ManageMenu.setForeground(new java.awt.Color(245, 251, 254));
@@ -257,9 +234,9 @@ public class CusReview extends javax.swing.JFrame {
         });
         btn_container1.add(btn_OrderHis);
 
-        btn_CusReview.setBackground(new java.awt.Color(43, 43, 43));
-        btn_CusReview.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btn_CusReview.setForeground(new java.awt.Color(255, 169, 140));
+        btn_CusReview.setBackground(new java.awt.Color(31, 31, 31));
+        btn_CusReview.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btn_CusReview.setForeground(new java.awt.Color(245, 251, 254));
         btn_CusReview.setText("Customer Review");
         btn_CusReview.setBorder(null);
         btn_CusReview.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -275,9 +252,11 @@ public class CusReview extends javax.swing.JFrame {
         });
         btn_container1.add(btn_CusReview);
         
-        btn_Revenue.setBackground(new java.awt.Color(31, 31, 31));
-        btn_Revenue.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_Revenue.setForeground(new java.awt.Color(245, 251, 254));
+        
+
+        btn_Revenue.setBackground(new java.awt.Color(43, 43, 43));
+        btn_Revenue.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btn_Revenue.setForeground(new java.awt.Color(255, 169, 140));
         btn_Revenue.setText("Revenue");
         btn_Revenue.setBorder(null);
         btn_Revenue.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -286,11 +265,8 @@ public class CusReview extends javax.swing.JFrame {
         btn_Revenue.setMaximumSize(new java.awt.Dimension(250, 40));
         btn_Revenue.setMinimumSize(new java.awt.Dimension(250, 40));
         btn_Revenue.setPreferredSize(new java.awt.Dimension(250, 40));
-        btn_Revenue.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_RevenueActionPerformed(evt);
-            }
-        });
+        
+        
         btn_container1.add(btn_Revenue);
 
         Sidebar.add(btn_container1);
@@ -395,7 +371,7 @@ public class CusReview extends javax.swing.JFrame {
         title.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         title.setForeground(new java.awt.Color(255, 169, 140));
         title.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        title.setText("Customer Review");
+        title.setText("Revenue");
         title.setAlignmentX(0.5F);
         title.setMaximumSize(new java.awt.Dimension(130, 50));
         title.setMinimumSize(new java.awt.Dimension(130, 50));
@@ -412,6 +388,16 @@ public class CusReview extends javax.swing.JFrame {
         title_container.add(btn_Noti);
 
         Main.add(title_container);
+
+        title_container1.setBackground(new java.awt.Color(31, 31, 31));
+        title_container1.setMaximumSize(new java.awt.Dimension(1000, 700));
+        title_container1.setMinimumSize(new java.awt.Dimension(1000, 700));
+        title_container1.setPreferredSize(new java.awt.Dimension(1000, 700));
+        title_container1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 0));
+
+       
+        Main.add(title_container1);
+
 
         m2.setBackground(new java.awt.Color(31, 31, 31));
         m2.setMaximumSize(new java.awt.Dimension(1000, 5));
@@ -474,52 +460,6 @@ public class CusReview extends javax.swing.JFrame {
         );
 
         Main.add(m4);
-    
-        ratingPanel = new javax.swing.JPanel();
-        ratingPanel.setBackground(new java.awt.Color(31, 31, 31));
-        ratingPanel.setMaximumSize(new java.awt.Dimension(1000, 500));
-        ratingPanel.setMinimumSize(new java.awt.Dimension(1000, 500));
-        ratingPanel.setPreferredSize(new java.awt.Dimension(1000, 500));
-        ratingPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
-        
-        ratingScrollPane = new javax.swing.JScrollPane();
-        ratingScrollPane.setMaximumSize(new java.awt.Dimension(880, 500));
-        ratingScrollPane.setMinimumSize(new java.awt.Dimension(880, 500));
-        ratingScrollPane.setPreferredSize(new java.awt.Dimension(880, 500));
-        
-        ratingTable = new javax.swing.JTable();
-        ratingTable.setBackground(new java.awt.Color(43, 43, 43));
-        ratingTable.setFont(new java.awt.Font("Segoe UI", 0, 16));
-        ratingTable.setForeground(new java.awt.Color(245, 251, 254));
-        ratingTable.setFocusable(false);
-        ratingTable.setGridColor(new java.awt.Color(31, 31, 31));
-        ratingTable.setMaximumSize(new java.awt.Dimension(880, 2000));
-        ratingTable.setMinimumSize(new java.awt.Dimension(880, 2000));
-        ratingTable.setPreferredSize(new java.awt.Dimension(880, 2000));
-        ratingTable.setRowHeight(35);
-        ratingTable.setSelectionBackground(new java.awt.Color(255, 169, 140));
-        ratingTable.setSelectionForeground(new java.awt.Color(31, 31, 31));
-        ratingTable.setShowGrid(true);
-        ratingTable.setShowVerticalLines(false);
-        
-        ratingScrollPane.setViewportView(ratingTable);
-        ratingPanel.add(ratingScrollPane);
-        
-        Main.add(ratingPanel);
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -531,6 +471,14 @@ public class CusReview extends javax.swing.JFrame {
         setLocationRelativeTo(null);
 
     }// </editor-fold>  
+
+
+
+
+
+
+
+
 
     List<Notification> notifications = NotificationUtils.getUnreadNotifications(NotificationUtils.getAllNotifications());
     
@@ -562,9 +510,7 @@ public class CusReview extends javax.swing.JFrame {
         });
     }   
 
-    private void btn_ManageOrderActionPerformed(java.awt.event.ActionEvent evt) {   
-        dispose();
-        new ManageOrder().setVisible(true);                                    
+    private void btn_ManageOrderActionPerformed(java.awt.event.ActionEvent evt) {                                     
     } 
 
     private void btn_ManageMenuActionPerformed(java.awt.event.ActionEvent evt) {      
@@ -573,17 +519,16 @@ public class CusReview extends javax.swing.JFrame {
     } 
 
     private void btn_OrderHisActionPerformed(java.awt.event.ActionEvent evt) {
-        dispose();
-        new VendorOrderHistoryPage().setVisible(true);                                         
+        // dispose();
+        // new OrderHistory().setVisible(true);                                         
     } 
     
-    private void btn_CusReviewActionPerformed(java.awt.event.ActionEvent evt) {                                      
+    private void btn_CusReviewActionPerformed(java.awt.event.ActionEvent evt) {
+        dispose();
+        new CusReview().setVisible(true);                                        
     } 
     
-    private void btn_RevenueActionPerformed(java.awt.event.ActionEvent evt) {
-        dispose();
-        new VendorRevenue().setVisible(true);                                         
-    } 
+    
     
     private void btn_logoutActionPerformed(java.awt.event.ActionEvent evt) {
         boolean confirm = DialogBox.confirmMessage("Are you sure you want to logout?", "Logout");
@@ -594,58 +539,58 @@ public class CusReview extends javax.swing.JFrame {
         }                                   
     } 
 
-        // Variables declaration - do not modify                     
-        private javax.swing.JPanel Sidebar;
-        private javax.swing.JPanel margin1;
-        private javax.swing.JPanel Logo_container;
-        private javax.swing.JLabel systemName;
-        private javax.swing.JPanel btn_container1;
-        private javax.swing.JButton btn_ManageOrder;
-        private javax.swing.JButton btn_ManageMenu;
-        private javax.swing.JButton btn_OrderHis;
-        private javax.swing.JButton btn_CusReview;
-        private javax.swing.JButton btn_Revenue;
-        private javax.swing.JPanel btn_container2;
-        private javax.swing.JButton btn_logout;
-        private javax.swing.JPanel Line;
-        private javax.swing.JPanel Main;
-        private javax.swing.JPanel m1;
-        private javax.swing.JPanel title_container;
-        private javax.swing.JPanel margin2;
-        private javax.swing.JPanel margin3;
-        private javax.swing.JLabel title;
-        private javax.swing.JPanel m2;
-        private javax.swing.JPanel Line1;
-        private javax.swing.JPanel m4;
 
-        private javax.swing.JPanel ratingPanel;
-        private javax.swing.JTable ratingTable;
-        private javax.swing.JScrollPane ratingScrollPane;
 
-        private javax.swing.JScrollPane jScrollPane1;
-        private javax.swing.JTable OrderInfo;
-        private javax.swing.JPanel searchBar;
-        private javax.swing.JButton addButton;
-        private javax.swing.JLabel nameLabel;
-        private javax.swing.JTextField nameTextField;
-        // private javax.swing.JButton btn_ManageVen;
-        private javax.swing.JPanel btn_container;
-        // private javax.swing.JButton btn_topup;
-        // private javax.swing.JButton btn_ManageRun;
-        private javax.swing.JButton editButton;
-        private javax.swing.JButton deleteButton;
-        private javax.swing.JPanel m10;
-        private javax.swing.JPanel m11;
-        private javax.swing.JPanel m3;
-        private javax.swing.JPanel m6;
-        private javax.swing.JPanel m7;
-        private javax.swing.JPanel margin5;
-        // private javax.swing.JPanel margin6;
-        private javax.swing.JPanel margin7;
-        // private javax.swing.JLabel modelLabel;
-        // private javax.swing.JTextField emailTextField;
-        private javax.swing.JButton searchButton;
-        private javax.swing.JButton btn_Noti;
-        // End of variables declaration
 
+
+    // Variables declaration - do not modify                     
+    private javax.swing.JPanel Sidebar;
+    private javax.swing.JPanel margin1;
+    private javax.swing.JPanel Logo_container;
+    private javax.swing.JLabel systemName;
+    private javax.swing.JPanel btn_container1;
+    private javax.swing.JButton btn_ManageOrder;
+    private javax.swing.JButton btn_ManageMenu;
+    private javax.swing.JButton btn_OrderHis;
+    private javax.swing.JButton btn_CusReview;
+    private javax.swing.JButton btn_Revenue;
+    private javax.swing.JPanel btn_container2;
+    private javax.swing.JButton btn_logout;
+    private javax.swing.JPanel Line;
+    private javax.swing.JPanel Main;
+    private javax.swing.JPanel m1;
+    private javax.swing.JPanel title_container;
+    private javax.swing.JPanel margin2;
+    private javax.swing.JPanel margin3;
+    private javax.swing.JLabel title;
+    private javax.swing.JPanel m2;
+    private javax.swing.JPanel Line1;
+    private javax.swing.JPanel m4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable OrderInfo;
+    private javax.swing.JPanel searchBar;
+    private javax.swing.JButton addButton;
+    private javax.swing.JLabel nameLabel;
+    private javax.swing.JTextField nameTextField;
+    // private javax.swing.JButton btn_ManageVen;
+    private javax.swing.JPanel btn_container;
+    // private javax.swing.JButton btn_topup;
+    // private javax.swing.JButton btn_ManageRun;
+    private javax.swing.JButton editButton;
+    private javax.swing.JButton deleteButton;
+    private javax.swing.JPanel m10;
+    private javax.swing.JPanel m11;
+    private javax.swing.JPanel m3;
+    private javax.swing.JPanel m6;
+    private javax.swing.JPanel m7;
+    private javax.swing.JPanel margin5;
+    // private javax.swing.JPanel margin6;
+    private javax.swing.JPanel margin7;
+    // private javax.swing.JLabel modelLabel;
+    // private javax.swing.JTextField emailTextField;
+    private javax.swing.JButton searchButton;
+    private javax.swing.JButton btn_Noti;
+    private static javax.swing.JPanel title_container1;
+// End of variables declaration       
+    
 }

@@ -78,7 +78,7 @@ public class CustomerProfile extends javax.swing.JFrame {
             customer.setPassword(updatedPassword);
             customer.setEmail(updatedEmail);
             customer.setAddress(updatedAddress);
-            // UserHandling.UpdateCustomer(customer.getID(), updatedContactNumber, updatedPassword, updatedEmail, updatedAddress);
+            UserHandling.UpdateCustomer(customer.getID(), updatedContactNumber, updatedPassword, updatedEmail, updatedAddress);
             
             PasswordField.setText(updatedPassword);
 
@@ -111,25 +111,14 @@ public class CustomerProfile extends javax.swing.JFrame {
         margin2 = new javax.swing.JPanel();
         btn_container1 = new javax.swing.JPanel();
         btn_home = new javax.swing.JButton();
-        btn_booking = new javax.swing.JButton();
         btn_history = new javax.swing.JButton();
-        btn_idk = new javax.swing.JButton();
         margin3 = new javax.swing.JPanel();
         btn_container2 = new javax.swing.JPanel();
         btn_logout = new javax.swing.JButton();
         Sidebar1 = new javax.swing.JPanel();
         margin4 = new javax.swing.JPanel();
-        Logo_container1 = new javax.swing.JPanel();
-        systemName1 = new javax.swing.JLabel();
-        margin5 = new javax.swing.JPanel();
-        btn_container3 = new javax.swing.JPanel();
-        btn_home1 = new javax.swing.JButton();
-        btn_booking1 = new javax.swing.JButton();
-        btn_history1 = new javax.swing.JButton();
         btn_profile = new javax.swing.JButton();
         margin6 = new javax.swing.JPanel();
-        btn_container4 = new javax.swing.JPanel();
-        btn_logout1 = new javax.swing.JButton();
         Line = new javax.swing.JPanel();
         Main = new javax.swing.JPanel();
         m4 = new javax.swing.JPanel();
@@ -903,12 +892,23 @@ public class CustomerProfile extends javax.swing.JFrame {
             contactNumberTextField.setEnabled(true);
             contactNumberTextField.getCaret().setVisible(true);
             contactNumberTextField.setEditable(true);
+// I want email and address to be editable too
+            emailTextField1.setEnabled(true);
+            emailTextField1.getCaret().setVisible(true);
+            emailTextField1.setEditable(true);
+            addressTextField2.setEnabled(true);
+            addressTextField2.getCaret().setVisible(true);
+            addressTextField2.setEditable(true);
 
             jTextField1.setText(new String(PasswordField.getPassword()));
             jTextField1.setVisible(true);
             jTextField1.setEnabled(true);
             jTextField1.getCaret().setVisible(true);
             jTextField1.setEditable(true);
+            PasswordField.setEnabled(true);
+            PasswordField.getCaret().setVisible(true);
+            PasswordField.setEditable(true);
+            
 
             PasswordField.setVisible(false);
 
@@ -957,43 +957,7 @@ public class CustomerProfile extends javax.swing.JFrame {
         new CustomerComplaint(endUser).setVisible(true);
     }
 
-                                                                             
-
-    // private void contactNumberTextFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                       
-    //     // TODO add your handling code here:
-    // }                                                      
-
-    // private void PasswordFieldActionPerformed(java.awt.event.ActionEvent evt) {                                              
-    //     // TODO add your handling code here:
-    // }                                             
-
-    // private void btn_home1ActionPerformed(java.awt.event.ActionEvent evt) {                                          
-    //     // TODO add your handling code here:
-    // }                                         
-
-    // private void btn_booking1ActionPerformed(java.awt.event.ActionEvent evt) {                                             
-    //     // TODO add your handling code here:
-    // }                                            
-
-    // private void btn_history1ActionPerformed(java.awt.event.ActionEvent evt) {                                             
-    //     // TODO add your handling code here:
-    // }                                            
-
-    // private void btn_profileActionPerformed(java.awt.event.ActionEvent evt) {                                         
-    //     // TODO add your handling code here:
-    // }                                        
-
-    // private void btn_logout1ActionPerformed(java.awt.event.ActionEvent evt) {                                            
-    //     // TODO add your handling code here:
-    // }                                           
-
-    // private void emailTextField1ActionPerformed(java.awt.event.ActionEvent evt) {                                                
-    //     // TODO add your handling code here:
-    // }                                               
-
-    // private void addressTextField2ActionPerformed(java.awt.event.ActionEvent evt) {                                                  
-    //     // TODO add your handling code here:
-    // }                                                 
+                                                                                                                       
 
 
     // Variables declaration - do not modify                     
@@ -1001,27 +965,18 @@ public class CustomerProfile extends javax.swing.JFrame {
     private javax.swing.JLabel DOBlabel;
     private javax.swing.JPanel Line;
     private javax.swing.JPanel Logo_container;
-    private javax.swing.JPanel Logo_container1;
     private javax.swing.JPanel Main;
     private javax.swing.JPasswordField PasswordField;
     private javax.swing.JPanel Sidebar;
     private javax.swing.JPanel Sidebar1;
     private javax.swing.JLabel addressLabel1;
     private javax.swing.JTextField addressTextField2;
-    private javax.swing.JButton btn_booking;
-    private javax.swing.JButton btn_booking1;
     private javax.swing.JPanel btn_container1;
     private javax.swing.JPanel btn_container2;
-    private javax.swing.JPanel btn_container3;
-    private javax.swing.JPanel btn_container4;
     private javax.swing.JButton btn_history;
-    private javax.swing.JButton btn_history1;
     private javax.swing.JButton btn_home;
-    private javax.swing.JButton btn_home1;
-    private javax.swing.JButton btn_idk;
     private javax.swing.JButton btn_profile;
     private javax.swing.JButton btn_logout;
-    private javax.swing.JButton btn_logout1;
     private javax.swing.JTextField contactNumberTextField;
     private javax.swing.JLabel contactnumberLabel;
     private javax.swing.JLabel dateOutput;
@@ -1049,11 +1004,9 @@ public class CustomerProfile extends javax.swing.JFrame {
     private javax.swing.JPanel margin2;
     private javax.swing.JPanel margin3;
     private javax.swing.JPanel margin4;
-    private javax.swing.JPanel margin5;
     private javax.swing.JPanel margin6;
     private javax.swing.JLabel passwordLabel;
     private javax.swing.JLabel systemName;
-    private javax.swing.JLabel systemName1;
     private javax.swing.JLabel title;
     private javax.swing.JPanel title_container;
     private javax.swing.JPanel txtbox1;

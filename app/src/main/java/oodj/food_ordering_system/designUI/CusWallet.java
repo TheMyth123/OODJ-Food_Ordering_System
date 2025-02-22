@@ -7,16 +7,14 @@ import oodj.food_ordering_system.utils.DialogBox;
 import oodj.food_ordering_system.utils.NotificationUtils;
 import oodj.food_ordering_system.utils.TransactionHandling;
 // import oodj.food_ordering_system.utils.NotificationUtils;
-import raven.glasspanepopup.*;
 
 import java.util.List;
 
-import javax.swing.BorderFactory;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
-// import java.util.List;
-// TODO add top up button here 
+
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -27,7 +25,6 @@ import javax.swing.table.TableRowSorter;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -41,10 +38,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-import net.miginfocom.layout.ComponentWrapper;
-import net.miginfocom.layout.LayoutCallback;
 
-//  TODO add transaction history
+
 public class CusWallet extends javax.swing.JFrame {
 
 
@@ -52,14 +47,7 @@ public class CusWallet extends javax.swing.JFrame {
     private List<Notification> notifications;
 
 
-// add run method
-    // public static void run() {
-    //     java.awt.EventQueue.invokeLater(() -> {
-    //         new CusDash().setVisible(true);
-    //     });
-    // }
 
-// TODO check again customerID
     public CusWallet(Customer endUser) {
         this.endUser = endUser;
 
@@ -98,17 +86,12 @@ public class CusWallet extends javax.swing.JFrame {
         m6 = new javax.swing.JPanel();
         margin5 = new javax.swing.JPanel();
         m7 = new javax.swing.JPanel();
-        btn_Noti = new oodj.food_ordering_system.designUI.Button();
         wallet = new javax.swing.JPanel();
-        amount = new javax.swing.JLabel();
-        btn_plus = new javax.swing.JButton();
         balanceLabel = new javax.swing.JLabel();
         transactionTable = new javax.swing.JTable();
         tableModel = new DefaultTableModel();
         refresh = new javax.swing.JPanel();
-        searchField = new JTextField();
-        searchPanel = new javax.swing.JPanel();
-        rowSorter = new TableRowSorter<>(tableModel);
+        
         btn_complaint = new javax.swing.JButton();
         topUpTable = new javax.swing.JTable();
         topUpModel = new DefaultTableModel();
@@ -443,7 +426,6 @@ public class CusWallet extends javax.swing.JFrame {
         title_container1.setMaximumSize(new java.awt.Dimension(1000, 670));
         title_container1.setMinimumSize(new java.awt.Dimension(1000, 670));
         title_container1.setPreferredSize(new java.awt.Dimension(1000, 670));
-        // title_container1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 0));
 
         refresh.setBackground(new java.awt.Color(31, 31, 31));
         refresh.setMaximumSize(new java.awt.Dimension(1000, 60));
@@ -470,18 +452,6 @@ public class CusWallet extends javax.swing.JFrame {
         wallet.setPreferredSize(new java.awt.Dimension(1000, 670));
         
 
-        // // **Search Bar Panel**
-        // searchPanel.setBackground(new Color(31, 31, 31));
-        // searchPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-
-        // searchField.setPreferredSize(new Dimension(200, 35)); // 200 width, 35 height
-        // JButton searchButton = new JButton("Search");
-
-        // searchPanel.add(searchField);
-        // searchPanel.add(searchButton);
-
-        // wallet.add(searchPanel, BorderLayout.NORTH);
-
         // **Tables Initialization**
         String[] topUpColumns = {"Date", "Amount (RM)", "Status", "Transaction ID"};
         topUpModel = new DefaultTableModel(topUpColumns, 0);
@@ -499,11 +469,6 @@ public class CusWallet extends javax.swing.JFrame {
 
         
 
-        // **Panel for Top-ups**
-        // JPanel topUpPanel = new JPanel(new BorderLayout());
-        // topUpPanel.setBackground(new Color(31, 31, 31));
-        // JLabel topUpLabel = new JLabel("Top-Up History");
-        // Download Button
         JButton btnDownload = new JButton("Download PDF");
         btnDownload.setPreferredSize(new Dimension(150, 35));
         btnDownload.setEnabled(false); // Initially disabled
@@ -512,9 +477,7 @@ public class CusWallet extends javax.swing.JFrame {
         JPanel downloadPanel = new JPanel();
         downloadPanel.setBackground(new Color(31, 31, 31));
         downloadPanel.add(btnDownload);
-        // topUpPanel.add(downloadPanel, BorderLayout.SOUTH);
-
-        // Enable the button when a row is selected
+        
         topUpTable.getSelectionModel().addListSelectionListener(event -> {
             if (!event.getValueIsAdjusting()) {
                 int selectedRow = topUpTable.getSelectedRow();
@@ -570,6 +533,7 @@ public class CusWallet extends javax.swing.JFrame {
 
         topUpPanel.add(topUpHeaderPanel, BorderLayout.NORTH);
         topUpPanel.add(topUpScrollPane, BorderLayout.CENTER);
+        topUpPanel.add(downloadPanel, BorderLayout.SOUTH);
 
         // **Panel for Transactions**
         JPanel transactionPanel = new JPanel(new BorderLayout());
@@ -603,6 +567,7 @@ public class CusWallet extends javax.swing.JFrame {
         // **Add Panels to Main Wallet Panel**
         wallet.add(topUpPanel, BorderLayout.WEST);
         wallet.add(transactionPanel, BorderLayout.EAST);
+        
 
 
 
@@ -736,8 +701,6 @@ public class CusWallet extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>    
 
-    //TODO I USED ADMIN DATA TO GET NOTIFICATIONS. CHANGE TO OWN DATA
-    // List<Notification> notifications = NotificationUtils.getUnreadNotifications(NotificationUtils.getAllNotifications(), customerID);
     
     private List<Notification> getNotifications() {
         if (notifications == null) {
@@ -745,36 +708,7 @@ public class CusWallet extends javax.swing.JFrame {
         }
         return notifications;
     }
-
-
-
-    // private void btn_NotiActionPerformed(java.awt.event.ActionEvent evt) {                                  
-    //     GlassPanePopup.showPopup(new NotificationPanel(getNotifications()), new DefaultOption(){
-    //         @Override
-    //         public float opacity() {
-    //             return 0;
-    //         }
-
-    //         @Override
-    //         public LayoutCallback getLayoutCallBack(java.awt.Component parent) {
-    //             return new DefaultLayoutCallBack(parent){
-    //                 @Override
-    //                 public void correctBounds(ComponentWrapper cw) {
-    //                     if (parent.isVisible()){
-    //                         java.awt.Point pl = parent.getLocationOnScreen();
-    //                         java.awt.Point bl = btn_Noti.getLocationOnScreen();
-    //                         int x = bl.x - pl.x;
-    //                         int y = bl.y - pl.y;
-    //                         cw.setBounds(x - cw.getWidth() + btn_Noti.getWidth(), y + btn_Noti.getHeight(), cw.getWidth(), cw.getHeight());
-    //                     } else {
-    //                         super.correctBounds(cw);
-    //                     }
-    //                 }
-    //             };
-    //         }
-
-    //     });
-    // }  
+  
 
 
     private void btn_plusActionPerformed(java.awt.event.ActionEvent evt) {                                         
@@ -832,17 +766,6 @@ public class CusWallet extends javax.swing.JFrame {
         new CustomerProfile(endUser).setVisible(true);
     }   
     
-    // private void loadTransactionHistory() {
-    //     tableModel.setRowCount(0); // Clear old data
-    //     balanceLabel.setText("Balance: RM " + endUser.getBalance()); // Update balance
-
-    //     List<Object[]> transactions = TransactionHandling.getTransactionLog(endUser.getID());
-
-    //     for (Object[] transaction : transactions) {
-    //         tableModel.addRow(transaction);
-    //     }
-
-    // }
 
     private void loadTransactionHistory() {
         topUpModel.setRowCount(0); // Clear existing data
@@ -861,30 +784,7 @@ public class CusWallet extends javax.swing.JFrame {
         }
     }
 
-    // private void loadTransactionHistory() {
-    //     topUpModel.setRowCount(0); // Clear existing data
-    //     transactionModel.setRowCount(0);
-    //     balanceLabel.setText("Balance: RM " + endUser.getBalance());
-    
-    //     List<Object[]> transactions = TransactionHandling.getTransactionLog(endUser.getID());
-    
-    //     for (Object[] transaction : transactions) {
-    //         String type = (String) transaction[1];
-    //         String status = (String) transaction[3];
-    //         String crId = (String) transaction[4]; // CR ID for top-ups
-            
-    //         if ("Top-Up".equalsIgnoreCase(type)) {
-    //             topUpModel.addRow(new Object[]{transaction[0], transaction[2], status, crId});
-                
-    //             // **Download PDF if status is "Accepted"**
-    //             if ("Accepted".equalsIgnoreCase(status)) {
-    //                 downloadFile(crId);
-    //             }
-    //         } else {
-    //             transactionModel.addRow(new Object[]{transaction[0], transaction[1], transaction[2], status, transaction[5]});
-    //         }
-    //     }
-    // }
+
 
     private void downloadFile(String crId) {
         String resourcePath = "topupPDF/" + crId + ".pdf"; 
@@ -904,16 +804,6 @@ public class CusWallet extends javax.swing.JFrame {
     }
     
 
-    
-
-    // private void filterTransactions() {
-    //     String searchText = searchField.getText().trim();
-    //     if (searchText.isEmpty()) {
-    //         rowSorter.setRowFilter(null);
-    //     } else {
-    //         rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText));
-    //     }
-    // }
 
 
     // Variables declaration - do not modify                     
@@ -929,7 +819,6 @@ public class CusWallet extends javax.swing.JFrame {
     private javax.swing.JButton btn_wallet;
     private javax.swing.JButton btn_profile;
     private javax.swing.JButton btn_logout;
-    private javax.swing.JLabel customer_username;
     private javax.swing.JPanel m5;
     private javax.swing.JPanel m6;
     private javax.swing.JPanel m7;
@@ -943,17 +832,13 @@ public class CusWallet extends javax.swing.JFrame {
     private javax.swing.JPanel title_container;
     private javax.swing.JPanel title_container1;
     private javax.swing.JLabel welcome;
-    private javax.swing.JButton btn_Noti;
-    private javax.swing.JLabel amount;
-    private javax.swing.JButton btn_plus;
+
     private javax.swing.JPanel wallet;
     private javax.swing.JLabel balanceLabel;
     private javax.swing.JTable transactionTable;
     private DefaultTableModel tableModel;
     private javax.swing.JPanel refresh;
-    private JTextField searchField;
-    private JPanel searchPanel;
-    private TableRowSorter<DefaultTableModel> rowSorter;
+    
     private JButton btn_complaint;
     private JTable topUpTable;
     private DefaultTableModel topUpModel;

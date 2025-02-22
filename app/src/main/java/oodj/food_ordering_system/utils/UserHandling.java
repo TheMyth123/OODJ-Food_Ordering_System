@@ -195,32 +195,7 @@ public class UserHandling {
         return buffer;
     }
 
-    public static PieDataset createDataCus() {
-        DefaultPieDataset dataset = new DefaultPieDataset();
     
-        try {
-            String jsonData = new String(Files.readAllBytes(Paths.get(CUSTOMER)));
-            JSONArray customersArray = new JSONArray(jsonData);
-            Map<String, Integer> genderCount = new HashMap<>();
-    
-            for (int i = 0; i < customersArray.length(); i++) {
-                JSONObject customerData = customersArray.getJSONObject(i);
-    
-                String gender = customerData.getString("Gender").trim();
-    
-                genderCount.put(gender, genderCount.getOrDefault(gender, 0) + 1);
-            }
-    
-            for (Map.Entry<String, Integer> entry : genderCount.entrySet()) {
-                dataset.setValue(entry.getKey(), entry.getValue());
-            }
-    
-        } catch (Exception e) {
-            DialogBox.errorMessage("Error reading or parsing customer JSON file: " + e.getMessage(), "Error");
-        }
-    
-        return dataset;
-    }
     
 
     public static ArrayList<Customer> getCustomers() {
@@ -264,36 +239,68 @@ public class UserHandling {
     }
     
 
-    public static void UpdateCustomer(String customerId, String updatedContactNumber, String updatedPassword) {
-        try {
-            String jsonData = new String(Files.readAllBytes(Paths.get(CUSTOMER)));
-            JSONArray customersArray = new JSONArray(jsonData);
+    // public static void UpdateCustomer(String customerId, String updatedContactNumber, String updatedPassword) {
+    //     try {
+    //         String jsonData = new String(Files.readAllBytes(Paths.get(CUSTOMER)));
+    //         JSONArray customersArray = new JSONArray(jsonData);
 
-            boolean isUpdated = false;
+    //         boolean isUpdated = false;
     
-            for (int i = 0; i < customersArray.length(); i++) {
-                JSONObject customerData = customersArray.getJSONObject(i);
+    //         for (int i = 0; i < customersArray.length(); i++) {
+    //             JSONObject customerData = customersArray.getJSONObject(i);
     
-                if (customerData.getString("CustomerID").equals(customerId)) {
-                    customerData.put("Phone", updatedContactNumber);
-                    customerData.put("Password", updatedPassword);
-                    isUpdated = true;
-                    break;
-                }
+    //             if (customerData.getString("CustomerID").equals(customerId)) {
+    //                 customerData.put("Phone", updatedContactNumber);
+    //                 customerData.put("Password", updatedPassword);
+    //                 isUpdated = true;
+    //                 break;
+    //             }
+    //         }
+    
+    //         if (isUpdated) {
+    //             try (BufferedWriter writer = new BufferedWriter(new FileWriter(CUSTOMER))) {
+    //                 writer.write(customersArray.toString(4)); // Pretty-print JSON with 4 spaces indentation
+    //             }
+    //         } else {
+    //             System.out.println("Customer ID not found: " + customerId);
+    //         }
+    
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
+    // }
+
+    public static void UpdateCustomer(String customerId, String updatedContactNumber, 
+                                  String updatedPassword, String updatedEmail, String updatedAddress) {
+    try {
+        String jsonData = new String(Files.readAllBytes(Paths.get(CUSTOMER))); // Read the JSON file
+        JSONArray customersArray = new JSONArray(jsonData);
+
+        boolean isUpdated = false;
+
+        for (int i = 0; i < customersArray.length(); i++) {
+            JSONObject customerData = customersArray.getJSONObject(i);
+
+            if (customerData.getString("CustomerID").equals(customerId)) {
+                customerData.put("Phone", updatedContactNumber);
+                customerData.put("Password", updatedPassword);
+                customerData.put("Email", updatedEmail); // ✅ Update Email
+                customerData.put("Address", updatedAddress); // ✅ Update Address
+                isUpdated = true;
+                break;
             }
-    
-            if (isUpdated) {
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(CUSTOMER))) {
-                    writer.write(customersArray.toString(4)); // Pretty-print JSON with 4 spaces indentation
-                }
-            } else {
-                System.out.println("Customer ID not found: " + customerId);
-            }
-    
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
+        if (isUpdated) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CUSTOMER))) {
+                writer.write(customersArray.toString(2)); // ✅ Pretty-print JSON with indentation
+            }
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+}
 
     public static ArrayList<Manager> getManagers() {
         ArrayList<Manager> buffer = new ArrayList<>();

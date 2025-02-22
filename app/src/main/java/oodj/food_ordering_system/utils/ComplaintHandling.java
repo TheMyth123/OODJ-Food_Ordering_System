@@ -40,24 +40,9 @@ public class ComplaintHandling {
         return tempCount;
     }
 
-    // public static void addComplaint(Complaint complaint) {
-    //     try {
-    //         String jsonData = new String(Files.readAllBytes(Paths.get(COMPLAINT)));
-    //         JSONArray complaintArray = new JSONArray(jsonData);
-    //         JSONObject complaintData = new JSONObject();
-    //         complaintData.put("ComplaintID", "CM" + getCMid());
-    //         complaintData.put("CustomerID", complaint.getUser());
-    //         complaintData.put("Messages", complaint.getMessages());
-    //         complaintData.put("Resolved", complaint.isResolved());
-    //         complaintArray.put(complaintData);
-    //         FileHandling.saveToFile(complaintArray, COMPLAINT);
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-    // }
+    
 
     public static void addNewComplaint(Complaint complaint, String customerID) {
-        System.out.println("DEBUG: addComplaint() was called");
     
         try {
             Path filePath = Paths.get(COMPLAINT);
@@ -87,7 +72,7 @@ public class ComplaintHandling {
             complaintData.put("ComplaintID", "CM" + String.format("%05d", getCMid() + 1));
             complaintData.put("CustomerID", customerID);
             complaintData.put("Messages", complaint.getMessages());
-            complaintData.put("Resolved", complaint.isResolved());
+            complaintData.put("Resolved", false); // Always set new complaints as unresolved
     
             complaintArray.put(complaintData);
             FileHandling.saveToFile(complaintArray, COMPLAINT);
@@ -127,7 +112,7 @@ public class ComplaintHandling {
         ArrayList<Complaint> complaints = new ArrayList<>();
         Path filePath = Paths.get(COMPLAINT);
     
-        // ✅ Check if the file exists before reading
+        //  Check if the file exists before reading
         if (!Files.exists(filePath)) {
             System.out.println("Error: Complaint JSON file not found.");
             return complaints; // Return empty list
@@ -135,9 +120,8 @@ public class ComplaintHandling {
     
         String jsonData = new String(Files.readAllBytes(filePath)).trim();
     
-        // ✅ Check if file is empty and prevent JSON parsing errors
+        //  Check if file is empty and prevent JSON parsing errors
         if (jsonData.isEmpty() || jsonData.equals("[]")) {
-            System.out.println("Warning: Complaint JSON file is empty.");
             return complaints; // Return empty list instead of trying to parse
         }
     
@@ -146,7 +130,7 @@ public class ComplaintHandling {
             for (int i = 0; i < complaintArray.length(); i++) {
                 JSONObject complaintData = complaintArray.getJSONObject(i);
     
-                // ✅ Ensure messages is never null
+                //  Ensure messages is never null
                 List<String> messages = new ArrayList<>();
                 if (complaintData.has("Messages") && !complaintData.isNull("Messages")) {
                     JSONArray messagesArray = complaintData.optJSONArray("Messages"); // Avoid NullPointerException
@@ -156,11 +140,14 @@ public class ComplaintHandling {
                         }
                     }
                 }
+                boolean resolved = complaintData.optBoolean("Resolved", false); // Ensure boolean is read correctly
+                
     
                 Complaint complaint = new Complaint(
                     complaintData.getString("ComplaintID"),
                     complaintData.getString("CustomerID"),
-                    messages
+                    messages,
+                    resolved
                 );
                 complaints.add(complaint);
             }
@@ -188,10 +175,13 @@ public class ComplaintHandling {
                     for (int j = 0; j < messagesArray.length(); j++) {
                         messages.add(messagesArray.getString(j));
                     }
+                    boolean resolved = complaintData.getBoolean("Resolved");
+
                     return new Complaint(
                         complaintData.getString("ComplaintID"),
                         complaintData.getString("CustomerID"),
-                        messages
+                        messages,
+                        resolved
                     );
                 }
             }

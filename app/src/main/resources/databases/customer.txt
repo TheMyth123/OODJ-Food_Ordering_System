@@ -2,13 +2,13 @@
   {
     "Status": "True",
     "Email": "c1@gmail.com",
-    "Address": "1, Jalan 1",
+    "Address": "1, Jalan 2",
     "Username": "chua",
-    "Phone": "01134567890",
+    "Phone": "01134567891",
     "DOB": "1/January/1910",
     "CustomerID": "CS00001",
     "Gender": "Male",
-    "Balance": 237,
+    "Balance": 37,
     "Name": "c",
     "Password": "a55555"
   },

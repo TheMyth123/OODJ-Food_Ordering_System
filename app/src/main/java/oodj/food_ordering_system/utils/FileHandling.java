@@ -30,7 +30,8 @@ public class FileHandling {
         RATING_PATH("Rating", "app\\src\\main\\resources\\databases\\rating.txt"),
         COMPLAINT_PATH("Complaint", "app\\src\\main\\resources\\databases\\complaint.txt"),
         NOTIFICATION_PATH("Notification", "app\\src\\main\\resources\\databases\\notification.txt"),
-        ORDER_PATH("Order", "app\\src\\main\\resources\\databases\\order.txt");
+        ORDER_PATH("Order", "app\\src\\main\\resources\\databases\\order.txt"),
+        TASK_PATH("Task", "app\\src\\main\\resources\\databases\\delivery_runner_task.txt");
 
         private final String key, value;
 

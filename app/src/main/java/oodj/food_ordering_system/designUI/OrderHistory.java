@@ -1,6 +1,15 @@
 package oodj.food_ordering_system.designUI;
 
 
+import oodj.food_ordering_system.models.CusOrder;
+import oodj.food_ordering_system.models.Customer;
+import oodj.food_ordering_system.models.Payment;
+import oodj.food_ordering_system.models.Rating;
+import oodj.food_ordering_system.utils.DialogBox;
+import oodj.food_ordering_system.utils.OrderHandling;
+import oodj.food_ordering_system.utils.UserHandling;
+
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
@@ -18,15 +27,6 @@ import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
-import oodj.food_ordering_system.models.CusOrder;
-import oodj.food_ordering_system.models.Customer;
-import oodj.food_ordering_system.models.Payment;
-import oodj.food_ordering_system.models.Rating;
-import oodj.food_ordering_system.utils.DialogBox;
-import oodj.food_ordering_system.utils.OrderHandling;
-import oodj.food_ordering_system.utils.UserHandling;
-// TODO make the table refresh
-// TODO design have done yet, discard items will affect the cart.txt json format
 public class OrderHistory extends javax.swing.JFrame {
 
     private Customer endUser;
@@ -36,29 +36,20 @@ public class OrderHistory extends javax.swing.JFrame {
 
     public OrderHistory(Customer endUser) {
         this.endUser = endUser;            
-        System.out.println("CusDash initialized with customerID: " + endUser.getID()); // Debugging statement
         initComponents();
         ArrayList<Payment> payment = OrderHandling.getOrderHistory(); // Fetch cart items
         displayHistory(payment, endUser.getID()); // Display cart items
-        // addWindowFocusListener(new java.awt.event.WindowFocusListener() {
-        //     @Override
-        //     public void windowGainedFocus(java.awt.event.WindowEvent evt) {
-        //         // refreshCart();
-        //     }
-        //     @Override
-        //     public void windowLostFocus(java.awt.event.WindowEvent evt) {
-        //         // Do nothing
-        //     }
-        // });
         
     }
 
+
+    
 
     private void displayHistory(ArrayList<Payment> paymentList, String endUserID) {
         if (historyTable == null) {
             historyTable = new JTable(new DefaultTableModel(
                 new Object[][]{},
-                new String[]{"Order ID", "Service Type", "Delivery Address", "Total Amount", "Date", "Order Status", "Payment Status"}
+                new String[]{"Order ID", "Service Type", "Delivery Address", "Total Amount", "Date", "Order Status", "Payment Status", "Runner ID", "Task Status"}
             ));
         }
     
@@ -67,6 +58,11 @@ public class OrderHistory extends javax.swing.JFrame {
     
         for (Payment payment : paymentList) {
             if (payment.getCustomerID().equals(endUserID)) {
+                // Fetch Runner ID & Task Status based on OrderID
+                String[] taskDetails = OrderHandling.getTaskDetailsByOrderID(payment.getOrderID());
+                String taskStatus = taskDetails[0];
+                String runnerID = taskDetails[1];
+        
                 model.addRow(new Object[]{
                     payment.getOrderID(),
                     payment.getServiceType(),
@@ -74,116 +70,113 @@ public class OrderHistory extends javax.swing.JFrame {
                     payment.getTotalAmount(),
                     payment.getDate(),
                     payment.getOrderStatus(),
-                    payment.getPaymentStatus()
+                    payment.getPaymentStatus(),
+                    runnerID,  
+                    taskStatus 
                 });
             }
         }
-
+    
         JTextField searchField = new JTextField();
         searchField.setPreferredSize(new Dimension(200, 30));
-
         JButton searchButton = new JButton("Search");
-
-        // **Set TableRowSorter for Filtering**
+    
         TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
         historyTable.setRowSorter(rowSorter);
-
-        // **Search Button Click Event**
+    
         searchButton.addActionListener(e -> {
             String searchTerm = searchField.getText().trim();
             if (searchTerm.isEmpty()) {
-                rowSorter.setRowFilter(null); // ✅ Show all rows when search is empty
+                rowSorter.setRowFilter(null);
             } else {
-                rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm)); // Case-insensitive search
+                rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm));
             }
         });
-
-        // **Real-Time Search (While Typing)**
+    
         searchField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 String searchTerm = searchField.getText().trim();
                 if (searchTerm.isEmpty()) {
-                    rowSorter.setRowFilter(null); // ✅ Show all rows when search is cleared
+                    rowSorter.setRowFilter(null);
                 } else {
-                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm)); // Case-insensitive search
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm));
                 }
             }
         });
-
-        // **Create Search Panel**
+    
         JPanel searchPanel = new JPanel();
         searchPanel.add(new JLabel("Search:"));
         searchPanel.add(searchField);
         searchPanel.add(searchButton);
 
+         // **Scroll Pane for Order History Table**
+         JScrollPane scrollPane = new JScrollPane(historyTable);
+         scrollPane.setPreferredSize(new Dimension(500, 200));
+ 
+         JButton rateButton = new JButton("Rate");
+         rateButton.addActionListener(e -> {
+             int selectedRow = historyTable.getSelectedRow();
+             if (selectedRow != -1) {
+                 String selectedOrderID = model.getValueAt(selectedRow, 0).toString();
+                 showRatingDialog(selectedOrderID);
+             } else {
+                 JOptionPane.showMessageDialog(null, "Please select an order to rate.");
+             }
+         });
+     
+         // **Reorder Button**
+         JButton reorderButton = new JButton("Reorder");
+         reorderButton.addActionListener(e -> {
+             int selectedRow = historyTable.getSelectedRow();
+             if (selectedRow != -1) {
+                 String selectedOrderID = model.getValueAt(selectedRow, 0).toString();
+                 reorderItems(selectedOrderID, endUser.getID());
+             } else {
+                 JOptionPane.showMessageDialog(null, "Please select an order to reorder.");
+             }
+         });
+     
+         // **View Receipt Button**
+         JButton viewReceiptButton = new JButton("View Receipt");
+         viewReceiptButton.addActionListener(e -> {
+             int selectedRow = historyTable.getSelectedRow();
+             if (selectedRow != -1) {
+                 String selectedOrderID = model.getValueAt(selectedRow, 0).toString();
+                 showReceipt(selectedOrderID);
+             } else {
+                 JOptionPane.showMessageDialog(null, "Please select an order to view the receipt.");
+             }
+         });
+ 
+         JButton viewFeedbackButton = new JButton("View Feedback");
+         viewFeedbackButton.addActionListener(e -> {
+             int selectedRow = historyTable.getSelectedRow();
+             if (selectedRow != -1) {
+                 String selectedOrderID = model.getValueAt(selectedRow, 0).toString();
+                 showFeedback(selectedOrderID);
+             } else {
+                 JOptionPane.showMessageDialog(null, "Please select an order to view feedback.");
+             }
+         });
+     
+         // **Button Panel**
+         JPanel buttonPanel = new JPanel();
+         buttonPanel.add(rateButton);
+         buttonPanel.add(reorderButton);
+         buttonPanel.add(viewFeedbackButton);
+         buttonPanel.add(viewReceiptButton);
+     
+         // **Update UI**
+         title_container1.removeAll();
+         title_container1.setLayout(new BorderLayout());
+         title_container1.add(searchPanel, BorderLayout.NORTH); 
+         title_container1.add(scrollPane, BorderLayout.CENTER);
+         title_container1.add(buttonPanel, BorderLayout.SOUTH);
+         title_container1.revalidate();
+         title_container1.repaint();
+     }
     
-        // **Scroll Pane for Order History Table**
-        JScrollPane scrollPane = new JScrollPane(historyTable);
-        scrollPane.setPreferredSize(new Dimension(500, 200));
-
-        JButton rateButton = new JButton("Rate");
-        rateButton.addActionListener(e -> {
-            int selectedRow = historyTable.getSelectedRow();
-            if (selectedRow != -1) {
-                String selectedOrderID = model.getValueAt(selectedRow, 0).toString();
-                showRatingDialog(selectedOrderID);
-            } else {
-                JOptionPane.showMessageDialog(null, "Please select an order to rate.");
-            }
-        });
-    
-        // **Reorder Button**
-        JButton reorderButton = new JButton("Reorder");
-        reorderButton.addActionListener(e -> {
-            int selectedRow = historyTable.getSelectedRow();
-            if (selectedRow != -1) {
-                String selectedOrderID = model.getValueAt(selectedRow, 0).toString();
-                reorderItems(selectedOrderID);
-            } else {
-                JOptionPane.showMessageDialog(null, "Please select an order to reorder.");
-            }
-        });
-    
-        // **View Receipt Button**
-        JButton viewReceiptButton = new JButton("View Receipt");
-        viewReceiptButton.addActionListener(e -> {
-            int selectedRow = historyTable.getSelectedRow();
-            if (selectedRow != -1) {
-                String selectedOrderID = model.getValueAt(selectedRow, 0).toString();
-                showReceipt(selectedOrderID);
-            } else {
-                JOptionPane.showMessageDialog(null, "Please select an order to view the receipt.");
-            }
-        });
-
-        JButton viewFeedbackButton = new JButton("View Feedback");
-        viewFeedbackButton.addActionListener(e -> {
-            int selectedRow = historyTable.getSelectedRow();
-            if (selectedRow != -1) {
-                String selectedOrderID = model.getValueAt(selectedRow, 0).toString();
-                showFeedback(selectedOrderID);
-            } else {
-                JOptionPane.showMessageDialog(null, "Please select an order to view feedback.");
-            }
-        });
-    
-        // **Button Panel**
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(rateButton);
-        buttonPanel.add(reorderButton);
-        buttonPanel.add(viewFeedbackButton);
-        buttonPanel.add(viewReceiptButton);
-    
-        // **Update UI**
-        title_container1.removeAll();
-        title_container1.setLayout(new BorderLayout());
-        title_container1.add(searchPanel, BorderLayout.NORTH); 
-        title_container1.add(scrollPane, BorderLayout.CENTER);
-        title_container1.add(buttonPanel, BorderLayout.SOUTH);
-        title_container1.revalidate();
-        title_container1.repaint();
-    }
 
     private void showFeedback(String orderID) {
         // Fetch ratings for the selected orderID
@@ -206,7 +199,7 @@ public class OrderHistory extends javax.swing.JFrame {
     }
 
 
-    private void reorderItems(String orderID) {
+    private void reorderItems(String orderID, String endUser) {
         Payment payment = OrderHandling.getPaymentByID(orderID);
         if (payment == null) {
             JOptionPane.showMessageDialog(null, "Order not found!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -219,39 +212,39 @@ public class OrderHistory extends javax.swing.JFrame {
         );
     
         if (confirm == JOptionPane.YES_OPTION) {
-            // ✅ Step 1: Get current cart
+            //  Step 1: Get current cart
             ArrayList<CusOrder> cartItems = OrderHandling.getCart();
     
-            // ✅ Step 2: Loop through ordered items and update quantity if exists
+            //  Step 2: Loop through ordered items and update quantity if exists
             for (CusOrder newItem : payment.getOrderItems()) {
                 boolean itemExists = false;
     
                 for (CusOrder cartItem : cartItems) {
-                    if (cartItem.getMenuID().equals(newItem.getMenuID())) {
-                        // ✅ Update quantity instead of adding a new row
+                    if (cartItem.getMenuID().equals(newItem.getMenuID()) &&
+                        cartItem.getCustomer().getID().equals(endUser)) {  //Check Customer ID
                         cartItem.setQuantity(cartItem.getQuantity() + newItem.getQuantity());
                         itemExists = true;
                         break;
                     }
                 }
     
-                // ✅ Step 3: If item doesn't exist, add it
                 if (!itemExists) {
                     cartItems.add(new CusOrder(
                         newItem.getMenuID(), newItem.getQuantity(), newItem.getPrice(), newItem.getName(), newItem.getCustomer()
                     ));
                 }
             }
+
     
-            // ✅ Step 4: Save updated cart
             OrderHandling.saveCart(cartItems);
+
     
-            // ✅ Step 5: Show success message
             JOptionPane.showMessageDialog(null, "Items added to cart successfully!", "Reorder Success", JOptionPane.INFORMATION_MESSAGE);
     
-            // ✅ Step 6: Refresh Cart Page (if needed)
-            // goToCartPage();
+            
         }
+
+    
     }
 
 
@@ -271,92 +264,6 @@ public class OrderHistory extends javax.swing.JFrame {
     }
     
     
-    
-
-
-    // private void showRatingDialog(String orderID) {
-    //     String[] ratings = {"1", "2", "3", "4", "5"};
-    //     String ratingStr = (String) JOptionPane.showInputDialog(
-    //             null,
-    //             "Rate Order ID: " + orderID,
-    //             "Order Rating",
-    //             JOptionPane.QUESTION_MESSAGE,
-    //             null,
-    //             ratings,
-    //             ratings[4] // Default rating is 5
-    //     );
-    
-    //     if (ratingStr != null) {
-    //         int rating = Integer.parseInt(ratingStr); // Convert String to int
-    
-    //         JOptionPane.showMessageDialog(null, "You rated Order " + orderID + " with " + rating + " stars.");
-            
-    //         Payment payment = OrderHandling.getPaymentByID(orderID); 
-    //         Customer customer = UserHandling.getCustomerByID(endUser.getID()); 
-    
-    //         OrderHandling.saveRating(payment, customer, rating); 
-    //         // Store the rating in the database or update the order history
-    //     }
-    // }
-
-    // private void showRatingDialog(String orderID) {
-    //     String[] ratings = {"1", "2", "3", "4", "5"};
-
-    //     // Step 1: Get the Food Rating
-    //     String foodRatingStr = (String) JOptionPane.showInputDialog(
-    //             null,
-    //             "Rate the FOOD for Order ID: " + orderID,
-    //             "Food Rating",
-    //             JOptionPane.QUESTION_MESSAGE,
-    //             null,
-    //             ratings,
-    //             ratings[4] // Default rating is 5
-    //     );
-
-    //     // Step 2: Get the Vendor Rating
-    //     String vendorRatingStr = (String) JOptionPane.showInputDialog(
-    //             null,
-    //             "Rate the VENDOR service for Order ID: " + orderID,
-    //             "Vendor Rating",
-    //             JOptionPane.QUESTION_MESSAGE,
-    //             null,
-    //             ratings,
-    //             ratings[4]
-    //     );
-
-    //     // Step 3: Get the Runner Rating
-    //     String runnerRatingStr = (String) JOptionPane.showInputDialog(
-    //             null,
-    //             "Rate the DELIVERY RUNNER for Order ID: " + orderID,
-    //             "Runner Rating",
-    //             JOptionPane.QUESTION_MESSAGE,
-    //             null,
-    //             ratings,
-    //             ratings[4]
-    //     );
-
-    //     if (foodRatingStr != null && vendorRatingStr != null && runnerRatingStr != null) {
-    //         int foodRating = Integer.parseInt(foodRatingStr);
-    //         int vendorRating = Integer.parseInt(vendorRatingStr);
-    //         int runnerRating = Integer.parseInt(runnerRatingStr);
-
-    //         JOptionPane.showMessageDialog(null,
-    //                 "Your Ratings for Order " + orderID + ":\n"
-    //                         + "Food: " + foodRating + " stars\n"
-    //                         + "Vendor: " + vendorRating + " stars\n"
-    //                         + "Runner: " + runnerRating + " stars");
-
-    //         Payment payment = OrderHandling.getPaymentByID(orderID);
-    //         Customer customer = UserHandling.getCustomerByID(endUser.getID());
-
-    //         // Step 4: Save each rating separately
-
-    //         OrderHandling.saveRating(payment, customer, foodRating, Rating.RatingType.FOOD);
-    //         OrderHandling.saveRating(payment, customer, vendorRating, Rating.RatingType.VENDOR);
-    //         OrderHandling.saveRating(payment, customer, runnerRating, Rating.RatingType.RUNNER);
-
-    //     }
-    // }
 
     private void showRatingDialog(String orderID) {
         String[] ratings = {"1", "2", "3", "4", "5"};
@@ -469,7 +376,6 @@ public class OrderHistory extends javax.swing.JFrame {
         m6 = new javax.swing.JPanel();
         margin5 = new javax.swing.JPanel();
         m7 = new javax.swing.JPanel();
-        btn_Noti = new javax.swing.JButton();
         btn_complaint = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -865,48 +771,6 @@ public class OrderHistory extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>    
 
-    // //TODO I USED ADMIN DATA TO GET NOTIFICATIONS. CHANGE TO OWN DATA
-    // List<Notification> notifications = NotificationUtils.getUnreadNotifications(NotificationUtils.getAllNotifications());
-    
-    // private void btn_NotiActionPerformed(java.awt.event.ActionEvent evt) {                                  
-    //     GlassPanePopup.showPopup(new NotificationPanel(notifications), new DefaultOption(){
-    //         @Override
-    //         public float opacity() {
-    //             return 0;
-    //         }
-
-    //         @Override
-    //         public LayoutCallback getLayoutCallBack(java.awt.Component parent) {
-    //             return new DefaultLayoutCallBack(parent){
-    //                 @Override
-    //                 public void correctBounds(ComponentWrapper cw) {
-    //                     if (parent.isVisible()){
-    //                         java.awt.Point pl = parent.getLocationOnScreen();
-    //                         java.awt.Point bl = btn_Noti.getLocationOnScreen();
-    //                         int x = bl.x - pl.x;
-    //                         int y = bl.y - pl.y;
-    //                         cw.setBounds(x - cw.getWidth() + btn_Noti.getWidth(), y + btn_Noti.getHeight(), cw.getWidth(), cw.getHeight());
-    //                     } else {
-    //                         super.correctBounds(cw);
-    //                     }
-    //                 }
-    //             };
-    //         }
-
-    //     });
-    // }   
-
-
-    private void discardItem(String item) {
-        // Read the current cart items from the file
-        // ArrayList<String> cartItems = OrderHandling.getCart();
-        // // Remove the selected item from the list
-        // cartItems.remove(item);
-        // // Write the updated list back to the file
-        // OrderHandling.saveCart(cartItems);
-        // System.out.println("Discard item: " + item);
-    }
-
     
 
     private void btn_logoutActionPerformed(java.awt.event.ActionEvent evt) {                                           
@@ -969,7 +833,6 @@ public class OrderHistory extends javax.swing.JFrame {
     private javax.swing.JPanel title_container;
     private javax.swing.JPanel title_container1;
     private javax.swing.JLabel welcome;
-    private javax.swing.JButton btn_Noti;
     private javax.swing.JButton btn_wallet;
     private javax.swing.JButton btn_complaint;
     // End of variables declaration                   

@@ -14,6 +14,7 @@ import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
 import oodj.food_ordering_system.models.Notification;
 import oodj.food_ordering_system.models.Order;
+import oodj.food_ordering_system.models.Vendor;
 import oodj.food_ordering_system.utils.DialogBox;
 import oodj.food_ordering_system.utils.FileHandling;
 import oodj.food_ordering_system.utils.NotificationUtils;
@@ -25,6 +26,8 @@ import raven.glasspanepopup.DefaultOption;
 import raven.glasspanepopup.GlassPanePopup;
 
 public class ManageOrder extends javax.swing.JFrame {
+
+    private Vendor endUserVD;
 
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(() -> {
@@ -797,7 +800,7 @@ public class ManageOrder extends javax.swing.JFrame {
     
     private void btn_RevenueActionPerformed(java.awt.event.ActionEvent evt) {
         dispose();
-        new RevenueDashboardView().setVisible(true);                                         
+        new VendorRevenue().setVisible(true);                                         
     } 
     
     private void btn_logoutActionPerformed(java.awt.event.ActionEvent evt) {

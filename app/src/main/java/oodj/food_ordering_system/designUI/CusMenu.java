@@ -5,32 +5,28 @@ import javax.swing.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import oodj.food_ordering_system.models.Customer;
 import oodj.food_ordering_system.models.Menu;
 import oodj.food_ordering_system.models.Rating;
-import oodj.food_ordering_system.utils.DialogBox;
-// TODO import dialog box after added cart
-// import oodj.food_ordering_system.utils.DialogBox;
+import oodj.food_ordering_system.models.Rating.RatingType;
 import oodj.food_ordering_system.utils.FileHandling;
 import oodj.food_ordering_system.utils.OrderHandling;
 import javax.swing.table.DefaultTableModel;
 
 
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 import java.awt.event.MouseAdapter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-// quantity calculation error
 public class CusMenu extends javax.swing.JFrame {
 
     private JPanel menuPanel;
@@ -39,29 +35,38 @@ public class CusMenu extends javax.swing.JFrame {
     private String[] selectedItem;
     private List<String[]> cart;
     private JPanel selectedItemPanel;
-    private String customerID;
     private Map<String, Integer> itemQuantities;
     private List<Menu> menuItems; // Store all menu items globally
+    private Customer endUser; // Ensure this is declared at the class level
 
-    
-    
+    private String customerID; // Declare at class level
+
     public CusMenu(String vendorID) {
-        // this.customerID = LoginPage.getLoginID();
+        this.endUser = LoginPage.getEndUser();
+        if (this.endUser != null) {
+            this.customerID = endUser.getID(); //  Assign customer ID
+        } else {
+            JOptionPane.showMessageDialog(null, "Error: User not logged in!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
 
-        cart = new ArrayList<>();
-        selectedItemPanel = null;
-        selectedItem = null;
-        // CusMenu.vendorID = vendorID;
-        itemQuantities = new HashMap<>();
-
+        //  Initialize cart to prevent NullPointerException
+        this.cart = new ArrayList<>();
 
         initComponents(vendorID);
-        
     }
-// TODO need OOP
+
+
+
     private void addToCart() throws IOException {
         String filePath = FileHandling.filePath.CART_PATH.getValue();
         JSONArray cartArray = new JSONArray();
+    
+        //  Ensure `endUser` exists and assign `customerID`
+        if (endUser == null) {
+            JOptionPane.showMessageDialog(null, "Error: User not logged in!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        String customerID = endUser.getID(); // Assign customer ID from logged-in user
     
         // Read existing cart items from the file
         try {
@@ -78,23 +83,17 @@ public class CusMenu extends javax.swing.JFrame {
             return;
         }
     
-        // Process each item in the cart list
+        //  Process each item in the cart list
         for (String[] item : cart) {
-            // if (item.length < 6) {
-            //     System.err.println("Invalid item array length: " + item.length);
-            //     continue;
-            // }
-    
             String menuID = item[0];
-            // String customerID = item[2]; // Assuming customerID is in the item array
             int quantityToAdd = Integer.parseInt(item[3]);
             boolean found = false;
     
-            // Check if the item already exists in the cart (JSON format handling)
+            //  Check if the item already exists in the cart
             for (int i = 0; i < cartArray.length(); i++) {
                 JSONObject cartItem = cartArray.getJSONObject(i);
                 if (cartItem.getString("MenuID").equals(menuID) && cartItem.getString("CustomerID").equals(customerID)) {
-                    // Update existing quantity
+                    //  Update existing quantity
                     int existingQuantity = cartItem.getInt("quantity");
                     cartItem.put("quantity", existingQuantity + quantityToAdd);
                     found = true;
@@ -107,10 +106,10 @@ public class CusMenu extends javax.swing.JFrame {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("MenuID", menuID);
                 jsonObject.put("quantity", quantityToAdd);
-                double price = Double.parseDouble(item[4].replace("RM", "").trim()); // Remove "RM" prefix and parse to double
+                double price = Double.parseDouble(item[4].replace("RM", "").trim()); // Remove "RM" prefix and parse
                 jsonObject.put("price", price);
                 jsonObject.put("name", item[1]);
-                jsonObject.put("CustomerID", customerID); // Use the customerID field
+                jsonObject.put("CustomerID", customerID); // Assign customer ID
     
                 cartArray.put(jsonObject);
             }
@@ -118,7 +117,7 @@ public class CusMenu extends javax.swing.JFrame {
     
         // Save updated JSON data back to the file
         try {
-            Files.write(Paths.get(filePath), cartArray.toString(4).getBytes()); // Pretty print with indentation
+            Files.write(Paths.get(filePath), cartArray.toString(4).getBytes()); 
         } catch (IOException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error writing to cart file.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -126,80 +125,8 @@ public class CusMenu extends javax.swing.JFrame {
     
         cart.clear();
     }
+    
 
-
-    
-    // test
- 
-    
-    // private void addToCart() throws IOException {
-    //     String filePath = FileHandling.filePath.CART_PATH.getValue();
-    //     JSONArray cartArray = new JSONArray();
-    
-    //     // Read existing cart items from the file
-    //     try {
-    //         String content = new String(Files.readAllBytes(Paths.get(filePath)));
-    //         if (!content.trim().isEmpty()) {
-    //             cartArray = new JSONArray(content);
-    //         }
-    //     } catch (IOException e) {
-    //         e.printStackTrace();
-    //         JOptionPane.showMessageDialog(null, "Error reading cart file.", "Error", JOptionPane.ERROR_MESSAGE);
-    //         return;
-    //     } catch (Exception e) {
-    //         JOptionPane.showMessageDialog(null, "Invalid JSON format in cart file.", "Error", JOptionPane.ERROR_MESSAGE);
-    //         return;
-    //     }
-    
-    //     // Process each item in the cart list
-    //     for (String[] item : cart) {
-    //         if (item.length < 6) {
-    //             System.err.println("Invalid item array length: " + item.length);
-    //             continue;
-    //         }
-    
-    //         String menuID = item[0];
-    //         int quantityToAdd = Integer.parseInt(item[3]);
-    //         boolean found = false;
-    
-    //         // Check if the item already exists in the cart (JSON format handling)
-    //         for (int i = 0; i < cartArray.length(); i++) {
-    //             JSONObject cartItem = cartArray.getJSONObject(i);
-    //             if (cartItem.getString("MenuID").equals(menuID)) {
-    //                 // Update existing quantity
-    //                 int existingQuantity = cartItem.getInt("quantity");
-    //                 cartItem.put("quantity", existingQuantity + quantityToAdd);
-    //                 found = true;
-    //                 break;
-    //             }
-    //         }
-    
-    //         // If item does not exist, add a new JSON object
-    //         if (!found) {
-    //             JSONObject jsonObject = new JSONObject();
-    //             jsonObject.put("MenuID", menuID);
-    //             jsonObject.put("CustomerID", customerID); // Use the customerID field
-    //             jsonObject.put("name", item[1]);
-    //             jsonObject.put("description", item[2]);
-    //             jsonObject.put("quantity", quantityToAdd);
-    //             jsonObject.put("price", item[4]);
-    //             jsonObject.put("imagePath", item[5]);
-    
-    //             cartArray.put(jsonObject);
-    //         }
-    //     }
-    
-    //     // Save updated JSON data back to the file
-    //     try {
-    //         Files.write(Paths.get(filePath), cartArray.toString(4).getBytes()); // Pretty print with indentation
-    //     } catch (IOException e) {
-    //         e.printStackTrace();
-    //         JOptionPane.showMessageDialog(null, "Error writing to cart file.", "Error", JOptionPane.ERROR_MESSAGE);
-    //     }
-    
-    //     cart.clear();
-    // }
-    
 
     
 private void initComponents(String vendorID) {
@@ -302,139 +229,52 @@ private void initComponents(String vendorID) {
     title.setMinimumSize(new java.awt.Dimension(694, 50));
     title.setPreferredSize(new java.awt.Dimension(694, 50));
     
-    // JButton ratingsButton = new JButton("⭐ View Ratings");
-    // ratingsButton.setFont(new Font("Segoe UI", Font.BOLD, 16));
-    // ratingsButton.setForeground(new Color(255, 169, 140));
-    // ratingsButton.setBackground(new Color(43, 43, 43));
-    // ratingsButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-    // ratingsButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    
 
-    // ratingsButton.addActionListener(e -> {
-    //     List<Rating> vendorRatings = OrderHandling.getVendorRatings(vendorID); // Fetch ratings
-
-    //     if (vendorRatings.isEmpty()) {
-    //         JOptionPane.showMessageDialog(null, "No ratings available for this vendor.", "Ratings", JOptionPane.INFORMATION_MESSAGE);
-    //         return;
-    //     }
-
-    //     // Create a new dialog to display ratings
-    //     JDialog ratingsDialog = new JDialog((Frame) null, "Customer Ratings", true);
-    //     ratingsDialog.setSize(500, 300);
-    //     ratingsDialog.setLayout(new BorderLayout());
-
-    //     // Column names
-    //     String[] columns = {"Customer", "Rating", "Review"};
-
-    //     // Table model
-    //     DefaultTableModel model = new DefaultTableModel();
-        
-    //     // Populate table with rating data
-    //     for (Rating rating : vendorRatings) {
-    //         model.addRow(new Object[]{rating.getCustomerName(), rating.getRatingStars() + " ⭐", rating.getReviewText()});
-    //     }
-
-    //     JTable ratingsTable = new JTable();
-    //     ratingsTable.setEnabled(false); // Make table read-only
-    //     JScrollPane scrollPane = new JScrollPane(ratingsTable);
-
-    //     // Add components to dialog
-    //     ratingsDialog.add(scrollPane, BorderLayout.CENTER);
-
-    //     // Close button
-    //     JButton closeButton = new JButton("Close");
-    //     closeButton.addActionListener(ev -> ratingsDialog.dispose());
-    //     JPanel buttonPanel = new JPanel();
-    //     buttonPanel.add(closeButton);
-        
-    //     ratingsDialog.add(buttonPanel, BorderLayout.SOUTH);
-
-    //     // Center the dialog on screen
-    //     ratingsDialog.setLocationRelativeTo(null);
-    //     ratingsDialog.setVisible(true);
-    // });
-
-    JButton ratingsButton = new JButton("⭐ View Ratings");
+    JButton ratingsButton = new JButton("View Ratings");
     ratingsButton.setFont(new Font("Segoe UI", Font.BOLD, 16));
     ratingsButton.setForeground(new Color(255, 169, 140));
     ratingsButton.setBackground(new Color(43, 43, 43));
     ratingsButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
     ratingsButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-    // ratingsButton.addActionListener(e -> {
-    //     List<Rating> vendorRatings = OrderHandling.getVendorRatings(vendorID);
 
-    //     if (vendorRatings.isEmpty()) {
-    //         JOptionPane.showMessageDialog(null, "No vendor ratings available for this vendor.", "Ratings", JOptionPane.INFORMATION_MESSAGE);
-    //         return;
-    //     }
-
-    //     // Step 5: Create a new dialog to display ratings
-    //     JDialog ratingsDialog = new JDialog((Frame) null, "Customer Ratings", true);
-    //     ratingsDialog.setSize(500, 300);
-    //     ratingsDialog.setLayout(new BorderLayout());
-
-    //     // Column names
-    //     String[] columns = {"Customer ID", "Rating", "Order ID"};
-
-    //     // Table model
-    //     DefaultTableModel model = new DefaultTableModel();
-    //     // DefaultTableModel model = new DefaultTableModel(columns, 0);        
-    //     // Populate table with rating data
-    //     for (Rating rating : vendorRatings) {
-    //         model.addRow(new Object[]{rating.getCustomerID(), rating.getRating() + " ⭐", rating.getOrderID()});
-    //     }
-
-    //     JTable ratingsTable = new JTable();
-    //     ratingsTable.setEnabled(false); // Make table read-only
-    //     JScrollPane scrollPane = new JScrollPane(ratingsTable);
-
-    //     // Add components to dialog
-    //     ratingsDialog.add(scrollPane, BorderLayout.CENTER);
-
-    //     // Close button
-    //     JButton closeButton = new JButton("Close");
-    //     closeButton.addActionListener(ev -> ratingsDialog.dispose());
-    //     JPanel buttonPanel = new JPanel();
-    //     buttonPanel.add(closeButton);
-        
-    //     ratingsDialog.add(buttonPanel, BorderLayout.SOUTH);
-
-    //     // Center the dialog on screen
-    //     ratingsDialog.setLocationRelativeTo(null);
-    //     ratingsDialog.setVisible(true);
-    // });
 
     ratingsButton.addActionListener(e -> {
         List<Rating> vendorRatings = OrderHandling.getVendorRatings(vendorID);
-    
-        if (vendorRatings.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "No vendor ratings available for this vendor.", "Ratings", JOptionPane.INFORMATION_MESSAGE);
+
+        // Filter only vendor ratings
+        List<Rating> filteredVendorRatings = vendorRatings.stream()
+            .filter(rating -> rating.getRatingType() == RatingType.VENDOR) // Use enum comparison
+            .collect(Collectors.toList());
+
+        if (filteredVendorRatings.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No vendor ratings available for this vendor.", "Vendor Ratings", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-    
+
         // Step 5: Create a new dialog to display ratings
-        JDialog ratingsDialog = new JDialog((Frame) null, "Customer Ratings", true);
+        JDialog ratingsDialog = new JDialog((Frame) null, "Vendor Ratings", true);
         ratingsDialog.setSize(500, 300);
         ratingsDialog.setLayout(new BorderLayout());
-    
-        // Column names
+
         String[] columns = {"Customer ID", "Rating", "Order ID"};
-    
+
         // Table model
-        DefaultTableModel model = new DefaultTableModel(columns, 0); // ✅ Corrected!
-    
-        // Populate table with rating data
-        for (Rating rating : vendorRatings) {
+        DefaultTableModel model = new DefaultTableModel(columns, 0);
+
+        // Populate table with vendor rating data
+        for (Rating rating : filteredVendorRatings) {
             model.addRow(new Object[]{rating.getCustomerID(), rating.getRating() + " ⭐", rating.getOrderID()});
         }
-    
-        JTable ratingsTable = new JTable(model); // ✅ Set model properly!
+
+        JTable ratingsTable = new JTable(model);
         ratingsTable.setEnabled(false); // Make table read-only
         JScrollPane scrollPane = new JScrollPane(ratingsTable);
-    
+
         // Add components to dialog
         ratingsDialog.add(scrollPane, BorderLayout.CENTER);
-    
+
         // Close button
         JButton closeButton = new JButton("Close");
         closeButton.addActionListener(ev -> ratingsDialog.dispose());
@@ -442,11 +282,12 @@ private void initComponents(String vendorID) {
         buttonPanel.add(closeButton);
         
         ratingsDialog.add(buttonPanel, BorderLayout.SOUTH);
-    
+
         // Center the dialog on screen
         ratingsDialog.setLocationRelativeTo(null);
         ratingsDialog.setVisible(true);
     });
+
     
 
         
@@ -490,7 +331,10 @@ private void initComponents(String vendorID) {
     itemsPanel.setBackground(new Color(31, 31, 31));
 
     try {
-        List<Menu> menuItems = OrderHandling.readMenuFile(vendorID);
+        List<Menu> menuItems = OrderHandling.readMenuFile(vendorID).stream()
+        .filter(item -> "True".equalsIgnoreCase(item.getStatus())) //  Convert string to boolean properly
+        .collect(Collectors.toList());
+        
         for (Menu item : menuItems) {
             JPanel itemPanel = new JPanel();
             itemPanel.setLayout(new BorderLayout());
@@ -521,13 +365,10 @@ private void initComponents(String vendorID) {
 
 
             String imagePath = OrderHandling.getImagePathByMenuID(item.getId());
-            System.out.println("Full Image Path: " + imagePath);
 
             if (imagePath != null) {
                 URL imageUrl = getClass().getResource(imagePath);
-                if (imageUrl == null) {
-                    System.out.println("❌ Image not found in resources: " + imagePath);
-                } else {
+                if (imageUrl != null) {
                     ImageIcon originalIcon = new ImageIcon(imageUrl);
                     Image originalImage = originalIcon.getImage();
                     Image resizedImage = originalImage.getScaledInstance(120, 90, Image.SCALE_SMOOTH);
@@ -741,12 +582,6 @@ private void initComponents(String vendorID) {
     }
 
     
-        
-
-        
-        
-        
-
   
     private javax.swing.JButton backBtn;
     private javax.swing.JPanel back_icon;

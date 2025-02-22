@@ -43,22 +43,15 @@ public class CusDash extends javax.swing.JFrame {
     private JButton searchButton;
     private ArrayList<Vendor> vendors;
 
-// add run method
-    // public static void run() {
-    //     java.awt.EventQueue.invokeLater(() -> {
-    //         new CusDash().setVisible(true);
-    //     });
-    // }
 
-// TODO check again customerID
+
     public CusDash() {
 
         this.endUser = LoginPage.getEndUser();      
-        vendors = UserHandling.getVendors(); // ✅ Initialize vendors list here
+        vendors = UserHandling.getVendors(); 
         if (vendors == null) {
-            vendors = new ArrayList<>(); // ✅ Prevent NullPointerException
+            vendors = new ArrayList<>(); 
         }  
-        System.out.println("CusDash initialized with customerID: " + endUser.getID()); // Debugging statement
 
         initComponents();
         GlassPanePopup.install(this);
@@ -68,7 +61,6 @@ public class CusDash extends javax.swing.JFrame {
     }
 
     private void loadName() {
-        // Customer endUser = LoginPage.getEndUser();
         customer_username.setText(endUser.getUsername());
     }
 
@@ -584,8 +576,7 @@ public class CusDash extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>    
 
-    //TODO I USED ADMIN DATA TO GET NOTIFICATIONS. CHANGE TO OWN DATA
-    // List<Notification> notifications = NotificationUtils.getUnreadNotifications(NotificationUtils.getAllNotifications(), customerID);
+    
     
     private List<Notification> getNotifications() {
         if (notifications == null) {
@@ -625,24 +616,7 @@ public class CusDash extends javax.swing.JFrame {
     }  
 
 
-    private void btn_plusActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        // Disable the current CusDash window
-        this.setEnabled(false);
     
-        // Create and show the TopUp window
-        TopUp topup = new TopUp(endUser);
-    
-        // Add a window listener to re-enable CusDash when TopUp is closed
-        topup.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                CusDash.this.setEnabled(true);
-                CusDash.this.toFront();
-            }
-        });
-    
-        topup.setVisible(true);
-    }
 
     private void btn_logoutActionPerformed(java.awt.event.ActionEvent evt) {                                           
         boolean confirm = DialogBox.confirmMessage("Are you sure you want to logout?", "Logout");

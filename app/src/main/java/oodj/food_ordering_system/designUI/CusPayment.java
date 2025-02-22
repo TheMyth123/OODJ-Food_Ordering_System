@@ -2,12 +2,6 @@ package oodj.food_ordering_system.designUI;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -20,11 +14,7 @@ import javax.swing.JComboBox;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import oodj.food_ordering_system.models.Credit;
-import oodj.food_ordering_system.models.CusOrder;
 import oodj.food_ordering_system.models.Customer;
-import oodj.food_ordering_system.utils.FileHandling;
 import oodj.food_ordering_system.utils.OrderHandling;
 import oodj.food_ordering_system.utils.UserHandling;
 
@@ -317,8 +307,7 @@ public class CusPayment extends javax.swing.JFrame {
         try {
             double customerBalance = endUser.getBalance();
     
-            System.out.println("Available credit: " + customerBalance);
-            System.out.println("Total amount: " + totalAmount);
+            
     
             // Check if the customer has enough balance
             if (customerBalance >= totalAmount) {
@@ -339,14 +328,15 @@ public class CusPayment extends javax.swing.JFrame {
     
                 // Generate OrderID
                 String orderID = "OR" + String.format("%05d", OrderHandling.getORid() + 1);
+                JOptionPane.showMessageDialog(this, "Payment successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                String status = "Pending";
     
                 // Call savePayment to save the payment details
-                OrderHandling.savePayment(orderID, endUser.getID(), orderItems, totalAmount, "Completed", serviceType, address, "Pending");
+                OrderHandling.savePayment(status, orderID, endUser.getID(), orderItems, totalAmount, "Completed", serviceType, address, "Pending");
     
                 paymentWindow.setPaymentStatus("Completed");
 
     
-                JOptionPane.showMessageDialog(this, "Payment successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
 
                 dispose(); // Close the payment page
     
@@ -361,8 +351,11 @@ public class CusPayment extends javax.swing.JFrame {
 
     
 
+    
+
     private void payButtonActionPerformed(java.awt.event.ActionEvent evt) {                                          
         String selectedAddress = addressComboBox.getSelectedItem().toString();
+        
         if (selectedAddress.equals("Other")) {
             selectedAddress = addressField.getText().trim();
             if (selectedAddress.isEmpty()) {
@@ -370,18 +363,32 @@ public class CusPayment extends javax.swing.JFrame {
                 return;
             }
         }
-        processPayment(selectedAddress, orderItems, serviceType, totalAmount);
+    
+        double finalAmount = totalAmount;
+    
+        // Check if delivery service is selected
+        if (serviceType.equals("Request for Delivery")) {
+            int response = JOptionPane.showConfirmDialog(
+                this,
+                "Note: An additional RM5 charge will be applied for delivery service.\nDo you wish to proceed?",
+                "Delivery Charge Notice",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+            );
+    
+            if (response != JOptionPane.YES_OPTION) {
+                return; // Stop payment process if the user selects "No"
+            }
+    
+            // Add RM5 delivery charge
+            finalAmount += 5.00;
+        }
+    
+        processPayment(selectedAddress, orderItems, serviceType, finalAmount);
     }
+    
 
-    // private static String getFoodNameFromMenu(JSONArray menuItems, String menuID) {
-    //     for (int j = 0; j < menuItems.length(); j++) {
-    //         JSONObject menuItem = menuItems.getJSONObject(j);
-    //         if (menuItem.getString("menuID").equals(menuID)) {
-    //             return menuItem.getString("foodName");
-    //         }
-    //     }
-    //     return "Unknown Item";  // Default if menuID is not found
-    // }
+    
     
     private void handleAddressSelection() {
         if (addressComboBox.getSelectedItem().equals("Other")) {

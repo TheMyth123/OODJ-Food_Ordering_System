@@ -25,63 +25,19 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-// Testing
 public class VendorHandling {
     private static final String MENU = FileHandling.filePath.MENU_PATH.getValue();
     private static final String PAYMENT = FileHandling.filePath.PAYMENT_PATH.getValue();
-
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Order History Checker");
-        frame.setSize(400, 200);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        JPanel panel = new JPanel();
-        frame.add(panel);
-        placeComponents(panel);
-
-        frame.setVisible(true);
-    }
-
-    private static void placeComponents(JPanel panel) {
-        panel.setLayout(null);
-
-        JLabel periodLabel = new JLabel("Select Period:");
-        periodLabel.setBounds(10, 20, 150, 25);
-        panel.add(periodLabel);
-
-        String[] periods = {"Daily", "Monthly", "Quarterly"};
-        JComboBox<String> periodDropdown = new JComboBox<>(periods);
-        periodDropdown.setBounds(150, 20, 150, 25);
-        panel.add(periodDropdown);
-
-        JButton checkButton = new JButton("Check History");
-        checkButton.setBounds(150, 60, 150, 25);
-        panel.add(checkButton);
-
-        JTextArea resultArea = new JTextArea();
-        resultArea.setBounds(10, 100, 360, 50);
-        panel.add(resultArea);
-
-        checkButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String selectedPeriod = (String) periodDropdown.getSelectedItem();
-                JSONArray history = getVendorOrderHistory("VD00001", selectedPeriod);
-                resultArea.setText(selectedPeriod + " order history: " + history.toString());
-                createRevenueChart(history);
-
-            }
-        });
-    }
                 
                 
-    private static JSONArray getVendorOrderHistory(String vendorID, String period) {
+
+    public static JSONArray getVendorOrderHistory(String vendorID, String period) {
         try {
             String filePath = PAYMENT;
             FileHandling.checkFile(filePath);
             JSONArray orderArray = new JSONArray();
             File file = new File(filePath);
-
+    
             if (file.length() > 0) {
                 try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
                     StringBuilder content = new StringBuilder();
@@ -92,11 +48,11 @@ public class VendorHandling {
                     orderArray = new JSONArray(content.toString());
                 }
             }
-
+    
             JSONArray filteredOrders = new JSONArray();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Calendar cal = Calendar.getInstance();
-
+    
             switch (period.toLowerCase()) {
                 case "daily":
                     cal.add(Calendar.DAY_OF_YEAR, -1);
@@ -108,12 +64,18 @@ public class VendorHandling {
                     cal.add(Calendar.MONTH, -3);
                     break;
             }
-
+    
             Date cutoffDate = cal.getTime();
-            System.out.println("Cutoff Date: " + cutoffDate); // Debugging
-
+    
             for (int i = 0; i < orderArray.length(); i++) {
                 JSONObject order = orderArray.getJSONObject(i);
+    
+                // Check if order status is "Completed"
+                String orderStatus = order.optString("OrderStatus", ""); 
+                if (!orderStatus.equals("Completed")) {
+                    continue; // Skip non-completed orders
+                }
+    
                 System.out.println("Processing Order: " + order.toString(2)); // Debugging
                 
                 JSONArray orderItems = order.getJSONArray("OrderItems");
@@ -123,12 +85,10 @@ public class VendorHandling {
                     JSONObject menuItem = getMenuItem(menuID);
                     
                     if (!menuItem.has("VendorID")) continue;
-                    System.out.println("Menu Item: " + menuItem.toString(2)); // Debugging
                     
                     if (menuItem.getString("VendorID").equals(vendorID)) {
                         Date orderDate = sdf.parse(order.getString("Date"));
-                        System.out.println("Order Date: " + orderDate); // Debugging
-
+    
                         if (!orderDate.before(cutoffDate)) {
                             filteredOrders.put(order);
                         }
@@ -141,8 +101,9 @@ public class VendorHandling {
             return new JSONArray();
         }
     }
+    
 
-    private static JSONObject getMenuItem(String menuID) {
+    public static JSONObject getMenuItem(String menuID) {
     try {
         String filePath = MENU;
         FileHandling.checkFile(filePath);
@@ -180,7 +141,7 @@ public class VendorHandling {
 
 
 
-    private static void createRevenueChart(JSONArray history) {
+    public static void createRevenueChart(JSONArray history) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         for (int i = 0; i < history.length(); i++) {
             JSONObject order = history.getJSONObject(i);

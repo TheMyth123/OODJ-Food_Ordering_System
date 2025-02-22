@@ -4,6 +4,8 @@ public class Vendor extends User {
     private String ID, name, foodcourtname, DOB, contactnumber, email;    
     private Boolean status;
     private double rating; // Added missing rating variable
+    private String runnerID;
+
 
     public Vendor(String ID, String name, String foodcourtname, String contactnumber, String username, String password, Boolean status, String DOB, String email) {
         super(username, password); // Use the superclass User constructor
@@ -14,8 +16,10 @@ public class Vendor extends User {
         this.foodcourtname = foodcourtname;
         this.status = status;
         this.email = email;
-        this.rating = 0.0; // Initialize rating
+        // this.rating = 0.0; // Initialize rating
     }
+
+    
 
     public String getID() {
         return ID;
@@ -89,6 +93,7 @@ public class Vendor extends User {
     public void deactivateVendor() {
         this.status = false;
     }
+
 
     public String displayVendorInfo() {
         return "VendorID: " + ID + 
