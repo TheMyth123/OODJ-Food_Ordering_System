@@ -896,7 +896,7 @@ public class ManageMenu extends javax.swing.JFrame {
     
     private void btn_RevenueActionPerformed(java.awt.event.ActionEvent evt) {
         dispose();
-        new RevenueDashboardView().setVisible(true);                                         
+        new VendorRevenue().setVisible(true);                                         
     } 
     
     private void btn_logoutActionPerformed(java.awt.event.ActionEvent evt) {
