@@ -18,7 +18,7 @@
   },
   {
     "Status": "Accepted",
-    "OrderStatus": "Pending",
+    "OrderStatus": "Completed",
     "OrderItems": [{
       "quantity": 1,
       "totalPrice": 25,
@@ -31,7 +31,7 @@
     "TotalAmount": 25,
     "OrderID": "OR00002",
     "PaymentStatus": "Completed",
-    "Date": "2025-02-11"
+    "Date": "2025-02-15"
   },
   {
     "OrderStatus": "Pending",

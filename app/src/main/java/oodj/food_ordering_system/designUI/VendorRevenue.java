@@ -8,7 +8,9 @@ import oodj.food_ordering_system.utils.UserHandling;
 import oodj.food_ordering_system.utils.VendorHandling;
 import raven.glasspanepopup.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -17,11 +19,16 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
@@ -61,17 +68,239 @@ public class VendorRevenue extends javax.swing.JFrame {
         checkButton.setBounds(150, 60, 150, 25);
         title_container1.add(checkButton);
     
-        
-    
         checkButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String selectedPeriod = (String) periodDropdown.getSelectedItem();
-                JSONArray history = VendorHandling.getVendorOrderHistory(endUserVD.getID(), selectedPeriod);
-                // resultArea.setText(selectedPeriod + " order history: " + history.toString());
-                VendorHandling.createRevenueChart(history);
+                // Read payment.txt and aggregate revenue data based on the selected period
+                JSONArray history = getRevenueHistory(selectedPeriod);
+                System.out.println(history);
+                // Instead of calling VendorHandling.createRevenueChart(history), show our custom revenue chart pop-up
+                showRevenueChartPopup(history);
+            }
+        });
+
+    }
+
+        /**
+     * Displays a pop-up window with the revenue chart.
+     * @param history JSONArray of aggregated revenue data.
+     */
+    private void showRevenueChartPopup(JSONArray history) {
+        RevenueChartPanel chartPanel = new RevenueChartPanel(history);
+        chartPanel.setPreferredSize(new java.awt.Dimension(600, 400));
+        
+        GlassPanePopup.showPopup(chartPanel, new DefaultOption() {
+            @Override
+            public float opacity() {
+                return 0;
+            }
+            @Override
+            public LayoutCallback getLayoutCallBack(java.awt.Component parent) {
+                return new DefaultLayoutCallBack(parent) {
+                    @Override
+                    public void correctBounds(ComponentWrapper cw) {
+                        if (parent.isVisible()) {
+                            // Center the popup within the parent window
+                            int x = (parent.getWidth() - cw.getWidth()) / 2;
+                            int y = (parent.getHeight() - cw.getHeight()) / 2;
+                            cw.setBounds(x, y, cw.getWidth(), cw.getHeight());
+                        } else {
+                            super.correctBounds(cw);
+                        }
+                    }
+                };
             }
         });
     }
+
+    /**
+     * A custom panel that draws a simple bar chart based on revenue data.
+     */
+    class RevenueChartPanel extends javax.swing.JPanel {
+        private JSONArray history;
+        
+        public RevenueChartPanel(JSONArray history) {
+            this.history = history;
+            setBackground(java.awt.Color.WHITE);
+        }
+        
+        @Override
+        protected void paintComponent(java.awt.Graphics g) {
+            super.paintComponent(g);
+            java.awt.Graphics2D g2d = (java.awt.Graphics2D) g;
+            g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, 
+                                java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+            
+            // Draw chart title
+            g2d.setColor(java.awt.Color.BLACK);
+            g2d.drawString("Revenue Chart", 10, 20);
+            
+            if (history == null || history.length() == 0) {
+                g2d.drawString("No revenue data available", 10, 40);
+                return;
+            }
+            
+            // Determine the maximum revenue value for scaling
+            double maxRevenue = 0;
+            for (int i = 0; i < history.length(); i++) {
+                org.json.JSONObject obj = history.getJSONObject(i);
+                double revenue = obj.getDouble("totalRevenue");
+                if (revenue > maxRevenue) {
+                    maxRevenue = revenue;
+                }
+            }
+            
+            // Set up parameters for drawing bars
+            int padding = 40;
+            int barWidth = 50;
+            int gap = 20;
+            int startX = padding;
+            int chartHeight = getHeight() - 2 * padding;
+            
+            // Draw each revenue bar
+            for (int i = 0; i < history.length(); i++) {
+                org.json.JSONObject obj = history.getJSONObject(i);
+                String period = obj.getString("period");
+                double revenue = obj.getDouble("totalRevenue");
+                
+                // Calculate bar height relative to maximum revenue
+                int barHeight = maxRevenue > 0 ? (int) ((revenue / maxRevenue) * chartHeight) : 0;
+                int x = startX + i * (barWidth + gap);
+                int y = getHeight() - padding - barHeight;
+                
+                // Draw the bar
+                g2d.setColor(java.awt.Color.BLUE);
+                g2d.fillRect(x, y, barWidth, barHeight);
+                g2d.setColor(java.awt.Color.BLACK);
+                g2d.drawRect(x, y, barWidth, barHeight);
+                
+                // Draw the revenue value above the bar
+                String revenueStr = String.format("%.2f", revenue);
+                int strWidth = g2d.getFontMetrics().stringWidth(revenueStr);
+                g2d.drawString(revenueStr, x + (barWidth - strWidth) / 2, y - 5);
+                
+                // Draw the period label below the bar
+                int periodWidth = g2d.getFontMetrics().stringWidth(period);
+                g2d.drawString(period, x + (barWidth - periodWidth) / 2, getHeight() - padding + 15);
+            }
+        }
+    }
+
+
+    public JSONArray getRevenueHistory(String selectedPeriod) {
+        // Build a map from menuID to VendorID using menu.txt
+        HashMap<String, String> menuVendorMap = new HashMap<>();
+        String menuFilePath = "app\\\\src\\\\main\\\\resources\\\\databases\\\\menu.txt";
+        File menuFile = new File(menuFilePath);
+        if (menuFile.exists() && menuFile.length() > 0) {
+            StringBuilder menuContent = new StringBuilder();
+            try (BufferedReader reader = new BufferedReader(new FileReader(menuFilePath))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    menuContent.append(line);
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                return new JSONArray();
+            }
+            JSONArray menuArray = new JSONArray(menuContent.toString());
+            for (int i = 0; i < menuArray.length(); i++) {
+                JSONObject menuObj = menuArray.getJSONObject(i);
+                String menuId = menuObj.getString("id");
+                String vendorId = menuObj.getString("VendorID");
+                menuVendorMap.put(menuId, vendorId);
+            }
+        } else {
+            System.err.println("Menu data file not found or empty.");
+            return new JSONArray();
+        }
+        
+        // Read payment.txt
+        String paymentFilePath = "app\\\\src\\\\main\\\\resources\\\\databases\\\\payment.txt";
+        File paymentFile = new File(paymentFilePath);
+        if (!paymentFile.exists() || paymentFile.length() == 0) {
+            System.err.println("Payment data file not found or empty.");
+            return new JSONArray();
+        }
+        StringBuilder paymentContent = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(paymentFilePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                paymentContent.append(line);
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return new JSONArray();
+        }
+        
+        JSONArray paymentArray = new JSONArray(paymentContent.toString());
+        // Map to group revenue by period key
+        HashMap<String, Double> revenueMap = new HashMap<>();
+        
+        // Process each payment record
+        for (int i = 0; i < paymentArray.length(); i++) {
+            JSONObject payment = paymentArray.getJSONObject(i);
+            
+            // Only consider records with PaymentStatus "Completed"
+            if (!payment.has("PaymentStatus") || 
+                !payment.getString("PaymentStatus").equalsIgnoreCase("Completed")) {
+                continue;
+            }
+            // Only consider records with OrderStatus "Completed"
+            if (!payment.has("OrderStatus") || 
+                !payment.getString("OrderStatus").equalsIgnoreCase("Completed")) {
+                continue;
+            }
+            
+            String dateStr = payment.getString("Date"); // Expected format: "yyyy-MM-dd"
+            String key = "";
+            if (selectedPeriod.equals("Daily")) {
+                key = dateStr;
+            } else if (selectedPeriod.equals("Monthly")) {
+                key = dateStr.substring(0, 7); // e.g., "2025-02"
+            } else if (selectedPeriod.equals("Quarterly")) {
+                int month = Integer.parseInt(dateStr.substring(5, 7));
+                int quarter = (month - 1) / 3 + 1;
+                String year = dateStr.substring(0, 4);
+                key = year + "-Q" + quarter;
+            }
+            
+            // Process each order item in this payment
+            if (!payment.has("OrderItems")) {
+                continue;
+            }
+            JSONArray orderItems = payment.getJSONArray("OrderItems");
+            double vendorRevenue = 0.0;
+            for (int j = 0; j < orderItems.length(); j++) {
+                JSONObject item = orderItems.getJSONObject(j);
+                String menuId = item.getString("menuID");
+                // Check if this order item belongs to the current vendor using our map
+                if (menuVendorMap.containsKey(menuId) && 
+                    menuVendorMap.get(menuId).equals(endUserVD.getID())) {
+                    // Use the order item's totalPrice as revenue for that vendor
+                    double price = item.getDouble("totalPrice");
+                    vendorRevenue += price;
+                }
+            }
+            
+            // Only add revenue if there was any revenue for the vendor in this payment record
+            if (vendorRevenue > 0) {
+                revenueMap.put(key, revenueMap.getOrDefault(key, 0.0) + vendorRevenue);
+            }
+        }
+        
+        // Convert the revenue map to a JSONArray for charting
+        JSONArray aggregatedHistory = new JSONArray();
+        for (Map.Entry<String, Double> entry : revenueMap.entrySet()) {
+            JSONObject obj = new JSONObject();
+            obj.put("period", entry.getKey());
+            obj.put("totalRevenue", entry.getValue());
+            aggregatedHistory.put(obj);
+        }
+        
+        return aggregatedHistory;
+    }
+    
     
         
         
@@ -510,7 +739,9 @@ public class VendorRevenue extends javax.swing.JFrame {
         });
     }   
 
-    private void btn_ManageOrderActionPerformed(java.awt.event.ActionEvent evt) {                                     
+    private void btn_ManageOrderActionPerformed(java.awt.event.ActionEvent evt) {      
+        dispose();
+        new ManageOrder().setVisible(true);                                 
     } 
 
     private void btn_ManageMenuActionPerformed(java.awt.event.ActionEvent evt) {      
@@ -519,8 +750,8 @@ public class VendorRevenue extends javax.swing.JFrame {
     } 
 
     private void btn_OrderHisActionPerformed(java.awt.event.ActionEvent evt) {
-        // dispose();
-        // new OrderHistory().setVisible(true);                                         
+        dispose();
+        new VendorOrderHistoryPage().setVisible(true);                                         
     } 
     
     private void btn_CusReviewActionPerformed(java.awt.event.ActionEvent evt) {
