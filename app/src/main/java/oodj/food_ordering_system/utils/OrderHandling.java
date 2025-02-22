@@ -36,6 +36,7 @@ public class OrderHandling {
     private static final String TOPUP = FileHandling.filePath.TOPUP_PATH.getValue();
     private static final String RATING = FileHandling.filePath.RATING_PATH.getValue();
     private static final String ORDER = FileHandling.filePath.ORDER_PATH.getValue();
+    private static final String TASK = FileHandling.filePath.TASK_PATH.getValue();
 
     public static int getCRid() {
         int tempCount = 0;
@@ -153,6 +154,37 @@ public class OrderHandling {
         }
     
         return "Unknown Item"; // If not found, return a default name
+    }
+
+    public static String[] getTaskDetailsByOrderID(String orderID) {
+        try {
+            // ✅ Step 1: Read file content
+            String content = new String(Files.readAllBytes(Paths.get(TASK)));
+
+            // ✅ Step 2: Parse JSON array
+            JSONArray taskArray = new JSONArray(content);
+
+            // ✅ Step 3: Loop through tasks and find matching OrderID
+            for (int i = 0; i < taskArray.length(); i++) {
+                JSONObject task = taskArray.getJSONObject(i);
+
+                if (task.getString("OrderID").equals(orderID)) {
+                    // ✅ Get Task Status and Runner ID
+                    String taskStatus = task.getString("TaskStatus");
+                    String runnerID = task.getString("RunnerID");
+
+                    return new String[]{taskStatus, runnerID}; // ✅ Return as array
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("❌ ERROR: Failed to read file!");
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("❌ ERROR: Invalid JSON format!");
+            e.printStackTrace();
+        }
+
+        return new String[]{"Unknown", "No Runner Assigned"}; // ✅ Return default if not found
     }
     
 
