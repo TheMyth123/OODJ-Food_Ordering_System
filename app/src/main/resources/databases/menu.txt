@@ -52,6 +52,23 @@
         "name": "Nasi Lemak Extra Pedas",
         "description": "Coconut rice with extra pedas sambal, fried anchovies, peanuts, and cucumber",
         "id": "MN00006"
+    },
+    {
+        "Status": "True",
+        "price": "RM6",
+        "imagePath": "nasi_lemak.jpg",
+        "VendorID": "VD00005",
+        "name": "Nasi Lemak Extra Pedas",
+        "description": "Coconut rice with extra pedas sambal, fried anchovies, peanuts, and cucumber",
+        "id": "MN00007"
+    },
+    {
+        "Status": "True",
+        "price": "RM10",
+        "imagePath": "hainanese_chicken_rice.jpg",
+        "VendorID": "VD00005",
+        "name": "Hainanese chicken rice",
+        "description": "Nice to eat",
+        "id": "MN00008"
     }
-
 ]

@@ -76,7 +76,6 @@ public class VendorHandling {
                     continue; // Skip non-completed orders
                 }
     
-                System.out.println("Processing Order: " + order.toString(2)); // Debugging
                 
                 JSONArray orderItems = order.getJSONArray("OrderItems");
                 for (int j = 0; j < orderItems.length(); j++) {

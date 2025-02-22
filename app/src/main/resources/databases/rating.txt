@@ -33,5 +33,19 @@
     "Rating": 5,
     "CustomerID": "CS00001",
     "OrderID": "OR00002"
+  },
+  {
+    "Status": true,
+    "RatingType": "FOOD",
+    "Rating": 5,
+    "CustomerID": "CS00001",
+    "OrderID": "OR00015"
+  },
+  {
+    "Status": true,
+    "RatingType": "VENDOR",
+    "Rating": 5,
+    "CustomerID": "CS00001",
+    "OrderID": "OR00015"
   }
 ]

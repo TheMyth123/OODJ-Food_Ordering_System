@@ -570,5 +570,38 @@
     "Title": "Order Cancelled",
     "Timestamp": "2025-02-22T18:45:48.431955800",
     "ActionLink": "OR00002"
+  },
+  {
+    "Status": "True",
+    "ReadStatus": "False",
+    "Type": "Order Accepted",
+    "NotificationID": "NT00053",
+    "UserID": "CS00001",
+    "Content": "Your order has been accepted. You can track the status in your order history.",
+    "Title": "Order Approved",
+    "Timestamp": "2025-02-22T20:10:44.642531400",
+    "ActionLink": "OR00005"
+  },
+  {
+    "Status": "True",
+    "ReadStatus": "False",
+    "Type": "Order Cancelled",
+    "NotificationID": "NT00054",
+    "UserID": "CS00001",
+    "Content": "Your order has been cancelled. If you have any concerns, please contact support.",
+    "Title": "Order Cancelled",
+    "Timestamp": "2025-02-22T20:10:59.797414700",
+    "ActionLink": "OR00005"
+  },
+  {
+    "Status": "True",
+    "ReadStatus": "False",
+    "Type": "Order Accepted",
+    "NotificationID": "NT00055",
+    "UserID": "CS00001",
+    "Content": "Your order has been accepted. You can track the status in your order history.",
+    "Title": "Order Approved",
+    "Timestamp": "2025-02-22T20:11:04.514617800",
+    "ActionLink": "OR00005"
   }
 ]
