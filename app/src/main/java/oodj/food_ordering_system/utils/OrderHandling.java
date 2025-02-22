@@ -16,6 +16,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import oodj.food_ordering_system.designUI.ManageMenu;
 import oodj.food_ordering_system.models.Credit;
 import oodj.food_ordering_system.models.CusOrder;
 import oodj.food_ordering_system.models.Customer;
@@ -656,76 +657,96 @@ public class OrderHandling {
         System.out.println("\nTotal vendor ratings found: " + vendorRatings.size());
         return vendorRatings;
     }
-    
-    
-    
-    
-    
-    
+      
+    public static String getMenuNameByID(String menuID) {
+    ArrayList<Menu> allMenus = ManageMenu.allMenus;
 
-//  this function will be added to vendor
-    private void AcceptOrderStatus(String orderID) {
-        try {
-            String filePath = PAYMENT;
-            FileHandling.checkFile(filePath);
-
-            JSONArray orderArray;
-            File file = new File(filePath);
-
-            if (file.length() > 0) {
-                try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-                    StringBuilder content = new StringBuilder();
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        content.append(line);
-                    }
-                    orderArray = new JSONArray(content.toString());
-                }
-            } else {
-                DialogBox.errorMessage("No order data found to edit.", "Error");
-                return;
-            }
-
-            boolean orderFound = false;
-            JSONObject updatedOrder = null;
-            for (int i = 0; i < orderArray.length(); i++) {
-                JSONObject order = orderArray.getJSONObject(i);
-                if (order.getString("OrderID").equals(orderID)) {
-                    order.put("Status", "Accepted");
-                    updatedOrder = order;
-                    orderFound = true;
-                    break;
-                }
-            }
-
-            if (!orderFound) {
-                DialogBox.errorMessage("Order with ID " + orderID + " not found.", "Error");
-                return;
-            }
-
-            FileHandling.saveToFile(orderArray, filePath);
-
-            // Send notification to the customer
-            if (updatedOrder != null) {
-                String customerID = updatedOrder.getString("CustomerID");
-                String type = "Order Accepted";
-                String content = "Your order has been accepted. You can track the status in your order history.";
-                String title = "Order Approved";
-                String actionlink = orderID;
-                
-                NotificationUtils.NotificationCreator(customerID, type, content, title, actionlink);
-            }
-
-            DialogBox.successMessage("Order " + orderID + " status updated to: Accepted", "Success");
-        } catch (IOException e) {
-            DialogBox.errorMessage("Something went wrong, please try again...", "IO Error");
+    for (Menu menu : allMenus) {
+        if (menu.getId().equalsIgnoreCase(menuID)) {
+            return menu.getName();
         }
     }
+    return "Unknown Item";
+    }
+
+//  this function will be added to vendor
+public static void AcceptOrderStatus(String orderID) {
+    try {
+        String filePath = PAYMENT;
+        FileHandling.checkFile(filePath);
+
+        JSONArray orderArray;
+        File file = new File(filePath);
+
+        if (file.length() > 0) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+                StringBuilder content = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    content.append(line);
+                }
+                orderArray = new JSONArray(content.toString());
+            }
+        } else {
+            DialogBox.errorMessage("No order data found to edit.", "Error");
+            return;
+        }
+
+        boolean orderFound = false;
+        JSONObject updatedOrder = null;
+        for (int i = 0; i < orderArray.length(); i++) {
+            JSONObject order = orderArray.getJSONObject(i);
+            if (order.getString("OrderID").equals(orderID)) {
+                String currentStatus = order.getString("OrderStatus");
+
+                // Check if the status is "Order Completed"
+                if (currentStatus.equalsIgnoreCase("Order Completed")) {
+                    DialogBox.errorMessage("The order has been completed, no changes can be made.", "Action Denied");
+                    return;
+                }
+                
+                if (currentStatus.equalsIgnoreCase("Accepted")) {
+                    DialogBox.errorMessage("The order has been accepted, no changes can be made.", "Action Denied");
+                    return;
+                }
+                // Proceed to accept the order if it's not completed
+                order.put("Status", "Accepted");
+                order.put("OrderStatus", "Order preparing");
+                updatedOrder = order;
+                orderFound = true;
+                break;
+            }
+        }
+
+        if (!orderFound) {
+            DialogBox.errorMessage("Order with ID " + orderID + " not found.", "Error");
+            return;
+        }
+
+        FileHandling.saveToFile(orderArray, filePath);
+
+        // Send notification to the customer
+        if (updatedOrder != null) {
+            String customerID = updatedOrder.getString("CustomerID");
+            String type = "Order Accepted";
+            String content = "Your order has been accepted. You can track the status in your order history.";
+            String title = "Order Approved";
+            String actionlink = orderID;
+            
+            NotificationUtils.NotificationCreator(customerID, type, content, title, actionlink);
+        }
+
+        DialogBox.successMessage("Order " + orderID + " status updated to: Accepted", "Success");
+    } catch (IOException e) {
+        DialogBox.errorMessage("Something went wrong, please try again...", "IO Error");
+    }
+}
+
     
         
     
     
-    private void CancelOrderStatus(String orderID) {
+    public static void CancelOrderStatus(String orderID) {
         try {
             String filePath = PAYMENT;
             FileHandling.checkFile(filePath);
@@ -752,7 +773,22 @@ public class OrderHandling {
             for (int i = 0; i < orderArray.length(); i++) {
                 JSONObject order = orderArray.getJSONObject(i);
                 if (order.getString("OrderID").equals(orderID)) {
+                    String currentStatus = order.getString("OrderStatus");
+    
+                    // Check if the status is "Order Completed"
+                    if (currentStatus.equalsIgnoreCase("Order Completed")) {
+                        DialogBox.errorMessage("The order has been completed, no changes can be made.", "Action Denied");
+                        return;
+                    }
+
+                    if (currentStatus.equalsIgnoreCase("Cancelled")) {
+                        DialogBox.errorMessage("The order has been cancelled, no changes can be made.", "Action Denied");
+                        return;
+                    }
+    
+                    // If not completed, proceed to cancel the order
                     order.put("Status", "Cancelled");
+                    order.put("OrderStatus", "Cancelled");
                     updatedOrder = order;
                     orderFound = true;
                     break;
@@ -773,7 +809,7 @@ public class OrderHandling {
                 String content = "Your order has been cancelled. If you have any concerns, please contact support.";
                 String title = "Order Cancelled";
                 String actionlink = orderID;
-                
+    
                 NotificationUtils.NotificationCreator(customerID, type, content, title, actionlink);
             }
     
@@ -782,6 +818,118 @@ public class OrderHandling {
             DialogBox.errorMessage("Something went wrong, please try again...", "IO Error");
         }
     }
+    
+
+    public static void UpdateOrderStatus(String orderID) {
+        try {
+            String filePath = PAYMENT;
+            FileHandling.checkFile(filePath);
+    
+            JSONArray orderArray;
+            File file = new File(filePath);
+    
+            if (file.length() > 0) {
+                try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+                    StringBuilder content = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        content.append(line);
+                    }
+                    orderArray = new JSONArray(content.toString());
+                }
+            } else {
+                DialogBox.errorMessage("No order data found to update.", "Error");
+                return;
+            }
+    
+            boolean orderFound = false;
+            JSONObject updatedOrder = null;
+            for (int i = 0; i < orderArray.length(); i++) {
+                JSONObject order = orderArray.getJSONObject(i);
+                if (order.getString("OrderID").equals(orderID)) {
+                    String serviceType = order.getString("ServiceType");
+                    String orderStatus = order.getString("OrderStatus");
+    
+                    // Check if the status is "Pending"
+                    if (orderStatus.equalsIgnoreCase("Pending")) {
+                        DialogBox.reminderMessage("Please accept the order before updating the status.", "Pending Order");
+                        return;
+                    }
+
+                    if (orderStatus.equalsIgnoreCase("Order Completed")) {
+                        DialogBox.errorMessage("The order has been completed, no changes can be made.", "Action Denied");
+                        return;
+                    }
+                    
+                    if (orderStatus.equalsIgnoreCase("Cancelled")) {
+                        DialogBox.errorMessage("The order has been cancelled, no changes can be made.", "Action Denied");
+                        return;
+                    }
+
+                    // Update Status based on Service Type and Current Status
+                    switch (serviceType) {
+                        case "Dine In":
+                            if (orderStatus.equalsIgnoreCase("Order preparing")) {
+                                order.put("OrderStatus", "Order is being served");
+                            } else if (orderStatus.equalsIgnoreCase("Order is being served")) {
+                                order.put("OrderStatus", "Order completed");
+                            }
+                            break;
+    
+                        case "Take-Away":
+                            if (orderStatus.equalsIgnoreCase("Order preparing")) {
+                                order.put("OrderStatus", "Order is ready for pickup");
+                            } else if (orderStatus.equalsIgnoreCase("Order is ready for pickup")) {
+                                order.put("OrderStatus", "Order completed");
+                            }
+                            break;
+    
+                        case "Request for Delivery":
+                            if (orderStatus.equalsIgnoreCase("Order preparing")) {
+                                order.put("OrderStatus", "Order is ready for pickup");
+                            } else if (orderStatus.equalsIgnoreCase("Order is ready for pickup")) {
+                                order.put("OrderStatus", "Runner has picked up the order");
+                            } else if (orderStatus.equalsIgnoreCase("Runner has picked up the order")) {
+                                order.put("OrderStatus", "Order completed");
+                            }
+                            break;
+                        
+                        default:
+                            DialogBox.errorMessage("Unknown service type. Unable to update status.", "Error");
+                            return;
+                    }
+                    
+                    updatedOrder = order;
+                    orderFound = true;
+                    break;
+                }
+            }
+    
+            if (!orderFound) {
+                DialogBox.errorMessage("Order with ID " + orderID + " not found.", "Error");
+                return;
+            }
+    
+            FileHandling.saveToFile(orderArray, filePath);
+    
+            // Send notification to the customer
+            if (updatedOrder != null) {
+                String customerID = updatedOrder.getString("CustomerID");
+                String type = "Order Status Updated";
+                String content = "The status of your order has been updated. Check your order history for details.";
+                String title = "Order Status Updated";
+                String actionlink = orderID;
+    
+                NotificationUtils.NotificationCreator(customerID, type, content, title, actionlink);
+            }
+    
+            DialogBox.successMessage("Order " + orderID + " status updated successfully.", "Success");
+        } catch (IOException e) {
+            DialogBox.errorMessage("Something went wrong, please try again...", "IO Error");
+        }
+    }
+    
+    
 
 
     public static Payment getPaymentByID(String orderID) {
@@ -1096,28 +1244,7 @@ public class OrderHandling {
             DialogBox.errorMessage("Error deleting menu: " + e.getMessage(), "Error");
         }
     }
-    
-    public static void main(String[] args) {
-        // Vendor vendor = new Vendor("VN001", "Food Court 1");
-        // createMenu(vendor, "Nasi Lemak", "Coconut rice with sambal, fried anchovies, peanuts, and cucumber", "RM5.50", "nasi_lemak.jpg", true);
-        
-        // ArrayList<Menu> menuList = getMenu(); 
-        // if (!menuList.isEmpty()) {
-        //     for (Menu menu : menuList) {
-        //         System.out.println(menu.displayMenuInfo()); 
-        //         System.out.println("------------------------------------------------");
-        //     }
-        // } else {
-        //     System.out.println("No menus found in the database.");
-        // }
 
-        // updateMenuInfo("MN00005", "Nasi Lemak", "Coconut rice with sambal, fried anchovies, peanuts, and cucumber", "RM6", "nasi_lemak.jpg", true);
-        // make a menu unavailable
-        // updateMenuInfo("MN00005", "Nasi Lemak", "Coconut rice with sambal, fried anchovies, peanuts, and cucumber", "RM6", "nasi_lemak.jpg", false);
-
-        // deleteMenu("MN00005", "Nasi Lemak");
-        
-    }
 
     
     

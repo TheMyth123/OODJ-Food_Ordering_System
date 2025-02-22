@@ -84,8 +84,10 @@ public class ManageMenu extends javax.swing.JFrame {
             jScrollPane1.getWidth(), Math.min(preferredHeight, 8000) // Max height is 400
         ));
 
-        MenuInfo.getColumnModel().getColumn(0).setPreferredWidth(25);
-        MenuInfo.getColumnModel().getColumn(3).setPreferredWidth(100);
+        MenuInfo.getColumnModel().getColumn(0).setPreferredWidth(15);
+        MenuInfo.getColumnModel().getColumn(1).setPreferredWidth(190);
+        MenuInfo.getColumnModel().getColumn(2).setPreferredWidth(250);
+        MenuInfo.getColumnModel().getColumn(3).setPreferredWidth(30);
 
         javax.swing.table.DefaultTableCellRenderer centerRenderer = new javax.swing.table.DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -883,18 +885,18 @@ public class ManageMenu extends javax.swing.JFrame {
     } 
 
     private void btn_OrderHisActionPerformed(java.awt.event.ActionEvent evt) {
-        // dispose();
-        // new OrderHistory().setVisible(true);                                         
+        dispose();
+        new VendorOrderHistoryPage().setVisible(true);                                         
     } 
     
     private void btn_CusReviewActionPerformed(java.awt.event.ActionEvent evt) {
         dispose();
-        new CusReview().setVisible(true);                                         
+        new CusReview().setVisible(true);                                        
     } 
     
     private void btn_RevenueActionPerformed(java.awt.event.ActionEvent evt) {
-        // dispose();
-        // new Revenue().setVisible(true);                                         
+        dispose();
+        new RevenueDashboardView().setVisible(true);                                         
     } 
     
     private void btn_logoutActionPerformed(java.awt.event.ActionEvent evt) {

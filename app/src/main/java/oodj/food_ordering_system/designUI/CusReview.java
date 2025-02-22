@@ -22,7 +22,7 @@ import raven.glasspanepopup.GlassPanePopup;
 
 
 
-public class CusReview extends JFrame {
+public class CusReview extends javax.swing.JFrame {
 
     private String vendorID; // Declare vendorID here
 
@@ -44,13 +44,21 @@ public class CusReview extends JFrame {
     private void displayRatings(String vendorID) {
         List<Rating> vendorRatings = OrderHandling.getVendorRatings(vendorID);
     
-        // Remove the 4th column: Vendor ID
+        // Filter to show only ratings of type VENDOR
+        List<Rating> vendorTypeRatings = new ArrayList<>();
+        for (Rating rating : vendorRatings) {
+            if (rating.getRatingType() == RatingType.VENDOR) {
+                vendorTypeRatings.add(rating);
+            }
+        }
+    
+        // Update column names (No Vendor ID)
         String[] columnNames = {"Order ID", "Customer ID", "Rating"};
     
-        // Adjust data array to have 3 columns instead of 4
-        String[][] data = new String[vendorRatings.size()][3];
-        for (int i = 0; i < vendorRatings.size(); i++) {
-            Rating rating = vendorRatings.get(i);
+        // Adjust data array for 3 columns
+        String[][] data = new String[vendorTypeRatings.size()][3];
+        for (int i = 0; i < vendorTypeRatings.size(); i++) {
+            Rating rating = vendorTypeRatings.get(i);
             data[i][0] = rating.getOrderID();
             data[i][1] = rating.getCustomerID();
             data[i][2] = String.valueOf(rating.getRating());
@@ -68,6 +76,7 @@ public class CusReview extends JFrame {
     
         ratingTable.getTableHeader().setReorderingAllowed(false);
     }
+    
     
     
     
@@ -564,16 +573,16 @@ public class CusReview extends JFrame {
     } 
 
     private void btn_OrderHisActionPerformed(java.awt.event.ActionEvent evt) {
-        // dispose();
-        // new OrderHistory().setVisible(true);                                         
+        dispose();
+        new VendorOrderHistoryPage().setVisible(true);                                         
     } 
     
     private void btn_CusReviewActionPerformed(java.awt.event.ActionEvent evt) {                                      
     } 
     
     private void btn_RevenueActionPerformed(java.awt.event.ActionEvent evt) {
-        // dispose();
-        // new Revenue().setVisible(true);                                         
+        dispose();
+        new RevenueDashboardView().setVisible(true);                                         
     } 
     
     private void btn_logoutActionPerformed(java.awt.event.ActionEvent evt) {

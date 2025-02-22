@@ -1,13 +1,25 @@
 package oodj.food_ordering_system.designUI;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.table.DefaultTableModel;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
 import oodj.food_ordering_system.models.Notification;
+import oodj.food_ordering_system.models.Order;
 import oodj.food_ordering_system.utils.DialogBox;
+import oodj.food_ordering_system.utils.FileHandling;
 import oodj.food_ordering_system.utils.NotificationUtils;
+import oodj.food_ordering_system.utils.OrderHandling;
 import oodj.food_ordering_system.utils.UserHandling;
+import oodj.food_ordering_system.utils.validation;
 import raven.glasspanepopup.DefaultLayoutCallBack;
 import raven.glasspanepopup.DefaultOption;
 import raven.glasspanepopup.GlassPanePopup;
@@ -20,64 +32,117 @@ public class ManageOrder extends javax.swing.JFrame {
         });
     }
 
-    // public static ArrayList<Order> allOrders = readOrderDetails();
+    public static ArrayList<Order> allOrders = readOrderDetails();
 
     public ManageOrder() {
         GlassPanePopup.install(this);
         initComponents();
 
-        // OrderInfo.getTableHeader().setReorderingAllowed(false);
-        // DefaultTableModel model = validation.nonEditTable(new Object[]{""}, 0);
+        OrderInfo.getTableHeader().setReorderingAllowed(false);
+        DefaultTableModel model = validation.nonEditTable(new Object[]{"Order ID", "Menu Names", "Service Type", "Order Status"}, 0);
+        OrderInfo.setModel(model);
 
-        // OrderInfo.setModel(model);
+        displayOrders();
 
-        // refreshOrderInfo();
-        // displayOrders(allOrders);
     }
 
-    // private void displayOrders(ArrayList<CusOrder> orders) {
-    //     if (orders == null || orders.isEmpty()) {
-    //         System.out.println("No orders available.");
-    //         return;
-    //     }
+    private void displayOrders() {
+        List<Order> orders = Order.getAllOrders();
+    
+        if (orders == null || orders.isEmpty()) {
+            System.out.println("No orders available.");
+            return;
+        }
+    
+        DefaultTableModel model = (DefaultTableModel) OrderInfo.getModel();
+        model.setRowCount(0);
+    
+        for (Order order : orders) {
+            model.addRow(new Object[]{
+                order.getOrderID(),
+                order.getMenuNames(),
+                order.getServiceType(),
+                order.getOrderStatus()
+            });
+        }
+    
+        int rowCount = model.getRowCount();
+        int rowHeight = OrderInfo.getRowHeight();
+        int preferredHeight = rowCount * rowHeight;
+        if (preferredHeight < 377) {
+            preferredHeight = 377;
+        }
+    
+        OrderInfo.setPreferredSize(new java.awt.Dimension(
+            jScrollPane1.getWidth(), Math.min(preferredHeight, 8000)
+        ));
+    
+        // Adjusted Column Widths for Better Alignment
+        OrderInfo.getColumnModel().getColumn(0).setPreferredWidth(15);  // Order ID
+        OrderInfo.getColumnModel().getColumn(1).setPreferredWidth(250); // Menu Names
+        OrderInfo.getColumnModel().getColumn(2).setPreferredWidth(80); // Service Type
+        OrderInfo.getColumnModel().getColumn(3).setPreferredWidth(140); // Order Status
+    
+        // Consistent Center Alignment for Columns
+        javax.swing.table.DefaultTableCellRenderer centerRenderer = new javax.swing.table.DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        OrderInfo.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        OrderInfo.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+    
+        // Force Repainting and Validation for Consistency
+        OrderInfo.revalidate();
+        jScrollPane1.revalidate();
+        jScrollPane1.repaint();
+    }
 
-    //     DefaultTableModel model = (DefaultTableModel) OrderInfo.getModel();
-    //     model.setRowCount(0);
+    private static ArrayList<Order> readOrderDetails() {
+        String ORDER = FileHandling.filePath.ORDER_PATH.getValue();
+        ArrayList<Order> Orders = new ArrayList<>();
+    
+        // Get the logged-in vendor's ID
+        String loggedInVendorID = UserHandling.getLoggedInVendorID();
+    
+        try {
+            String jsonData = new String(Files.readAllBytes(Paths.get(ORDER)));
+            JSONArray orderArray = new JSONArray(jsonData);
+    
+            for (int i = 0; i < orderArray.length(); i++) {
+                JSONObject orderData = orderArray.getJSONObject(i);
+    
+                if (!orderData.getString("Status").equalsIgnoreCase("Order completed") &&
+                !orderData.getString("Status").equalsIgnoreCase("Cancelled")) {
+                    
+                    String orderID = orderData.getString("OrderID");
+                    String menuNames = orderData.getString("MenuNames");
+                    String serviceType = orderData.getString("ServiceType");
+                    String orderStatus = orderData.getString("Status");
+                    String vendorID = orderData.getString("VendorID");
+                    
+    
+                    // Filter by logged-in vendor's ID
+                    if (loggedInVendorID != null && vendorID.equalsIgnoreCase(loggedInVendorID.trim()) 
+                        && UserHandling.getVendorByID(vendorID) != null) {
+    
+                        // Create an Order object
+                        Order order = new Order(orderID, menuNames, serviceType, orderStatus);
+                        Orders.add(order);
+                    }
 
-    //     for (CusOrder order : orders) {
-    //         model.addRow(new Object[]{
-    //             order.getId(),
-    //             order.getName(),
-    //             order.getDescription(),
-    //             order.getPrice()
-    //             // menu.getStatus()
-    //             // menu.getVendorID()
-    //         });
-    //     }
+                    
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Orders;
+    }
 
-    //     int rowCount = model.getRowCount();
-    //     int rowHeight = MenuInfo.getRowHeight();
-    //     int preferredHeight = rowCount * rowHeight;
-    //     if (preferredHeight < 377){
-    //         preferredHeight = 377;
-    //     }
+    public void refreshOrderInfo() {
+        allOrders = readOrderDetails();
+        displayOrders();
+    }
+    
 
-    //     MenuInfo.setPreferredSize(new java.awt.Dimension(
-    //         jScrollPane1.getWidth(), Math.min(preferredHeight, 8000) // Max height is 400
-    //     ));
-
-    //     MenuInfo.getColumnModel().getColumn(0).setPreferredWidth(25);
-    //     MenuInfo.getColumnModel().getColumn(3).setPreferredWidth(100);
-
-    //     javax.swing.table.DefaultTableCellRenderer centerRenderer = new javax.swing.table.DefaultTableCellRenderer();
-    //     centerRenderer.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-    //     MenuInfo.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-    //     MenuInfo.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
-
-    //     MenuInfo.revalidate();
-    //     jScrollPane1.revalidate();
-    //     jScrollPane1.repaint();
-    // }
 
 
 
@@ -119,8 +184,17 @@ public class ManageOrder extends javax.swing.JFrame {
         m2 = new javax.swing.JPanel();
         Line1 = new javax.swing.JPanel();
         m4 = new javax.swing.JPanel();
+        m3 = new javax.swing.JPanel();
+        m6 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         OrderInfo = new javax.swing.JTable();
+        m7 = new javax.swing.JPanel();
+        btn_container = new javax.swing.JPanel();
+        acceptButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
+        updateButton = new javax.swing.JButton();
+        m10 = new javax.swing.JPanel();
+        m11 = new javax.swing.JPanel();
         // searchBar = new javax.swing.JPanel();
         // margin5 = new javax.swing.JPanel();
         // nameLabel = new javax.swing.JLabel();
@@ -130,15 +204,6 @@ public class ManageOrder extends javax.swing.JFrame {
         // emailTextField = new javax.swing.JTextField();
         // margin7 = new javax.swing.JPanel();
         // searchButton = new javax.swing.JButton();
-        // m3 = new javax.swing.JPanel();
-        // m6 = new javax.swing.JPanel();
-        // m7 = new javax.swing.JPanel();
-        // btn_container = new javax.swing.JPanel();
-        // addButton = new javax.swing.JButton();
-        // m10 = new javax.swing.JPanel();
-        // editButton = new javax.swing.JButton();
-        // m11 = new javax.swing.JPanel();
-        // deleteButton = new javax.swing.JButton();
         btn_Noti = new oodj.food_ordering_system.designUI.Button();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -487,47 +552,184 @@ public class ManageOrder extends javax.swing.JFrame {
 
         Main.add(m4);
 
-        // jScrollPane1.setMaximumSize(new java.awt.Dimension(880, 400));
-        // jScrollPane1.setMinimumSize(new java.awt.Dimension(880, 400));
-        // jScrollPane1.setPreferredSize(new java.awt.Dimension(880, 400));
+        m3.setBackground(new java.awt.Color(31, 31, 31));
+        m3.setMaximumSize(new java.awt.Dimension(1000, 30));
+        m3.setMinimumSize(new java.awt.Dimension(1000, 30));
+        m3.setPreferredSize(new java.awt.Dimension(1000, 10));
 
-        // MenuInfo.setBackground(new java.awt.Color(43, 43, 43));
-        // MenuInfo.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        // MenuInfo.setForeground(new java.awt.Color(245, 251, 254));
-        // MenuInfo.setModel(new javax.swing.table.DefaultTableModel(
-        //     new Object [][] {
-        //         {},
-        //         {},
-        //         {},
-        //         {}
-        //     },
-        //     new String [] {
-        //         "Menu ID", 
-        //         "Name", 
-        //         "Description", 
-        //         "Price"
-        //     }
-        // ));
-        // OrderInfo.setFocusable(false);
-        // OrderInfo.setGridColor(new java.awt.Color(31, 31, 31));
-        // OrderInfo.setMaximumSize(new java.awt.Dimension(880, 2000));
-        // OrderInfo.setMinimumSize(new java.awt.Dimension(880, 2000));
-        // OrderInfo.setPreferredSize(new java.awt.Dimension(880, 2000));
-        // OrderInfo.setRowHeight(35);
-        // OrderInfo.setSelectionBackground(new java.awt.Color(255, 169, 140));
-        // OrderInfo.setSelectionForeground(new java.awt.Color(31, 31, 31));
-        // OrderInfo.setShowGrid(true);
-        // OrderInfo.setShowVerticalLines(false);
-        // jScrollPane1.setViewportView(OrderInfo);
+        javax.swing.GroupLayout m3Layout = new javax.swing.GroupLayout(m3);
+        m3.setLayout(m3Layout);
+        m3Layout.setHorizontalGroup(
+            m3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1000, Short.MAX_VALUE)
+        );
+        m3Layout.setVerticalGroup(
+            m3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
 
-        // Main.add(jScrollPane1);
+        Main.add(m3);
 
+        m6.setBackground(new java.awt.Color(31, 31, 31));
+        m6.setMaximumSize(new java.awt.Dimension(60, 50));
+        m6.setMinimumSize(new java.awt.Dimension(60, 50));
 
+        javax.swing.GroupLayout m6Layout = new javax.swing.GroupLayout(m6);
+        m6.setLayout(m6Layout);
+        m6Layout.setHorizontalGroup(
+            m6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 60, Short.MAX_VALUE)
+        );
+        m6Layout.setVerticalGroup(
+            m6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 50, Short.MAX_VALUE)
+        );
 
+        Main.add(m6);
 
+        jScrollPane1.setMaximumSize(new java.awt.Dimension(880, 400));
+        jScrollPane1.setMinimumSize(new java.awt.Dimension(880, 400));
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(880, 450));
+        
+        OrderInfo.setFocusable(false);
+        OrderInfo.setBackground(new java.awt.Color(43, 43, 43));
+        OrderInfo.setFont(new java.awt.Font("Segoe UI", 0, 16)); 
+        OrderInfo.setForeground(new java.awt.Color(245, 251, 254));
+        OrderInfo.setGridColor(new java.awt.Color(31, 31, 31));
+        OrderInfo.setMaximumSize(new java.awt.Dimension(880, 2000));
+        OrderInfo.setMinimumSize(new java.awt.Dimension(880, 2000));
+        OrderInfo.setPreferredSize(new java.awt.Dimension(880, 2000));
+        OrderInfo.setRowHeight(35);
+        OrderInfo.setSelectionBackground(new java.awt.Color(255, 169, 140));
+        OrderInfo.setSelectionForeground(new java.awt.Color(31, 31, 31));
+        OrderInfo.setShowGrid(true);
+        OrderInfo.setShowVerticalLines(false);
+        OrderInfo.getTableHeader().setReorderingAllowed(false);
+        
+        jScrollPane1.setViewportView(OrderInfo);
+        
+        Main.add(jScrollPane1);
 
+        m7.setBackground(new java.awt.Color(31, 31, 31));
+        m7.setMaximumSize(new java.awt.Dimension(1000, 30));
+        m7.setMinimumSize(new java.awt.Dimension(1000, 30));
 
+        javax.swing.GroupLayout m7Layout = new javax.swing.GroupLayout(m7);
+        m7.setLayout(m7Layout);
+        m7Layout.setHorizontalGroup(
+            m7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1000, Short.MAX_VALUE)
+        );
+        m7Layout.setVerticalGroup(
+            m7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
 
+        Main.add(m7);
+
+        btn_container.setBackground(new java.awt.Color(31, 31, 31));
+        btn_container.setMaximumSize(new java.awt.Dimension(1000, 55));
+        btn_container.setMinimumSize(new java.awt.Dimension(1000, 55));
+        btn_container.setPreferredSize(new java.awt.Dimension(1000, 55));
+        btn_container.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
+
+        acceptButton.setBackground(new java.awt.Color(255, 169, 140));
+        acceptButton.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        acceptButton.setForeground(new java.awt.Color(31, 31, 31));
+        acceptButton.setText("Accept");
+        acceptButton.setBorder(null);
+        acceptButton.setBorderPainted(false);
+        acceptButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        acceptButton.setFocusable(false);
+        acceptButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        acceptButton.setMargin(null);
+        acceptButton.setMaximumSize(new java.awt.Dimension(150, 50));
+        acceptButton.setMinimumSize(new java.awt.Dimension(150, 50));
+        acceptButton.setPreferredSize(new java.awt.Dimension(150, 50));
+        acceptButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                acceptButtonActionPerformed(evt);
+            }
+        });
+        btn_container.add(acceptButton);
+
+        m10.setBackground(new java.awt.Color(31, 31, 31));
+        m10.setMaximumSize(new java.awt.Dimension(30, 55));
+        m10.setMinimumSize(new java.awt.Dimension(30, 55));
+        m10.setPreferredSize(new java.awt.Dimension(30, 55));
+
+        javax.swing.GroupLayout m10Layout = new javax.swing.GroupLayout(m10);
+        m10.setLayout(m10Layout);
+        m10Layout.setHorizontalGroup(
+            m10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+        m10Layout.setVerticalGroup(
+            m10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 55, Short.MAX_VALUE)
+        );
+
+        btn_container.add(m10);
+
+        cancelButton.setBackground(new java.awt.Color(255, 169, 140));
+        cancelButton.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        cancelButton.setForeground(new java.awt.Color(31, 31, 31));
+        cancelButton.setText("Cancel");
+        cancelButton.setBorder(null);
+        cancelButton.setBorderPainted(false);
+        cancelButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        cancelButton.setFocusable(false);
+        cancelButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        cancelButton.setMargin(null);
+        cancelButton.setMaximumSize(new java.awt.Dimension(150, 50));
+        cancelButton.setMinimumSize(new java.awt.Dimension(150, 50));
+        cancelButton.setPreferredSize(new java.awt.Dimension(150, 50));
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
+        btn_container.add(cancelButton);
+
+        m11.setBackground(new java.awt.Color(31, 31, 31));
+        m11.setMaximumSize(new java.awt.Dimension(30, 55));
+        m11.setMinimumSize(new java.awt.Dimension(30, 55));
+        m11.setPreferredSize(new java.awt.Dimension(30, 55));
+
+        javax.swing.GroupLayout m11Layout = new javax.swing.GroupLayout(m11);
+        m11.setLayout(m11Layout);
+        m11Layout.setHorizontalGroup(
+            m11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+        m11Layout.setVerticalGroup(
+            m11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 55, Short.MAX_VALUE)
+        );
+
+        btn_container.add(m11);
+
+        updateButton.setBackground(new java.awt.Color(255, 169, 140));
+        updateButton.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        updateButton.setForeground(new java.awt.Color(31, 31, 31));
+        updateButton.setText("Update");
+        updateButton.setBorder(null);
+        updateButton.setBorderPainted(false);
+        updateButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        updateButton.setFocusable(false);
+        updateButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        updateButton.setMargin(null);
+        updateButton.setMaximumSize(new java.awt.Dimension(150, 50));
+        updateButton.setMinimumSize(new java.awt.Dimension(150, 50));
+        updateButton.setPreferredSize(new java.awt.Dimension(150, 50));
+        updateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateButtonActionPerformed(evt);
+            }
+        });
+        btn_container.add(updateButton);
+
+        Main.add(btn_container);
 
         getContentPane().add(Main);
         Main.setBounds(300, 0, 1000, 670);
@@ -584,8 +786,8 @@ public class ManageOrder extends javax.swing.JFrame {
     } 
 
     private void btn_OrderHisActionPerformed(java.awt.event.ActionEvent evt) {
-        // dispose();
-        // new OrderHistory().setVisible(true);                                         
+        dispose();
+        new VendorOrderHistoryPage().setVisible(true);                                         
     } 
     
     private void btn_CusReviewActionPerformed(java.awt.event.ActionEvent evt) {
@@ -594,8 +796,8 @@ public class ManageOrder extends javax.swing.JFrame {
     } 
     
     private void btn_RevenueActionPerformed(java.awt.event.ActionEvent evt) {
-        // dispose();
-        // new Revenue().setVisible(true);                                         
+        dispose();
+        new RevenueDashboardView().setVisible(true);                                         
     } 
     
     private void btn_logoutActionPerformed(java.awt.event.ActionEvent evt) {
@@ -607,8 +809,79 @@ public class ManageOrder extends javax.swing.JFrame {
         }                                   
     } 
 
+    private void acceptButtonActionPerformed(java.awt.event.ActionEvent evt) {       
+        int selectedRow = OrderInfo.getSelectedRow();
 
+        if (selectedRow == -1) {
+            DialogBox.reminderMessage("Please select an order to accept!", "Error");
+            return;
+        }
 
+        DefaultTableModel model = (DefaultTableModel) OrderInfo.getModel();
+        String orderID = model.getValueAt(selectedRow, 0).toString();
+
+        boolean confirm = DialogBox.confirmMessage("Are you sure you want to accept Order " + orderID + "?", "Confirm Acceptance");
+        if (!confirm) {
+            return;
+        }
+
+        OrderHandling.AcceptOrderStatus(orderID);
+
+        // Refresh the order table to show updated status
+        displayOrders();
+
+    } 
+    
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {             
+        int selectedRow = OrderInfo.getSelectedRow();
+    
+        if (selectedRow == -1) {
+            DialogBox.reminderMessage("Please select an order to cancel!", "Error");
+            return;
+        }
+    
+        DefaultTableModel model = (DefaultTableModel) OrderInfo.getModel();
+        String orderID = model.getValueAt(selectedRow, 0).toString();
+    
+        boolean confirm = DialogBox.confirmMessage("Are you sure you want to cancel Order " + orderID + "?", "Confirm Cancellation");
+        if (!confirm) {
+            return;
+        }
+    
+        // Call CancelOrderStatus() from OrderHandling
+        OrderHandling.CancelOrderStatus(orderID);
+    
+        // Refresh the order table to show updated status
+        displayOrders();
+    }
+    
+    
+    private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {             
+        int selectedRow = OrderInfo.getSelectedRow();
+    
+        if (selectedRow == -1) {
+            DialogBox.reminderMessage("Please select an order to update!", "Error");
+            return;
+        }
+    
+        DefaultTableModel model = (DefaultTableModel) OrderInfo.getModel();
+        String orderID = model.getValueAt(selectedRow, 0).toString();
+    
+        boolean confirm = DialogBox.confirmMessage("Are you sure you want to update the status of Order " + orderID + "?", "Confirm Update");
+        if (!confirm) {
+            return;
+        }
+    
+        // Call UpdateOrderStatus() from OrderHandling
+        OrderHandling.UpdateOrderStatus(orderID);
+    
+        // Refresh the order table to show updated status
+        refreshOrderInfo();
+    }
+    
+    
+    // private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {             
+    // } 
 
 
     // Variables declaration - do not modify                     
@@ -636,16 +909,16 @@ public class ManageOrder extends javax.swing.JFrame {
     private javax.swing.JPanel m4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable OrderInfo;
+    private javax.swing.JPanel btn_container;
+    private javax.swing.JButton acceptButton;
+    private javax.swing.JButton cancelButton;
+    private javax.swing.JButton updateButton;
     private javax.swing.JPanel searchBar;
-    private javax.swing.JButton addButton;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JTextField nameTextField;
     // private javax.swing.JButton btn_ManageVen;
-    private javax.swing.JPanel btn_container;
     // private javax.swing.JButton btn_topup;
     // private javax.swing.JButton btn_ManageRun;
-    private javax.swing.JButton editButton;
-    private javax.swing.JButton deleteButton;
     private javax.swing.JPanel m10;
     private javax.swing.JPanel m11;
     private javax.swing.JPanel m3;
