@@ -1,54 +1,30 @@
 package oodj.food_ordering_system.designUI;
 
 
-import oodj.food_ordering_system.models.Credit;
-import oodj.food_ordering_system.models.CusOrder;
-import oodj.food_ordering_system.models.Customer;
-import oodj.food_ordering_system.models.Notification;
-import oodj.food_ordering_system.models.Payment;
-import oodj.food_ordering_system.models.Rating;
-import oodj.food_ordering_system.utils.DialogBox;
-import oodj.food_ordering_system.utils.NotificationUtils;
-import oodj.food_ordering_system.utils.OrderHandling;
-import oodj.food_ordering_system.utils.UserHandling;
-import raven.glasspanepopup.*;
-
-import static oodj.food_ordering_system.designUI.LoginPage.loginID;
-
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.FlowLayout;
 import java.util.ArrayList;
-import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-import javax.swing.ListSelectionModel;
-import javax.swing.RowFilter;
-import javax.swing.DefaultListSelectionModel;
-import javax.swing.JScrollPane;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
-import net.miginfocom.layout.ComponentWrapper;
-import net.miginfocom.layout.LayoutCallback;
+import oodj.food_ordering_system.models.CusOrder;
+import oodj.food_ordering_system.models.Customer;
+import oodj.food_ordering_system.models.Payment;
+import oodj.food_ordering_system.models.Rating;
+import oodj.food_ordering_system.utils.DialogBox;
+import oodj.food_ordering_system.utils.OrderHandling;
+import oodj.food_ordering_system.utils.UserHandling;
 // TODO make the table refresh
 // TODO design have done yet, discard items will affect the cart.txt json format
 public class OrderHistory extends javax.swing.JFrame {
@@ -497,7 +473,7 @@ public class OrderHistory extends javax.swing.JFrame {
         btn_complaint = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Customer Cart");
+        setTitle("Vendor Menu");
         setBackground(new java.awt.Color(25, 25, 25));
         setMinimumSize(new java.awt.Dimension(1300, 700));
         setSize(new java.awt.Dimension(1300, 700));

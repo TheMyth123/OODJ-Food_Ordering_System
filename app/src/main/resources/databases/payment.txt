@@ -1,7 +1,7 @@
 [
   {
     "Status": "Cancelled",
-    "OrderStatus": "Pending",
+    "OrderStatus": "Cancelled",
     "OrderItems": [{
       "quantity": 1,
       "totalPrice": 25,
@@ -17,12 +17,13 @@
     "Date": "2025-02-11"
   },
   {
+    "Status": "Accepted",
     "OrderStatus": "Pending",
     "OrderItems": [{
       "quantity": 1,
       "totalPrice": 25,
       "price": 25,
-      "menuID": "MN00001"
+      "menuID": "MN00002"
     }],
     "ServiceType": "Take-Away",
     "DeliveryAddress": "cccc",

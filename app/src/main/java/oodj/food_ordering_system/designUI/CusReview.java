@@ -22,7 +22,7 @@ import raven.glasspanepopup.GlassPanePopup;
 
 
 
-public class CusReview extends JFrame {
+public class CusReview extends javax.swing.JFrame {
 
     private String vendorID; // Declare vendorID here
 
@@ -573,16 +573,16 @@ public class CusReview extends JFrame {
     } 
 
     private void btn_OrderHisActionPerformed(java.awt.event.ActionEvent evt) {
-        // dispose();
-        // new OrderHistory().setVisible(true);                                         
+        dispose();
+        new VendorOrderHistoryPage().setVisible(true);                                         
     } 
     
     private void btn_CusReviewActionPerformed(java.awt.event.ActionEvent evt) {                                      
     } 
     
     private void btn_RevenueActionPerformed(java.awt.event.ActionEvent evt) {
-        // dispose();
-        // new Revenue().setVisible(true);                                         
+        dispose();
+        new RevenueDashboardView().setVisible(true);                                         
     } 
     
     private void btn_logoutActionPerformed(java.awt.event.ActionEvent evt) {
