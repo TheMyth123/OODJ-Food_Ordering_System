@@ -107,7 +107,7 @@ public class Cart extends javax.swing.JFrame {
                                " with Current User ID: " + endUser.getID());
         
             if (order.getCustomer().getID().equals(endUser.getID())) {
-                System.out.println("✅ MATCH: Adding item to cart display: " + order.getMenuID());
+                System.out.println(" MATCH: Adding item to cart display: " + order.getMenuID());
                 model.addRow(new Object[]{
                     order.getMenuID(),
                     order.getQuantity(),
@@ -145,7 +145,7 @@ public class Cart extends javax.swing.JFrame {
                 String searchTerm = searchField.getText().trim();
         
                 if (searchTerm.isEmpty()) {
-                    rowSorter.setRowFilter(null); // ✅ Show all rows when search is cleared
+                    rowSorter.setRowFilter(null); //  Show all rows when search is cleared
                 } else {
                     rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchTerm)); // Case-insensitive search
                 }
@@ -278,7 +278,7 @@ public class Cart extends javax.swing.JFrame {
 
     
     private void editQuantity() {
-        System.out.println("✅ editQuantity() function called!"); // Debugging step
+        System.out.println(" editQuantity() function called!"); // Debugging step
     
         int selectedRow = cartTable.getSelectedRow();
         
@@ -310,7 +310,7 @@ public class Cart extends javax.swing.JFrame {
                     if (item.getMenuID().equals(menuID) && 
                         item.getCustomer().getID().equals(endUser.getID())) {
                         
-                        System.out.println("✅ Updating quantity for: " + menuID + " to " + newQuantity);
+                        System.out.println(" Updating quantity for: " + menuID + " to " + newQuantity);
                         item.setQuantity(newQuantity);
                         updated = true;
                         break;
@@ -322,7 +322,7 @@ public class Cart extends javax.swing.JFrame {
     
                     OrderHandling.saveCart(cartItems);
     
-                    System.out.println("✅ Cart saved successfully!");
+                    System.out.println(" Cart saved successfully!");
     
                     refreshCart();
                 } else {
@@ -398,7 +398,7 @@ public class Cart extends javax.swing.JFrame {
     
             System.out.println("DEBUG: Final Selected MenuIDs for Removal: " + selectedMenuIDs); // Check before proceeding
     
-            // **✅ Fix: Pass `itemsToRemove` correctly**
+            // ** Fix: Pass `itemsToRemove` correctly**
             ArrayList<CusOrder> cartItems = OrderHandling.getCart();      
             System.out.println("Selected MenuIDs to remove: " + selectedMenuIDs);
 

@@ -162,30 +162,28 @@ public class OrderHandling {
             // Step 1: Read file content
             String content = new String(Files.readAllBytes(Paths.get(TASK)));
 
-            // ✅ Step 2: Parse JSON array
+            //  Step 2: Parse JSON array
             JSONArray taskArray = new JSONArray(content);
 
-            // ✅ Step 3: Loop through tasks and find matching OrderID
+            //  Step 3: Loop through tasks and find matching OrderID
             for (int i = 0; i < taskArray.length(); i++) {
                 JSONObject task = taskArray.getJSONObject(i);
 
                 if (task.getString("OrderID").equals(orderID)) {
-                    // ✅ Get Task Status and Runner ID
+                    //  Get Task Status and Runner ID
                     String taskStatus = task.getString("TaskStatus");
                     String runnerID = task.getString("RunnerID");
 
-                    return new String[]{taskStatus, runnerID}; // ✅ Return as array
+                    return new String[]{taskStatus, runnerID}; //  Return as array
                 }
             }
         } catch (IOException e) {
-            System.err.println("❌ ERROR: Failed to read file!");
             e.printStackTrace();
         } catch (Exception e) {
-            System.err.println("❌ ERROR: Invalid JSON format!");
             e.printStackTrace();
         }
 
-        return new String[]{"Unknown", "No Runner Assigned"}; // ✅ Return default if not found
+        return new String[]{"Unknown", "No Runner Assigned"}; //  Return default if not found
     }
     
 
@@ -197,8 +195,8 @@ public class OrderHandling {
             jsonData.append(line);
         }
     
-        System.out.println("✅ DEBUG: Read cart file content:");
-        System.out.println(jsonData.toString()); // ✅ Print full JSON before parsing
+        System.out.println(" DEBUG: Read cart file content:");
+        System.out.println(jsonData.toString()); //  Print full JSON before parsing
     
         ArrayList<CusOrder> cartItems = new ArrayList<>();
         try {
@@ -207,15 +205,15 @@ public class OrderHandling {
                 JSONObject item = cartArray.getJSONObject(i);
                 String menuID = item.getString("MenuID");
                 int quantity = item.getInt("quantity");
-                double price = item.optDouble("price", 0.0); // ✅ Use `optDouble` to avoid errors
+                double price = item.optDouble("price", 0.0); //  Use `optDouble` to avoid errors
                 String name = item.getString("name");
-                String customerID = item.getString("CustomerID"); // ✅ Ensure this exists
+                String customerID = item.getString("CustomerID"); //  Ensure this exists
     
                 Customer customer = UserHandling.getCustomerByID(customerID);
                 cartItems.add(new CusOrder(menuID, quantity, price, name, customer));
             }
     
-            System.out.println("✅ DEBUG: Parsed cart data successfully!");
+            System.out.println(" DEBUG: Parsed cart data successfully!");
         } catch (Exception e) {
             System.err.println("❌ ERROR: Failed to parse cart JSON!");
             e.printStackTrace();
@@ -257,54 +255,28 @@ public class OrderHandling {
         FileHandling.saveToFile(cartArray, CART); // Write updated cart list
     }
 
-    // public static void updateCart(ArrayList<CusOrder> cartItems, String customerID, ArrayList<CusOrder> cartItems2) {
-    //     JSONArray cartArray = new JSONArray();
     
-    //     ArrayList<CusOrder> allCartItems = getCart(); // Get all items from the cart file
-    
-    //     for (CusOrder order : allCartItems) {
-    //         // Only modify items belonging to the logged-in customer
-    //         if (order.getCustomer().getID().equals(customerID)) {
-    //             if (cartItems2.contains(order.getMenuID())) {
-    //                 continue; // Skip items that were removed
-    //             }
-    //         }
-    
-    //         // Keep other customers' items intact
-    //         JSONObject obj = new JSONObject();
-    //         obj.put("MenuID", order.getMenuID());
-    //         obj.put("quantity", order.getQuantity());
-    //         obj.put("price", order.getPrice());
-    //         obj.put("name", order.getName());
-    //         obj.put("CustomerID", order.getCustomer().getID());
-    
-    //         cartArray.put(obj);
-    //     }
-    
-    //     FileHandling.saveToFile(cartArray, CART); // Write the updated cart list
-    // }
 
     public static void updateCart(ArrayList<CusOrder> allCartItems, String customerID, ArrayList<String> itemsToRemove) {
-        System.out.println("Updating cart for customer: " + customerID);
-        System.out.println("Selected MenuIDs to remove: " + itemsToRemove);
+        
     
         if (itemsToRemove.isEmpty()) {
-            System.out.println("WARNING: No items were selected for removal.");
-            return; // 🚨 Exit early to prevent overwriting the cart with the same data
+            DialogBox.errorMessage("WARNING: No items were selected for removal.", "Error");
+            return; 
         }
     
         JSONArray cartArray = new JSONArray();
     
         for (CusOrder order : allCartItems) {
-            // ✅ Compare order's customer ID with the given `customerID`
-            if (!customerID.equals(order.getCustomer().getID())) {
-                System.out.println("Keeping item for another customer: " + order.getMenuID());
-            } else if (itemsToRemove.contains(order.getMenuID())) {
-                System.out.println("Removing item: " + order.getMenuID());
-                continue; // Skip adding this item
-            } else {
-                System.out.println("Keeping item for current customer: " + order.getMenuID());
-            }
+            //  Compare order's customer ID with the given `customerID`
+            // if (!customerID.equals(order.getCustomer().getID())) {
+            //     System.out.println("Keeping item for another customer: " + order.getMenuID());
+            // } else if (itemsToRemove.contains(order.getMenuID())) {
+            //     System.out.println("Removing item: " + order.getMenuID());
+            //     continue; // Skip adding this item
+            // } else {
+            //     System.out.println("Keeping item for current customer: " + order.getMenuID());
+            // }
     
             JSONObject obj = new JSONObject();
             obj.put("MenuID", order.getMenuID());
@@ -405,7 +377,6 @@ public class OrderHandling {
         }
     }
 
-//  need OOP
 
     public static void savePayment(String orderID, String customerID, JSONArray orderItems, 
         double totalAmount, String paymentStatus, String serviceType, 
@@ -505,7 +476,6 @@ public class OrderHandling {
     }
 
      
-// need OOP
     public static void saveRating(Payment orderID, Customer customerID, int rating, RatingType ratingType) {
         ArrayList<String> lines = FileHandling.readLines(RATING);
         StringBuilder jsonData = new StringBuilder();
@@ -589,7 +559,7 @@ public class OrderHandling {
                 JSONObject payment = (JSONObject) obj;
     
                 if (payment.getString("OrderID").equals(orderID)) {
-                    // ✅ Check if "OrderItems" array exists
+                    //  Check if "OrderItems" array exists
                     if (!payment.has("OrderItems")) {
                         System.out.println("⚠️ Warning: No 'OrderItems' found for Order ID: " + orderID);
                         return null;
@@ -597,7 +567,7 @@ public class OrderHandling {
     
                     JSONArray orderItems = payment.getJSONArray("OrderItems");
     
-                    // ✅ Extract menuID from the first order item (assuming at least one exists)
+                    //  Extract menuID from the first order item (assuming at least one exists)
                     if (orderItems.length() > 0) {
                         JSONObject firstItem = orderItems.getJSONObject(0);
     
@@ -606,7 +576,7 @@ public class OrderHandling {
                             return null;
                         }
     
-                        return firstItem.getString("menuID"); // ✅ Extract and return menuID
+                        return firstItem.getString("menuID"); //  Extract and return menuID
                     } else {
                         System.out.println("⚠️ Warning: 'OrderItems' is empty for Order ID: " + orderID);
                     }
@@ -627,14 +597,14 @@ public class OrderHandling {
             JSONArray menuItems = new JSONArray(jsonData);
     
             for (Object obj : menuItems) {
-                // ✅ Cast the object correctly instead of creating a new JSONObject
+                //  Cast the object correctly instead of creating a new JSONObject
                 JSONObject menuItem = (JSONObject) obj;
     
-                // ✅ Debugging statement to check what is inside menuItem
+                //  Debugging statement to check what is inside menuItem
                 System.out.println("Checking menu item: " + menuItem.toString());
     
                 if (menuItem.has("id") && menuItem.getString("id").equals(menuID)) {
-                    System.out.println("✅ Found Vendor ID: " + menuItem.getString("VendorID"));
+                    System.out.println(" Found Vendor ID: " + menuItem.getString("VendorID"));
                     return menuItem.getString("VendorID");
                 }
             }
@@ -671,7 +641,7 @@ public class OrderHandling {
     
                 // Directly filter by Vendor ID and Active Status
                 if (linkedVendorID != null && linkedVendorID.equals(vendorID) && rating.getStatus()) {
-                    System.out.println("  ✅ Match Found! Adding to vendor ratings.");
+                    System.out.println("   Match Found! Adding to vendor ratings.");
                     vendorRatings.add(rating);
                 } else {
                     System.out.println("  ❌ No Match: Vendor ID does not match or rating is inactive.");
@@ -814,21 +784,21 @@ public class OrderHandling {
 
     public static Payment getPaymentByID(String orderID) {
         try {
-            // ✅ Read JSON file (ensure UTF-8 encoding)
+            //  Read JSON file (ensure UTF-8 encoding)
             String jsonData = new String(Files.readAllBytes(Paths.get(PAYMENT)), StandardCharsets.UTF_8);
             System.out.println("DEBUG: JSON Data Read Successfully");
     
-            // ✅ Parse JSON array
+            //  Parse JSON array
             JSONArray paymentArray = new JSONArray(jsonData);
     
-            // ✅ Loop through payment records to find matching OrderID
+            //  Loop through payment records to find matching OrderID
             for (int i = 0; i < paymentArray.length(); i++) {
                 JSONObject paymentData = paymentArray.getJSONObject(i);
     
                 if (paymentData.getString("OrderID").equals(orderID)) {
                     System.out.println("DEBUG: Found matching Order ID: " + orderID);
     
-                    // ✅ Extract payment details
+                    //  Extract payment details
                     String customerID = paymentData.getString("CustomerID");
                     String serviceType = paymentData.getString("ServiceType");
                     double totalAmount = paymentData.getDouble("TotalAmount");
@@ -837,7 +807,7 @@ public class OrderHandling {
                     String dateString = paymentData.getString("Date");
                     String orderStatus = paymentData.getString("OrderStatus");
     
-                    // ✅ Extract ordered items
+                    //  Extract ordered items
                     ArrayList<CusOrder> orderItems = new ArrayList<>();
                     JSONArray orderItemsArray = paymentData.optJSONArray("OrderItems");
     
@@ -849,11 +819,11 @@ public class OrderHandling {
                     for (int j = 0; j < orderItemsArray.length(); j++) {
                         JSONObject jsonItem = orderItemsArray.getJSONObject(j);
     
-                        // ✅ Print full JSON item to debug
+                        //  Print full JSON item to debug
                         System.out.println("DEBUG: Full JSON Object -> " + jsonItem.toString());
                         System.out.println("DEBUG: Order Item Keys -> " + jsonItem.keySet());
     
-                        // ✅ Ensure 'menuID' exists
+                        //  Ensure 'menuID' exists
                         if (!jsonItem.has("menuID")) {
                             System.err.println("ERROR: 'menuID' missing for an item in order: " + orderID);
                             continue;
@@ -864,22 +834,22 @@ public class OrderHandling {
                         int quantity = jsonItem.getInt("quantity");
                         double price = jsonItem.getDouble("price");
     
-                        // ✅ Fetch item name using menuID
+                        //  Fetch item name using menuID
                         String itemName = getFoodNameByMenuID(menuID);
                         // if (itemName == null || itemName.isEmpty()) {
                         //     itemName = "Unknown Item"; // Default name if not found
                         //     System.err.println("WARNING: Menu item not found for menuID: " + menuID);
                         // }
     
-                        // ✅ Retrieve Customer object using customerID
+                        //  Retrieve Customer object using customerID
                         Customer customer = UserHandling.getCustomerByID(customerID);
     
-                        // ✅ Create CusOrder object and add to list
+                        //  Create CusOrder object and add to list
                         CusOrder item = new CusOrder(menuID, quantity, price, itemName, customer);
                         orderItems.add(item);
                     }
     
-                    // ✅ Create and return the Payment object
+                    //  Create and return the Payment object
                     return new Payment(orderID, customerID, serviceType, totalAmount, paymentStatus, address, dateString, orderStatus, orderItems);
                 }
             }

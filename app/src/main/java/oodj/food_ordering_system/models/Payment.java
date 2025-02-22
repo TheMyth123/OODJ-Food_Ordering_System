@@ -11,9 +11,9 @@ public class Payment {
     private String address;
     private String date;
     private String orderStatus;
-    private ArrayList<CusOrder> orderItems; // ✅ Added to store order items
+    private ArrayList<CusOrder> orderItems; //  Added to store order items
 
-    // ✅ Updated constructor to include order items
+    //  Updated constructor to include order items
     public Payment(String orderID, String customerID, String serviceType, double totalAmount,
                    String paymentStatus, String address, String date, String orderStatus,
                    ArrayList<CusOrder> orderItems) {
@@ -25,10 +25,10 @@ public class Payment {
         this.address = address;
         this.date = date;
         this.orderStatus = orderStatus;
-        this.orderItems = orderItems; // ✅ Assign order items
+        this.orderItems = orderItems; //  Assign order items
     }
 
-    // ✅ Getter method for order items
+    //  Getter method for order items
     public ArrayList<CusOrder> getOrderItems() {
         return orderItems;
     }

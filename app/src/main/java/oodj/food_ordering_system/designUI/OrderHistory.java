@@ -215,10 +215,10 @@ public class OrderHistory extends javax.swing.JFrame {
         );
     
         if (confirm == JOptionPane.YES_OPTION) {
-            // ✅ Step 1: Get current cart
+            //  Step 1: Get current cart
             ArrayList<CusOrder> cartItems = OrderHandling.getCart();
     
-            // ✅ Step 2: Loop through ordered items and update quantity if exists
+            //  Step 2: Loop through ordered items and update quantity if exists
             for (CusOrder newItem : payment.getOrderItems()) {
                 boolean itemExists = false;
     

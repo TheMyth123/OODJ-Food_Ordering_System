@@ -162,12 +162,12 @@ public class CustomerComplaintPanel extends JPanel {
                 chatArea.append(message + "\n");
             }
     
-            if (complaint.isResolved()) { // ✅ If complaint is resolved
+            if (complaint.isResolved()) { //  If complaint is resolved
                 chatArea.setEditable(false);
                 sendButton.setText("Resolved");
                 sendButton.setEnabled(false);
                 inputField.setVisible(false);
-            } else { // ✅ Allow chat if unresolved
+            } else { //  Allow chat if unresolved
                 chatArea.setEditable(true);
                 sendButton.setText("Send Message");
                 sendButton.setEnabled(true);
@@ -254,7 +254,7 @@ public class CustomerComplaintPanel extends JPanel {
             String complaintId = (String) tableModel.getValueAt(selectedRow, 0);
             Complaint complaint = ComplaintHandling.getComplaintById(complaintId);
     
-            if (complaint != null && complaint.isResolved()) { // ✅ Prevent sending if resolved
+            if (complaint != null && complaint.isResolved()) { //  Prevent sending if resolved
                 JOptionPane.showMessageDialog(this, "This complaint is resolved. You cannot send messages.", "Warning", JOptionPane.WARNING_MESSAGE);
                 return;
             }

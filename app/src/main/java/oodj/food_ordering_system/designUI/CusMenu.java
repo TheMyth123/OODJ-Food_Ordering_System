@@ -44,12 +44,12 @@ public class CusMenu extends javax.swing.JFrame {
     public CusMenu(String vendorID) {
         this.endUser = LoginPage.getEndUser();
         if (this.endUser != null) {
-            this.customerID = endUser.getID(); // ✅ Assign customer ID
+            this.customerID = endUser.getID(); //  Assign customer ID
         } else {
             JOptionPane.showMessageDialog(null, "Error: User not logged in!", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-        // ✅ Initialize cart to prevent NullPointerException
+        //  Initialize cart to prevent NullPointerException
         this.cart = new ArrayList<>();
 
         initComponents(vendorID);
@@ -61,7 +61,7 @@ public class CusMenu extends javax.swing.JFrame {
         String filePath = FileHandling.filePath.CART_PATH.getValue();
         JSONArray cartArray = new JSONArray();
     
-        // ✅ Ensure `endUser` exists and assign `customerID`
+        //  Ensure `endUser` exists and assign `customerID`
         if (endUser == null) {
             JOptionPane.showMessageDialog(null, "Error: User not logged in!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -83,17 +83,17 @@ public class CusMenu extends javax.swing.JFrame {
             return;
         }
     
-        // ✅ Process each item in the cart list
+        //  Process each item in the cart list
         for (String[] item : cart) {
             String menuID = item[0];
             int quantityToAdd = Integer.parseInt(item[3]);
             boolean found = false;
     
-            // ✅ Check if the item already exists in the cart
+            //  Check if the item already exists in the cart
             for (int i = 0; i < cartArray.length(); i++) {
                 JSONObject cartItem = cartArray.getJSONObject(i);
                 if (cartItem.getString("MenuID").equals(menuID) && cartItem.getString("CustomerID").equals(customerID)) {
-                    // ✅ Update existing quantity
+                    //  Update existing quantity
                     int existingQuantity = cartItem.getInt("quantity");
                     cartItem.put("quantity", existingQuantity + quantityToAdd);
                     found = true;
@@ -332,7 +332,7 @@ private void initComponents(String vendorID) {
 
     try {
         List<Menu> menuItems = OrderHandling.readMenuFile(vendorID).stream()
-        .filter(item -> "True".equalsIgnoreCase(item.getStatus())) // ✅ Convert string to boolean properly
+        .filter(item -> "True".equalsIgnoreCase(item.getStatus())) //  Convert string to boolean properly
         .collect(Collectors.toList());
         
         for (Menu item : menuItems) {

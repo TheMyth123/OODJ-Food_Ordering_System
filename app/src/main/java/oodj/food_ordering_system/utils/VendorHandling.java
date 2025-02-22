@@ -25,78 +25,11 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-// Testing
 public class VendorHandling {
     private static final String MENU = FileHandling.filePath.MENU_PATH.getValue();
     private static final String PAYMENT = FileHandling.filePath.PAYMENT_PATH.getValue();
                 
                 
-    // public static JSONArray getVendorOrderHistory(String vendorID, String period) {
-    //     try {
-    //         String filePath = PAYMENT;
-    //         FileHandling.checkFile(filePath);
-    //         JSONArray orderArray = new JSONArray();
-    //         File file = new File(filePath);
-
-    //         if (file.length() > 0) {
-    //             try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-    //                 StringBuilder content = new StringBuilder();
-    //                 String line;
-    //                 while ((line = reader.readLine()) != null) {
-    //                     content.append(line);
-    //                 }
-    //                 orderArray = new JSONArray(content.toString());
-    //             }
-    //         }
-
-    //         JSONArray filteredOrders = new JSONArray();
-    //         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    //         Calendar cal = Calendar.getInstance();
-
-    //         switch (period.toLowerCase()) {
-    //             case "daily":
-    //                 cal.add(Calendar.DAY_OF_YEAR, -1);
-    //                 break;
-    //             case "monthly":
-    //                 cal.add(Calendar.MONTH, -1);
-    //                 break;
-    //             case "quarterly":
-    //                 cal.add(Calendar.MONTH, -3);
-    //                 break;
-    //         }
-
-    //         Date cutoffDate = cal.getTime();
-    //         System.out.println("Cutoff Date: " + cutoffDate); // Debugging
-
-    //         for (int i = 0; i < orderArray.length(); i++) {
-    //             JSONObject order = orderArray.getJSONObject(i);
-    //             System.out.println("Processing Order: " + order.toString(2)); // Debugging
-                
-    //             JSONArray orderItems = order.getJSONArray("OrderItems");
-    //             for (int j = 0; j < orderItems.length(); j++) {
-    //                 JSONObject item = orderItems.getJSONObject(j);
-    //                 String menuID = item.getString("menuID");
-    //                 JSONObject menuItem = getMenuItem(menuID);
-                    
-    //                 if (!menuItem.has("VendorID")) continue;
-    //                 System.out.println("Menu Item: " + menuItem.toString(2)); // Debugging
-                    
-    //                 if (menuItem.getString("VendorID").equals(vendorID)) {
-    //                     Date orderDate = sdf.parse(order.getString("Date"));
-    //                     System.out.println("Order Date: " + orderDate); // Debugging
-
-    //                     if (!orderDate.before(cutoffDate)) {
-    //                         filteredOrders.put(order);
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //         return filteredOrders;
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //         return new JSONArray();
-    //     }
-    // }
 
     public static JSONArray getVendorOrderHistory(String vendorID, String period) {
         try {

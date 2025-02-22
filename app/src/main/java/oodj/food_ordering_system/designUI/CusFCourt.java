@@ -86,7 +86,7 @@ public class CusFCourt extends javax.swing.JFrame {
     public static void displayVendors(List<Vendor> filteredVendors) {
         restaurantListPanel.removeAll(); // Clear previous results
     
-        // ✅ Only show vendors with status true
+        //  Only show vendors with status true
         List<Vendor> activeVendors = filteredVendors.stream()
                 .filter(Vendor::getStatus)
                 .collect(Collectors.toList());
