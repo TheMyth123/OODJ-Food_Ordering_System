@@ -14,11 +14,11 @@
     "TotalAmount": 25,
     "OrderID": "OR00001",
     "PaymentStatus": "Completed",
-    "Date": "2025-02-11"
+    "Date": "2025-02-22"
   },
   {
     "Status": "Accepted",
-    "OrderStatus": "Pending",
+    "OrderStatus": "Completed",
     "OrderItems": [{
       "quantity": 1,
       "totalPrice": 25,
@@ -31,10 +31,11 @@
     "TotalAmount": 25,
     "OrderID": "OR00002",
     "PaymentStatus": "Completed",
-    "Date": "2025-02-11"
+    "Date": "2025-02-21"
   },
   {
-    "OrderStatus": "Pending",
+    "Status": "Cancelled",
+    "OrderStatus": "Cancelled",
     "OrderItems": [{
       "quantity": 1,
       "totalPrice": 35,
@@ -47,10 +48,11 @@
     "TotalAmount": 35,
     "OrderID": "OR00003",
     "PaymentStatus": "Completed",
-    "Date": "2025-02-11"
+    "Date": "2025-02-22"
   },
   {
-    "OrderStatus": "Pending",
+    "Status": "Accepted",
+    "OrderStatus": "Order completed",
     "OrderItems": [{
       "quantity": 1,
       "totalPrice": 25,
@@ -63,10 +65,11 @@
     "TotalAmount": 25,
     "OrderID": "OR00004",
     "PaymentStatus": "Completed",
-    "Date": "2025-02-11"
+    "Date": "2025-02-22"
   },
   {
-    "OrderStatus": "Pending",
+    "Status": "Accepted",
+    "OrderStatus": "Order completed",
     "OrderItems": [{
       "quantity": 1,
       "totalPrice": 35,
@@ -79,10 +82,11 @@
     "TotalAmount": 35,
     "OrderID": "OR00005",
     "PaymentStatus": "Completed",
-    "Date": "2025-02-11"
+    "Date": "2025-02-22"
   },
   {
-    "OrderStatus": "Pending",
+    "Status": "Accepted",
+    "OrderStatus": "Order completed",
     "OrderItems": [{
       "quantity": 1,
       "totalPrice": 35,
@@ -95,7 +99,7 @@
     "TotalAmount": 35,
     "OrderID": "OR00006",
     "PaymentStatus": "Completed",
-    "Date": "2025-02-11"
+    "Date": "2025-02-22"
   },
   {
     "OrderStatus": "Pending",
