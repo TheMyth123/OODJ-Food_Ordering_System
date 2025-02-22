@@ -739,7 +739,9 @@ public class VendorRevenue extends javax.swing.JFrame {
         });
     }   
 
-    private void btn_ManageOrderActionPerformed(java.awt.event.ActionEvent evt) {                                     
+    private void btn_ManageOrderActionPerformed(java.awt.event.ActionEvent evt) {      
+        dispose();
+        new ManageOrder().setVisible(true);                                 
     } 
 
     private void btn_ManageMenuActionPerformed(java.awt.event.ActionEvent evt) {      
@@ -748,8 +750,8 @@ public class VendorRevenue extends javax.swing.JFrame {
     } 
 
     private void btn_OrderHisActionPerformed(java.awt.event.ActionEvent evt) {
-        // dispose();
-        // new OrderHistory().setVisible(true);                                         
+        dispose();
+        new VendorOrderHistoryPage().setVisible(true);                                         
     } 
     
     private void btn_CusReviewActionPerformed(java.awt.event.ActionEvent evt) {

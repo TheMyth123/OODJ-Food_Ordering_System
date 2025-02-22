@@ -304,7 +304,11 @@ public class VendorOrderHistoryPage extends JFrame {
         btn_Revenue.setMaximumSize(new java.awt.Dimension(250, 40));
         btn_Revenue.setMinimumSize(new java.awt.Dimension(250, 40));
         btn_Revenue.setPreferredSize(new java.awt.Dimension(250, 40));
-        
+        btn_Revenue.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_RevenueActionPerformed(evt);
+            }
+        });
         
         btn_container1.add(btn_Revenue);
 
@@ -514,7 +518,9 @@ public class VendorOrderHistoryPage extends JFrame {
 
     
 
-    private void btn_ManageOrderActionPerformed(java.awt.event.ActionEvent evt) {                                     
+    private void btn_ManageOrderActionPerformed(java.awt.event.ActionEvent evt) {   
+        dispose();
+        new ManageOrder().setVisible(true);                                     
     } 
 
     private void btn_ManageMenuActionPerformed(java.awt.event.ActionEvent evt) {      
@@ -530,6 +536,11 @@ public class VendorOrderHistoryPage extends JFrame {
     private void btn_CusReviewActionPerformed(java.awt.event.ActionEvent evt) {
         dispose();
         new CusReview().setVisible(true);                                        
+    } 
+
+    private void btn_RevenueActionPerformed(java.awt.event.ActionEvent evt) {
+        dispose();
+        new VendorRevenue().setVisible(true);                                        
     } 
     
     

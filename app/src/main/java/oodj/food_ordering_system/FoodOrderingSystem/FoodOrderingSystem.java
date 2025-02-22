@@ -2,7 +2,7 @@
 package oodj.food_ordering_system.FoodOrderingSystem;
 
 import java.io.IOException;
-import javax.swing.SwingUtilities;
+    import javax.swing.SwingUtilities;
 
 import oodj.food_ordering_system.designUI.LoginPage;
 import oodj.food_ordering_system.utils.FileChecker;

@@ -5,9 +5,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import javax.swing.JTable;
+import javax.swing.JScrollPane;
+import javax.swing.table.DefaultTableModel;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
@@ -20,18 +25,18 @@ import raven.glasspanepopup.DefaultLayoutCallBack;
 import raven.glasspanepopup.DefaultOption;
 import raven.glasspanepopup.GlassPanePopup;
 
-public class RunnerRevenueDashboard extends javax.swing.JFrame {
-        private DeliveryRunner endUser;
-        private String runnerID;
-        private List<Notification> notifications;
+public class RunnerViewRatings extends javax.swing.JFrame {
+    private DeliveryRunner endUser;
+    private String runnerID;
+    private List<Notification> notifications;
 
-    public RunnerRevenueDashboard() {
+    public RunnerViewRatings() {
         GlassPanePopup.install(this);
         this.endUser = LoginPage.getEndUserDr();
         this.runnerID = endUser.getID();
         initComponents();
-        runner_name.setText(endUser.getUsername());
         loadDetails();
+        loadRatingsTable();  // Load and display the ratings table below the title
         notifications = NotificationUtils.getUnreadNotifications(NotificationUtils.getAllNotifications(), runnerID, false);
     }
 
@@ -82,7 +87,6 @@ public class RunnerRevenueDashboard extends javax.swing.JFrame {
                 try {
                     minutes = Integer.parseInt(estimatedTime.replaceAll("[^0-9]", ""));
                 } catch (NumberFormatException e) {
-                    // If parsing fails, default to 0 minutes.
                     minutes = 0;
                 }
                 totalDeliveryTime += minutes;
@@ -100,8 +104,99 @@ public class RunnerRevenueDashboard extends javax.swing.JFrame {
         averageDeliveryFeeLabel.setText(String.format("%.2f", averageDeliveryFee));
     }
 
+    private void loadRatingsTable() {
+        // Create a set to hold OrderIDs for the current runner from delivery_runner_task.txt
+        Set<String> runnerOrderIDs = new HashSet<>();
+        String taskFilePath = "app\\\\src\\\\main\\\\resources\\\\databases\\\\delivery_runner_task.txt";
+        JSONArray taskArray;
+        File taskFile = new File(taskFilePath);
+        if (taskFile.length() > 0) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(taskFilePath))) {
+                StringBuilder content = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    content.append(line);
+                }
+                taskArray = new JSONArray(content.toString());
+                for (int i = 0; i < taskArray.length(); i++) {
+                    JSONObject task = taskArray.getJSONObject(i);
+                    if (task.getString("RunnerID").equals(this.runnerID)) {
+                        runnerOrderIDs.add(task.getString("OrderID"));
+                    }
+                }
+            } catch (IOException e) {
+                DialogBox.errorMessage("Error reading delivery task data file.", "Error");
+                e.printStackTrace();
+                return;
+            }
+        } else {
+            DialogBox.errorMessage("No delivery task data found.", "Error");
+            return;
+        }
+    
+        // Read rating.txt and filter for entries with RatingType "RUNNER" for the runner's orders
+        String ratingFilePath = "app\\\\src\\\\main\\\\resources\\\\databases\\\\rating.txt";
+        JSONArray ratingArray;
+        File ratingFile = new File(ratingFilePath);
+        List<Object[]> rows = new ArrayList<>();
+        if (ratingFile.length() > 0) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(ratingFilePath))) {
+                StringBuilder content = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    content.append(line);
+                }
+                ratingArray = new JSONArray(content.toString());
+                for (int i = 0; i < ratingArray.length(); i++) {
+                    JSONObject ratingObj = ratingArray.getJSONObject(i);
+                    if (ratingObj.getString("RatingType").equalsIgnoreCase("RUNNER") &&
+                        runnerOrderIDs.contains(ratingObj.getString("OrderID"))) {
+                        String orderId = ratingObj.getString("OrderID");
+                        String ratingType = ratingObj.getString("RatingType");
+                        int ratingValue = ratingObj.getInt("Rating");
+                        rows.add(new Object[]{orderId, ratingType, ratingValue});
+                    }
+                }
+            } catch (IOException e) {
+                DialogBox.errorMessage("Error reading rating data file.", "Error");
+                e.printStackTrace();
+                return;
+            }
+        } else {
+            DialogBox.errorMessage("No rating data found.", "Error");
+            return;
+        }
+    
+        // Create the table model and add the rows
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("OrderID");
+        model.addColumn("Rating Type");
+        model.addColumn("Rating (out of 5)");
+        for (Object[] row : rows) {
+            model.addRow(row);
+        }
+    
+        // Create the table and add it to a scroll pane with an increased preferred size
+        JTable table = new JTable(model);
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new java.awt.Dimension(900, 450));
+    
+        // Create a container panel with BorderLayout to center the scrollPane
+        javax.swing.JPanel containerPanel = new javax.swing.JPanel(new java.awt.BorderLayout());
+        containerPanel.setBackground(Main.getBackground());
+        // Add an empty border to add some margin on the left and right (50 pixels each)
+        containerPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 50, 0, 50));
+        containerPanel.add(scrollPane, java.awt.BorderLayout.CENTER);
+    
+        // Add the container panel to the Main panel
+        Main.add(containerPanel);
+        Main.revalidate();
+        Main.repaint();
+    }
+    
+    
 
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
 
         Sidebar = new javax.swing.JPanel();
@@ -120,33 +215,10 @@ public class RunnerRevenueDashboard extends javax.swing.JFrame {
         margin4 = new javax.swing.JPanel();
         title_container = new javax.swing.JPanel();
         margin5 = new javax.swing.JPanel();
-        welcome = new javax.swing.JLabel();
-        runner_name = new javax.swing.JLabel();
-        data_container = new javax.swing.JPanel();
-        margin7 = new javax.swing.JPanel();
-        data1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jPanel4 = new javax.swing.JPanel();
+        title = new javax.swing.JLabel();
         totalDeliveriesLabel = new javax.swing.JLabel();
-        margin13 = new javax.swing.JPanel();
-        data2 = new javax.swing.JPanel();
-        jPanel5 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
-        jPanel6 = new javax.swing.JPanel();
         totalEarningsLabel = new javax.swing.JLabel();
-        margin14 = new javax.swing.JPanel();
-        data3 = new javax.swing.JPanel();
-        jPanel7 = new javax.swing.JPanel();
-        jLabel5 = new javax.swing.JLabel();
-        jPanel8 = new javax.swing.JPanel();
         averageDeliveryTimeLabel = new javax.swing.JLabel();
-        margin11 = new javax.swing.JPanel();
-        data4 = new javax.swing.JPanel();
-        jPanel9 = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
-        jPanel12 = new javax.swing.JPanel();
-        jPanel11 = new javax.swing.JPanel();
         averageDeliveryFeeLabel = new javax.swing.JLabel();
         btn_Noti = new oodj.food_ordering_system.designUI.Button();
 
@@ -225,9 +297,9 @@ public class RunnerRevenueDashboard extends javax.swing.JFrame {
         btn_container1.setPreferredSize(new java.awt.Dimension(300, 370));
         btn_container1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 30));
 
-        btn_RevenueDashboard.setBackground(new java.awt.Color(43, 43, 43));
-        btn_RevenueDashboard.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btn_RevenueDashboard.setForeground(new java.awt.Color(255, 169, 140));
+        btn_RevenueDashboard.setBackground(new java.awt.Color(31, 31, 31));
+        btn_RevenueDashboard.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btn_RevenueDashboard.setForeground(new java.awt.Color(245, 251, 254));
         btn_RevenueDashboard.setText("Revenue Dashboard");
         btn_RevenueDashboard.setBorder(null);
         btn_RevenueDashboard.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -243,9 +315,9 @@ public class RunnerRevenueDashboard extends javax.swing.JFrame {
         });
         btn_container1.add(btn_RevenueDashboard);
 
-        btn_reviews.setBackground(new java.awt.Color(31, 31, 31));
-        btn_reviews.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_reviews.setForeground(new java.awt.Color(245, 251, 254));
+        btn_reviews.setBackground(new java.awt.Color(43, 43, 43));
+        btn_reviews.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btn_reviews.setForeground(new java.awt.Color(255, 169, 140));
         btn_reviews.setText("Customer Reviews");
         btn_reviews.setBorder(null);
         btn_reviews.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -378,25 +450,16 @@ public class RunnerRevenueDashboard extends javax.swing.JFrame {
 
         title_container.add(margin5);
 
-        welcome.setBackground(new java.awt.Color(31, 31, 31));
-        welcome.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        welcome.setForeground(new java.awt.Color(255, 169, 140));
-        welcome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        welcome.setText("Welcome, ");
-        welcome.setAlignmentX(0.5F);
-        welcome.setMaximumSize(new java.awt.Dimension(130, 50));
-        welcome.setMinimumSize(new java.awt.Dimension(130, 50));
-        welcome.setPreferredSize(new java.awt.Dimension(130, 50));
-        title_container.add(welcome);
-
-        runner_name.setBackground(new java.awt.Color(31, 31, 31));
-        runner_name.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        runner_name.setForeground(new java.awt.Color(255, 169, 140));
-        runner_name.setText("< runner_name >");
-        runner_name.setMaximumSize(new java.awt.Dimension(300, 50));
-        runner_name.setMinimumSize(new java.awt.Dimension(300, 50));
-        runner_name.setPreferredSize(new java.awt.Dimension(600, 50));
-        title_container.add(runner_name);
+        title.setBackground(new java.awt.Color(31, 31, 31));
+        title.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        title.setForeground(new java.awt.Color(255, 169, 140));
+        title.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        title.setText("Runner Ratings");
+        title.setAlignmentX(0.5F);
+        title.setMaximumSize(new java.awt.Dimension(130, 50));
+        title.setMinimumSize(new java.awt.Dimension(130, 50));
+        title.setPreferredSize(new java.awt.Dimension(800, 50));
+        title_container.add(title);
 
         btn_Noti.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/noti.png"))); // NOI18N
         btn_Noti.setPreferredSize(new java.awt.Dimension(50, 50));
@@ -409,309 +472,12 @@ public class RunnerRevenueDashboard extends javax.swing.JFrame {
 
         Main.add(title_container);
 
-        data_container.setBackground(new java.awt.Color(31, 31, 31));
-        data_container.setMaximumSize(new java.awt.Dimension(1000, 380));
-        data_container.setMinimumSize(new java.awt.Dimension(1000, 380));
-        data_container.setPreferredSize(new java.awt.Dimension(1000, 380));
-        data_container.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 0));
-
-        margin7.setBackground(new java.awt.Color(31, 31, 31));
-        margin7.setMaximumSize(new java.awt.Dimension(60, 350));
-        margin7.setMinimumSize(new java.awt.Dimension(60, 350));
-        margin7.setPreferredSize(new java.awt.Dimension(60, 350));
-
-        javax.swing.GroupLayout margin7Layout = new javax.swing.GroupLayout(margin7);
-        margin7.setLayout(margin7Layout);
-        margin7Layout.setHorizontalGroup(
-            margin7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 60, Short.MAX_VALUE)
-        );
-        margin7Layout.setVerticalGroup(
-            margin7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 350, Short.MAX_VALUE)
-        );
-
-        data_container.add(margin7);
-
-        data1.setBackground(new java.awt.Color(43, 43, 43));
-        data1.setMaximumSize(new java.awt.Dimension(200, 200));
-        data1.setMinimumSize(new java.awt.Dimension(200, 200));
-        data1.setPreferredSize(new java.awt.Dimension(200, 200));
-        data1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
-
-        jPanel2.setBackground(new java.awt.Color(43, 43, 43));
-        jPanel2.setPreferredSize(new java.awt.Dimension(200, 20));
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 200, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-
-        data1.add(jPanel2);
-
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(245, 251, 254));
-        jLabel1.setText("Total Deliveries");
-        data1.add(jLabel1);
-
-        jPanel4.setBackground(new java.awt.Color(43, 43, 43));
-        jPanel4.setPreferredSize(new java.awt.Dimension(200, 50));
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 200, Short.MAX_VALUE)
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 50, Short.MAX_VALUE)
-        );
-
-        data1.add(jPanel4);
-
-        totalDeliveriesLabel.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
-        totalDeliveriesLabel.setForeground(new java.awt.Color(255, 169, 140));
-        totalDeliveriesLabel.setText("999");
-        data1.add(totalDeliveriesLabel);
-
-        data_container.add(data1);
-
-        margin13.setBackground(new java.awt.Color(31, 31, 31));
-        margin13.setMaximumSize(new java.awt.Dimension(25, 350));
-        margin13.setMinimumSize(new java.awt.Dimension(25, 350));
-        margin13.setPreferredSize(new java.awt.Dimension(25, 350));
-
-        javax.swing.GroupLayout margin13Layout = new javax.swing.GroupLayout(margin13);
-        margin13.setLayout(margin13Layout);
-        margin13Layout.setHorizontalGroup(
-            margin13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 25, Short.MAX_VALUE)
-        );
-        margin13Layout.setVerticalGroup(
-            margin13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 350, Short.MAX_VALUE)
-        );
-
-        data_container.add(margin13);
-
-        data2.setBackground(new java.awt.Color(43, 43, 43));
-        data2.setMaximumSize(new java.awt.Dimension(200, 200));
-        data2.setMinimumSize(new java.awt.Dimension(200, 200));
-        data2.setPreferredSize(new java.awt.Dimension(200, 200));
-        data2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
-
-        jPanel5.setBackground(new java.awt.Color(43, 43, 43));
-        jPanel5.setPreferredSize(new java.awt.Dimension(200, 20));
-
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 200, Short.MAX_VALUE)
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-
-        data2.add(jPanel5);
-
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(245, 251, 254));
-        jLabel3.setText("Total Earnings");
-        data2.add(jLabel3);
-
-        jPanel6.setBackground(new java.awt.Color(43, 43, 43));
-        jPanel6.setPreferredSize(new java.awt.Dimension(200, 50));
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 200, Short.MAX_VALUE)
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 50, Short.MAX_VALUE)
-        );
-
-        data2.add(jPanel6);
-
-        totalEarningsLabel.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
-        totalEarningsLabel.setForeground(new java.awt.Color(255, 169, 140));
-        totalEarningsLabel.setText("999");
-        data2.add(totalEarningsLabel);
-
-        data_container.add(data2);
-
-        margin14.setBackground(new java.awt.Color(31, 31, 31));
-        margin14.setMaximumSize(new java.awt.Dimension(25, 350));
-        margin14.setMinimumSize(new java.awt.Dimension(25, 350));
-        margin14.setPreferredSize(new java.awt.Dimension(25, 350));
-
-        javax.swing.GroupLayout margin14Layout = new javax.swing.GroupLayout(margin14);
-        margin14.setLayout(margin14Layout);
-        margin14Layout.setHorizontalGroup(
-            margin14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        margin14Layout.setVerticalGroup(
-            margin14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-
-        data_container.add(margin14);
-
-        data3.setBackground(new java.awt.Color(43, 43, 43));
-        data3.setMaximumSize(new java.awt.Dimension(200, 200));
-        data3.setMinimumSize(new java.awt.Dimension(200, 200));
-        data3.setPreferredSize(new java.awt.Dimension(200, 200));
-        data3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
-
-        jPanel7.setBackground(new java.awt.Color(43, 43, 43));
-        jPanel7.setPreferredSize(new java.awt.Dimension(200, 20));
-
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 200, Short.MAX_VALUE)
-        );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-
-        data3.add(jPanel7);
-
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(245, 251, 254));
-        jLabel5.setText("Average Delivery Time");
-        data3.add(jLabel5);
-
-        jPanel8.setBackground(new java.awt.Color(43, 43, 43));
-        jPanel8.setPreferredSize(new java.awt.Dimension(200, 50));
-
-        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
-        jPanel8.setLayout(jPanel8Layout);
-        jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 200, Short.MAX_VALUE)
-        );
-        jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 50, Short.MAX_VALUE)
-        );
-
-        data3.add(jPanel8);
-
-        averageDeliveryTimeLabel.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
-        averageDeliveryTimeLabel.setForeground(new java.awt.Color(255, 169, 140));
-        averageDeliveryTimeLabel.setText("999");
-        data3.add(averageDeliveryTimeLabel);
-
-        data_container.add(data3);
-
-        margin11.setBackground(new java.awt.Color(31, 31, 31));
-        margin11.setMaximumSize(new java.awt.Dimension(25, 350));
-        margin11.setMinimumSize(new java.awt.Dimension(25, 350));
-        margin11.setPreferredSize(new java.awt.Dimension(25, 350));
-
-        javax.swing.GroupLayout margin11Layout = new javax.swing.GroupLayout(margin11);
-        margin11.setLayout(margin11Layout);
-        margin11Layout.setHorizontalGroup(
-            margin11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 25, Short.MAX_VALUE)
-        );
-        margin11Layout.setVerticalGroup(
-            margin11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 350, Short.MAX_VALUE)
-        );
-
-        data_container.add(margin11);
-
-        data4.setBackground(new java.awt.Color(43, 43, 43));
-        data4.setMaximumSize(new java.awt.Dimension(200, 200));
-        data4.setMinimumSize(new java.awt.Dimension(200, 200));
-        data4.setPreferredSize(new java.awt.Dimension(200, 200));
-        data4.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
-
-        jPanel9.setBackground(new java.awt.Color(43, 43, 43));
-        jPanel9.setPreferredSize(new java.awt.Dimension(200, 20));
-
-        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
-        jPanel9.setLayout(jPanel9Layout);
-        jPanel9Layout.setHorizontalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 200, Short.MAX_VALUE)
-        );
-        jPanel9Layout.setVerticalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-
-        data4.add(jPanel9);
-
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(245, 251, 254));
-        jLabel7.setText("Average Delivery Fee");
-        data4.add(jLabel7);
-
-        jPanel12.setBackground(new java.awt.Color(43, 43, 43));
-        jPanel12.setPreferredSize(new java.awt.Dimension(200, 50));
-
-        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
-        jPanel12.setLayout(jPanel12Layout);
-        jPanel12Layout.setHorizontalGroup(
-            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 200, Short.MAX_VALUE)
-        );
-        jPanel12Layout.setVerticalGroup(
-            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 50, Short.MAX_VALUE)
-        );
-
-        data4.add(jPanel12);
-
-        jPanel11.setBackground(new java.awt.Color(43, 43, 43));
-        jPanel11.setPreferredSize(new java.awt.Dimension(200, 5));
-
-        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
-        jPanel11.setLayout(jPanel11Layout);
-        jPanel11Layout.setHorizontalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 200, Short.MAX_VALUE)
-        );
-        jPanel11Layout.setVerticalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 5, Short.MAX_VALUE)
-        );
-
-        data4.add(jPanel11);
-
-        averageDeliveryFeeLabel.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
-        averageDeliveryFeeLabel.setForeground(new java.awt.Color(255, 169, 140));
-        averageDeliveryFeeLabel.setText("999");
-        data4.add(averageDeliveryFeeLabel);
-
-        data_container.add(data4);
-
-        Main.add(data_container);
-
         getContentPane().add(Main);
         Main.setBounds(300, 0, 1000, 670);
 
         pack();
         setLocationRelativeTo(null);
-    }// </editor-fold>        
-    
+    }// </editor-fold>
 
     private void btn_NotiActionPerformed(java.awt.event.ActionEvent evt) {                                  
         GlassPanePopup.showPopup(new NotificationPanel(notifications), new DefaultOption(){
@@ -719,7 +485,6 @@ public class RunnerRevenueDashboard extends javax.swing.JFrame {
             public float opacity() {
                 return 0;
             }
-
             @Override
             public LayoutCallback getLayoutCallBack(java.awt.Component parent) {
                 return new DefaultLayoutCallBack(parent){
@@ -737,7 +502,6 @@ public class RunnerRevenueDashboard extends javax.swing.JFrame {
                     }
                 };
             }
-
         });
     }   
 
@@ -751,65 +515,41 @@ public class RunnerRevenueDashboard extends javax.swing.JFrame {
     }                                          
 
     private void btn_RevenueDashboardActionPerformed(java.awt.event.ActionEvent evt) {                                         
-
-    }                                                                
-    
-    private void btn_reviewsActionPerformed(java.awt.event.ActionEvent evt) {                                            
         dispose();
-        new RunnerViewRatings().setVisible(true);
+        new RunnerRevenueDashboard().setVisible(true);
+    }                                                                                          
+
+    private void btn_reviewsActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        // Customer Reviews button action
     }                                           
 
     private void btn_ManageTasksActionPerformed(java.awt.event.ActionEvent evt) {                                              
         dispose();
         new RunnerManageTask().setVisible(true);
     }
-    
+
     // Variables declaration - do not modify                     
     private javax.swing.JPanel Line;
     private javax.swing.JPanel Logo_container;
     private javax.swing.JPanel Main;
     private javax.swing.JPanel Sidebar;
-    private javax.swing.JLabel runner_name;
     private javax.swing.JButton btn_reviews;
     private javax.swing.JPanel btn_container1;
     private javax.swing.JPanel btn_container2;
     private javax.swing.JButton btn_RevenueDashboard;
     private javax.swing.JButton btn_ManageTasks;
     private javax.swing.JButton btn_logout;
-    private javax.swing.JPanel data1;
-    private javax.swing.JPanel data2;
-    private javax.swing.JPanel data3;
-    private javax.swing.JPanel data4;
-    private javax.swing.JPanel data_container;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JPanel jPanel11;
-    private javax.swing.JPanel jPanel12;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
     private javax.swing.JPanel margin1;
     private javax.swing.JPanel margin2;
-    private javax.swing.JPanel margin11;
-    private javax.swing.JPanel margin13;
-    private javax.swing.JPanel margin14;
     private javax.swing.JPanel margin4;
     private javax.swing.JPanel margin5;
-    private javax.swing.JPanel margin7;
     private javax.swing.JLabel averageDeliveryTimeLabel;
     private javax.swing.JLabel systemName;
     private javax.swing.JPanel title_container;
     private javax.swing.JLabel averageDeliveryFeeLabel;
     private javax.swing.JLabel totalEarningsLabel;
     private javax.swing.JLabel totalDeliveriesLabel;
-    private javax.swing.JLabel welcome;
+    private javax.swing.JLabel title;
     private oodj.food_ordering_system.designUI.Button btn_Noti;
     // End of variables declaration                   
 }
-
