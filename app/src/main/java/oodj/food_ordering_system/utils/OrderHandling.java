@@ -265,16 +265,24 @@ public class OrderHandling {
     
         JSONArray cartArray = new JSONArray();
     
-        for (CusOrder order : allCartItems) {
+        // for (CusOrder order : allCartItems) {
             //  Compare order's customer ID with the given `customerID`
+            // if (!customerID.equals(order.getCustomer().getID())) {
+            //     continue;
+            // } else if (itemsToRemove.contains(order.getMenuID())) {
+            //     continue; // Skip adding this item
+            // } else {
+            //     System.out.println("Keeping item for current customer: " + order.getMenuID());
+            // }
+        for (CusOrder order : allCartItems) {
+            // Compare order's customer ID with the given `customerID`
             if (!customerID.equals(order.getCustomer().getID())) {
-                System.out.println("Keeping item for another customer: " + order.getMenuID());
+                continue;
             } else if (itemsToRemove.contains(order.getMenuID())) {
-                System.out.println("Removing item: " + order.getMenuID());
                 continue; // Skip adding this item
-            } else {
-                System.out.println("Keeping item for current customer: " + order.getMenuID());
-            }
+            } 
+        
+            
     
             JSONObject obj = new JSONObject();
             obj.put("MenuID", order.getMenuID());
@@ -286,7 +294,6 @@ public class OrderHandling {
             cartArray.put(obj);
         }
     
-        System.out.println("Final Cart Data to be saved: " + cartArray.toString(2));
     
         if (cartArray.length() == 0) {
             System.out.println("WARNING: The cart is empty after update. Check logic.");

@@ -1,23 +1,7 @@
-[
-  {
-    "MenuID": "MN00003",
-    "quantity": 3,
-    "price": 20,
-    "name": "Truffle Risotto",
-    "CustomerID": "CS00001"
-  },
-  {
-    "MenuID": "MN00001",
-    "quantity": 35,
-    "price": 25,
-    "name": "Seared Salmon",
-    "CustomerID": "CS00004"
-  },
-  {
-    "MenuID": "MN00002",
-    "quantity": 4,
-    "price": 35,
-    "name": "Filet Mignon",
-    "CustomerID": "CS00001"
-  }
-]
+[{
+  "MenuID": "MN00002",
+  "quantity": 4,
+  "price": 35,
+  "name": "Filet Mignon",
+  "CustomerID": "CS00001"
+}]

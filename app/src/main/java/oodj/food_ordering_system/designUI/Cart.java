@@ -226,11 +226,9 @@ public class Cart extends javax.swing.JFrame {
                 if (confirm) {
 
                     ArrayList<CusOrder> cartItems = OrderHandling.getCart();
-                    System.out.println("Before update, cart has: " + cartItems.size() + " items.");
 
                     OrderHandling.updateCart(cartItems, endUser.getID(), selectedMenuIDs);
 
-                    System.out.println("After update, cart should be updated.");
 
                     SwingUtilities.invokeLater(() -> displayCart(OrderHandling.getCart(), endUser));
                 }
