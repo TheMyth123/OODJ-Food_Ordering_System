@@ -64,16 +64,6 @@ public class OrderHistory extends javax.swing.JFrame {
         initComponents();
         ArrayList<Payment> payment = OrderHandling.getOrderHistory(); // Fetch cart items
         displayHistory(payment, endUser.getID()); // Display cart items
-        // addWindowFocusListener(new java.awt.event.WindowFocusListener() {
-        //     @Override
-        //     public void windowGainedFocus(java.awt.event.WindowEvent evt) {
-        //         // refreshCart();
-        //     }
-        //     @Override
-        //     public void windowLostFocus(java.awt.event.WindowEvent evt) {
-        //         // Do nothing
-        //     }
-        // });
         
     }
 
@@ -273,17 +263,73 @@ public class OrderHistory extends javax.swing.JFrame {
         searchPanel.add(new JLabel("Search:"));
         searchPanel.add(searchField);
         searchPanel.add(searchButton);
-    
-        JScrollPane scrollPane = new JScrollPane(historyTable);
-        scrollPane.setPreferredSize(new Dimension(800, 300));
-    
-        title_container1.removeAll();
-        title_container1.setLayout(new BorderLayout());
-        title_container1.add(searchPanel, BorderLayout.NORTH);
-        title_container1.add(scrollPane, BorderLayout.CENTER);
-        title_container1.revalidate();
-        title_container1.repaint();
-    }
+
+         // **Scroll Pane for Order History Table**
+         JScrollPane scrollPane = new JScrollPane(historyTable);
+         scrollPane.setPreferredSize(new Dimension(500, 200));
+ 
+         JButton rateButton = new JButton("Rate");
+         rateButton.addActionListener(e -> {
+             int selectedRow = historyTable.getSelectedRow();
+             if (selectedRow != -1) {
+                 String selectedOrderID = model.getValueAt(selectedRow, 0).toString();
+                 showRatingDialog(selectedOrderID);
+             } else {
+                 JOptionPane.showMessageDialog(null, "Please select an order to rate.");
+             }
+         });
+     
+         // **Reorder Button**
+         JButton reorderButton = new JButton("Reorder");
+         reorderButton.addActionListener(e -> {
+             int selectedRow = historyTable.getSelectedRow();
+             if (selectedRow != -1) {
+                 String selectedOrderID = model.getValueAt(selectedRow, 0).toString();
+                 reorderItems(selectedOrderID);
+             } else {
+                 JOptionPane.showMessageDialog(null, "Please select an order to reorder.");
+             }
+         });
+     
+         // **View Receipt Button**
+         JButton viewReceiptButton = new JButton("View Receipt");
+         viewReceiptButton.addActionListener(e -> {
+             int selectedRow = historyTable.getSelectedRow();
+             if (selectedRow != -1) {
+                 String selectedOrderID = model.getValueAt(selectedRow, 0).toString();
+                 showReceipt(selectedOrderID);
+             } else {
+                 JOptionPane.showMessageDialog(null, "Please select an order to view the receipt.");
+             }
+         });
+ 
+         JButton viewFeedbackButton = new JButton("View Feedback");
+         viewFeedbackButton.addActionListener(e -> {
+             int selectedRow = historyTable.getSelectedRow();
+             if (selectedRow != -1) {
+                 String selectedOrderID = model.getValueAt(selectedRow, 0).toString();
+                 showFeedback(selectedOrderID);
+             } else {
+                 JOptionPane.showMessageDialog(null, "Please select an order to view feedback.");
+             }
+         });
+     
+         // **Button Panel**
+         JPanel buttonPanel = new JPanel();
+         buttonPanel.add(rateButton);
+         buttonPanel.add(reorderButton);
+         buttonPanel.add(viewFeedbackButton);
+         buttonPanel.add(viewReceiptButton);
+     
+         // **Update UI**
+         title_container1.removeAll();
+         title_container1.setLayout(new BorderLayout());
+         title_container1.add(searchPanel, BorderLayout.NORTH); 
+         title_container1.add(scrollPane, BorderLayout.CENTER);
+         title_container1.add(buttonPanel, BorderLayout.SOUTH);
+         title_container1.revalidate();
+         title_container1.repaint();
+     }
     
 
     private void showFeedback(String orderID) {

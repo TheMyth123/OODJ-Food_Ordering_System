@@ -5,6 +5,7 @@ import javax.swing.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import oodj.food_ordering_system.models.Customer;
 import oodj.food_ordering_system.models.Menu;
 import oodj.food_ordering_system.models.Rating;
 import oodj.food_ordering_system.utils.DialogBox;
@@ -40,31 +41,127 @@ public class CusMenu extends javax.swing.JFrame {
     private String[] selectedItem;
     private List<String[]> cart;
     private JPanel selectedItemPanel;
-    private String customerID;
     private Map<String, Integer> itemQuantities;
     private List<Menu> menuItems; // Store all menu items globally
+private Customer endUser; // Ensure this is declared at the class level
 
-    
-    
-    public CusMenu(String vendorID) {
-        // this.customerID = LoginPage.getLoginID();
+private String customerID; // Declare at class level
 
-        cart = new ArrayList<>();
-        selectedItemPanel = null;
-        selectedItem = null;
-        // CusMenu.vendorID = vendorID;
-        itemQuantities = new HashMap<>();
-
-
-        initComponents(vendorID);
-        
+public CusMenu(String vendorID) {
+    this.endUser = LoginPage.getEndUser();
+    if (this.endUser != null) {
+        this.customerID = endUser.getID(); // ✅ Assign customer ID
+    } else {
+        JOptionPane.showMessageDialog(null, "Error: User not logged in!", "Error", JOptionPane.ERROR_MESSAGE);
     }
+
+    // ✅ Initialize cart to prevent NullPointerException
+    this.cart = new ArrayList<>();
+
+    initComponents(vendorID);
+}
+
+
+
+
+    
+    
+    // public CusMenu(String vendorID) {
+    //     // this.customerID = LoginPage.getLoginID();
+    //     this.endUser = LoginPage.getLoginID(); 
+
+
+    //     cart = new ArrayList<>();
+    //     selectedItemPanel = null;
+    //     selectedItem = null;
+    //     // CusMenu.vendorID = vendorID;
+    //     itemQuantities = new HashMap<>();
+
+
+    //     initComponents(vendorID);
+        
+    // }
 // TODO need OOP
+    // private void addToCart() throws IOException {
+    //     String filePath = FileHandling.filePath.CART_PATH.getValue();
+    //     JSONArray cartArray = new JSONArray();
+    
+    //     // Read existing cart items from the file
+    //     try {
+    //         String content = new String(Files.readAllBytes(Paths.get(filePath)));
+    //         if (!content.trim().isEmpty()) {
+    //             cartArray = new JSONArray(content);
+    //         }
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //         JOptionPane.showMessageDialog(null, "Error reading cart file.", "Error", JOptionPane.ERROR_MESSAGE);
+    //         return;
+    //     } catch (Exception e) {
+    //         JOptionPane.showMessageDialog(null, "Invalid JSON format in cart file.", "Error", JOptionPane.ERROR_MESSAGE);
+    //         return;
+    //     }
+    
+    //     // Process each item in the cart list
+    //     for (String[] item : cart) {
+    //         // if (item.length < 6) {
+    //         //     System.err.println("Invalid item array length: " + item.length);
+    //         //     continue;
+    //         // }
+    
+    //         String menuID = item[0];
+    //         // String customerID = item[2]; // Assuming customerID is in the item array
+    //         int quantityToAdd = Integer.parseInt(item[3]);
+    //         boolean found = false;
+    
+    //         // Check if the item already exists in the cart (JSON format handling)
+    //         for (int i = 0; i < cartArray.length(); i++) {
+    //             JSONObject cartItem = cartArray.getJSONObject(i);
+    //             if (cartItem.getString("MenuID").equals(menuID) && cartItem.getString("CustomerID").equals(customerID)) {
+    //                 // Update existing quantity
+    //                 int existingQuantity = cartItem.getInt("quantity");
+    //                 cartItem.put("quantity", existingQuantity + quantityToAdd);
+    //                 found = true;
+    //                 break;
+    //             }
+    //         }
+    
+    //         // If item does not exist, add a new JSON object
+    //         if (!found) {
+    //             JSONObject jsonObject = new JSONObject();
+    //             jsonObject.put("MenuID", menuID);
+    //             jsonObject.put("quantity", quantityToAdd);
+    //             double price = Double.parseDouble(item[4].replace("RM", "").trim()); // Remove "RM" prefix and parse to double
+    //             jsonObject.put("price", price);
+    //             jsonObject.put("name", item[1]);
+    //             jsonObject.put("CustomerID", customerID); // Use the customerID field
+    
+    //             cartArray.put(jsonObject);
+    //         }
+    //     }
+    
+    //     // Save updated JSON data back to the file
+    //     try {
+    //         Files.write(Paths.get(filePath), cartArray.toString(4).getBytes()); // Pretty print with indentation
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //         JOptionPane.showMessageDialog(null, "Error writing to cart file.", "Error", JOptionPane.ERROR_MESSAGE);
+    //     }
+    
+    //     cart.clear();
+    // }
+
     private void addToCart() throws IOException {
         String filePath = FileHandling.filePath.CART_PATH.getValue();
         JSONArray cartArray = new JSONArray();
     
-        // Read existing cart items from the file
+        // ✅ Ensure `endUser` exists and assign `customerID`
+        if (endUser == null) {
+            JOptionPane.showMessageDialog(null, "Error: User not logged in!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        String customerID = endUser.getID(); // ✅ Assign customer ID from logged-in user
+    
+        // ✅ Read existing cart items from the file
         try {
             String content = new String(Files.readAllBytes(Paths.get(filePath)));
             if (!content.trim().isEmpty()) {
@@ -79,23 +176,17 @@ public class CusMenu extends javax.swing.JFrame {
             return;
         }
     
-        // Process each item in the cart list
+        // ✅ Process each item in the cart list
         for (String[] item : cart) {
-            // if (item.length < 6) {
-            //     System.err.println("Invalid item array length: " + item.length);
-            //     continue;
-            // }
-    
             String menuID = item[0];
-            // String customerID = item[2]; // Assuming customerID is in the item array
             int quantityToAdd = Integer.parseInt(item[3]);
             boolean found = false;
     
-            // Check if the item already exists in the cart (JSON format handling)
+            // ✅ Check if the item already exists in the cart
             for (int i = 0; i < cartArray.length(); i++) {
                 JSONObject cartItem = cartArray.getJSONObject(i);
                 if (cartItem.getString("MenuID").equals(menuID) && cartItem.getString("CustomerID").equals(customerID)) {
-                    // Update existing quantity
+                    // ✅ Update existing quantity
                     int existingQuantity = cartItem.getInt("quantity");
                     cartItem.put("quantity", existingQuantity + quantityToAdd);
                     found = true;
@@ -103,23 +194,23 @@ public class CusMenu extends javax.swing.JFrame {
                 }
             }
     
-            // If item does not exist, add a new JSON object
+            // ✅ If item does not exist, add a new JSON object
             if (!found) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("MenuID", menuID);
                 jsonObject.put("quantity", quantityToAdd);
-                double price = Double.parseDouble(item[4].replace("RM", "").trim()); // Remove "RM" prefix and parse to double
+                double price = Double.parseDouble(item[4].replace("RM", "").trim()); // ✅ Remove "RM" prefix and parse
                 jsonObject.put("price", price);
                 jsonObject.put("name", item[1]);
-                jsonObject.put("CustomerID", customerID); // Use the customerID field
+                jsonObject.put("CustomerID", customerID); // ✅ Assign customer ID
     
                 cartArray.put(jsonObject);
             }
         }
     
-        // Save updated JSON data back to the file
+        // ✅ Save updated JSON data back to the file
         try {
-            Files.write(Paths.get(filePath), cartArray.toString(4).getBytes()); // Pretty print with indentation
+            Files.write(Paths.get(filePath), cartArray.toString(4).getBytes()); // ✅ Pretty print with indentation
         } catch (IOException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error writing to cart file.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -127,6 +218,7 @@ public class CusMenu extends javax.swing.JFrame {
     
         cart.clear();
     }
+    
 
 
     
