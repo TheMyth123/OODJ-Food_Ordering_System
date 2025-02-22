@@ -28,12 +28,7 @@ import raven.glasspanepopup.GlassPanePopup;
 
 public class ManageCustomer extends javax.swing.JFrame {
 
-    // TODO FOR DEVELOPMENT PURPOSES ONLY, REMOVE THIS LATER
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> {
-            new ManageCustomer().setVisible(true);
-        });
-    }
+    
 
     public static ArrayList<Customer> allCustomers = readCustomerDetails();
 

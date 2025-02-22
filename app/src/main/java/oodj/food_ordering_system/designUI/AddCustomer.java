@@ -25,11 +25,7 @@ import oodj.food_ordering_system.utils.validation;
 
 public class AddCustomer extends javax.swing.JFrame {
     
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> {
-            new AddCustomer().setVisible(true);
-        });
-    }
+    
 
     private String formattedDate;
     private ManageCustomer parent;

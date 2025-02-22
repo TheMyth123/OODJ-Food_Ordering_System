@@ -31,11 +31,7 @@ import raven.glasspanepopup.GlassPanePopup;
 
 public class ManageMenu extends javax.swing.JFrame {
 
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> {
-            new ManageMenu().setVisible(true);
-        });
-    }
+    
 
     public static ArrayList<Menu> allMenus = readMenuDetails();
 

@@ -27,12 +27,10 @@ import oodj.food_ordering_system.models.Rating;
 import oodj.food_ordering_system.models.Rating.RatingType;
 import oodj.food_ordering_system.models.Vendor;
 
-// change to OOP
 public class OrderHandling {
     
     private static final String MENU = FileHandling.filePath.MENU_PATH.getValue();
     private static final String CART = FileHandling.filePath.CART_PATH.getValue();
-    // private static final String CREDIT = FileHandling.filePath.CREDIT_PATH.getValue();
     private static final String PAYMENT = FileHandling.filePath.PAYMENT_PATH.getValue();
     public static final String RECEIPT_FOLDER = "app/src/main/resources/receipts/";
     private static final String TOPUP = FileHandling.filePath.TOPUP_PATH.getValue();
@@ -86,7 +84,6 @@ public class OrderHandling {
         return tempCount;
     }
 
-// USE OOP
     public static String getImagePathByMenuID(String menuID) {
         try {
             // Read JSON file content
@@ -236,7 +233,6 @@ public class OrderHandling {
     }
     
 
-//  need OOP
     public static void saveCart(ArrayList<CusOrder> cartItems) {
         JSONArray cartArray = new JSONArray();
 
@@ -266,15 +262,7 @@ public class OrderHandling {
     
         JSONArray cartArray = new JSONArray();
     
-        // for (CusOrder order : allCartItems) {
-            //  Compare order's customer ID with the given `customerID`
-            // if (!customerID.equals(order.getCustomer().getID())) {
-            //     continue;
-            // } else if (itemsToRemove.contains(order.getMenuID())) {
-            //     continue; // Skip adding this item
-            // } else {
-            //     System.out.println("Keeping item for current customer: " + order.getMenuID());
-            // }
+        
         for (CusOrder order : allCartItems) {
             // Compare order's customer ID with the given `customerID`
             if (!customerID.equals(order.getCustomer().getID())) {
@@ -645,10 +633,6 @@ public class OrderHandling {
             e.printStackTrace();
         }
     
-        // //  Show a message only if there are no ratings
-        // if (vendorRatings.isEmpty()) {
-        //     DialogBox.reminderMessage("No ratings for this vendor", "Reminder");
-        // }
     
         return vendorRatings;
     }
