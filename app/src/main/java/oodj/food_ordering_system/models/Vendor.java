@@ -4,9 +4,23 @@ public class Vendor extends User {
     private String ID, name, foodcourtname, DOB, contactnumber, email;    
     private Boolean status;
     private double rating; // Added missing rating variable
+    private String runnerID;
 
-    public Vendor(String ID, String name, String foodcourtname, String contactnumber, String username, String password, Boolean status, String DOB, String email) {
-        super(username, password); // Use the superclass User constructor
+
+    // public Vendor(String ID, String name, String foodcourtname, String contactnumber, String username, String password, Boolean status, String DOB, String email) {
+    //     super(username, password); // Use the superclass User constructor
+    //     this.ID = ID;
+    //     this.name = name;
+    //     this.DOB = DOB;
+    //     this.contactnumber = contactnumber;
+    //     this.foodcourtname = foodcourtname;
+    //     this.status = status;
+    //     this.email = email;
+    //     this.rating = 0.0; // Initialize rating
+    // }
+
+    public Vendor(String ID, String name, String foodcourtname, String contactnumber, String username, String password, Boolean status, String DOB, String email, String runnerID) {
+        super(username, password);
         this.ID = ID;
         this.name = name;
         this.DOB = DOB;
@@ -14,7 +28,8 @@ public class Vendor extends User {
         this.foodcourtname = foodcourtname;
         this.status = status;
         this.email = email;
-        this.rating = 0.0; // Initialize rating
+        this.rating = 0.0;
+        this.runnerID = runnerID; // Assign runner ID during initialization
     }
 
     public String getID() {
@@ -88,6 +103,14 @@ public class Vendor extends User {
 
     public void deactivateVendor() {
         this.status = false;
+    }
+
+    public String getRunnerID() { 
+        return runnerID; 
+    }
+
+    public void setRunnerID(String runnerID) { 
+        this.runnerID = runnerID; 
     }
 
     public String displayVendorInfo() {

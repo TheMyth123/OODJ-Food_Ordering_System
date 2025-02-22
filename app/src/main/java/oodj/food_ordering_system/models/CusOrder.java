@@ -9,39 +9,31 @@ public class CusOrder {
     private String description;
     private Customer customer;
     private String orderType;
+    private Vendor vendor;
 
 
-    // Constructor
-    // public CusOrder(String menuID, int quantity, double price, String imagePath, 
-    //                 String name, String description, Customer customer, String orderType) {
+
+    // public CusOrder(String menuID, int quantity, double price,
+    //                 String name, Customer customer) {
     //     this.menuID = menuID;
     //     this.quantity = quantity;
     //     this.price = price;
-    //     this.imagePath = imagePath;
     //     this.name = name;
-    //     this.description = description;
     //     this.customer = customer;
-    //     this.orderType = orderType;
+
 
     // }
 
-    public CusOrder(String menuID, int quantity, double price,
-                    String name, Customer customer) {
+    public CusOrder(String menuID, int quantity, double price, String name, Customer customer, Vendor vendor) {
         this.menuID = menuID;
         this.quantity = quantity;
         this.price = price;
         this.name = name;
         this.customer = customer;
-
+        this.vendor = vendor;
     }
 
     
-
-    // public CusOrder(String string, int int1, String string2, double double1, Customer customer2) {
-    //     //TODO Auto-generated constructor stub
-    // }
-
-
 
     // Getters and Setters
     public String getMenuID() { 
@@ -101,6 +93,18 @@ public class CusOrder {
 
     public void setOrderType(String orderType) {
         this.orderType = orderType;
+    }
+
+    public String getRunnerID() {
+        return vendor.getRunnerID(); // Always get runner ID from the vendor
+    }
+
+    public Vendor getVendor() {
+        return vendor;
+    }
+
+    public void setVendor(Vendor vendor) {
+        this.vendor = vendor;
     }
       
 }
