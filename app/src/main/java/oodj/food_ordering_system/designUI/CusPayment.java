@@ -361,8 +361,21 @@ public class CusPayment extends javax.swing.JFrame {
 
     
 
+    // private void payButtonActionPerformed(java.awt.event.ActionEvent evt) {                                          
+    //     String selectedAddress = addressComboBox.getSelectedItem().toString();
+    //     if (selectedAddress.equals("Other")) {
+    //         selectedAddress = addressField.getText().trim();
+    //         if (selectedAddress.isEmpty()) {
+    //             JOptionPane.showMessageDialog(this, "Please enter a valid address.", "Invalid Address", JOptionPane.ERROR_MESSAGE);
+    //             return;
+    //         }
+    //     }
+    //     processPayment(selectedAddress, orderItems, serviceType, totalAmount);
+    // }
+
     private void payButtonActionPerformed(java.awt.event.ActionEvent evt) {                                          
         String selectedAddress = addressComboBox.getSelectedItem().toString();
+        
         if (selectedAddress.equals("Other")) {
             selectedAddress = addressField.getText().trim();
             if (selectedAddress.isEmpty()) {
@@ -370,8 +383,30 @@ public class CusPayment extends javax.swing.JFrame {
                 return;
             }
         }
-        processPayment(selectedAddress, orderItems, serviceType, totalAmount);
+    
+        double finalAmount = totalAmount;
+    
+        // Check if delivery service is selected
+        if (serviceType.equals("Request for Delivery")) {
+            int response = JOptionPane.showConfirmDialog(
+                this,
+                "Note: An additional RM5 charge will be applied for delivery service.\nDo you wish to proceed?",
+                "Delivery Charge Notice",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+            );
+    
+            if (response != JOptionPane.YES_OPTION) {
+                return; // Stop payment process if the user selects "No"
+            }
+    
+            // Add RM5 delivery charge
+            finalAmount += 5.00;
+        }
+    
+        processPayment(selectedAddress, orderItems, serviceType, finalAmount);
     }
+    
 
     // private static String getFoodNameFromMenu(JSONArray menuItems, String menuID) {
     //     for (int j = 0; j < menuItems.length(); j++) {
