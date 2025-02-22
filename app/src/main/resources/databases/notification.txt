@@ -603,5 +603,16 @@
     "Title": "Order Approved",
     "Timestamp": "2025-02-22T20:11:04.514617800",
     "ActionLink": "OR00005"
+  },
+  {
+    "Status": "True",
+    "ReadStatus": "False",
+    "Type": "Order Status Updated",
+    "NotificationID": "NT00056",
+    "UserID": "CS00001",
+    "Content": "The status of your order has been updated. Check your order history for details.",
+    "Title": "Order Status Updated",
+    "Timestamp": "2025-02-22T21:16:27.078604100",
+    "ActionLink": "OR00005"
   }
 ]

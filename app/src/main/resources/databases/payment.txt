@@ -69,7 +69,7 @@
   },
   {
     "Status": "Accepted",
-    "OrderStatus": "Order preparing",
+    "OrderStatus": "Order is ready for pickup",
     "OrderItems": [{
       "quantity": 1,
       "totalPrice": 35,

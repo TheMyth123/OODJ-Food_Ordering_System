@@ -107,7 +107,6 @@ public class Order {
                             int quantity = item.optInt("quantity", 0);
 
                             // Debugging information
-                            System.out.println("Reading menuID: " + menuID + ", Quantity: " + quantity);
 
                             if (!menuID.equals("UnknownID") && quantity > 0) {
                                 String menuName = getMenuName(menuID);
