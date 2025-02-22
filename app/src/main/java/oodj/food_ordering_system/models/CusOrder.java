@@ -13,27 +13,17 @@ public class CusOrder {
 
 
 
-    // public CusOrder(String menuID, int quantity, double price,
-    //                 String name, Customer customer) {
-    //     this.menuID = menuID;
-    //     this.quantity = quantity;
-    //     this.price = price;
-    //     this.name = name;
-    //     this.customer = customer;
-
-
-    // }
-
-    public CusOrder(String menuID, int quantity, double price, String name, Customer customer, Vendor vendor) {
+    public CusOrder(String menuID, int quantity, double price,
+                    String name, Customer customer) {
         this.menuID = menuID;
         this.quantity = quantity;
         this.price = price;
         this.name = name;
         this.customer = customer;
-        this.vendor = vendor;
-    }
 
-    
+
+    }
+  
 
     // Getters and Setters
     public String getMenuID() { 
@@ -95,9 +85,6 @@ public class CusOrder {
         this.orderType = orderType;
     }
 
-    public String getRunnerID() {
-        return vendor.getRunnerID(); // Always get runner ID from the vendor
-    }
 
     public Vendor getVendor() {
         return vendor;
