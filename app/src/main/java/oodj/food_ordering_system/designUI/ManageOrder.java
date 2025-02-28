@@ -49,7 +49,6 @@ public class ManageOrder extends javax.swing.JFrame {
         List<Order> orders = Order.getAllOrders();
     
         if (orders == null || orders.isEmpty()) {
-            System.out.println("No orders available.");
             return;
         }
     

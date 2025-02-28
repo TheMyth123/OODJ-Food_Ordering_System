@@ -35,11 +35,6 @@ import net.miginfocom.layout.LayoutCallback;
 
 public class VendorRevenue extends javax.swing.JFrame {
 
-    // public static void main(String[] args) {
-    //     java.awt.EventQueue.invokeLater(() -> {
-    //         new VendorPerformance().setVisible(true);
-    //     });
-    // }
     private Vendor endUserVD;
     
     public VendorRevenue() {
@@ -73,7 +68,6 @@ public class VendorRevenue extends javax.swing.JFrame {
                 String selectedPeriod = (String) periodDropdown.getSelectedItem();
                 // Read payment.txt and aggregate revenue data based on the selected period
                 JSONArray history = getRevenueHistory(selectedPeriod);
-                System.out.println(history);
                 // Instead of calling VendorHandling.createRevenueChart(history), show our custom revenue chart pop-up
                 showRevenueChartPopup(history);
             }

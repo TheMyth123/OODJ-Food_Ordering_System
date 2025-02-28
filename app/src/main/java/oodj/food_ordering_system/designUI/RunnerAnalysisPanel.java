@@ -198,7 +198,6 @@ public class RunnerAnalysisPanel extends JPanel {
             if (file.exists()) {
                 return new String(Files.readAllBytes(Paths.get(path)));
             } else {
-                System.out.println("Delivery Runner file not found: " + path);
                 return "[]";
             }
         } catch (IOException e) {
@@ -214,7 +213,6 @@ public class RunnerAnalysisPanel extends JPanel {
             if (file.exists()) {
                 return new String(Files.readAllBytes(Paths.get(path)));
             } else {
-                System.out.println("Delivery Runner Task file not found: " + path);
                 return "[]";
             }
         } catch (IOException e) {

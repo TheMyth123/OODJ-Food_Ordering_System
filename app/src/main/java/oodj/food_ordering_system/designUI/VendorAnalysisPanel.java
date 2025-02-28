@@ -245,7 +245,6 @@ public class VendorAnalysisPanel extends JPanel {
             if (file.exists()) {
                 return new String(Files.readAllBytes(Paths.get(path)));
             } else {
-                System.out.println("Vendor file not found: " + path);
                 return "[]";
             }
         } catch (IOException e) {

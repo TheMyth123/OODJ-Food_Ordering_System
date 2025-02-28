@@ -53,11 +53,7 @@ public class ManageComplaints extends javax.swing.JFrame {
     private Map<String, Complaint> complaintMap = new HashMap<>();
     List<Notification> notifications = NotificationUtils.getUnreadNotifications(NotificationUtils.getAllNotifications(), "Manager", false);
 
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> {
-            new ManageComplaints().setVisible(true);
-        });
-    }
+
 
     public ManageComplaints() {
         initComponents();
@@ -81,7 +77,6 @@ public class ManageComplaints extends javax.swing.JFrame {
             if (file.exists()) {
                 return new String(Files.readAllBytes(Paths.get(path)));
             } else {
-                System.out.println("File not found: " + path);
                 return "";
             }
         } catch (IOException e) {

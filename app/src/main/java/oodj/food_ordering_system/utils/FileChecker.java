@@ -24,60 +24,49 @@ public class FileChecker {
             if (!managerFile.exists()) {
                 managerFile.createNewFile();
                 writeEmptyJsonArray(managerFile);
-                System.out.println("Manager file created successfully");
             }
             if (!adminFile.exists()) {
                 adminFile.createNewFile();
                 writeEmptyJsonArray(adminFile);
-                System.out.println("Admin file created successfully");
             }
             if (!customerFile.exists()) {
                 customerFile.createNewFile();
                 writeEmptyJsonArray(customerFile);
-                System.out.println("Customer file created successfully");
             }
             if (!deliveryFile.exists()) {
                 deliveryFile.createNewFile();
                 writeEmptyJsonArray(deliveryFile);
-                System.out.println("Delivery file created successfully");
             }
             if (!vendorFile.exists()) {
                 vendorFile.createNewFile();
                 writeEmptyJsonArray(vendorFile);
-                System.out.println("Vendor file created successfully");
             }
             if (!notificationFile.exists()) {
                 notificationFile.createNewFile();
                 writeEmptyJsonArray(notificationFile);
-                System.out.println("Notification file created successfully");
             }
             if (!menuFile.exists()) {
                 menuFile.createNewFile();
                 writeEmptyJsonArray(menuFile);
-                System.out.println("Menu file created successfully");
             }
             if (!cartFile.exists()) {
                 cartFile.createNewFile();
                 writeEmptyJsonArray(cartFile);
-                System.out.println("Cart file created successfully");
             }
 
             if (!paymentFile.exists()) {
                 paymentFile.createNewFile();
                 writeEmptyJsonArray(paymentFile);
-                System.out.println("Payment file created successfully");
             }
 
             if (!ratingFile.exists()) {
                 ratingFile.createNewFile();
                 writeEmptyJsonArray(ratingFile);
-                System.out.println("Rating file created successfully");
             }
 
             if (!complaintFile.exists()) {
                 complaintFile.createNewFile();
                 writeEmptyJsonArray(complaintFile);
-                System.out.println("Complaint file created successfully");
             }
 
             

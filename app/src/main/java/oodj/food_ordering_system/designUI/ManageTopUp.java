@@ -28,11 +28,6 @@ import net.miginfocom.layout.LayoutCallback;
 
 public class ManageTopUp extends javax.swing.JFrame {
 
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> {
-            new ManageTopUp().setVisible(true);
-        });
-    }
 
     public ManageTopUp() {
         initComponents();
@@ -65,7 +60,6 @@ public class ManageTopUp extends javax.swing.JFrame {
                 // Read all lines from the file into a single string
                 return new String(Files.readAllBytes(Paths.get(path)));
             } else {
-                System.out.println("File not found: " + path);
                 return "";
             }
         } catch (IOException e) {

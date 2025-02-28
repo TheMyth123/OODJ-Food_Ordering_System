@@ -136,7 +136,6 @@ public class VendorHandling {
     JComboBox<String> periodDropdown = new JComboBox<>(new String[]{"Daily", "Monthly", "Quarterly"});
     String selectedPeriod = (String) periodDropdown.getSelectedItem();
     JSONArray history = getVendorOrderHistory("VD00001", selectedPeriod);
-    // System.out.println(selectedPeriod + " order history: " + history.toString());
 
 
 

@@ -285,7 +285,6 @@ public class OrderHandling {
     
     
         if (cartArray.length() == 0) {
-            System.out.println("WARNING: The cart is empty after update. Check logic.");
         }
     
         FileHandling.saveToFile(cartArray, CART); // Update the cart file
@@ -365,7 +364,6 @@ public class OrderHandling {
             }
             File destFile = new File(RECEIPT_FOLDER + credit.getCreditID() + ".pdf");
             Files.copy(sourceFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            System.out.println("Receipt image copied to: " + destFile.getPath());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -566,13 +564,11 @@ public class OrderHandling {
                         JSONObject firstItem = orderItems.getJSONObject(0);
     
                         if (!firstItem.has("menuID")) {
-                            System.out.println(" Warning: No 'menuID' found in OrderItems for Order ID: " + orderID);
                             return null;
                         }
     
                         return firstItem.getString("menuID"); //  Extract and return menuID
                     } else {
-                        System.out.println(" Warning: 'OrderItems' is empty for Order ID: " + orderID);
                     }
                 }
             }
@@ -1022,12 +1018,6 @@ public static void AcceptOrderStatus(String orderID) {
     }
 
 
-    // test the code
-    // public static void main(String[] args) {
-    //     // updateOrderStatus("ORD001", "Kitchen is preparing");
-    // }
-
-    
     // CRUD menu 
 
     public static String getMenuID() {
@@ -1048,7 +1038,6 @@ public static void AcceptOrderStatus(String orderID) {
                             highestID = number; // Update the ID
                         }
                     } catch (NumberFormatException e) {
-                        System.out.println("Invalid MenuID: " + menuID);
                         DialogBox.errorMessage("Invalid data or format for menu: " + menuID, "Error");
                     }
                 }

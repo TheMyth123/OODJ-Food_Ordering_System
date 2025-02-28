@@ -13,11 +13,6 @@ import net.miginfocom.layout.LayoutCallback;
 
 public class MenuTemplate extends javax.swing.JFrame {
 
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> {
-            new MenuTemplate().setVisible(true);
-        });
-    }
 
     public MenuTemplate() {
         initComponents();
@@ -526,19 +521,16 @@ public class MenuTemplate extends javax.swing.JFrame {
     private void btn_Page2ActionPerformed(java.awt.event.ActionEvent evt) {                                            
         //dispose();
         //TODO CALL PAGE 2
-        System.out.println("Page 2");
     }                                           
 
     private void btn_Page3ActionPerformed(java.awt.event.ActionEvent evt) {                                            
         //dispose();
         //TODO CALL PAGE 3
-        System.out.println("Page 3");
     }                                                                          
 
     private void btn_Page4ActionPerformed(java.awt.event.ActionEvent evt) {                                        
         //dispose();
         //TODO CALL PAGE 4
-        System.out.println("Page 4");
     }                                       
 
 

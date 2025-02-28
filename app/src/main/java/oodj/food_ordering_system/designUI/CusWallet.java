@@ -792,7 +792,6 @@ public class CusWallet extends javax.swing.JFrame {
     
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(resourcePath)) {
             if (inputStream == null) {
-                System.out.println("PDF not found in resources: " + resourcePath);
                 return;
             }
     

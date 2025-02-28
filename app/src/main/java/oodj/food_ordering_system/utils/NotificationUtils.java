@@ -94,7 +94,6 @@ public class NotificationUtils{
                 // Read all lines from the file into a single string
                 return new String(Files.readAllBytes(Paths.get(path)));
             } else {
-                System.out.println("File not found: " + path);
                 return "";
             }
         } catch (IOException e) {
@@ -165,7 +164,6 @@ public class NotificationUtils{
                     fileWriter.flush();
                 }
             } else {
-                System.out.println("File not found: " + path);
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -13,11 +13,6 @@ import net.miginfocom.layout.LayoutCallback;
 
 public class RunnerPerformance extends javax.swing.JFrame {
 
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> {
-            new RunnerPerformance().setVisible(true);
-        });
-    }
 
     public RunnerPerformance() {
         initComponents();

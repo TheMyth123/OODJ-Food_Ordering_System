@@ -3,6 +3,7 @@
         "Messages": [
             "User: 1",
             "System: This complaint has been resolved.",
+            "System: This complaint has been resolved.",
             "System: This complaint has been resolved."
         ],
         "ComplaintID": "CM00001",
@@ -13,10 +14,12 @@
         "Messages": [
             "User: hi",
             "User: I am having a problem",
-            "Manager: what is your issue"
+            "Manager: what is your issue",
+            "Manager: testeest",
+            "System: This complaint has been resolved."
         ],
         "ComplaintID": "CM00003",
-        "Resolved": false,
+        "Resolved": true,
         "CustomerID": "CS00001"
     },
     {

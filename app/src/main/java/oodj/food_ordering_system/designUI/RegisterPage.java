@@ -659,13 +659,7 @@ public class RegisterPage extends javax.swing.JFrame {
     private void addressTextFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                        
     }                                                       
 
-    // public static void main(String args[]) {
 
-    //     java.awt.EventQueue.invokeLater(() -> {
-    //         new RegisterPage().setVisible(true);
-
-    //     });
-    // }
 
     // Variables declaration - do not modify                     
     private javax.swing.JLabel DOBlabel;

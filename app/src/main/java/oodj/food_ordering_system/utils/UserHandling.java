@@ -225,7 +225,6 @@ public class UserHandling {
                     Customer customer = new Customer(customerID, username, name, phone, password, gender, dob, email, address, status, balance);
                     buffer.add(customer);
                 } else {
-                    System.out.println("Invalid CustomerID: " + customerID);
     
                     DialogBox.errorMessage("Invalid data or format for customer: " + customerID, "Error");
                 }
@@ -323,7 +322,6 @@ public class UserHandling {
                     Manager manager = new Manager(managerID, username, password, name, email, status);
                     buffer.add(manager);
                 } else {
-                    System.out.println("Invalid ManagerID: " + managerID);
     
                     DialogBox.errorMessage("Invalid data or format for manager: " + managerID, "Error");
                 }
@@ -363,7 +361,6 @@ public class UserHandling {
                     DeliveryRunner delivery = new DeliveryRunner(runnerID, username, name, phone, password, gender, dob, email, vehicle, license, status, balance);
                     buffer.add(delivery);
                 } else {
-                    System.out.println("Invalid DeliveryID: " + runnerID);
     
                     DialogBox.errorMessage("Invalid data or format for delivery: " + runnerID, "Error");
                 }
@@ -400,7 +397,6 @@ public class UserHandling {
                     Vendor vendor = new Vendor(vendorID, name, foodcourtname, phone, username, password, status, DOB, email);
                     buffer.add(vendor);
                 } else {
-                    System.out.println("Invalid VendorID: " + vendorID);
     
                     DialogBox.errorMessage("Invalid data or format for vendor: " + vendorID, "Error");
                 }

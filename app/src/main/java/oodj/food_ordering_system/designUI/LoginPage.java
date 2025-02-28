@@ -113,12 +113,10 @@ public class LoginPage extends javax.swing.JFrame {
                 case 1:
                     setVisible(false);
                     new VendorPerformance().setVisible(true);
-                    System.out.println("Manager: "+username+" Logged In");
                     break;
                 case 2:
                     setVisible(false);
                     new ManageCustomer().setVisible(true);
-                    System.out.println("Admin: "+username+" Logged In");
                     break;
                 case 3:
                     DialogBox.successMessage("Welcome back, " + username + "!", "Customer Login Success!");
@@ -128,17 +126,14 @@ public class LoginPage extends javax.swing.JFrame {
                     // TODO Develop Customer Main Menu
                     // test
 
-                    System.out.println("Customer: "+username+" Logged In");
                     break;
                 case 4:
                     setVisible(false);
                     new RunnerRevenueDashboard().setVisible(true);
-                    System.out.println("Delivery Runner: "+username+" Logged In");
                     break;
                 case 5:
                     setVisible(false);
                     new ManageOrder().setVisible(true); 
-                    System.out.println("Vendor: "+username+" Logged In");
                     break;
                 default:
                     DialogBox.errorMessage("Invalid user, please try again", "No user found!");
@@ -435,11 +430,6 @@ public class LoginPage extends javax.swing.JFrame {
 
     }                                      
 
-    public static void main(String args[]) {
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            new LoginPage().setVisible(true);
-        });
-    }
 
     // Variables declaration - do not modify                     
     private javax.swing.JPasswordField PasswordField;

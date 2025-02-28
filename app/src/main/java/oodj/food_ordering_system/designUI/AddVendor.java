@@ -18,12 +18,6 @@ import oodj.food_ordering_system.utils.validation;
 
 public class AddVendor extends javax.swing.JFrame {
     
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> {
-            new AddVendor().setVisible(true);
-        });
-    }
-
     private ManageVendor parent;
 
     public AddVendor(ManageVendor parent) {

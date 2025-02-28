@@ -28,12 +28,6 @@ import raven.glasspanepopup.GlassPanePopup;
 
 public class ManageVendor extends javax.swing.JFrame {
 
-    // TODO FOR DEVELOPMENT PURPOSES ONLY, REMOVE THIS LATER
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> {
-            new ManageVendor().setVisible(true);
-        });
-    }
 
     public static ArrayList<Vendor> allVendors = readVendorDetails();
 

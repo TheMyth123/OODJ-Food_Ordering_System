@@ -269,7 +269,6 @@ public class TopUp extends javax.swing.JFrame {
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             // Handle file selection
             receiptImagePath = fileChooser.getSelectedFile().getPath();
-            System.out.println("Receipt uploaded: " + receiptImagePath);
         }
     }
 

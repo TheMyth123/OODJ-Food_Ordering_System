@@ -51,7 +51,6 @@ public class ManageMenu extends javax.swing.JFrame {
 
     private void displayMenus(ArrayList<Menu> menus) {
         if (menus == null || menus.isEmpty()) {
-            System.out.println("No menus available.");
             return;
         }
 

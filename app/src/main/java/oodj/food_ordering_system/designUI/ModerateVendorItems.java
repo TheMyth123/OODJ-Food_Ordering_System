@@ -27,11 +27,6 @@ import net.miginfocom.layout.LayoutCallback;
 
 public class ModerateVendorItems extends javax.swing.JFrame {
 
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> {
-            new ModerateVendorItems().setVisible(true);
-        });
-    }
 
     public ModerateVendorItems() {
         initComponents();
@@ -65,7 +60,6 @@ public class ModerateVendorItems extends javax.swing.JFrame {
                 // Read all lines from the file into a single string
                 return new String(Files.readAllBytes(Paths.get(path)));
             } else {
-                System.out.println("File not found: " + path);
                 return "";
             }
         } catch (IOException e) {

@@ -268,7 +268,6 @@ public class Cart extends javax.swing.JFrame {
 
     
     private void editQuantity() {
-        System.out.println(" editQuantity() function called!"); // Debugging step
     
         int selectedRow = cartTable.getSelectedRow();
         
@@ -300,7 +299,6 @@ public class Cart extends javax.swing.JFrame {
                     if (item.getMenuID().equals(menuID) && 
                         item.getCustomer().getID().equals(endUser.getID())) {
                         
-                        System.out.println(" Updating quantity for: " + menuID + " to " + newQuantity);
                         item.setQuantity(newQuantity);
                         updated = true;
                         break;
@@ -308,15 +306,12 @@ public class Cart extends javax.swing.JFrame {
                 }
     
                 if (updated) {
-                    System.out.println("🔹 Updated Cart Items: " + cartItems);
     
                     OrderHandling.saveCart(cartItems);
     
-                    System.out.println(" Cart saved successfully!");
     
                     refreshCart();
                 } else {
-                    System.out.println(" Item not found in cart for update.");
                 }
     
             } catch (NumberFormatException e) {

@@ -201,7 +201,6 @@ public class CustomerComplaintPanel extends JPanel {
     
         String message = JOptionPane.showInputDialog(this, "Enter your complaint:");
         if (message != null && !message.trim().isEmpty()) {
-            System.out.println("User entered a complaint: " + message);
     
             // Create a new Complaint object
             Complaint newComplaint = new Complaint("Customer" + UserHandling.getCUid(), message);
@@ -211,10 +210,8 @@ public class CustomerComplaintPanel extends JPanel {
             // Call addNewComplaint() with a Complaint object
             ComplaintHandling.addNewComplaint(newComplaint, customerID);
     
-            System.out.println("Complaint passed to ComplaintHandling.addComplaint()");
             updateTable();
         } else {
-            System.out.println("User did not enter a valid complaint.");
         }
     }
 

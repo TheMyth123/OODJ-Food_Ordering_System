@@ -16,7 +16,6 @@ public class NotificationItem extends javax.swing.JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 // Print "Clicked" when the item is clicked
-                System.out.println(title + " " + actionLink + " Clicked");
             }
     
             @Override

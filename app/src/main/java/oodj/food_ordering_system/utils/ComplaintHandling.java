@@ -50,11 +50,9 @@ public class ComplaintHandling {
             // Ensure the file exists before reading
             if (!Files.exists(filePath)) {
                 Files.write(filePath, "[]".getBytes()); // Create an empty JSON array if missing
-                System.out.println("File did not exist, created a new complaints.txt file.");
             }
     
             String jsonData = new String(Files.readAllBytes(filePath)).trim();
-            System.out.println("File content before adding complaint: " + jsonData);
     
             JSONArray complaintArray;
             if (jsonData.isEmpty() || jsonData.equals("[]")) {
@@ -62,11 +60,6 @@ public class ComplaintHandling {
             } else {
                 complaintArray = new JSONArray(jsonData);
             }
-    
-            // Debugging to confirm complaint details
-            System.out.println("Adding complaint with ID: CM" + getCMid());
-            System.out.println("Customer: " + complaint.getUser());
-            System.out.println("Messages: " + complaint.getMessages());
     
             JSONObject complaintData = new JSONObject();
             complaintData.put("ComplaintID", "CM" + String.format("%05d", getCMid() + 1));
@@ -77,7 +70,6 @@ public class ComplaintHandling {
             complaintArray.put(complaintData);
             FileHandling.saveToFile(complaintArray, COMPLAINT);
     
-            System.out.println("Complaint successfully added!");
     
         } catch (IOException e) {
             System.err.println("File I/O error: " + e.getMessage());
@@ -114,7 +106,6 @@ public class ComplaintHandling {
     
         //  Check if the file exists before reading
         if (!Files.exists(filePath)) {
-            System.out.println("Error: Complaint JSON file not found.");
             return complaints; // Return empty list
         }
     
@@ -152,7 +143,6 @@ public class ComplaintHandling {
                 complaints.add(complaint);
             }
         } catch (JSONException e) {
-            System.out.println("JSON Parsing Error: " + e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
         }

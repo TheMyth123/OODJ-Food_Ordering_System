@@ -90,16 +90,6 @@ public class Order {
                     for (int j = 0; j < orderItemsArray.length(); j++) {
                         JSONObject item = orderItemsArray.getJSONObject(j);
     
-                        // Check if menuID exists before accessing it
-                        // if (item.has("menuID")) {
-                        //     String menuID = item.getString("menuID");
-                        //     int quantity = item.getInt("quantity");
-    
-                        //     String menuName = getMenuName(menuID);
-                        //     menuCountMap.put(menuName, menuCountMap.getOrDefault(menuName, 0) + quantity);
-                        // } else {
-                        //     System.out.println("menuID not found in: " + item.toString());
-                        // }
 
                         // Check if menuID exists before accessing it
                         if (item.has("menuID")) {
@@ -112,14 +102,11 @@ public class Order {
                                 String menuName = getMenuName(menuID);
                                 menuCountMap.put(menuName, menuCountMap.getOrDefault(menuName, 0) + quantity);
                             } else {
-                                System.out.println("Invalid menuID or quantity for: " + item.toString());
                             }
                         } else {
-                            System.out.println("menuID not found in: " + item.toString());
                         }
                     }
                 } else {
-                    System.out.println("OrderItems is empty for OrderID: " + orderID);
                 }
     
                 String formattedMenuNames = formatMenuNames(menuCountMap);
@@ -170,15 +157,4 @@ public class Order {
         return formattedMenuNames.toString();
     }
 
-    // Debugging method to test the output
-    public static void main(String[] args) {
-        List<Order> orders = getAllOrders();
-        for (Order order : orders) {
-            System.out.println("Order ID: " + order.getOrderID());
-            System.out.println("Menu Names: " + order.getMenuNames());
-            System.out.println("Service Type: " + order.getServiceType());
-            System.out.println("Order Status: " + order.getOrderStatus());
-            System.out.println("----------------------------------------");
-        }
-    }
 }

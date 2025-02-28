@@ -13,11 +13,6 @@ import net.miginfocom.layout.LayoutCallback;
 
 public class VendorPerformance extends javax.swing.JFrame {
 
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> {
-            new VendorPerformance().setVisible(true);
-        });
-    }
 
     public VendorPerformance() {
         initComponents();
